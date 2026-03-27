@@ -43,7 +43,7 @@ const LANG = {
     ghostPhases: {
       early: ["Elegante. Anche troppo.", "Il bello non basta."],
       mid: ["Sì ok, ma chi sei davvero?", "Quanta cura per non dire niente.", "Manca qualcosa, no?"],
-      late: ["Tutto perfetto. Troppo perfetto.", "Il portfolio vero non è ancora iniziato.", "C'è una parte che qui non si vede."]
+      late: ["Tutto perfetto. Troppo perfetto.", "Il portfolio vero non è ancora iniziato.", "C'è una parte che qui non si vede.", "Provaci a cestinarlo.", "Non lo faresti mai.", "Quel bottone non serve a niente."]
     },
     // Chapter 1 strings
     ch1: {
@@ -97,7 +97,7 @@ const LANG = {
     ghostPhases: {
       early: ["Slick. Maybe too slick.", "Pretty isn't enough."],
       mid: ["Yeah but who are you, really?", "So much polish to say so little.", "Something's missing, no?"],
-      late: ["All perfect. Too perfect.", "The real portfolio hasn't started yet.", "There's a part you can't see here."]
+      late: ["All perfect. Too perfect.", "The real portfolio hasn't started yet.", "There's a part you can't see here.", "Go ahead, trash it.", "You wouldn't dare.", "That button does nothing."]
     },
     ch1: {
       kicker: "Chapter 1 · Origin",
@@ -197,9 +197,9 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   };
 
   const getStageConfig = (mobile) => ({
-    early: { opacity: mobile ? 0.6 : 0.4, duration: mobile ? 3500 : 3000, yRange: mobile ? [12, 18] : [18, 35] },
-    mid: { opacity: mobile ? 0.65 : 0.5, duration: mobile ? 4000 : 3500, yRange: mobile ? [12, 18] : [35, 55] },
-    late: { opacity: mobile ? 0.7 : 0.55, duration: mobile ? 4500 : 4000, yRange: mobile ? [12, 18] : [55, 78] }
+    early: { opacity: mobile ? 0.7 : 0.5, duration: mobile ? 3500 : 3000, yRange: mobile ? [70, 78] : [70, 80] },
+    mid: { opacity: mobile ? 0.75 : 0.55, duration: mobile ? 4000 : 3500, yRange: mobile ? [72, 80] : [72, 82] },
+    late: { opacity: mobile ? 0.8 : 0.6, duration: mobile ? 4500 : 4000, yRange: mobile ? [74, 82] : [75, 85] }
   });
 
   useEffect(() => {
@@ -266,12 +266,12 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
       transition: fade ? "all 1s ease-out" : "all 0.35s ease-out",
       filter: fade ? "blur(2px)" : "none",
       fontFamily: "'Playfair Display',serif", fontStyle: "italic", 
-      fontSize: mobile ? 13 : (isLate ? 14 : 13),
-      color: mobile ? "#999" : (isLate ? "#777" : "#666"),
+      fontSize: mobile ? 15 : (isLate ? 16 : 15),
+      color: mobile ? "#aaa" : (isLate ? "#999" : "#888"),
       letterSpacing: isLate ? 0.4 : 0.3,
-      whiteSpace: "normal", maxWidth: mobile ? "90vw" : "min(280px, 75vw)",
-      textAlign: "center", padding: mobile ? "8px 16px" : "0 1rem",
-      background: mobile ? "rgba(5,5,5,0.85)" : "transparent",
+      whiteSpace: "normal", maxWidth: mobile ? "90vw" : "min(320px, 80vw)",
+      textAlign: "center", padding: mobile ? "10px 18px" : "0 1rem",
+      background: mobile ? "rgba(5,5,5,0.9)" : "transparent",
       borderRadius: mobile ? "4px" : "0",
     }}>
       {current.text}
@@ -590,7 +590,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
               <section className={`ch1-scene ${scene === 'discover' ? 'active' : ''}`}>
                 <div className="ch1-label">{T.profileCap}</div>
-                <img className="ch1-fill ch1-discover-img" src={ASSETS.discoverCrtCloseup} alt="" />
+                <img className="ch1-fill" src={ASSETS.discoverCrtCloseup} alt="" />
                 <div className="ch1-discover-overlay" />
                 <div className="ch1-line-block">
                   <div className="ch1-line">{T.discoverCopy}</div>
@@ -815,9 +815,8 @@ export default function Roberto() {
         .ch1-fill{position:absolute;inset:0;z-index:1}
         .ch1-grass-loop{clip-path:inset(72% 0 0 0);z-index:2;pointer-events:none}
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
-        .ch1-meadow-intro{position:absolute;left:22px;right:22px;top:50px;z-index:8;max-width:480px;padding:14px 18px;background:rgba(5,5,5,.75);border-radius:4px;border-left:2px solid rgba(175,200,211,.4)}
+        .ch1-meadow-intro{position:absolute;left:22px;right:22px;top:26px;z-index:8;max-width:560px;border-bottom:1px solid rgba(175,200,211,.18);padding-bottom:12px}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(5,8,10,.18),rgba(5,8,10,.28))}
-        .ch1-discover-img{filter:sepia(15%) saturate(120%) hue-rotate(160deg) brightness(0.95)}
         .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px}
         .ch1-line-block.ch1-reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
