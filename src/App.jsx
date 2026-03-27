@@ -48,6 +48,7 @@ const LANG = {
     // Chapter 1 strings
     ch1: {
       kicker: "Capitolo 1 · Origine",
+      meadowIntro: "Ero un bambino isola. I libri erano oceani, e io ci annegavo volentieri.",
       discoverCopy: "Quel giorno, in biblioteca, c'era qualcosa che non avevo mai visto.",
       revealCopy: "Prima li trovavo nei libri. Poi ho scoperto che potevo entrarci.",
       stayBtn: "Resta nell'erba",
@@ -100,6 +101,7 @@ const LANG = {
     },
     ch1: {
       kicker: "Chapter 1 · Origin",
+      meadowIntro: "I was an island child. Books were oceans, and I drowned in them willingly.",
       discoverCopy: "That day, in the library, there was something I had never seen before.",
       revealCopy: "First I found them in books. Then I discovered I could enter them.",
       stayBtn: "Stay in the grass",
@@ -578,6 +580,9 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 <img className="ch1-fill" src={ASSETS.pratoFirstFrame} alt="" />
                 <video ref={meadowVideoRef} className="ch1-fill ch1-grass-loop" src={ASSETS.pratoFull} autoPlay loop muted playsInline preload="auto" />
                 <div className="ch1-meadow-shade" />
+                <div className="ch1-meadow-intro">
+                  <div className="ch1-line">{T.meadowIntro}</div>
+                </div>
                 <div className={`ch1-feedback ${showMeadowFeedback ? 'show' : ''}`}>
                   <div className="ch1-line">{T.stayFeedback}</div>
                 </div>
@@ -810,6 +815,7 @@ export default function Roberto() {
         .ch1-fill{position:absolute;inset:0;z-index:1}
         .ch1-grass-loop{clip-path:inset(72% 0 0 0);z-index:2;pointer-events:none}
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
+        .ch1-meadow-intro{position:absolute;left:22px;right:22px;top:50px;z-index:8;max-width:480px;padding:14px 18px;background:rgba(5,5,5,.75);border-radius:4px;border-left:2px solid rgba(175,200,211,.4)}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(5,8,10,.18),rgba(5,8,10,.28))}
         .ch1-discover-img{filter:sepia(15%) saturate(120%) hue-rotate(160deg) brightness(0.95)}
         .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px}
