@@ -459,11 +459,17 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const [profileUnlocked, setProfileUnlocked] = useState(false);
   const [showCrossing, setShowCrossing] = useState(false);
   const [crossingDone, setCrossingDone] = useState(false);
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
 
-  const syncVideoAudio = useCallback((video, { loop = false, visible = true } = {}) => {
+  // Unlock audio on first user interaction
+  const unlockAudio = useCallback(() => {
+    if (!audioUnlocked) setAudioUnlocked(true);
+  }, [audioUnlocked]);
+
+  const syncVideoAudio = useCallback((video, { loop = false, visible = true, muted = true } = {}) => {
     if (!video) return;
     video.loop = loop;
-    video.muted = true;
+    video.muted = muted;
     video.playsInline = true;
     video.preload = 'auto';
     video.style.display = visible ? 'block' : 'none';
@@ -482,17 +488,17 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     if (!loopVideo || !fullVideo) return;
     if (scene === 'library') {
       if (!activated) {
-        syncVideoAudio(loopVideo, { loop: true, visible: true });
+        syncVideoAudio(loopVideo, { loop: true, visible: true, muted: !audioUnlocked });
         fullVideo.pause(); fullVideo.currentTime = 0; fullVideo.style.display = 'none';
       } else {
         loopVideo.pause(); loopVideo.style.display = 'none';
-        syncVideoAudio(fullVideo, { loop: false, visible: true });
+        syncVideoAudio(fullVideo, { loop: false, visible: true, muted: !audioUnlocked });
       }
     } else {
       loopVideo.pause(); fullVideo.pause();
       loopVideo.style.display = 'none'; fullVideo.style.display = 'none';
     }
-  }, [activated, scene, syncVideoAudio]);
+  }, [activated, scene, syncVideoAudio, audioUnlocked]);
 
   useEffect(() => {
     if (scene !== 'discover') { setShowApproach(false); if (discoverDelayRef.current) clearTimeout(discoverDelayRef.current); return; }
@@ -517,22 +523,25 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   }, []);
 
   const handleStay = useCallback(() => {
+    unlockAudio();
     setShowMeadowFeedback(true);
     if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
     feedbackTimeoutRef.current = setTimeout(() => setShowMeadowFeedback(false), 1150);
-  }, []);
+  }, [unlockAudio]);
 
-  const handleToDiscover = useCallback(() => setScene('discover'), []);
-  const handleApproach = useCallback(() => setScene('library'), []);
+  const handleToDiscover = useCallback(() => { unlockAudio(); setScene('discover'); }, [unlockAudio]);
+  const handleApproach = useCallback(() => { unlockAudio(); setScene('library'); }, [unlockAudio]);
   
   const handleBackOff = useCallback(() => {
     if (activated) return;
+    unlockAudio();
     setShowReveal(false);
     setScene('discover');
-  }, [activated]);
+  }, [activated, unlockAudio]);
 
   const handleContinue = useCallback(() => {
     if (activated) return;
+    unlockAudio();
     setActivated(true);
     setShowReveal(true);
     revealTimeoutRef.current = setTimeout(() => {
@@ -540,7 +549,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
       const fullVideo = libraryFullRef.current;
       if (fullVideo) fullVideo.currentTime = 0;
     }, 450);
-  }, [activated]);
+  }, [activated, unlockAudio]);
 
   const handleCrossingComplete = useCallback(() => {
     setCrossingDone(true);
