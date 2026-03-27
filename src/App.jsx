@@ -179,7 +179,6 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   const timers = useRef([]);
   const scrollRef = useRef(scrollProgress);
   const isRunning = useRef(false);
-  const mobileShownStages = useRef(new Set());
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 600);
@@ -197,9 +196,9 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   };
 
   const getStageConfig = (mobile) => ({
-    early: { opacity: mobile ? 0.7 : 0.5, duration: mobile ? 3500 : 3000, yRange: mobile ? [70, 78] : [70, 80] },
-    mid: { opacity: mobile ? 0.75 : 0.55, duration: mobile ? 4000 : 3500, yRange: mobile ? [72, 80] : [72, 82] },
-    late: { opacity: mobile ? 0.8 : 0.6, duration: mobile ? 4500 : 4000, yRange: mobile ? [74, 82] : [75, 85] }
+    early: { opacity: mobile ? 0.7 : 0.55, duration: mobile ? 3000 : 2500, yRange: mobile ? [55, 65] : [45, 55] },
+    mid: { opacity: mobile ? 0.75 : 0.6, duration: mobile ? 3200 : 2800, yRange: mobile ? [60, 70] : [55, 68] },
+    late: { opacity: mobile ? 0.8 : 0.65, duration: mobile ? 3500 : 3000, yRange: mobile ? [65, 78] : [65, 80] }
   });
 
   useEffect(() => {
@@ -209,8 +208,8 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   useEffect(() => {
     if (!active || animPhase !== "idle" || isRunning.current) return;
     isRunning.current = true;
-    const baseDelay = isMobile ? 5000 : 2800;
-    const randomDelay = isMobile ? 3000 : 2200;
+    const baseDelay = isMobile ? 2500 : 1800;
+    const randomDelay = isMobile ? 1500 : 1200;
     const delay = baseDelay + Math.random() * randomDelay;
     
     const t1 = setTimeout(() => {
@@ -220,27 +219,20 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
       const config = stageConfig[currentStage];
       
       if (!phrases || phrases.length === 0) { isRunning.current = false; return; }
-      if (isMobile && mobileShownStages.current.has(currentStage)) {
-        isRunning.current = false;
-        const recheckTimer = setTimeout(() => { isRunning.current = false; setAnimPhase("idle"); }, 2000);
-        timers.current.push(recheckTimer);
-        return;
-      }
 
       const idx = shownIndices[currentStage] % phrases.length;
-      const text = isMobile ? phrases[0] : phrases[idx];
+      const text = phrases[idx];
       const side = isMobile ? "center" : (idx % 2 === 0 ? "right" : "left");
       const [yMin, yMax] = config.yRange;
       const yPct = yMin + Math.random() * (yMax - yMin);
       
       setCurrent({ text, side, yPct, key: Date.now(), opacity: config.opacity, stage: currentStage, isMobile });
       setAnimPhase("show");
-      if (isMobile) mobileShownStages.current.add(currentStage);
       setShownIndices(prev => ({ ...prev, [currentStage]: prev[currentStage] + 1 }));
       
       const t2 = setTimeout(() => {
         setAnimPhase("fade");
-        const t3 = setTimeout(() => { setCurrent(null); setAnimPhase("idle"); isRunning.current = false; }, 1000);
+        const t3 = setTimeout(() => { setCurrent(null); setAnimPhase("idle"); isRunning.current = false; }, 800);
         timers.current.push(t3);
       }, config.duration);
       timers.current.push(t2);
@@ -450,14 +442,15 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const libraryLoopRef = useRef(null);
   const libraryFullRef = useRef(null);
   const discoverDelayRef = useRef(null);
-  const feedbackTimeoutRef = useRef(null);
   const revealTimeoutRef = useRef(null);
+  const hideRevealTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState('meadow');
   const [showMeadowFeedback, setShowMeadowFeedback] = useState(false);
   const [showApproach, setShowApproach] = useState(false);
   const [activated, setActivated] = useState(false);
   const [showReveal, setShowReveal] = useState(false);
+  const [hideReveal, setHideReveal] = useState(false);
   const [profileUnlocked, setProfileUnlocked] = useState(false);
   const [showCrossing, setShowCrossing] = useState(false);
   const [crossingDone, setCrossingDone] = useState(false);
@@ -519,16 +512,15 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   useEffect(() => {
     return () => {
       if (discoverDelayRef.current) clearTimeout(discoverDelayRef.current);
-      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
       if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
+      if (hideRevealTimeoutRef.current) clearTimeout(hideRevealTimeoutRef.current);
     };
   }, []);
 
   const handleStay = useCallback(() => {
     unlockAudio();
     setShowMeadowFeedback(true);
-    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
-    feedbackTimeoutRef.current = setTimeout(() => setShowMeadowFeedback(false), 1150);
+    setTimeout(() => setShowMeadowFeedback(false), 2000);
   }, [unlockAudio]);
 
   const handleToDiscover = useCallback(() => { unlockAudio(); setScene('discover'); }, [unlockAudio]);
@@ -551,6 +543,10 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
       const fullVideo = libraryFullRef.current;
       if (fullVideo) fullVideo.currentTime = 0;
     }, 450);
+    // Nascondi la frase dopo 1.5s quando il video full è partito
+    hideRevealTimeoutRef.current = setTimeout(() => {
+      setHideReveal(true);
+    }, 1500);
   }, [activated, unlockAudio]);
 
   const handleCrossingComplete = useCallback(() => {
@@ -576,20 +572,18 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
               <div className="ch1-scan" />
 
               <section className={`ch1-scene ${scene === 'meadow' ? 'active' : ''}`}>
-                <div className="ch1-label">{T.profileCap}</div>
                 <img className="ch1-fill" src={ASSETS.pratoFirstFrame} alt="" />
                 <video ref={meadowVideoRef} className="ch1-fill ch1-grass-loop" src={ASSETS.pratoFull} autoPlay loop muted playsInline preload="auto" />
                 <div className="ch1-meadow-shade" />
-                <div className="ch1-meadow-intro">
+                <div className="ch1-line-block">
                   <div className="ch1-line">{T.meadowIntro}</div>
                 </div>
-                <div className={`ch1-feedback ${showMeadowFeedback ? 'show' : ''}`}>
-                  <div className="ch1-line">{T.stayFeedback}</div>
+                <div className={`ch1-stay-feedback ${showMeadowFeedback ? 'show' : ''}`}>
+                  {T.stayFeedback}
                 </div>
               </section>
 
               <section className={`ch1-scene ${scene === 'discover' ? 'active' : ''}`}>
-                <div className="ch1-label">{T.profileCap}</div>
                 <img className="ch1-fill" src={ASSETS.discoverCrtCloseup} alt="" />
                 <div className="ch1-discover-overlay" />
                 <div className="ch1-line-block">
@@ -598,11 +592,10 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
               </section>
 
               <section className={`ch1-scene ${scene === 'library' ? 'active' : ''}`}>
-                <div className="ch1-label">{T.profileCap}</div>
                 <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
                 <video ref={libraryFullRef} className="ch1-fill" src={ASSETS.libraryFull} muted playsInline preload="auto" style={{ display: 'none' }} />
                 <div className="ch1-library-glow" />
-                <div className={`ch1-line-block ch1-reveal ${showReveal ? 'show' : ''}`}>
+                <div className={`ch1-line-block ch1-reveal ${showReveal && !hideReveal ? 'show' : ''}`}>
                   <div className="ch1-line">{T.revealCopy}</div>
                 </div>
               </section>
@@ -815,7 +808,8 @@ export default function Roberto() {
         .ch1-fill{position:absolute;inset:0;z-index:1}
         .ch1-grass-loop{clip-path:inset(72% 0 0 0);z-index:2;pointer-events:none}
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
-        .ch1-meadow-intro{position:absolute;left:22px;right:22px;top:26px;z-index:8;max-width:560px;border-bottom:1px solid rgba(175,200,211,.18);padding-bottom:12px}
+        .ch1-stay-feedback{position:absolute;right:22px;top:22px;z-index:9;font-size:11px;color:rgba(220,231,222,.6);font-family:Georgia,serif;font-style:italic;opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease}
+        .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(5,8,10,.18),rgba(5,8,10,.28))}
         .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px}
         .ch1-line-block.ch1-reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
