@@ -195,9 +195,9 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   };
 
   const getStageConfig = (mobile) => ({
-    early: { opacity: mobile ? 0.35 : 0.4, duration: mobile ? 2500 : 3000, yRange: mobile ? [75, 82] : [18, 35] },
-    mid: { opacity: mobile ? 0.38 : 0.5, duration: mobile ? 2800 : 3500, yRange: mobile ? [75, 82] : [35, 55] },
-    late: { opacity: mobile ? 0.42 : 0.55, duration: mobile ? 3000 : 4000, yRange: mobile ? [72, 80] : [55, 78] }
+    early: { opacity: mobile ? 0.6 : 0.4, duration: mobile ? 3500 : 3000, yRange: mobile ? [12, 18] : [18, 35] },
+    mid: { opacity: mobile ? 0.65 : 0.5, duration: mobile ? 4000 : 3500, yRange: mobile ? [12, 18] : [35, 55] },
+    late: { opacity: mobile ? 0.7 : 0.55, duration: mobile ? 4500 : 4000, yRange: mobile ? [12, 18] : [55, 78] }
   });
 
   useEffect(() => {
@@ -264,11 +264,13 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
       transition: fade ? "all 1s ease-out" : "all 0.35s ease-out",
       filter: fade ? "blur(2px)" : "none",
       fontFamily: "'Playfair Display',serif", fontStyle: "italic", 
-      fontSize: mobile ? 12 : (isLate ? 14 : 13),
-      color: mobile ? "#555" : (isLate ? "#777" : "#666"),
+      fontSize: mobile ? 13 : (isLate ? 14 : 13),
+      color: mobile ? "#999" : (isLate ? "#777" : "#666"),
       letterSpacing: isLate ? 0.4 : 0.3,
-      whiteSpace: "normal", maxWidth: mobile ? "85vw" : "min(280px, 75vw)",
-      textAlign: "center", padding: "0 1rem",
+      whiteSpace: "normal", maxWidth: mobile ? "90vw" : "min(280px, 75vw)",
+      textAlign: "center", padding: mobile ? "8px 16px" : "0 1rem",
+      background: mobile ? "rgba(5,5,5,0.85)" : "transparent",
+      borderRadius: mobile ? "4px" : "0",
     }}>
       {current.text}
     </div>
@@ -574,7 +576,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
               <section className={`ch1-scene ${scene === 'discover' ? 'active' : ''}`}>
                 <div className="ch1-label">{T.profileCap}</div>
-                <img className="ch1-fill" src={ASSETS.discoverCrtCloseup} alt="" />
+                <img className="ch1-fill ch1-discover-img" src={ASSETS.discoverCrtCloseup} alt="" />
                 <div className="ch1-discover-overlay" />
                 <div className="ch1-line-block">
                   <div className="ch1-line">{T.discoverCopy}</div>
@@ -800,6 +802,7 @@ export default function Roberto() {
         .ch1-grass-loop{clip-path:inset(72% 0 0 0);z-index:2;pointer-events:none}
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(5,8,10,.18),rgba(5,8,10,.28))}
+        .ch1-discover-img{filter:sepia(15%) saturate(120%) hue-rotate(160deg) brightness(0.95)}
         .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px}
         .ch1-line-block.ch1-reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
@@ -968,6 +971,8 @@ export default function Roberto() {
                 <button className="btn-trash" onClick={handleTrash}
                   onMouseEnter={() => setHoverTrash(true)}
                   onMouseLeave={() => { setHoverTrash(false); setTrashScale(1); }}
+                  onTouchStart={() => setHoverTrash(true)}
+                  onTouchEnd={() => { setTimeout(() => { setHoverTrash(false); setTrashScale(1); }, 150); }}
                   style={{
                     transform: `scale(${trashScale})`,
                     transition: trashScale > 1.05 ? "none" : "transform .25s",
