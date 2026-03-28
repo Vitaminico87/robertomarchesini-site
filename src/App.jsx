@@ -305,18 +305,18 @@ function Ch1ProfilePanel({ unlocked, T }) {
   );
 }
 
-// Constants for ConnectionsCrossing - basate su bg reale 1232x928
-const CROSSING_BASE_W = 1232;
-const CROSSING_BASE_H = 928;
-const CROSSING_ENTRY = { x: 80, y: 720 };
-const CROSSING_EXIT = { x: 1300, y: 400 };
+// Constants for ConnectionsCrossing - basate su bg 1600x1200
+const CROSSING_BASE_W = 1600;
+const CROSSING_BASE_H = 1200;
+const CROSSING_ENTRY = { x: 110, y: 910 };
+const CROSSING_EXIT = { x: 1465, y: 800 };
 const CROSSING_NODES = [
-  { x: 180, y: 680 },
-  { x: 320, y: 620 },
-  { x: 500, y: 560 },
-  { x: 700, y: 480 },
-  { x: 900, y: 520 },
-  { x: 1080, y: 560 },
+  { x: 205, y: 875 },
+  { x: 395, y: 830 },
+  { x: 610, y: 785 },
+  { x: 845, y: 760 },
+  { x: 1085, y: 805 },
+  { x: 1285, y: 860 },
 ];
 
 // Difficoltà progressiva
@@ -785,10 +785,10 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   
   // Stile fondale con effetti dinamici
   const bgStyle = {
-    position: "relative", width: "100%", aspectRatio: "1232 / 928", overflow: "hidden",
+    position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden",
     backgroundColor: "#191E1B",
     backgroundImage: `url(${CROSSING_ASSETS.bg})`,
-    backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat",
+    backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat",
     cursor: isJumping || isComplete ? "default" : "pointer",
     userSelect: "none", touchAction: "manipulation", borderRadius: 8,
     transform: `scale(${bgBreath}) translateX(${bgShake ? (Math.random() - 0.5) * bgShake : 0}px)`,
@@ -1487,8 +1487,8 @@ export default function Roberto() {
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         
         /* Chapter 1 styles */
-        .ch1-root{min-height:100vh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:center;justify-content:center;padding:24px}
-        .ch1-wrap{width:min(92vw,880px);display:flex;flex-direction:column;align-items:center}
+        .ch1-root{min-height:100vh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto}
+        .ch1-wrap{width:min(92vw,880px);display:flex;flex-direction:column;align-items:center;padding-top:20px;padding-bottom:40px}
         .ch1-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
         .ch1-kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,77,0,.72)}
         .ch1-back-btn{background:transparent;border:1px solid #222;border-radius:3px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#444;transition:all .25s}
