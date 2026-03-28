@@ -311,12 +311,12 @@ const CROSSING_BASE_H = 1200;
 const CROSSING_ENTRY = { x: 110, y: 910 };
 const CROSSING_EXIT = { x: 1465, y: 800 };
 const CROSSING_NODES = [
-  { x: 205, y: 875 },
-  { x: 395, y: 830 },
-  { x: 610, y: 785 },
-  { x: 845, y: 760 },
-  { x: 1085, y: 805 },
-  { x: 1285, y: 860 },
+  { x: 205, y: 875, label: "Curiosità" },
+  { x: 395, y: 830, label: "Lettura" },
+  { x: 610, y: 785, label: "Immaginazione" },
+  { x: 845, y: 760, label: "Domande" },
+  { x: 1085, y: 805, label: "Connessioni" },
+  { x: 1285, y: 860, label: "Identità" },
 ];
 
 const CROSSING_ASSETS = {
@@ -325,7 +325,11 @@ const CROSSING_ASSETS = {
   jump: "https://robertomarchesini.com/assets/chapter1/boy-jump.png",
 };
 
-function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, finalPause = 700 }) {
+// Easing function for more natural jump
+const easeOutQuad = (t) => t * (2 - t);
+const easeInQuad = (t) => t * t;
+
+function ConnectionsCrossing({ onComplete, jumpDuration = 480, arcHeight = 105, finalPause = 1800 }) {
   const [currentNodeIndex, setCurrentNodeIndex] = useState(-1);
   const [activatedNodes, setActivatedNodes] = useState([]);
   const [isJumping, setIsJumping] = useState(false);
@@ -333,11 +337,20 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
   const [characterPos, setCharacterPos] = useState(CROSSING_ENTRY);
   const [landingFx, setLandingFx] = useState(null);
   const [scenePulse, setScenePulse] = useState(null);
+  const [showHint, setShowHint] = useState(false);
+  const [showLabel, setShowLabel] = useState(null);
+  const [trail, setTrail] = useState([]);
+  const [squash, setSquash] = useState(false);
+  const [showClosingPhrase, setShowClosingPhrase] = useState(false);
 
   const rafRef = useRef(null);
   const landingFxTimeoutRef = useRef(null);
   const scenePulseTimeoutRef = useRef(null);
   const completeTimeoutRef = useRef(null);
+  const hintTimeoutRef = useRef(null);
+  const labelTimeoutRef = useRef(null);
+  const squashTimeoutRef = useRef(null);
+  const hasInteracted = useRef(false);
 
   const toPercentX = (x) => `${(x / CROSSING_BASE_W) * 100}%`;
   const toPercentY = (y) => `${(y / CROSSING_BASE_H) * 100}%`;
@@ -352,12 +365,22 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
     });
   }, []);
 
+  // Hint after 2 seconds if no interaction
+  useEffect(() => {
+    hintTimeoutRef.current = setTimeout(() => {
+      if (!hasInteracted.current) setShowHint(true);
+    }, 2000);
+    return () => { if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current); };
+  }, []);
+
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (landingFxTimeoutRef.current) clearTimeout(landingFxTimeoutRef.current);
       if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
       if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+      if (labelTimeoutRef.current) clearTimeout(labelTimeoutRef.current);
+      if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
     };
   }, []);
 
@@ -366,6 +389,17 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
     const fx = { key: `${nodeIndex}-${Date.now()}`, x: node.x, y: node.y };
     setLandingFx(fx);
     setScenePulse(fx);
+    
+    // Show label
+    setShowLabel({ index: nodeIndex, label: node.label });
+    if (labelTimeoutRef.current) clearTimeout(labelTimeoutRef.current);
+    labelTimeoutRef.current = setTimeout(() => setShowLabel(null), 1200);
+    
+    // Squash effect
+    setSquash(true);
+    if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
+    squashTimeoutRef.current = setTimeout(() => setSquash(false), 150);
+    
     if (landingFxTimeoutRef.current) clearTimeout(landingFxTimeoutRef.current);
     if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
     landingFxTimeoutRef.current = setTimeout(() => setLandingFx(null), 420);
@@ -374,33 +408,61 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
 
   const handleAdvance = () => {
     if (isJumping || isComplete) return;
+    
+    // Hide hint on first interaction
+    if (!hasInteracted.current) {
+      hasInteracted.current = true;
+      setShowHint(false);
+    }
+    
     const targetIndex = currentNodeIndex + 1;
     if (targetIndex >= CROSSING_NODES.length) return;
 
     const start = currentNodeIndex >= 0 ? CROSSING_NODES[currentNodeIndex] : CROSSING_ENTRY;
     const end = CROSSING_NODES[targetIndex];
     setIsJumping(true);
+    setTrail([]);
     const startedAt = performance.now();
+    let lastTrailTime = 0;
 
     const tick = (now) => {
-      const progress = Math.min((now - startedAt) / jumpDuration, 1);
-      const x = start.x + (end.x - start.x) * progress;
-      const y = start.y + (end.y - start.y) * progress - arcHeight * Math.sin(progress * Math.PI);
+      const rawProgress = Math.min((now - startedAt) / jumpDuration, 1);
+      
+      // Eased progress for more natural arc
+      const xProgress = rawProgress; // linear for horizontal
+      const yProgress = rawProgress < 0.5 
+        ? easeOutQuad(rawProgress * 2) * 0.5  // slow start, fast to peak
+        : 0.5 + easeInQuad((rawProgress - 0.5) * 2) * 0.5; // fast from peak, slow landing
+      
+      const x = start.x + (end.x - start.x) * xProgress;
+      const baseY = start.y + (end.y - start.y) * rawProgress;
+      const arcOffset = arcHeight * Math.sin(rawProgress * Math.PI);
+      const y = baseY - arcOffset;
+      
       setCharacterPos({ x, y });
+      
+      // Add trail points every 40ms
+      if (now - lastTrailTime > 40 && rawProgress < 0.95) {
+        lastTrailTime = now;
+        setTrail(prev => [...prev.slice(-6), { x, y, id: now, opacity: 0.6 }]);
+      }
 
-      if (progress < 1) {
+      if (rawProgress < 1) {
         rafRef.current = requestAnimationFrame(tick);
         return;
       }
 
       setCharacterPos(end);
       setIsJumping(false);
+      setTrail([]);
       setCurrentNodeIndex(targetIndex);
       setActivatedNodes((prev) => [...prev, targetIndex]);
       triggerLandingFx(targetIndex);
 
       if (targetIndex === CROSSING_NODES.length - 1) {
         setIsComplete(true);
+        // Show closing phrase before transition
+        setTimeout(() => setShowClosingPhrase(true), 400);
         if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
         completeTimeoutRef.current = setTimeout(() => onComplete?.(), finalPause);
       }
@@ -409,11 +471,17 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
   };
 
   const spriteSrc = isJumping ? CROSSING_ASSETS.jump : CROSSING_ASSETS.idle;
+  
+  // Squash & stretch transform
+  const characterTransform = squash 
+    ? "translate(-50%, -100%) scaleX(1.15) scaleY(0.85)"
+    : "translate(-50%, -100%)";
 
   return (
     <div
       role="button"
       tabIndex={0}
+      aria-label="Attraversa le connessioni. Tocca o premi spazio per saltare."
       onPointerDown={handleAdvance}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleAdvance(); } }}
       style={{
@@ -481,9 +549,10 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
         );
       })}
 
-      {/* nodes */}
+      {/* nodes with labels */}
       {CROSSING_NODES.map((node, index) => {
         const active = activatedNodes.includes(index);
+        const showingLabel = showLabel && showLabel.index === index;
         return (
           <React.Fragment key={`node-${index}`}>
             <div style={{
@@ -507,6 +576,25 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
               filter: "blur(6px)",
               pointerEvents: "none",
             }} />
+            {/* Node label */}
+            {showingLabel && (
+              <div style={{
+                position: "absolute",
+                left: toPercentX(node.x),
+                top: `calc(${toPercentY(node.y)} - 45px)`,
+                transform: "translateX(-50%)",
+                color: "#C7D4A0",
+                fontSize: "clamp(11px, 1.4vw, 14px)",
+                fontFamily: "Georgia, serif",
+                fontStyle: "italic",
+                textShadow: "0 2px 8px rgba(0,0,0,0.8)",
+                whiteSpace: "nowrap",
+                pointerEvents: "none",
+                animation: "crossingLabelFade 1.2s ease-out forwards",
+              }}>
+                {node.label}
+              </div>
+            )}
           </React.Fragment>
         );
       })}
@@ -570,6 +658,22 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
         }} />
       </div>
 
+      {/* trail / scia */}
+      {trail.map((point, i) => (
+        <div key={point.id} style={{
+          position: "absolute",
+          left: toPercentX(point.x),
+          top: toPercentY(point.y),
+          width: 8 - i * 0.8,
+          height: 8 - i * 0.8,
+          borderRadius: 999,
+          background: `rgba(199,212,160,${0.4 - i * 0.05})`,
+          transform: "translate(-50%, -50%)",
+          filter: "blur(2px)",
+          pointerEvents: "none",
+        }} />
+      ))}
+
       {/* character */}
       <img
         src={spriteSrc}
@@ -580,13 +684,81 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, f
           left: toPercentX(characterPos.x), top: toPercentY(characterPos.y),
           width: "5.8%", maxWidth: 92, minWidth: 56,
           height: "auto",
-          transform: "translate(-50%, -100%)",
+          transform: characterTransform,
+          transformOrigin: "center bottom",
+          transition: squash ? "transform 0.08s ease-out" : "transform 0.12s ease-out",
           imageRendering: "pixelated",
           pointerEvents: "none",
-          animation: !isJumping ? "crossingIdleFloat 2.1s ease-in-out infinite" : "none",
+          animation: !isJumping && !squash ? "crossingIdleFloat 2.1s ease-in-out infinite" : "none",
           filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.28))",
         }}
       />
+
+      {/* Tap hint */}
+      {showHint && (
+        <div style={{
+          position: "absolute",
+          left: toPercentX(CROSSING_ENTRY.x + 60),
+          top: toPercentY(CROSSING_ENTRY.y - 80),
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 6,
+          pointerEvents: "none",
+          animation: "crossingHintPulse 1.5s ease-in-out infinite",
+        }}>
+          <div style={{
+            width: 28, height: 28,
+            borderRadius: 999,
+            border: "2px solid rgba(199,212,160,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(0,0,0,0.3)",
+          }}>
+            <div style={{
+              width: 8, height: 8,
+              borderRadius: 999,
+              background: "rgba(199,212,160,0.9)",
+            }} />
+          </div>
+          <div style={{
+            color: "rgba(199,212,160,0.8)",
+            fontSize: 10,
+            fontFamily: "'IBM Plex Mono', monospace",
+            letterSpacing: 1,
+            textTransform: "uppercase",
+          }}>
+            Tap
+          </div>
+        </div>
+      )}
+
+      {/* Closing phrase */}
+      {showClosingPhrase && (
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgba(25,30,27,0.75)",
+          pointerEvents: "none",
+          animation: "crossingClosingFade 0.6s ease-out forwards",
+        }}>
+          <div style={{
+            color: "#C7D4A0",
+            fontFamily: "Georgia, serif",
+            fontStyle: "italic",
+            fontSize: "clamp(18px, 2.8vw, 28px)",
+            textAlign: "center",
+            textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+            padding: "0 20px",
+          }}>
+            Ogni salto lascia un segno.
+          </div>
+        </div>
+      )}
 
       {/* vignette */}
       <div style={{
@@ -1031,6 +1203,9 @@ export default function Roberto() {
         @keyframes crossingScenePulse{0%{opacity:0}22%{opacity:1}100%{opacity:0}}
         @keyframes crossingExitGlow{0%,100%{opacity:.35;filter:blur(10px)}50%{opacity:.95;filter:blur(18px)}}
         @keyframes crossingExitCore{0%,100%{opacity:.45}50%{opacity:1}}
+        @keyframes crossingHintPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+        @keyframes crossingLabelFade{0%{opacity:0;transform:translateX(-50%) translateY(8px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}75%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-5px)}}
+        @keyframes crossingClosingFade{0%{opacity:0}100%{opacity:1}}
         
         @media(max-width:600px){
           .svc-in{flex-direction:column!important;gap:8px!important}
