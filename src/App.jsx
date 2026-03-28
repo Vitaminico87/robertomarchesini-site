@@ -308,15 +308,15 @@ function Ch1ProfilePanel({ unlocked, T }) {
 // Constants for ConnectionsCrossing - basate su bg 1600x1200
 const CROSSING_BASE_W = 1600;
 const CROSSING_BASE_H = 1200;
-const CROSSING_ENTRY = { x: 110, y: 850 };
-const CROSSING_EXIT = { x: 1750, y: 600 }; // Fuori schermo a destra
+const CROSSING_ENTRY = { x: 110, y: 880 };
+const CROSSING_EXIT = { x: 1750, y: 650 }; // Fuori schermo a destra
 const CROSSING_NODES = [
-  { x: 220, y: 820 },
-  { x: 420, y: 780 },
-  { x: 640, y: 740 },
-  { x: 880, y: 720 },
-  { x: 1120, y: 760 },
-  { x: 1320, y: 800 },
+  { x: 220, y: 860 },   // basso sinistra
+  { x: 420, y: 820 },   // sale
+  { x: 640, y: 770 },   // sale ancora  
+  { x: 880, y: 750 },   // picco centrale
+  { x: 1120, y: 780 },  // scende
+  { x: 1320, y: 830 },  // scende ancora
 ];
 
 // Difficoltà progressiva
