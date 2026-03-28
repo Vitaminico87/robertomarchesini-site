@@ -305,134 +305,297 @@ function Ch1ProfilePanel({ unlocked, T }) {
   );
 }
 
-function Ch1CrossingField({ onComplete, T }) {
-  const frameRef = useRef(null);
-  const rafRef = useRef(0);
-  const lastTsRef = useRef(0);
-  const keysRef = useRef(new Set());
-  const [cursor, setCursor] = useState({ x: 44, y: 190 });
-  const [completed, setCompleted] = useState(false);
-  const [passed, setPassed] = useState([false, false, false]);
+// Constants for ConnectionsCrossing
+const CROSSING_BASE_W = 1600;
+const CROSSING_BASE_H = 1200;
+const CROSSING_ENTRY = { x: 110, y: 910 };
+const CROSSING_EXIT = { x: 1465, y: 800 };
+const CROSSING_NODES = [
+  { x: 205, y: 875 },
+  { x: 395, y: 830 },
+  { x: 610, y: 785 },
+  { x: 845, y: 760 },
+  { x: 1085, y: 805 },
+  { x: 1285, y: 860 },
+];
 
-  const gates = useMemo(() => [
-    { x: 170, gapY: 88, gapH: 62 },
-    { x: 320, gapY: 156, gapH: 54 },
-    { x: 480, gapY: 108, gapH: 46 },
-  ], []);
+const CROSSING_ASSETS = {
+  bg: "https://robertomarchesini.com/assets/chapter1/connections_field_bg.png",
+  idle: "https://robertomarchesini.com/assets/chapter1/boy-idle.png",
+  jump: "https://robertomarchesini.com/assets/chapter1/boy-jump.png",
+};
 
-  const frame = { width: 640, height: 480 };
-  const cursorSize = 12;
-  const speed = 145;
+function ConnectionsCrossing({ onComplete, jumpDuration = 540, arcHeight = 92, finalPause = 700 }) {
+  const [currentNodeIndex, setCurrentNodeIndex] = useState(-1);
+  const [activatedNodes, setActivatedNodes] = useState([]);
+  const [isJumping, setIsJumping] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [characterPos, setCharacterPos] = useState(CROSSING_ENTRY);
+  const [landingFx, setLandingFx] = useState(null);
+  const [scenePulse, setScenePulse] = useState(null);
 
-  const resolvePosition = useCallback((nextX, nextY) => {
-    let x = clamp(nextX, 18, frame.width - 18 - cursorSize);
-    let y = clamp(nextY, 18, frame.height - 18 - cursorSize);
-    for (let i = 0; i < gates.length; i += 1) {
-      const gate = gates[i];
-      const barrierWidth = 16;
-      const cursorBox = { left: x, right: x + cursorSize, top: y, bottom: y + cursorSize };
-      const barrierBox = { left: gate.x, right: gate.x + barrierWidth, top: 26, bottom: frame.height - 26 };
-      const collidesHorizontally = cursorBox.right > barrierBox.left && cursorBox.left < barrierBox.right;
-      const inGap = cursorBox.top > gate.gapY && cursorBox.bottom < gate.gapY + gate.gapH;
-      if (collidesHorizontally && !inGap) {
-        if (cursor.x + cursorSize <= barrierBox.left) x = barrierBox.left - cursorSize - 3;
-        else if (cursor.x >= barrierBox.right) x = barrierBox.right + 3;
-      }
-    }
-    return { x, y };
-  }, [cursor.x, cursorSize, frame.height, frame.width, gates]);
+  const rafRef = useRef(null);
+  const landingFxTimeoutRef = useRef(null);
+  const scenePulseTimeoutRef = useRef(null);
+  const completeTimeoutRef = useRef(null);
 
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      const valid = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', 'W', 'A', 'S', 'D'];
-      if (!valid.includes(e.key)) return;
-      e.preventDefault();
-      keysRef.current.add(e.key.toLowerCase());
-    };
-    const onKeyUp = (e) => keysRef.current.delete(e.key.toLowerCase());
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
-    return () => { window.removeEventListener('keydown', onKeyDown); window.removeEventListener('keyup', onKeyUp); };
+  const toPercentX = (x) => `${(x / CROSSING_BASE_W) * 100}%`;
+  const toPercentY = (y) => `${(y / CROSSING_BASE_H) * 100}%`;
+
+  const segments = useMemo(() => {
+    const points = [CROSSING_ENTRY, ...CROSSING_NODES];
+    return points.slice(0, -1).map((a, i) => {
+      const b = points[i + 1];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      return { x: a.x, y: a.y, length: Math.hypot(dx, dy), angle: Math.atan2(dy, dx) * (180 / Math.PI) };
+    });
   }, []);
 
   useEffect(() => {
-    const tick = (ts) => {
-      if (!lastTsRef.current) lastTsRef.current = ts;
-      const dt = (ts - lastTsRef.current) / 1000;
-      lastTsRef.current = ts;
-      if (!completed) {
-        let dx = 0, dy = 0;
-        const keys = keysRef.current;
-        if (keys.has('arrowleft') || keys.has('a')) dx -= 1;
-        if (keys.has('arrowright') || keys.has('d')) dx += 1;
-        if (keys.has('arrowup') || keys.has('w')) dy -= 1;
-        if (keys.has('arrowdown') || keys.has('s')) dy += 1;
-        if (dx !== 0 || dy !== 0) {
-          const length = Math.hypot(dx, dy) || 1;
-          const next = resolvePosition(cursor.x + (dx / length) * speed * dt, cursor.y + (dy / length) * speed * dt);
-          setCursor(next);
-        }
-      }
-      rafRef.current = window.requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (landingFxTimeoutRef.current) clearTimeout(landingFxTimeoutRef.current);
+      if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
+      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
     };
-    rafRef.current = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(rafRef.current);
-  }, [completed, cursor.x, cursor.y, resolvePosition]);
+  }, []);
 
-  useEffect(() => {
-    const nextPassed = gates.map((gate) => cursor.x + cursorSize > gate.x + 16);
-    if (JSON.stringify(nextPassed) !== JSON.stringify(passed)) setPassed(nextPassed);
-    if (!completed && nextPassed.every(Boolean)) {
-      setCompleted(true);
-      window.setTimeout(() => onComplete?.(), 900);
-    }
-  }, [completed, cursor.x, cursorSize, gates, onComplete, passed]);
+  const triggerLandingFx = (nodeIndex) => {
+    const node = CROSSING_NODES[nodeIndex];
+    const fx = { key: `${nodeIndex}-${Date.now()}`, x: node.x, y: node.y };
+    setLandingFx(fx);
+    setScenePulse(fx);
+    if (landingFxTimeoutRef.current) clearTimeout(landingFxTimeoutRef.current);
+    if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
+    landingFxTimeoutRef.current = setTimeout(() => setLandingFx(null), 420);
+    scenePulseTimeoutRef.current = setTimeout(() => setScenePulse(null), 360);
+  };
 
-  const handlePointerMove = useCallback((e) => {
-    if (!frameRef.current || completed || (e.buttons !== 1 && e.pointerType !== 'touch')) return;
-    const rect = frameRef.current.getBoundingClientRect();
-    const scaleX = frame.width / rect.width;
-    const scaleY = frame.height / rect.height;
-    const targetX = (e.clientX - rect.left) * scaleX - cursorSize / 2;
-    const targetY = (e.clientY - rect.top) * scaleY - cursorSize / 2;
-    setCursor(resolvePosition(targetX, targetY));
-  }, [completed, cursorSize, frame.height, frame.width, resolvePosition]);
+  const handleAdvance = () => {
+    if (isJumping || isComplete) return;
+    const targetIndex = currentNodeIndex + 1;
+    if (targetIndex >= CROSSING_NODES.length) return;
 
-  const handlePointerDown = useCallback((e) => {
-    if (!frameRef.current || completed) return;
-    const rect = frameRef.current.getBoundingClientRect();
-    const scaleX = frame.width / rect.width;
-    const scaleY = frame.height / rect.height;
-    const targetX = (e.clientX - rect.left) * scaleX - cursorSize / 2;
-    const targetY = (e.clientY - rect.top) * scaleY - cursorSize / 2;
-    setCursor(resolvePosition(targetX, targetY));
-  }, [completed, cursorSize, frame.height, frame.width, resolvePosition]);
+    const start = currentNodeIndex >= 0 ? CROSSING_NODES[currentNodeIndex] : CROSSING_ENTRY;
+    const end = CROSSING_NODES[targetIndex];
+    setIsJumping(true);
+    const startedAt = performance.now();
+
+    const tick = (now) => {
+      const progress = Math.min((now - startedAt) / jumpDuration, 1);
+      const x = start.x + (end.x - start.x) * progress;
+      const y = start.y + (end.y - start.y) * progress - arcHeight * Math.sin(progress * Math.PI);
+      setCharacterPos({ x, y });
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      setCharacterPos(end);
+      setIsJumping(false);
+      setCurrentNodeIndex(targetIndex);
+      setActivatedNodes((prev) => [...prev, targetIndex]);
+      triggerLandingFx(targetIndex);
+
+      if (targetIndex === CROSSING_NODES.length - 1) {
+        setIsComplete(true);
+        if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+        completeTimeoutRef.current = setTimeout(() => onComplete?.(), finalPause);
+      }
+    };
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  const spriteSrc = isJumping ? CROSSING_ASSETS.jump : CROSSING_ASSETS.idle;
 
   return (
-    <div className="ch1-crossing-wrap">
-      <div className="ch1-crossing-kicker">{T.crossingKicker}</div>
-      <div ref={frameRef} className="ch1-crossing-frame" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove}>
-        <div className="ch1-crossing-noise" />
-        {gates.map((gate, index) => (
-          <div key={gate.x}>
-            <div className={`ch1-gate ${passed[index] ? 'is-passed' : ''}`} style={{ left: `${gate.x / frame.width * 100}%` }}>
-              <div className="ch1-gate-top" style={{ height: `${gate.gapY / frame.height * 100}%` }} />
-              <div className="ch1-gate-bottom" style={{ top: `${(gate.gapY + gate.gapH) / frame.height * 100}%`, height: `${(frame.height - 26 - (gate.gapY + gate.gapH)) / frame.height * 100}%` }} />
-            </div>
-            <div className="ch1-gate-mark" style={{ left: `${gate.x / frame.width * 100}%` }} />
-          </div>
-        ))}
-        <div className={`ch1-cursor ${completed ? 'is-done' : ''}`} style={{ left: `${cursor.x / frame.width * 100}%`, top: `${cursor.y / frame.height * 100}%` }} />
-        <div className="ch1-crossing-copy">
-          <div>{T.crossingCopy}</div>
-          <div className="ch1-crossing-subcopy">{T.crossingSubcopy}</div>
+    <div
+      role="button"
+      tabIndex={0}
+      onPointerDown={handleAdvance}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleAdvance(); } }}
+      style={{
+        position: "relative",
+        width: "100%",
+        aspectRatio: "4 / 3",
+        overflow: "hidden",
+        backgroundColor: "#191E1B",
+        backgroundImage: `url(${CROSSING_ASSETS.bg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        cursor: isJumping || isComplete ? "default" : "pointer",
+        userSelect: "none",
+        touchAction: "manipulation",
+        borderRadius: 8,
+      }}
+    >
+      {/* depth overlay */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.28)), radial-gradient(circle at 18% 25%, rgba(199,212,160,0.08), transparent 24%), radial-gradient(circle at 72% 62%, rgba(126,143,99,0.08), transparent 26%)",
+      }} />
+
+      {/* scene pulse */}
+      {scenePulse && (
+        <div key={scenePulse.key} style={{
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: `radial-gradient(circle at ${toPercentX(scenePulse.x)} ${toPercentY(scenePulse.y)}, rgba(199,212,160,0.20) 0%, rgba(199,212,160,0.10) 12%, rgba(199,212,160,0.04) 22%, transparent 34%), rgba(199,212,160,0.04)`,
+          animation: "crossingScenePulse 360ms ease-out forwards",
+        }} />
+      )}
+
+      {/* connection lines */}
+      {segments.map((seg, i) => {
+        const active = currentNodeIndex >= i;
+        return (
+          <React.Fragment key={`seg-${i}`}>
+            <div style={{
+              position: "absolute",
+              left: toPercentX(seg.x), top: toPercentY(seg.y),
+              width: `${(seg.length / CROSSING_BASE_W) * 100}%`,
+              height: "0.5%", minHeight: 3,
+              transformOrigin: "0 50%",
+              transform: `translateY(-50%) rotate(${seg.angle}deg)`,
+              borderRadius: 999,
+              background: active ? "linear-gradient(90deg, rgba(199,212,160,0.2), rgba(199,212,160,0.85))" : "linear-gradient(90deg, rgba(126,143,99,0.08), rgba(126,143,99,0.22))",
+              opacity: active ? 1 : 0.6,
+              boxShadow: active ? "0 0 14px rgba(199,212,160,0.35)" : "none",
+              animation: active ? "crossingLineGlow 1.8s ease-in-out infinite" : "none",
+              pointerEvents: "none",
+            }} />
+            <div style={{
+              position: "absolute",
+              left: toPercentX(seg.x), top: toPercentY(seg.y),
+              width: `${(seg.length / CROSSING_BASE_W) * 100}%`,
+              height: "1.2%", minHeight: 8,
+              transformOrigin: "0 50%",
+              transform: `translateY(-50%) rotate(${seg.angle}deg)`,
+              borderRadius: 999,
+              background: active ? "linear-gradient(90deg, rgba(199,212,160,0), rgba(199,212,160,0.12), rgba(199,212,160,0))" : "transparent",
+              filter: "blur(6px)",
+              pointerEvents: "none",
+            }} />
+          </React.Fragment>
+        );
+      })}
+
+      {/* nodes */}
+      {CROSSING_NODES.map((node, index) => {
+        const active = activatedNodes.includes(index);
+        return (
+          <React.Fragment key={`node-${index}`}>
+            <div style={{
+              position: "absolute",
+              left: toPercentX(node.x), top: toPercentY(node.y),
+              width: active ? 24 : 18, height: active ? 24 : 18,
+              borderRadius: 999,
+              transform: "translate(-50%, -50%)",
+              background: active ? "#C7D4A0" : "rgba(126,143,99,0.58)",
+              boxShadow: active ? "0 0 22px rgba(199,212,160,0.55)" : "0 0 10px rgba(126,143,99,0.16)",
+              animation: active ? "crossingNodeBreath 1.9s ease-in-out infinite" : "none",
+              pointerEvents: "none",
+            }} />
+            <div style={{
+              position: "absolute",
+              left: toPercentX(node.x), top: toPercentY(node.y),
+              width: active ? 54 : 38, height: active ? 54 : 38,
+              borderRadius: 999,
+              transform: "translate(-50%, -50%)",
+              background: active ? "radial-gradient(circle, rgba(199,212,160,0.22), rgba(199,212,160,0.05), transparent 70%)" : "radial-gradient(circle, rgba(126,143,99,0.08), transparent 70%)",
+              filter: "blur(6px)",
+              pointerEvents: "none",
+            }} />
+          </React.Fragment>
+        );
+      })}
+
+      {/* landing fx */}
+      {landingFx && (
+        <div key={landingFx.key} style={{ position: "absolute", left: toPercentX(landingFx.x), top: toPercentY(landingFx.y), width: 0, height: 0, pointerEvents: "none" }}>
+          <div style={{
+            position: "absolute", width: 96, height: 96, borderRadius: 999,
+            transform: "translate(-50%, -50%)",
+            background: "radial-gradient(circle, rgba(199,212,160,0.38) 0%, rgba(199,212,160,0.12) 32%, rgba(199,212,160,0.04) 52%, transparent 72%)",
+            filter: "blur(8px)",
+            animation: "crossingLandingHalo 420ms ease-out forwards",
+          }} />
+          <div style={{
+            position: "absolute", width: 42, height: 42, borderRadius: 999,
+            border: "2px solid rgba(199,212,160,0.95)",
+            transform: "translate(-50%, -50%)",
+            animation: "crossingLandingRing 320ms ease-out forwards",
+          }} />
+          <div style={{
+            position: "absolute", width: 14, height: 14, borderRadius: 999,
+            transform: "translate(-50%, -50%)",
+            background: "rgba(199,212,160,0.96)",
+            boxShadow: "0 0 18px rgba(199,212,160,0.8)",
+            animation: "crossingLandingCore 220ms ease-out forwards",
+          }} />
+          {[0, 1, 2, 3, 4, 5].map((r) => (
+            <div key={r} style={{
+              "--r": `${r * 60}deg`,
+              position: "absolute", left: 0, top: 0,
+              width: 3, height: 26, borderRadius: 999,
+              background: "linear-gradient(to bottom, rgba(199,212,160,0.95), rgba(199,212,160,0))",
+              transformOrigin: "50% 100%",
+              animation: "crossingLandingRay 280ms ease-out forwards",
+            }} />
+          ))}
         </div>
-        {completed && (
-          <div className="ch1-crossing-complete">
-            <div className="ch1-crossing-complete-line">{T.crossingComplete}</div>
-          </div>
-        )}
+      )}
+
+      {/* exit portal */}
+      <div style={{
+        position: "absolute",
+        left: toPercentX(CROSSING_EXIT.x), top: toPercentY(CROSSING_EXIT.y),
+        width: "7.2%", maxWidth: 112, minWidth: 76,
+        height: "18%", minHeight: 130,
+        transform: "translate(-50%, -50%)",
+        pointerEvents: "none",
+      }}>
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: 999,
+          background: isComplete ? "rgba(199,212,160,0.22)" : "rgba(126,143,99,0.07)",
+          filter: "blur(10px)",
+          animation: isComplete ? "crossingExitGlow 1.1s ease-in-out infinite" : "none",
+        }} />
+        <div style={{
+          position: "absolute", inset: "18% 22%", borderRadius: 999,
+          background: isComplete ? "linear-gradient(to bottom, rgba(199,212,160,0.92), rgba(199,212,160,0.42))" : "linear-gradient(to bottom, rgba(126,143,99,0.18), rgba(126,143,99,0.08))",
+          boxShadow: isComplete ? "0 0 24px rgba(199,212,160,0.62)" : "0 0 10px rgba(126,143,99,0.12)",
+          animation: isComplete ? "crossingExitCore 1.1s ease-in-out infinite" : "none",
+        }} />
       </div>
+
+      {/* character */}
+      <img
+        src={spriteSrc}
+        alt=""
+        draggable={false}
+        style={{
+          position: "absolute",
+          left: toPercentX(characterPos.x), top: toPercentY(characterPos.y),
+          width: "5.8%", maxWidth: 92, minWidth: 56,
+          height: "auto",
+          transform: "translate(-50%, -100%)",
+          imageRendering: "pixelated",
+          pointerEvents: "none",
+          animation: !isJumping ? "crossingIdleFloat 2.1s ease-in-out infinite" : "none",
+          filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.28))",
+        }}
+      />
+
+      {/* vignette */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        boxShadow: "inset 0 0 150px rgba(0,0,0,0.42)",
+      }} />
+
+      {/* scanlines */}
+      <div className="ch1-scan" />
     </div>
   );
 }
@@ -441,16 +604,12 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const meadowVideoRef = useRef(null);
   const libraryLoopRef = useRef(null);
   const libraryFullRef = useRef(null);
-  const discoverDelayRef = useRef(null);
   const revealTimeoutRef = useRef(null);
-  const hideRevealTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState('meadow');
   const [showMeadowFeedback, setShowMeadowFeedback] = useState(false);
   const [showApproach, setShowApproach] = useState(false);
   const [activated, setActivated] = useState(false);
-  const [showReveal, setShowReveal] = useState(false);
-  const [hideReveal, setHideReveal] = useState(false);
   const [profileUnlocked, setProfileUnlocked] = useState(false);
   const [showCrossing, setShowCrossing] = useState(false);
   const [crossingDone, setCrossingDone] = useState(false);
@@ -496,9 +655,8 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   }, [activated, scene, syncVideoAudio, audioUnlocked]);
 
   useEffect(() => {
-    if (scene !== 'discover') { setShowApproach(false); if (discoverDelayRef.current) clearTimeout(discoverDelayRef.current); return; }
-    discoverDelayRef.current = setTimeout(() => setShowApproach(true), 1050);
-    return () => { if (discoverDelayRef.current) clearTimeout(discoverDelayRef.current); };
+    if (scene !== 'discover') { setShowApproach(false); return; }
+    setShowApproach(true);
   }, [scene]);
 
   useEffect(() => {
@@ -511,9 +669,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
   useEffect(() => {
     return () => {
-      if (discoverDelayRef.current) clearTimeout(discoverDelayRef.current);
       if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
-      if (hideRevealTimeoutRef.current) clearTimeout(hideRevealTimeoutRef.current);
     };
   }, []);
 
@@ -529,7 +685,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const handleBackOff = useCallback(() => {
     if (activated) return;
     unlockAudio();
-    setShowReveal(false);
     setScene('discover');
   }, [activated, unlockAudio]);
 
@@ -537,16 +692,11 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     if (activated) return;
     unlockAudio();
     setActivated(true);
-    setShowReveal(true);
     revealTimeoutRef.current = setTimeout(() => {
       setProfileUnlocked(true);
       const fullVideo = libraryFullRef.current;
       if (fullVideo) fullVideo.currentTime = 0;
     }, 450);
-    // Nascondi la frase dopo 1.5s quando il video full è partito
-    hideRevealTimeoutRef.current = setTimeout(() => {
-      setHideReveal(true);
-    }, 1500);
   }, [activated, unlockAudio]);
 
   const handleCrossingComplete = useCallback(() => {
@@ -595,7 +745,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
                 <video ref={libraryFullRef} className="ch1-fill" src={ASSETS.libraryFull} muted playsInline preload="auto" style={{ display: 'none' }} />
                 <div className="ch1-library-glow" />
-                <div className={`ch1-line-block ch1-reveal ${showReveal && !hideReveal ? 'show' : ''}`}>
+                <div className={`ch1-line-block ch1-reveal ${scene === 'library' && !activated ? 'show' : ''}`}>
                   <div className="ch1-line">{T.revealCopy}</div>
                 </div>
               </section>
@@ -625,7 +775,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
           </>
         ) : (
           <>
-            <Ch1CrossingField onComplete={handleCrossingComplete} T={T} />
+            <ConnectionsCrossing onComplete={handleCrossingComplete} />
             <Ch1ProfilePanel unlocked={true} T={T} />
           </>
         )}
@@ -869,6 +1019,18 @@ export default function Roberto() {
         .ch1-crossing-subcopy{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(7,12,7,.48)}
         .ch1-crossing-complete{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:6;background:rgba(215,225,183,.14);backdrop-filter:blur(2px)}
         .ch1-crossing-complete-line{color:#111611;font-family:Georgia,serif;font-style:italic;font-size:clamp(24px,2.8vw,32px)}
+        
+        /* ConnectionsCrossing animations */
+        @keyframes crossingIdleFloat{0%{transform:translate(-50%,-100%) translateY(0)}50%{transform:translate(-50%,-100%) translateY(-4px)}100%{transform:translate(-50%,-100%) translateY(0)}}
+        @keyframes crossingNodeBreath{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.88}50%{transform:translate(-50%,-50%) scale(1.12);opacity:1}}
+        @keyframes crossingLineGlow{0%,100%{opacity:.65;filter:blur(0)}50%{opacity:1;filter:blur(.6px)}}
+        @keyframes crossingLandingHalo{0%{transform:translate(-50%,-50%) scale(.55);opacity:.75}100%{transform:translate(-50%,-50%) scale(2.8);opacity:0}}
+        @keyframes crossingLandingRing{0%{transform:translate(-50%,-50%) scale(.4);opacity:.95}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
+        @keyframes crossingLandingCore{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}40%{transform:translate(-50%,-50%) scale(1.35);opacity:.95}100%{transform:translate(-50%,-50%) scale(.75);opacity:0}}
+        @keyframes crossingLandingRay{0%{opacity:.95;transform:rotate(var(--r)) translateY(-8px) scaleY(.35)}100%{opacity:0;transform:rotate(var(--r)) translateY(-28px) scaleY(1)}}
+        @keyframes crossingScenePulse{0%{opacity:0}22%{opacity:1}100%{opacity:0}}
+        @keyframes crossingExitGlow{0%,100%{opacity:.35;filter:blur(10px)}50%{opacity:.95;filter:blur(18px)}}
+        @keyframes crossingExitCore{0%,100%{opacity:.45}50%{opacity:1}}
         
         @media(max-width:600px){
           .svc-in{flex-direction:column!important;gap:8px!important}
