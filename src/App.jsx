@@ -308,15 +308,15 @@ function Ch1ProfilePanel({ unlocked, T }) {
 // Constants for ConnectionsCrossing - basate su bg 1600x1200
 const CROSSING_BASE_W = 1600;
 const CROSSING_BASE_H = 1200;
-const CROSSING_ENTRY = { x: 110, y: 910 };
-const CROSSING_EXIT = { x: 1465, y: 800 };
+const CROSSING_ENTRY = { x: 110, y: 950 };
+const CROSSING_EXIT = { x: 1465, y: 820 };
 const CROSSING_NODES = [
-  { x: 205, y: 875 },
-  { x: 395, y: 830 },
-  { x: 610, y: 785 },
-  { x: 845, y: 760 },
-  { x: 1085, y: 805 },
-  { x: 1285, y: 860 },
+  { x: 220, y: 920 },
+  { x: 420, y: 880 },
+  { x: 640, y: 850 },
+  { x: 880, y: 830 },
+  { x: 1120, y: 860 },
+  { x: 1320, y: 900 },
 ];
 
 // Difficoltà progressiva
@@ -1487,8 +1487,8 @@ export default function Roberto() {
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         
         /* Chapter 1 styles */
-        .ch1-root{min-height:100vh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto}
-        .ch1-wrap{width:min(92vw,880px);display:flex;flex-direction:column;align-items:center;padding-top:20px;padding-bottom:40px}
+        .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:20px 16px;padding-bottom:env(safe-area-inset-bottom,20px)}
+        .ch1-wrap{width:min(94vw,880px);display:flex;flex-direction:column;align-items:center;padding-top:12px;padding-bottom:30px}
         .ch1-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
         .ch1-kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,77,0,.72)}
         .ch1-back-btn{background:transparent;border:1px solid #222;border-radius:3px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#444;transition:all .25s}
