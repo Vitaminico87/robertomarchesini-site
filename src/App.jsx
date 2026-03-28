@@ -309,7 +309,7 @@ function Ch1ProfilePanel({ unlocked, T }) {
 const CROSSING_BASE_W = 1600;
 const CROSSING_BASE_H = 1200;
 const CROSSING_ENTRY = { x: 80, y: 1050 };
-const CROSSING_EXIT = { x: 1800, y: 650 }; // Fuori schermo a destra
+const CROSSING_EXIT = { x: 1800, y: 650 };
 const CROSSING_NODES = [
   { x: 200, y: 1000 },
   { x: 400, y: 920 },
@@ -319,10 +319,21 @@ const CROSSING_NODES = [
   { x: 1380, y: 830 },
 ];
 
+// Difficoltà progressiva: durata ciclo e grandezza zona target
+const TIMING_DIFFICULTY = [
+  { cycleDuration: 2200, targetWidth: 0.32 }, // Salto 1 - molto facile
+  { cycleDuration: 2000, targetWidth: 0.28 }, // Salto 2
+  { cycleDuration: 1700, targetWidth: 0.24 }, // Salto 3
+  { cycleDuration: 1500, targetWidth: 0.22 }, // Salto 4
+  { cycleDuration: 1300, targetWidth: 0.20 }, // Salto 5
+  { cycleDuration: 1100, targetWidth: 0.18 }, // Salto 6 - più difficile
+  { cycleDuration: 1000, targetWidth: 0.22 }, // Salto finale - medio
+];
+
 const CROSSING_ASSETS = {
-  bg: "https://robertomarchesini.com/assets/chapter1/connections_field_bg.png",
-  idle: "https://robertomarchesini.com/assets/chapter1/boy-idle.png",
-  jump: "https://robertomarchesini.com/assets/chapter1/boy-jump.png",
+  bg: "https://robertomarchesini.com/assets/chapter1/connections_field_bg.png?v=2",
+  idle: "https://robertomarchesini.com/assets/chapter1/boy-idle.png?v=2",
+  jump: "https://robertomarchesini.com/assets/chapter1/boy-jump.png?v=2",
 };
 
 function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3500 }) {
@@ -339,16 +350,31 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const [squash, setSquash] = useState(false);
   const [transition, setTransition] = useState(null);
   const [particles, setParticles] = useState([]);
+  
+  // Timing bar state
+  const [pulsePosition, setPulsePosition] = useState(0); // 0-1
+  const [timingMiss, setTimingMiss] = useState(false);
+  const [timingHit, setTimingHit] = useState(false);
 
   const rafRef = useRef(null);
+  const pulseRafRef = useRef(null);
   const scenePulseTimeoutRef = useRef(null);
   const completeTimeoutRef = useRef(null);
   const hintTimeoutRef = useRef(null);
   const squashTimeoutRef = useRef(null);
+  const missTimeoutRef = useRef(null);
   const hasInteracted = useRef(false);
+  const pulseStartTime = useRef(0);
 
   const toPercentX = (x) => `${(x / CROSSING_BASE_W) * 100}%`;
   const toPercentY = (y) => `${(y / CROSSING_BASE_H) * 100}%`;
+
+  // Current difficulty based on next jump
+  const nextJumpIndex = currentNodeIndex + 1;
+  const difficulty = TIMING_DIFFICULTY[Math.min(nextJumpIndex, TIMING_DIFFICULTY.length - 1)];
+  const targetCenter = 0.5;
+  const targetStart = targetCenter - difficulty.targetWidth / 2;
+  const targetEnd = targetCenter + difficulty.targetWidth / 2;
 
   // Segmenti tra nodi attivati
   const activeSegments = useMemo(() => {
@@ -368,6 +394,26 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     }
     return segs;
   }, [activatedNodes]);
+
+  // Pulse animation loop
+  useEffect(() => {
+    if (isJumping || isComplete || isFinalJump || transition) return;
+    
+    pulseStartTime.current = performance.now();
+    
+    const animatePulse = (now) => {
+      const elapsed = now - pulseStartTime.current;
+      const progress = (elapsed % difficulty.cycleDuration) / difficulty.cycleDuration;
+      setPulsePosition(progress);
+      pulseRafRef.current = requestAnimationFrame(animatePulse);
+    };
+    
+    pulseRafRef.current = requestAnimationFrame(animatePulse);
+    
+    return () => {
+      if (pulseRafRef.current) cancelAnimationFrame(pulseRafRef.current);
+    };
+  }, [isJumping, isComplete, isFinalJump, transition, difficulty.cycleDuration, currentNodeIndex]);
 
   // Particelle ambientali
   useEffect(() => {
@@ -407,9 +453,11 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (pulseRafRef.current) cancelAnimationFrame(pulseRafRef.current);
       if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
       if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
       if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
+      if (missTimeoutRef.current) clearTimeout(missTimeoutRef.current);
     };
   }, []);
 
@@ -451,19 +499,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     rafRef.current = requestAnimationFrame(tick);
   };
 
-  const handleAdvance = () => {
-    if (isJumping || isComplete || isFinalJump) return;
-    if (!hasInteracted.current) { hasInteracted.current = true; setShowHint(false); }
-    
-    // Ultimo nodo raggiunto -> salto finale
-    if (currentNodeIndex === CROSSING_NODES.length - 1) {
-      setIsComplete(true);
-      doFinalJump();
-      return;
-    }
-    
-    const targetIndex = currentNodeIndex + 1;
-    if (targetIndex >= CROSSING_NODES.length) return;
+  const doJump = (targetIndex) => {
     const start = currentNodeIndex >= 0 ? CROSSING_NODES[currentNodeIndex] : CROSSING_ENTRY;
     const end = CROSSING_NODES[targetIndex];
     setIsJumping(true);
@@ -484,8 +520,44 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       setCurrentNodeIndex(targetIndex);
       setActivatedNodes(prev => [...prev, targetIndex]);
       triggerLandingFx(targetIndex);
+      // Reset pulse per prossimo salto
+      pulseStartTime.current = performance.now();
     };
     rafRef.current = requestAnimationFrame(tick);
+  };
+
+  const handleAdvance = () => {
+    if (isJumping || isComplete || isFinalJump || timingMiss) return;
+    if (!hasInteracted.current) { hasInteracted.current = true; setShowHint(false); }
+    
+    // Check timing
+    const isInTarget = pulsePosition >= targetStart && pulsePosition <= targetEnd;
+    
+    if (!isInTarget) {
+      // Miss! Shake feedback
+      setTimingMiss(true);
+      if (missTimeoutRef.current) clearTimeout(missTimeoutRef.current);
+      missTimeoutRef.current = setTimeout(() => setTimingMiss(false), 400);
+      // Reset pulse
+      pulseStartTime.current = performance.now();
+      return;
+    }
+    
+    // Hit! Flash verde e salta
+    setTimingHit(true);
+    setTimeout(() => setTimingHit(false), 300);
+    
+    // Ultimo nodo raggiunto -> salto finale
+    if (currentNodeIndex === CROSSING_NODES.length - 1) {
+      setIsComplete(true);
+      doFinalJump();
+      return;
+    }
+    
+    const targetIndex = currentNodeIndex + 1;
+    if (targetIndex >= CROSSING_NODES.length) return;
+    
+    doJump(targetIndex);
   };
 
   const spriteSrc = isJumping ? CROSSING_ASSETS.jump : CROSSING_ASSETS.idle;
@@ -493,10 +565,13 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     ? "translate(-50%, -100%) scaleX(-1.12) scaleY(0.88)"
     : "translate(-50%, -100%) scaleX(-1)";
 
+  // Timing bar visibility
+  const showTimingBar = !isJumping && !isComplete && !isFinalJump && !transition;
+
   return (
     <div
       role="button" tabIndex={0}
-      aria-label="Attraversa. Tocca per saltare."
+      aria-label="Attraversa. Tocca quando la luce è al centro."
       onPointerDown={handleAdvance}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleAdvance(); } }}
       style={{
@@ -508,6 +583,64 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         userSelect: "none", touchAction: "manipulation", borderRadius: 8,
       }}
     >
+      {/* TIMING BAR - Barra sinapsi in alto */}
+      {showTimingBar && (
+        <div style={{
+          position: "absolute",
+          top: "4%", left: "50%",
+          transform: `translateX(-50%) ${timingMiss ? 'translateX(4px)' : ''}`,
+          width: "60%", maxWidth: 400,
+          height: 12,
+          background: "rgba(25,30,27,0.7)",
+          borderRadius: 20,
+          overflow: "hidden",
+          border: `1px solid ${timingMiss ? 'rgba(255,100,100,0.6)' : 'rgba(126,143,99,0.3)'}`,
+          boxShadow: timingHit ? "0 0 20px rgba(199,212,160,0.5)" : "0 0 15px rgba(0,0,0,0.3)",
+          animation: timingMiss ? "crossingTimingShake 0.4s ease-out" : "none",
+          transition: "border-color 0.15s, box-shadow 0.15s",
+          zIndex: 20,
+        }}>
+          {/* Zona target (centro) */}
+          <div style={{
+            position: "absolute",
+            left: `${targetStart * 100}%`,
+            width: `${difficulty.targetWidth * 100}%`,
+            height: "100%",
+            background: timingHit 
+              ? "rgba(199,212,160,0.5)" 
+              : "linear-gradient(90deg, transparent, rgba(199,212,160,0.25), rgba(199,212,160,0.25), transparent)",
+            borderRadius: 10,
+          }} />
+          
+          {/* Pulse che viaggia */}
+          <div style={{
+            position: "absolute",
+            left: `${pulsePosition * 100}%`,
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: pulsePosition >= targetStart && pulsePosition <= targetEnd
+              ? "radial-gradient(circle, #C7D4A0 0%, rgba(199,212,160,0.6) 50%, transparent 70%)"
+              : "radial-gradient(circle, rgba(199,212,160,0.8) 0%, rgba(126,143,99,0.4) 50%, transparent 70%)",
+            boxShadow: pulsePosition >= targetStart && pulsePosition <= targetEnd
+              ? "0 0 12px rgba(199,212,160,0.8)"
+              : "0 0 8px rgba(126,143,99,0.4)",
+          }} />
+          
+          {/* Glow trail del pulse */}
+          <div style={{
+            position: "absolute",
+            left: `${Math.max(0, pulsePosition - 0.15) * 100}%`,
+            width: `${Math.min(pulsePosition, 0.15) * 100}%`,
+            height: "100%",
+            background: "linear-gradient(90deg, transparent, rgba(199,212,160,0.15))",
+            borderRadius: 10,
+          }} />
+        </div>
+      )}
+
       {/* Color grade overlay */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
@@ -600,7 +733,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         <div style={{
           position: "absolute",
           left: toPercentX(characterPos.x), top: toPercentY(characterPos.y + 10),
-          width: "2.2%", minWidth: 18, height: "0.5%", minHeight: 3,
+          width: "clamp(14px, 2%, 24px)", height: "clamp(2px, 0.4%, 4px)",
           borderRadius: "50%", background: "rgba(0,0,0,0.22)",
           filter: "blur(2px)", transform: "translate(-50%, 0)",
           pointerEvents: "none",
@@ -613,7 +746,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         <img src={spriteSrc} alt="" draggable={false} style={{
           position: "absolute",
           left: toPercentX(characterPos.x), top: toPercentY(characterPos.y),
-          width: "4.8%", maxWidth: 76, minWidth: 44,
+          width: "clamp(32px, 4.5%, 70px)",
           height: "auto", transform: characterTransform,
           transformOrigin: "center bottom",
           transition: squash ? "transform 0.07s ease-out" : "transform 0.09s ease-out",
@@ -623,26 +756,22 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         }} />
       )}
 
-      {/* Tap hint */}
+      {/* Tap hint - aggiornato */}
       {showHint && (
         <div style={{
           position: "absolute",
-          left: toPercentX(CROSSING_ENTRY.x + 110), top: toPercentY(CROSSING_ENTRY.y - 130),
-          display: "flex", flexDirection: "column", alignItems: "center", gap: 5,
+          left: "50%", top: "14%",
+          transform: "translateX(-50%)",
+          display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
           pointerEvents: "none", animation: "crossingHintPulse 1.4s ease-in-out infinite",
         }}>
           <div style={{
-            width: 24, height: 24, borderRadius: 999,
-            border: "2px solid rgba(199,212,160,0.55)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            background: "rgba(0,0,0,0.2)",
-          }}>
-            <div style={{ width: 5, height: 5, borderRadius: 999, background: "rgba(199,212,160,0.8)" }} />
-          </div>
-          <div style={{
-            color: "rgba(199,212,160,0.65)", fontSize: 8,
+            color: "rgba(199,212,160,0.75)", fontSize: 10,
             fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 1.5, textTransform: "uppercase",
-          }}>Tap</div>
+            textAlign: "center", lineHeight: 1.5,
+          }}>
+            Tap quando<br/>la luce è al centro
+          </div>
         </div>
       )}
 
@@ -1137,6 +1266,7 @@ export default function Roberto() {
         @keyframes crossingFadeToWhite{0%{opacity:0}100%{opacity:1}}
         @keyframes crossingPhraseIn{0%{opacity:0;transform:translateY(12px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         @keyframes crossingChapter2In{0%{opacity:0}100%{opacity:1}}
+        @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
         @media(max-width:600px){
           .svc-in{flex-direction:column!important;gap:8px!important}
