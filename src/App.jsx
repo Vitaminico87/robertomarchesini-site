@@ -680,13 +680,16 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       setBirds(prev => prev.map(b => ({ ...b, fleeing: true })));
     }
     
-    // Ultimo nodo: effetto speciale "innesco"
+    // Ultimo nodo: effetto speciale "innesco" + salto automatico
     if (nodeIndex === CROSSING_NODES.length - 1) {
       // Tutti i nodi brillano insieme
       setAllNodesGlow(true);
       setTimeout(() => setAllNodesGlow(false), 800);
       // Spawn stormo finale che attraversa
       spawnFinalFlock();
+      // Salto automatico dopo pausa drammatica (nota che tiene + stormo passa)
+      setIsComplete(true);
+      setTimeout(() => doFinalJump(), 1800);
     }
     
     if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
@@ -768,13 +771,6 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     setTimingHit(true);
     setTimeout(() => setTimingHit(false), 300);
     
-    if (currentNodeIndex === CROSSING_NODES.length - 1) {
-      setIsComplete(true);
-      // Pausa drammatica prima del salto finale
-      setTimeout(() => doFinalJump(), 600);
-      return;
-    }
-    
     const targetIndex = currentNodeIndex + 1;
     if (targetIndex >= CROSSING_NODES.length) return;
     doJump(targetIndex);
@@ -789,10 +785,10 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   
   // Stile fondale con effetti dinamici
   const bgStyle = {
-    position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden",
+    position: "relative", width: "100%", aspectRatio: "1232 / 928", overflow: "hidden",
     backgroundColor: "#191E1B",
     backgroundImage: `url(${CROSSING_ASSETS.bg})`,
-    backgroundSize: "cover", backgroundPosition: "center bottom", backgroundRepeat: "no-repeat",
+    backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat",
     cursor: isJumping || isComplete ? "default" : "pointer",
     userSelect: "none", touchAction: "manipulation", borderRadius: 8,
     transform: `scale(${bgBreath}) translateX(${bgShake ? (Math.random() - 0.5) * bgShake : 0}px)`,
@@ -1043,25 +1039,25 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       {showHint && (
         <div style={{
           position: "absolute",
-          left: "50%", top: "12%",
-          transform: "translateX(-50%)",
+          left: 0, right: 0, top: "10%",
           display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
           pointerEvents: "none", animation: "crossingHintPulse 1.4s ease-in-out infinite",
         }}>
           <div style={{
-            color: "rgba(199,212,160,0.8)", fontSize: 11,
-            fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 1.2, textTransform: "uppercase",
+            color: "rgba(199,212,160,0.85)", fontSize: "clamp(9px, 2.5vw, 11px)",
+            fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 1, textTransform: "uppercase",
             textAlign: "center", lineHeight: 1.4,
-            textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+            textShadow: "0 1px 4px rgba(0,0,0,0.6)",
+            padding: "0 10px",
           }}>
             Tap quando la luce è al centro
           </div>
           <div style={{
             width: 0, height: 0,
-            borderLeft: "6px solid transparent",
-            borderRight: "6px solid transparent",
-            borderTop: "8px solid rgba(199,212,160,0.5)",
-            marginTop: 2,
+            borderLeft: "5px solid transparent",
+            borderRight: "5px solid transparent",
+            borderBottom: "6px solid rgba(199,212,160,0.4)",
+            marginTop: 3,
           }} />
         </div>
       )}
