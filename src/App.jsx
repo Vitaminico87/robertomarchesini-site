@@ -305,29 +305,29 @@ function Ch1ProfilePanel({ unlocked, T }) {
   );
 }
 
-// Constants for ConnectionsCrossing
-const CROSSING_BASE_W = 1600;
-const CROSSING_BASE_H = 1200;
-const CROSSING_ENTRY = { x: 80, y: 1050 };
-const CROSSING_EXIT = { x: 1800, y: 650 };
+// Constants for ConnectionsCrossing - basate su bg reale 1232x928
+const CROSSING_BASE_W = 1232;
+const CROSSING_BASE_H = 928;
+const CROSSING_ENTRY = { x: 60, y: 800 };
+const CROSSING_EXIT = { x: 1350, y: 480 };
 const CROSSING_NODES = [
-  { x: 200, y: 1000 },
-  { x: 400, y: 920 },
-  { x: 620, y: 850 },
-  { x: 880, y: 750 },
-  { x: 1140, y: 800 },
-  { x: 1380, y: 830 },
+  { x: 150, y: 760 },
+  { x: 300, y: 700 },
+  { x: 480, y: 640 },
+  { x: 680, y: 560 },
+  { x: 880, y: 600 },
+  { x: 1060, y: 640 },
 ];
 
 // Difficoltà progressiva: durata ciclo e grandezza zona target
 const TIMING_DIFFICULTY = [
-  { cycleDuration: 2200, targetWidth: 0.32 }, // Salto 1 - molto facile
-  { cycleDuration: 2000, targetWidth: 0.28 }, // Salto 2
-  { cycleDuration: 1700, targetWidth: 0.24 }, // Salto 3
-  { cycleDuration: 1500, targetWidth: 0.22 }, // Salto 4
-  { cycleDuration: 1300, targetWidth: 0.20 }, // Salto 5
-  { cycleDuration: 1100, targetWidth: 0.18 }, // Salto 6 - più difficile
-  { cycleDuration: 1000, targetWidth: 0.22 }, // Salto finale - medio
+  { cycleDuration: 2800, targetWidth: 0.40 }, // Salto 1 - facilissimo
+  { cycleDuration: 2600, targetWidth: 0.38 }, // Salto 2
+  { cycleDuration: 2400, targetWidth: 0.36 }, // Salto 3
+  { cycleDuration: 2200, targetWidth: 0.34 }, // Salto 4
+  { cycleDuration: 2000, targetWidth: 0.32 }, // Salto 5
+  { cycleDuration: 1800, targetWidth: 0.30 }, // Salto 6
+  { cycleDuration: 1600, targetWidth: 0.35 }, // Salto finale
 ];
 
 const CROSSING_ASSETS = {
@@ -578,68 +578,93 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden",
         backgroundColor: "#191E1B",
         backgroundImage: `url(${CROSSING_ASSETS.bg})`,
-        backgroundSize: "cover", backgroundPosition: "center",
+        backgroundSize: "cover", backgroundPosition: "center bottom", backgroundRepeat: "no-repeat",
         cursor: isJumping || isComplete ? "default" : "pointer",
         userSelect: "none", touchAction: "manipulation", borderRadius: 8,
       }}
     >
-      {/* TIMING BAR - Barra sinapsi in alto */}
-      {showTimingBar && (
-        <div style={{
-          position: "absolute",
-          top: "4%", left: "50%",
-          transform: `translateX(-50%) ${timingMiss ? 'translateX(4px)' : ''}`,
-          width: "60%", maxWidth: 400,
-          height: 12,
-          background: "rgba(25,30,27,0.7)",
-          borderRadius: 20,
-          overflow: "hidden",
-          border: `1px solid ${timingMiss ? 'rgba(255,100,100,0.6)' : 'rgba(126,143,99,0.3)'}`,
-          boxShadow: timingHit ? "0 0 20px rgba(199,212,160,0.5)" : "0 0 15px rgba(0,0,0,0.3)",
-          animation: timingMiss ? "crossingTimingShake 0.4s ease-out" : "none",
-          transition: "border-color 0.15s, box-shadow 0.15s",
-          zIndex: 20,
-        }}>
-          {/* Zona target (centro) */}
+      {/* TIMING BAR - Fascio di luce minimal */}
+      {showTimingBar && (() => {
+        const isInTarget = pulsePosition >= targetStart && pulsePosition <= targetEnd;
+        // Calcola quanto è vicino al centro (0 = bordi, 1 = centro esatto)
+        const distFromCenter = Math.abs(pulsePosition - 0.5);
+        const centerIntensity = Math.max(0, 1 - distFromCenter * 2.5);
+        
+        return (
           <div style={{
             position: "absolute",
-            left: `${targetStart * 100}%`,
-            width: `${difficulty.targetWidth * 100}%`,
-            height: "100%",
-            background: timingHit 
-              ? "rgba(199,212,160,0.5)" 
-              : "linear-gradient(90deg, transparent, rgba(199,212,160,0.25), rgba(199,212,160,0.25), transparent)",
-            borderRadius: 10,
-          }} />
-          
-          {/* Pulse che viaggia */}
-          <div style={{
-            position: "absolute",
-            left: `${pulsePosition * 100}%`,
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: pulsePosition >= targetStart && pulsePosition <= targetEnd
-              ? "radial-gradient(circle, #C7D4A0 0%, rgba(199,212,160,0.6) 50%, transparent 70%)"
-              : "radial-gradient(circle, rgba(199,212,160,0.8) 0%, rgba(126,143,99,0.4) 50%, transparent 70%)",
-            boxShadow: pulsePosition >= targetStart && pulsePosition <= targetEnd
-              ? "0 0 12px rgba(199,212,160,0.8)"
-              : "0 0 8px rgba(126,143,99,0.4)",
-          }} />
-          
-          {/* Glow trail del pulse */}
-          <div style={{
-            position: "absolute",
-            left: `${Math.max(0, pulsePosition - 0.15) * 100}%`,
-            width: `${Math.min(pulsePosition, 0.15) * 100}%`,
-            height: "100%",
-            background: "linear-gradient(90deg, transparent, rgba(199,212,160,0.15))",
-            borderRadius: 10,
-          }} />
-        </div>
-      )}
+            top: "5%", left: "50%",
+            transform: "translateX(-50%)",
+            width: "55%", maxWidth: 360,
+            height: 6,
+            pointerEvents: "none",
+            zIndex: 20,
+            animation: timingMiss ? "crossingTimingShake 0.35s ease-out" : "none",
+          }}>
+            {/* Fascio base - appena visibile */}
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(90deg, transparent 5%, rgba(199,212,160,0.08) 30%, rgba(199,212,160,0.12) 50%, rgba(199,212,160,0.08) 70%, transparent 95%)",
+              borderRadius: 10,
+            }} />
+            
+            {/* Glow centrale - sempre presente ma più intenso quando pulse è lì */}
+            <div style={{
+              position: "absolute",
+              left: "50%", top: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "40%",
+              height: 20,
+              background: `radial-gradient(ellipse, rgba(199,212,160,${0.15 + centerIntensity * 0.5}) 0%, transparent 70%)`,
+              filter: `blur(${4 + centerIntensity * 6}px)`,
+              transition: "all 0.08s ease-out",
+            }} />
+            
+            {/* Pulse che viaggia */}
+            <div style={{
+              position: "absolute",
+              left: `${pulsePosition * 100}%`,
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              width: isInTarget ? 18 : 10,
+              height: isInTarget ? 18 : 10,
+              borderRadius: "50%",
+              background: isInTarget
+                ? `radial-gradient(circle, rgba(235,242,225,${0.9 + centerIntensity * 0.1}) 0%, rgba(199,212,160,0.7) 40%, transparent 70%)`
+                : "radial-gradient(circle, rgba(199,212,160,0.6) 0%, rgba(126,143,99,0.3) 50%, transparent 70%)",
+              boxShadow: isInTarget
+                ? `0 0 ${12 + centerIntensity * 18}px rgba(199,212,160,${0.6 + centerIntensity * 0.4})`
+                : "0 0 6px rgba(126,143,99,0.25)",
+              transition: "width 0.12s, height 0.12s, box-shadow 0.08s",
+            }} />
+            
+            {/* Flash esplosivo al centro quando è nel target */}
+            {isInTarget && centerIntensity > 0.6 && (
+              <div style={{
+                position: "absolute",
+                left: "50%", top: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 60,
+                height: 30,
+                background: `radial-gradient(ellipse, rgba(235,242,225,${centerIntensity * 0.4}) 0%, transparent 60%)`,
+                filter: "blur(8px)",
+                pointerEvents: "none",
+              }} />
+            )}
+            
+            {/* Miss feedback - flash rosso sottile */}
+            {timingMiss && (
+              <div style={{
+                position: "absolute",
+                inset: -4,
+                background: "radial-gradient(ellipse at center, rgba(255,100,100,0.15) 0%, transparent 70%)",
+                borderRadius: 20,
+              }} />
+            )}
+          </div>
+        );
+      })()}
 
       {/* Color grade overlay */}
       <div style={{
