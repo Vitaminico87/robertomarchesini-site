@@ -347,7 +347,7 @@ const LANDING_NOTES = [
   { freq: 330, duration: 300 },  // Mi4
   { freq: 392, duration: 320 },  // Sol4
   { freq: 440, duration: 340 },  // La4
-  { freq: 523, duration: 400 },  // Do5 - ultimo, più lungo
+  { freq: 523, duration: 2200, hold: true },  // Do5 - ultimo, tiene a lungo
 ];
 
 const CROSSING_ASSETS = {
@@ -370,10 +370,11 @@ function useLandingSound() {
       
       const note = LANDING_NOTES[Math.min(noteIndex, LANDING_NOTES.length - 1)];
       const now = ctx.currentTime;
+      const isHold = note.hold;
       
       // Oscillatore principale (onda triangolare per suono caldo)
       const osc = ctx.createOscillator();
-      osc.type = 'triangle';
+      osc.type = isHold ? 'sine' : 'triangle'; // Sine per nota finale (più puro)
       osc.frequency.setValueAtTime(note.freq, now);
       
       // Leggero detune per suono più organico
@@ -384,24 +385,47 @@ function useLandingSound() {
       osc2.type = 'sine';
       osc2.frequency.setValueAtTime(note.freq * 2, now);
       
-      // Gain principale con envelope ADSR morbido
-      const gainNode = ctx.createGain();
-      const volume = 0.12 + noteIndex * 0.015; // Volume cresce leggermente
-      gainNode.gain.setValueAtTime(0, now);
-      gainNode.gain.linearRampToValueAtTime(volume, now + 0.02); // Attack
-      gainNode.gain.exponentialRampToValueAtTime(volume * 0.6, now + 0.08); // Decay
-      gainNode.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000); // Release
+      // Terzo oscillatore per nota hold (quinta, crea accordo)
+      const osc3 = isHold ? ctx.createOscillator() : null;
+      if (osc3) {
+        osc3.type = 'sine';
+        osc3.frequency.setValueAtTime(note.freq * 1.5, now); // Quinta
+      }
       
-      // Gain per armonico (molto più basso)
+      // Gain principale con envelope ADSR
+      const gainNode = ctx.createGain();
+      const volume = isHold ? 0.18 : (0.12 + noteIndex * 0.015);
+      gainNode.gain.setValueAtTime(0, now);
+      gainNode.gain.linearRampToValueAtTime(volume, now + (isHold ? 0.05 : 0.02)); // Attack
+      
+      if (isHold) {
+        // Sustain lungo per nota finale
+        gainNode.gain.linearRampToValueAtTime(volume * 0.8, now + 0.3);
+        gainNode.gain.linearRampToValueAtTime(volume * 0.6, now + 1.0);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000);
+      } else {
+        gainNode.gain.exponentialRampToValueAtTime(volume * 0.6, now + 0.08); // Decay
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000); // Release
+      }
+      
+      // Gain per armonico
       const gain2 = ctx.createGain();
       gain2.gain.setValueAtTime(0, now);
-      gain2.gain.linearRampToValueAtTime(volume * 0.15, now + 0.02);
+      gain2.gain.linearRampToValueAtTime(volume * (isHold ? 0.25 : 0.15), now + 0.02);
       gain2.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1200);
+      
+      // Gain per terzo oscillatore (quinta)
+      const gain3 = isHold ? ctx.createGain() : null;
+      if (gain3) {
+        gain3.gain.setValueAtTime(0, now);
+        gain3.gain.linearRampToValueAtTime(volume * 0.12, now + 0.1);
+        gain3.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000);
+      }
       
       // Filtro passa-basso per suono più morbido
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(1200 + noteIndex * 200, now);
+      filter.frequency.setValueAtTime(isHold ? 2000 : (1200 + noteIndex * 200), now);
       filter.Q.setValueAtTime(0.5, now);
       
       // Connessioni
@@ -409,13 +433,19 @@ function useLandingSound() {
       osc2.connect(gain2);
       gainNode.connect(filter);
       gain2.connect(filter);
+      if (osc3 && gain3) {
+        osc3.connect(gain3);
+        gain3.connect(filter);
+      }
       filter.connect(ctx.destination);
       
       // Start e stop
       osc.start(now);
       osc2.start(now);
+      if (osc3) osc3.start(now);
       osc.stop(now + note.duration / 1000 + 0.1);
       osc2.stop(now + note.duration / 1000 + 0.1);
+      if (osc3) osc3.stop(now + note.duration / 1000 + 0.1);
     } catch (e) {
       // Audio non supportato, ignora silenziosamente
     }
@@ -538,42 +568,59 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
   // Uccelli pixel
   useEffect(() => {
-    const createBird = (startX = -5) => ({
+    const createBird = (startX = -5, isStormBird = false) => ({
       id: Date.now() + Math.random(),
       x: startX,
-      y: 15 + Math.random() * 25,
-      speed: 0.8 + Math.random() * 0.6,
+      y: isStormBird ? (20 + Math.random() * 35) : (15 + Math.random() * 25),
+      speed: 0.15 + Math.random() * 0.12, // Molto più lenti
       size: 3 + Math.random() * 2,
       wingPhase: Math.random() * Math.PI * 2,
       fleeing: false,
     });
     
-    // Spawn uccelli ogni 8-14 secondi
+    // Spawn uccelli ogni 10-18 secondi
     const spawnBird = () => {
-      if (Math.random() > 0.4) {
+      if (Math.random() > 0.5) {
         setBirds(prev => {
-          if (prev.length < 4) return [...prev, createBird()];
+          if (prev.length < 3) return [...prev, createBird()];
           return prev;
         });
       }
     };
     
-    birdIntervalRef.current = setInterval(spawnBird, 8000 + Math.random() * 6000);
+    birdIntervalRef.current = setInterval(spawnBird, 10000 + Math.random() * 8000);
     
     // Movimento uccelli
     const moveInterval = setInterval(() => {
       setBirds(prev => prev.map(b => ({
         ...b,
-        x: b.x + (b.fleeing ? b.speed * 2.5 : b.speed),
-        y: b.y + Math.sin(Date.now() / 300 + b.wingPhase) * 0.15 + (b.fleeing ? -0.3 : 0),
-        wingPhase: b.wingPhase + 0.15,
-      })).filter(b => b.x < 110));
+        x: b.x + (b.fleeing ? b.speed * 4 : b.speed),
+        y: b.y + Math.sin(Date.now() / 400 + b.wingPhase) * 0.08 + (b.fleeing ? -0.15 : 0),
+        wingPhase: b.wingPhase + 0.1,
+      })).filter(b => b.x < 115));
     }, 50);
     
     return () => {
       if (birdIntervalRef.current) clearInterval(birdIntervalRef.current);
       clearInterval(moveInterval);
     };
+  }, []);
+  
+  // Funzione per spawnare stormo finale
+  const spawnFinalFlock = useCallback(() => {
+    const flockBirds = [];
+    for (let i = 0; i < 6; i++) {
+      flockBirds.push({
+        id: Date.now() + Math.random() + i,
+        x: -8 - Math.random() * 15,
+        y: 25 + Math.random() * 30,
+        speed: 0.4 + Math.random() * 0.2,
+        size: 2.5 + Math.random() * 2,
+        wingPhase: Math.random() * Math.PI * 2,
+        fleeing: true, // Partono già in volo rapido
+      });
+    }
+    setBirds(prev => [...prev, ...flockBirds]);
   }, []);
 
   // Hint
@@ -638,6 +685,8 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       // Tutti i nodi brillano insieme
       setAllNodesGlow(true);
       setTimeout(() => setAllNodesGlow(false), 800);
+      // Spawn stormo finale che attraversa
+      spawnFinalFlock();
     }
     
     if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
@@ -990,22 +1039,30 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         }} />
       )}
 
-      {/* Tap hint */}
+      {/* Tap hint - sotto la barra, al centro */}
       {showHint && (
         <div style={{
           position: "absolute",
-          left: "50%", top: "14%",
+          left: "50%", top: "12%",
           transform: "translateX(-50%)",
-          display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
+          display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
           pointerEvents: "none", animation: "crossingHintPulse 1.4s ease-in-out infinite",
         }}>
           <div style={{
-            color: "rgba(199,212,160,0.75)", fontSize: 10,
-            fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 1.5, textTransform: "uppercase",
-            textAlign: "center", lineHeight: 1.5,
+            color: "rgba(199,212,160,0.8)", fontSize: 11,
+            fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 1.2, textTransform: "uppercase",
+            textAlign: "center", lineHeight: 1.4,
+            textShadow: "0 1px 4px rgba(0,0,0,0.5)",
           }}>
-            Tap quando<br/>la luce è al centro
+            Tap quando la luce è al centro
           </div>
+          <div style={{
+            width: 0, height: 0,
+            borderLeft: "6px solid transparent",
+            borderRight: "6px solid transparent",
+            borderTop: "8px solid rgba(199,212,160,0.5)",
+            marginTop: 2,
+          }} />
         </div>
       )}
 
