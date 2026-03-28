@@ -309,7 +309,7 @@ function Ch1ProfilePanel({ unlocked, T }) {
 const CROSSING_BASE_W = 1600;
 const CROSSING_BASE_H = 1200;
 const CROSSING_ENTRY = { x: 110, y: 950 };
-const CROSSING_EXIT = { x: 1465, y: 820 };
+const CROSSING_EXIT = { x: 1750, y: 700 }; // Fuori schermo a destra
 const CROSSING_NODES = [
   { x: 220, y: 920 },
   { x: 420, y: 880 },
@@ -785,10 +785,12 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   
   // Stile fondale con effetti dinamici
   const bgStyle = {
-    position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden",
+    position: "relative", width: "100%", aspectRatio: "4 / 3",
+    maxHeight: "65vh", // Limita altezza su mobile
+    overflow: "hidden",
     backgroundColor: "#191E1B",
     backgroundImage: `url(${CROSSING_ASSETS.bg})`,
-    backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat",
+    backgroundSize: "cover", backgroundPosition: "center bottom", backgroundRepeat: "no-repeat",
     cursor: isJumping || isComplete ? "default" : "pointer",
     userSelect: "none", touchAction: "manipulation", borderRadius: 8,
     transform: `scale(${bgBreath}) translateX(${bgShake ? (Math.random() - 0.5) * bgShake : 0}px)`,
