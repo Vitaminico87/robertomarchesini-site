@@ -663,7 +663,7 @@ export default function Roberto() {
   const [glitch, setGlitch] = useState(false);
   const [progress, setProgress] = useState(0);
   const [hoverTrash, setHoverTrash] = useState(false);
-  const [trashScale, setTrashScale] = useState(1);
+  const [trashGlitchText, setTrashGlitchText] = useState(null);
   const [hoverContact, setHoverContact] = useState(false);
   const [hoverBlog, setHoverBlog] = useState(false);
   const [flicker, setFlicker] = useState(false);
@@ -727,13 +727,35 @@ export default function Roberto() {
     return () => window.removeEventListener("scroll", fn);
   }, [phase]);
 
-  // Trash button grow
+  // Trash text glitch - solo rumore visivo che attira
   useEffect(() => {
-    if (!hoverTrash) { setTrashScale(1); return; }
-    let s = 1;
-    const iv = setInterval(() => { s += .007; if (s > 1.3) s = 1.3; setTrashScale(s); }, 30);
-    return () => clearInterval(iv);
-  }, [hoverTrash]);
+    if (phase !== "main" || hoverTrash) return;
+    const chars = "!@#$%^&*_+-=<>?/~▓▒░█▄▀";
+    const length = T.trashBtn.length;
+    
+    const triggerGlitch = () => {
+      let frame = 0;
+      const maxFrames = 4;
+      const glitchInterval = setInterval(() => {
+        if (frame >= maxFrames) {
+          clearInterval(glitchInterval);
+          setTrashGlitchText(null);
+          return;
+        }
+        const glitched = Array(length).fill(0).map(() => 
+          chars[Math.floor(Math.random() * chars.length)]
+        ).join("");
+        setTrashGlitchText(glitched);
+        frame++;
+      }, 40);
+    };
+    
+    const interval = setInterval(() => {
+      if (Math.random() > 0.7) triggerGlitch();
+    }, 5000 + Math.random() * 4000);
+    
+    return () => clearInterval(interval);
+  }, [phase, hoverTrash, T.trashBtn]);
 
   const switchLang = useCallback(() => {
     setBlackout(true);
@@ -770,6 +792,7 @@ export default function Roberto() {
         @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(255,77,0,.12)}50%{box-shadow:0 0 35px rgba(255,77,0,.25)}}
         @keyframes nameGlow{0%,100%{text-shadow:0 0 30px rgba(255,77,0,.04)}50%{text-shadow:0 0 50px rgba(255,77,0,.08)}}
         @keyframes trashPulse{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.12)}}
+        @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.08), 0 0 40px rgba(255,77,0,.04)}50%{box-shadow:0 0 35px rgba(255,77,0,.18), 0 0 70px rgba(255,77,0,.08)}}
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
@@ -779,7 +802,7 @@ export default function Roberto() {
         .mth{padding-left:16px;border-left:2px solid #161616;transition:all .25s;cursor:default}
         .mth:hover{border-left-color:#FF4D00;padding-left:20px}
         .mth:hover .mth-t{color:#FF4D00!important}
-        .btn-trash{padding:16px 38px;background:transparent;border:1px solid #FF4D00;color:#FF4D00;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;animation:trashPulse 3s ease-in-out infinite;transition:background .2s,color .2s}
+        .btn-trash{min-width:140px;padding:16px 38px;background:transparent;border:1px solid #FF4D00;color:#FF4D00;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:background .2s,color .2s}
         .btn-talk{padding:16px 38px;background:transparent;border:1px solid #444;color:#AAA;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:all .25s}
         .btn-talk:hover{background:#E8E4DE;color:#050505;border-color:#E8E4DE;box-shadow:0 0 20px rgba(232,228,222,.12)}
         .fl-word{position:absolute;white-space:nowrap;opacity:0}
@@ -978,16 +1001,13 @@ export default function Roberto() {
               <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center" }}>
                 <button className="btn-trash" onClick={handleTrash}
                   onMouseEnter={() => setHoverTrash(true)}
-                  onMouseLeave={() => { setHoverTrash(false); setTrashScale(1); }}
+                  onMouseLeave={() => setHoverTrash(false)}
                   onTouchStart={() => setHoverTrash(true)}
-                  onTouchEnd={() => { setTimeout(() => { setHoverTrash(false); setTrashScale(1); }, 150); }}
+                  onTouchEnd={() => { setTimeout(() => setHoverTrash(false), 150); }}
                   style={{
-                    transform: `scale(${trashScale})`,
-                    transition: trashScale > 1.05 ? "none" : "transform .25s",
-                    boxShadow: hoverTrash ? `0 0 ${18 + (trashScale - 1) * 70}px rgba(255,77,0,${.12 + (trashScale - 1) * .7})` : undefined,
-                    animation: hoverTrash ? "none" : "trashPulse 3s ease-in-out infinite",
+                    animation: "trashBreath 4s ease-in-out infinite",
                   }}>
-                  {hoverTrash ? T.trashHover : T.trashBtn}
+                  {hoverTrash ? T.trashHover : (trashGlitchText || T.trashBtn)}
                 </button>
                 <span className="orsep" style={{ fontSize: 11, color: "#222" }}>{T.or}</span>
                 <button className="btn-talk" onClick={openContact}
