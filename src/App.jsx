@@ -831,10 +831,10 @@ export default function Roberto() {
         .ch1-fill{position:absolute;inset:0;z-index:1}
         .ch1-grass-loop{clip-path:inset(72% 0 0 0);z-index:2;pointer-events:none}
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
-        .ch1-stay-feedback{position:absolute;right:22px;top:22px;z-index:9;font-size:11px;color:rgba(220,231,222,.6);font-family:Georgia,serif;font-style:italic;opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease}
+        .ch1-stay-feedback{position:absolute;right:22px;top:22px;z-index:9;font-size:15px;color:rgba(220,231,222,.85);font-family:Georgia,serif;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.5);opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease}
         .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(5,8,10,.18),rgba(5,8,10,.28))}
-        .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px}
+        .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,rgba(0,0,0,.25) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}
         .ch1-line-block.ch1-reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
         .ch1-line{color:#dce7de;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}
