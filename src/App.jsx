@@ -20,6 +20,8 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
     hero: "Creatività, strategia e AI per brand che vogliono distinguersi davvero.",
+    heroSub: "Costruisco sistemi creativi, contenuti, campagne ed esperienze digitali con uno standard alto e una logica chiara.",
+    proofStrip: "Creative systems · Growth-minded execution · AI-enhanced workflows",
     whatido: "Cosa faccio",
     services: [
       { title: "Create", desc: "Direzione creativa, identità visiva, contenuti. Do al tuo brand una voce chiara, un linguaggio coerente e un'estetica che non sembri presa in prestito." },
@@ -27,12 +29,43 @@ const LANG = {
       { title: "Evolve", desc: "AI nei flussi di lavoro, processi più rapidi, nuovi formati. Uso l'AI per aumentare qualità, velocità e possibilità creative — non per produrre contenuti generici più in fretta." },
       { title: "Teach", desc: "Workshop, onboarding, consulenza operativa. Aiuto team e professionisti a usare l'AI nel processo creativo con metodo, criterio e autonomia." },
     ],
+    selectedWorkLabel: "Lavori scelti",
+    selectedWorkSub: "Progetti reali, impegni a lungo termine.",
+    selectedWork: [
+      {
+        title: "Largo Venue",
+        period: "2019 – in corso",
+        status: "active",
+        narrative: "Creative direction e content engine per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        technical: "Identity · Promotion architecture · Editorial consistency",
+        tags: ["Venue marketing", "Creative system", "Weekly execution"]
+      },
+      {
+        title: "Notre Dame de Paris",
+        period: "2012 – 2024",
+        status: "completed",
+        narrative: "Dodici anni di direzione creativa per comunicazione e contenuti digitali di uno dei live brand più riconoscibili in Italia, con un'audience cresciuta oltre 400K persone.",
+        technical: "Content & digital creative direction · Content system · Audience growth",
+        tags: ["Live entertainment", "Growth", "Content system"]
+      },
+      {
+        title: "THEIA Events",
+        period: "2025",
+        status: "active",
+        narrative: "Posizionamento premium, website direction e architettura digitale per un brand eventi orientato a credibilità e lead qualificati.",
+        technical: "Website direction · Brand tone · Conversion logic",
+        tags: ["Website", "Positioning", "Lead architecture"]
+      }
+    ],
     howLabel: "Come lavoro",
     method: [
       { title: "Sperimentare, non sfruttare", desc: "Mi interessa l'AI quando aumenta possibilità e qualità. Non quando serve a produrre di più abbassando il livello." },
       { title: "Standard alto, pipeline intelligenti", desc: "Produco visual, motion e contenuti con uno standard alto e un processo più leggero, rapido e controllato." },
       { title: "Decisioni basate sui dati", desc: "La creatività non vive fuori dalla realtà. Ogni scelta importante passa da analisi, test e lettura dei dati." },
     ],
+    nowBuildingLabel: "Now building",
+    nowBuilding: "Stessi principi — sistemi, narrazione, dati — applicati a formati nuovi: AI-driven content, esperienze interattive, narrative non lineari.\n\nIl lavoro sopra è il fondamento. Quello che segue è la direzione.",
+    availableFor: "Available for selected collaborations — brand, events, digital experiences, AI-led creative systems.",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
     hintDefault: "Questa pagina spiega il lavoro. Il resto è il motivo per cui lo faccio.",
@@ -74,6 +107,8 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
     hero: "Creativity, strategy, and AI for brands that want to stand out for real.",
+    heroSub: "I build creative systems, content, campaigns, and digital experiences with a high standard and a clear logic.",
+    proofStrip: "Creative systems · Growth-minded execution · AI-enhanced workflows",
     whatido: "What I do",
     services: [
       { title: "Create", desc: "Creative direction, visual identity, content. I give your brand a clear voice, a coherent language, and an aesthetic that doesn't look borrowed." },
@@ -81,12 +116,43 @@ const LANG = {
       { title: "Evolve", desc: "AI in your workflows, faster processes, new formats. I use AI to increase quality, speed, and creative possibilities — not to produce generic content faster." },
       { title: "Teach", desc: "Workshops, onboarding, hands-on consulting. I help teams and professionals use AI in the creative process with method, judgement, and autonomy." },
     ],
+    selectedWorkLabel: "Selected Work",
+    selectedWorkSub: "Real projects, long-term commitments.",
+    selectedWork: [
+      {
+        title: "Largo Venue",
+        period: "2019 – ongoing",
+        status: "active",
+        narrative: "Creative direction and content engine for a venue with weekly programming and over 150 events a year.",
+        technical: "Identity · Promotion architecture · Editorial consistency",
+        tags: ["Venue marketing", "Creative system", "Weekly execution"]
+      },
+      {
+        title: "Notre Dame de Paris",
+        period: "2012 – 2024",
+        status: "completed",
+        narrative: "Twelve years of creative direction for the communications and digital content of one of Italy's most recognizable live brands, with an audience grown to over 400K.",
+        technical: "Content & digital creative direction · Content system · Audience growth",
+        tags: ["Live entertainment", "Growth", "Content system"]
+      },
+      {
+        title: "THEIA Events",
+        period: "2025",
+        status: "active",
+        narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
+        technical: "Website direction · Brand tone · Conversion logic",
+        tags: ["Website", "Positioning", "Lead architecture"]
+      }
+    ],
     howLabel: "How I work",
     method: [
       { title: "Experiment, don't exploit", desc: "I care about AI when it increases possibilities and quality. Not when it's used to produce more while lowering the standard." },
       { title: "High standard, smart pipelines", desc: "I produce visuals, motion, and content at a high standard with a lighter, faster, more controlled process." },
       { title: "Data-backed decisions", desc: "Creativity doesn't live outside reality. Every important choice goes through analysis, testing, and reading the data." },
     ],
+    nowBuildingLabel: "Now building",
+    nowBuilding: "Same principles — systems, narrative, data — applied to new formats: AI-driven content, interactive experiences, non-linear storytelling.\n\nThe work above is the foundation. What follows is the direction.",
+    availableFor: "Available for selected collaborations — brand, events, digital experiences, AI-led creative systems.",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
     hintDefault: "This page explains the work. The rest is why I do it.",
@@ -190,15 +256,15 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   useEffect(() => { scrollRef.current = scrollProgress; }, [scrollProgress]);
 
   const getStage = (progress) => {
-    if (progress < 0.25) return "early";
-    if (progress < 0.60) return "mid";
+    if (progress < 0.40) return "early";
+    if (progress < 0.75) return "mid";
     return "late";
   };
 
   const getStageConfig = (mobile) => ({
-    early: { opacity: mobile ? 0.7 : 0.55, duration: mobile ? 3000 : 2500, yRange: mobile ? [55, 65] : [45, 55] },
-    mid: { opacity: mobile ? 0.75 : 0.6, duration: mobile ? 3200 : 2800, yRange: mobile ? [60, 70] : [55, 68] },
-    late: { opacity: mobile ? 0.8 : 0.65, duration: mobile ? 3500 : 3000, yRange: mobile ? [65, 78] : [65, 80] }
+    early: { opacity: mobile ? 0.6 : 0.45, duration: mobile ? 3500 : 3000, yRange: mobile ? [55, 65] : [45, 55] },
+    mid: { opacity: mobile ? 0.65 : 0.5, duration: mobile ? 3800 : 3200, yRange: mobile ? [60, 70] : [55, 68] },
+    late: { opacity: mobile ? 0.7 : 0.55, duration: mobile ? 4000 : 3500, yRange: mobile ? [65, 78] : [65, 80] }
   });
 
   useEffect(() => {
@@ -208,8 +274,8 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   useEffect(() => {
     if (!active || animPhase !== "idle" || isRunning.current) return;
     isRunning.current = true;
-    const baseDelay = isMobile ? 2500 : 1800;
-    const randomDelay = isMobile ? 1500 : 1200;
+    const baseDelay = isMobile ? 5000 : 4000;
+    const randomDelay = isMobile ? 3000 : 2500;
     const delay = baseDelay + Math.random() * randomDelay;
     
     const t1 = setTimeout(() => {
@@ -1378,8 +1444,8 @@ export default function Roberto() {
     if (phase !== "main" || ghostReady) return;
     const timeInterval = setInterval(() => {
       timeOnPage.current += 100;
-      if (timeOnPage.current >= 3000 && hasScrolled.current && !ghostReady) {
-        setTimeout(() => setGhostReady(true), 1500);
+      if (timeOnPage.current >= 8000 && hasScrolled.current && !ghostReady) {
+        setTimeout(() => setGhostReady(true), 2500);
         clearInterval(timeInterval);
       }
     }, 100);
@@ -1469,9 +1535,13 @@ export default function Roberto() {
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+        .work-card{transition:all .3s}
+        .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
         .svc{padding:22px 24px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
         .svc:hover{border-color:rgba(255,77,0,.35);background:rgba(255,77,0,.02)}
         .svc:hover .svc-t{color:#FF4D00!important;text-shadow:0 0 15px rgba(255,77,0,.12)}
+        .work-card{transition:all .3s;padding-left:0;border-left:3px solid transparent}
+        .work-card:hover{border-left-color:#FF4D00;padding-left:20px;background:linear-gradient(90deg,rgba(255,77,0,.025) 0%,transparent 40%)}
         .mth{padding-left:16px;border-left:2px solid #161616;transition:all .25s;cursor:default}
         .mth:hover{border-left-color:#FF4D00;padding-left:20px}
         .mth:hover .mth-t{color:#FF4D00!important}
@@ -1628,22 +1698,80 @@ export default function Roberto() {
           opacity: contentFading ? 0 : (flicker ? .85 : 1),
           transition: contentFading ? "opacity .6s ease-out" : "opacity .04s",
         }}>
+          {/* 1. HERO */}
           <Section delay={0.05}>
-            <div style={{ marginBottom: 48 }}>
+            <div style={{ marginBottom: 32 }}>
               <h1 className="nm" style={{ fontFamily: "'Playfair Display',serif", fontSize: 52, fontWeight: 700, lineHeight: 1.02, margin: "0 0 10px", color: "#F0ECE6", animation: "nameGlow 6s ease-in-out infinite" }}>
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
               <div style={{ fontSize: 14, color: "#666", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>Creative Director · AI Systems</div>
               <div style={{ fontSize: 13, color: "#999", marginTop: 16, lineHeight: 1.9, maxWidth: 520 }}>{T.hero}</div>
+              <div style={{ fontSize: 12, color: "#777", marginTop: 10, lineHeight: 1.8, maxWidth: 520 }}>{T.heroSub}</div>
             </div>
           </Section>
 
+          {/* 2. PROOF STRIP */}
+          <Section delay={0.08}>
+            <div style={{ marginBottom: 32, textAlign: "center" }}>
+              <div style={{ fontSize: 10, letterSpacing: 3, color: "#555", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{T.proofStrip}</div>
+            </div>
+          </Section>
+
+          {/* 3. DIVIDER */}
           <Section delay={0.1}>
             <div style={{ height: 1, background: "linear-gradient(to right,#FF4D00 0%,rgba(255,77,0,.12) 45%,transparent 100%)", marginBottom: 48 }} />
           </Section>
 
+          {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
+            <div style={{ marginBottom: 56 }}>
+              <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 6, opacity: .6 }}>{T.selectedWorkLabel}</div>
+              <div style={{ fontSize: 11, color: "#555", marginBottom: 28, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{T.selectedWorkSub}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                {T.selectedWork.map((work, i) => (
+                  <div key={i} className="work-card" style={{
+                    paddingTop: 28,
+                    paddingBottom: 28,
+                    paddingRight: 0,
+                    borderBottom: i < T.selectedWork.length - 1 ? "1px solid #141414" : "none",
+                    cursor: "default",
+                    position: "relative",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 10, flexWrap: "wrap" }}>
+                      <div style={{ fontSize: 26, fontWeight: 600, color: "#E8E4DE", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.1 }}>
+                        {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: 10, letterSpacing: 1.5, color: "#444", fontFamily: "'IBM Plex Mono', monospace" }}>{work.period}</span>
+                        {work.status === "active" && (
+                          <span style={{ 
+                            display: "inline-block", width: 6, height: 6, borderRadius: "50%", 
+                            background: "#FF4D00", boxShadow: "0 0 8px rgba(255,77,0,.4)",
+                            animation: "glowPulse 2s infinite",
+                          }} />
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 13, color: "#AAA", lineHeight: 1.7, marginBottom: 10, maxWidth: 540 }}>{work.narrative}</div>
+                    <div style={{ fontSize: 11, color: "#666", lineHeight: 1.6, marginBottom: 14, letterSpacing: .3 }}>{work.technical}</div>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {work.tags.map((tag, j) => (
+                        <span key={j} style={{ 
+                          fontSize: 9, letterSpacing: 1.2, color: "#555", textTransform: "uppercase", 
+                          fontFamily: "'IBM Plex Mono', monospace",
+                          padding: "3px 8px", border: "1px solid #1A1A1A", borderRadius: 2,
+                        }}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Section>
+
+          {/* 5. WHAT I DO */}
+          <Section delay={0.15}>
             <div style={{ marginBottom: 52 }}>
               <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 24, opacity: .6 }}>{T.whatido}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1663,7 +1791,8 @@ export default function Roberto() {
             </div>
           </Section>
 
-          <Section delay={0.15}>
+          {/* 6. HOW I WORK */}
+          <Section delay={0.18}>
             <div style={{ marginBottom: 52 }}>
               <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 20, opacity: .6 }}>{T.howLabel}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -1677,11 +1806,21 @@ export default function Roberto() {
             </div>
           </Section>
 
-          <Section delay={0.18}>
-            <div style={{ height: 1, background: "linear-gradient(to right,transparent,#1A1A1A,transparent)", marginBottom: 56 }} />
+          {/* 7. NOW BUILDING */}
+          <Section delay={0.2}>
+            <div style={{ marginBottom: 48 }}>
+              <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 16, opacity: .6 }}>{T.nowBuildingLabel}</div>
+              <div style={{ fontSize: 12, color: "#777", lineHeight: 1.8, whiteSpace: "pre-line" }}>{T.nowBuilding}</div>
+            </div>
           </Section>
 
-          <Section delay={0.2}>
+          {/* 8. DIVIDER */}
+          <Section delay={0.22}>
+            <div style={{ height: 1, background: "linear-gradient(to right,transparent,#1A1A1A,transparent)", marginBottom: 40 }} />
+          </Section>
+
+          {/* 9. CTA + CESTINA */}
+          <Section delay={0.24}>
             <div style={{ marginBottom: 8 }}>
               <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center" }}>
                 <button className="btn-trash" onClick={handleTrash}
@@ -1700,7 +1839,10 @@ export default function Roberto() {
                   {hoverContact ? T.contactHover : T.contactBtn}
                 </button>
               </div>
-              <div style={{ textAlign: "center", marginTop: 18, fontSize: 11, color: "#555", fontStyle: "italic", fontFamily: "'Playfair Display',serif", letterSpacing: .5 }}>
+              <div style={{ textAlign: "center", marginTop: 16, fontSize: 11, color: "#666", fontFamily: "'IBM Plex Mono', monospace" }}>
+                {T.availableFor}
+              </div>
+              <div style={{ textAlign: "center", marginTop: 14, fontSize: 11, color: "#555", fontStyle: "italic", fontFamily: "'Playfair Display',serif", letterSpacing: .5 }}>
                 {hoverTrash ? T.hintTrash : T.hintDefault}
               </div>
             </div>
