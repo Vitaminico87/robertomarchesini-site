@@ -1650,68 +1650,29 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
 
 
+
 function ChapterIntroCard({ number, title, onDone }) {
   useEffect(() => {
-    const t = setTimeout(() => onDone?.(), 1700);
+    const t = setTimeout(() => {
+      if (typeof onDone === "function") onDone();
+    }, 2700);
     return () => clearTimeout(t);
-  }, [onDone]);
+  }, []);
 
   return (
-    <div
-      onClick={onDone}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}
-      style={{
-        minHeight: "100vh",
-        background: "#f5f2eb",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        paddingTop: "13vh",
-        paddingLeft: 24,
-        paddingRight: 24,
-        cursor: "pointer",
-        animation: "chapterCardFadeIn 420ms ease-out both",
-      }}
-    >
-      <div
-        style={{
-          textAlign: "center",
-          animation: "chapterCardTextDrift 1350ms ease-out both",
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 11,
-            letterSpacing: 4,
-            textTransform: "uppercase",
-            color: "#8b8176",
-            marginBottom: 14,
-          }}
-        >
-          Capitolo {number}
-        </div>
-        <div
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: "italic",
-            fontWeight: 600,
-            fontSize: "clamp(38px, 7vw, 72px)",
-            lineHeight: 1.02,
-            color: "#111111",
-            letterSpacing: -0.5,
-            textRendering: "geometricPrecision",
-          }}
-        >
-          {title}
+    <div className="ch1-root">
+      <div className="ch1-wrap">
+        <div className="chapter-intro-stage" onClick={onDone} role="button" tabIndex={0}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
+          <div className="chapter-intro-inner">
+            <div className="chapter-intro-kicker">Capitolo {number}</div>
+            <div className="chapter-intro-title">{title}</div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
 
 function ChapterTwoScene({ T, onBack }) {
   const deskLoopRef = useRef(null);
@@ -1823,8 +1784,7 @@ export default function Roberto() {
   const hasScrolled = useRef(false);
 
   const T = LANG[lang];
-  const [gameChapter, setGameChapter] = useState("chapter1");
-  const [gameIntroCard, setGameIntroCard] = useState(null);
+  const [gameFlow, setGameFlow] = useState("chapter1");
 
   // Loading
   useEffect(() => {
@@ -1911,8 +1871,7 @@ export default function Roberto() {
   }, []);
 
   const handleTrash = () => {
-    setGameChapter("chapter1");
-    setGameIntroCard("chapter1");
+    setGameFlow("chapter1Intro");
     setFallingWords(genFallingWords(T));
     setFalling(true);
     setContentFading(true);
@@ -1921,8 +1880,7 @@ export default function Roberto() {
   };
 
   const handleBack = () => {
-    setGameChapter("chapter1");
-    setGameIntroCard(null);
+    setGameFlow("chapter1");
     setFalling(false); setFallingWords([]); setContentFading(false);
     setPhase("main"); setGameChapter("chapter1"); setGlitch(true); setTimeout(() => setGlitch(false), 500);
     // Reset ghost system
@@ -1948,8 +1906,8 @@ export default function Roberto() {
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-        @keyframes chapterCardFadeIn{from{opacity:0}to{opacity:1}}
-        @keyframes chapterCardTextDrift{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
+        @keyframes chapterCardHoldFade{0%{opacity:0}8%{opacity:1}82%{opacity:1}100%{opacity:0}}
+        @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}12%{opacity:1;transform:translateY(0)}82%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         .work-card{transition:all .3s}
         .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
         .svc{padding:22px 24px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
@@ -2060,7 +2018,12 @@ export default function Roberto() {
         @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
         
-        .ch2-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid #161616;background:#0b0f12;box-shadow:0 0 0 1px rgba(255,255,255,.02),0 30px 70px rgba(0,0,0,.35)}
+                .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 2.7s ease-in-out both;display:flex;justify-content:center;align-items:flex-start;padding-top:14%}
+        .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 2.7s ease-in-out both;padding:0 24px}
+        .chapter-intro-kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7d756c;margin-bottom:14px}
+        .chapter-intro-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(38px,7vw,72px);line-height:1.02;color:#101010;letter-spacing:-0.5px;text-rendering:geometricPrecision}
+
+.ch2-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid #161616;background:#0b0f12;box-shadow:0 0 0 1px rgba(255,255,255,.02),0 30px 70px rgba(0,0,0,.35)}
         .ch2-fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
         .ch2-window-mask{position:absolute;inset:0;overflow:hidden;clip-path:polygon(19% 15%, 62.8% 15%, 62.8% 49.3%, 19% 49.3%);z-index:2}
         .ch2-window-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.96) brightness(.98)}
@@ -2365,35 +2328,33 @@ export default function Roberto() {
         </div>
       )}
 
-      {phase === "game" && gameIntroCard === "chapter1" && (
+      {phase === "game" && gameFlow === "chapter1Intro" && (
         <ChapterIntroCard
           number="1"
           title={T.ch1.introTitle}
-          onDone={() => setGameIntroCard(null)}
+          onDone={() => setGameFlow("chapter1")}
         />
       )}
 
-      {phase === "game" && gameIntroCard === "chapter2" && (
+      {phase === "game" && gameFlow === "chapter2Intro" && (
         <ChapterIntroCard
           number="2"
           title={T.ch2.introTitle}
-          onDone={() => setGameIntroCard(null)}
+          onDone={() => setGameFlow("chapter2")}
         />
       )}
 
-      {/* GAME — Chapter 1 */}
-      {phase === "game" && !gameIntroCard && gameChapter === "chapter1" && (
+      {phase === "game" && gameFlow === "chapter1" && (
         <ChapterOne 
           T={T.ch1} 
           onBack={handleBack}
           onRequestChapterTwo={() => {
-            setGameChapter("chapter2");
-            setGameIntroCard("chapter2");
+            setGameFlow("chapter2Intro");
           }}
         />
       )}
 
-      {phase === "game" && !gameIntroCard && gameChapter === "chapter2" && (
+      {phase === "game" && gameFlow === "chapter2" && (
         <ChapterTwoScene
           T={T.ch2}
           onBack={handleBack}
