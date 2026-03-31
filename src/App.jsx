@@ -1367,6 +1367,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const [libraryRoomGreen, setLibraryRoomGreen] = useState(false);
   const [libraryTakeoverSolid, setLibraryTakeoverSolid] = useState(false);
   const [librarySceneDissolve, setLibrarySceneDissolve] = useState(false);
+  const [showLibraryPlayCue, setShowLibraryPlayCue] = useState(false);
 
   const unlockAudio = useCallback(() => {
     if (!audioUnlocked) setAudioUnlocked(true);
@@ -1468,6 +1469,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryRoomGreen(false);
     setLibraryTakeoverSolid(false);
     setLibrarySceneDissolve(false);
+    setShowLibraryPlayCue(false);
   }, [unlockAudio]);
 
   const handleBackOff = useCallback(() => {
@@ -1479,6 +1481,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryRoomGreen(false);
     setLibraryTakeoverSolid(false);
     setLibrarySceneDissolve(false);
+    setShowLibraryPlayCue(false);
     setShowLibraryThesis(false);
   }, [activated, unlockAudio]);
 
@@ -1491,37 +1494,39 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryRoomGreen(false);
     setLibraryTakeoverSolid(false);
     setLibrarySceneDissolve(false);
+    setShowLibraryPlayCue(false);
     setShowLibraryThesis(false);
 
     swoshTimeoutRef.current = setTimeout(() => {
       playLibrarySwosh();
       setLibraryMonitorBloom(true);
-    }, 60);
+    }, 50);
 
     floodTimeoutRef.current = setTimeout(() => {
       setLibraryPropagationActive(true);
-    }, 165);
+    }, 150);
 
     thesisTimeoutRef.current = setTimeout(() => {
       setShowLibraryThesis(true);
-    }, 620);
+    }, 540);
 
     revealTimeoutRef.current = setTimeout(() => {
       setLibraryRoomGreen(true);
       setProfileUnlocked(true);
-    }, 980);
+    }, 860);
 
     dissolveTimeoutRef.current = setTimeout(() => {
       setLibraryTakeoverSolid(true);
-    }, 1640);
+    }, 1320);
 
     crossingTimeoutRef.current = setTimeout(() => {
-      setLibrarySceneDissolve(true);
-    }, 2460);
+      setShowLibraryPlayCue(true);
+    }, 1700);
 
     mountCrossingTimeoutRef.current = setTimeout(() => {
+      setLibrarySceneDissolve(true);
       setShowCrossing(true);
-    }, 3280);
+    }, 2120);
   }, [activated, unlockAudio, playLibrarySwosh]);
 
   const handleCrossingComplete = useCallback(() => {
@@ -1586,6 +1591,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 <div className={`ch1-library-green-propagation ${libraryPropagationActive ? 'active' : ''}`} />
                 <div className={`ch1-library-room-green ${libraryRoomGreen ? 'active' : ''}`} />
                 <div className={`ch1-library-full-green ${libraryTakeoverSolid ? 'active' : ''}`} />
+                <div className={`ch1-library-play-cue ${showLibraryPlayCue ? 'show' : ''}`}>play</div>
               </section>
             </div>
 
@@ -1838,23 +1844,25 @@ export default function Roberto() {
         .ch1-library-base-layer{position:absolute;inset:0;z-index:1;transition:opacity 1.75s cubic-bezier(.22,.61,.36,1),filter 1.75s cubic-bezier(.22,.61,.36,1)}
         .ch1-library-base-layer.taken{opacity:.03;filter:brightness(.46) saturate(.72) blur(1.5px)}
         .ch1-library-glow{position:absolute;inset:0;z-index:3;background:radial-gradient(circle at 19% 71%,rgba(167,203,216,.13),transparent 18%);opacity:.65}
-        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;clip-path:circle(1.2% at 21% 70%);transition:opacity 2.05s cubic-bezier(.22,.61,.36,1),filter 2.05s cubic-bezier(.22,.61,.36,1),clip-path 2.8s cubic-bezier(.19,1,.22,1);filter:brightness(.82) contrast(1.01) saturate(.98) hue-rotate(-8deg)}
-        .ch1-library-activation-video.active{opacity:.6;clip-path:circle(178% at 21% 70%);filter:brightness(.88) contrast(1.02) saturate(1) hue-rotate(-8deg)}
+        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;clip-path:circle(1.2% at 21% 70%);transition:opacity 1.7s cubic-bezier(.22,.61,.36,1),filter 1.7s cubic-bezier(.22,.61,.36,1),clip-path 2.15s cubic-bezier(.19,1,.22,1);filter:brightness(.82) contrast(1.01) saturate(.98) hue-rotate(-8deg)}
+        .ch1-library-activation-video.active{opacity:.54;clip-path:circle(178% at 21% 70%);filter:brightness(.86) contrast(1.01) saturate(.98) hue-rotate(-8deg)}
         .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(118,163,87,.05),transparent 15%),linear-gradient(180deg,rgba(62,96,56,.012),rgba(32,58,34,.07));transition:opacity 1.35s cubic-bezier(.22,.61,.36,1)}
         .ch1-library-activated-glow.active{opacity:1}
-        .ch1-library-monitor-bloom{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(104,150,78,.06) 0%,rgba(96,143,73,.12) 5%,rgba(73,118,60,.16) 11%,rgba(46,82,45,.12) 17%,rgba(25,44,27,.06) 23%,transparent 31%);filter:blur(12px);transform:scale(.995);transition:opacity .75s cubic-bezier(.22,.61,.36,1),filter 1.7s cubic-bezier(.22,.61,.36,1),transform 1.7s cubic-bezier(.22,.61,.36,1)}
-        .ch1-library-monitor-bloom.active{opacity:1;filter:blur(28px);transform:scale(1.018)}
-        .ch1-library-green-propagation{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(108,155,82,.04) 0%,rgba(97,145,75,.1) 7%,rgba(77,124,63,.26) 17%,rgba(48,88,47,.54) 35%,rgba(21,39,23,.86) 67%,rgba(7,12,8,1) 100%);clip-path:circle(.8% at 21% 70%);filter:blur(42px) saturate(.96);transition:opacity 2.15s cubic-bezier(.22,.61,.36,1),clip-path 2.95s cubic-bezier(.19,1,.22,1),filter 2.15s cubic-bezier(.22,.61,.36,1)}
-        .ch1-library-green-propagation.active{opacity:1;clip-path:circle(182% at 21% 70%);filter:blur(10px) saturate(1)}
-        .ch1-library-room-green{position:absolute;inset:0;z-index:8;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(48,78,44,.018),rgba(36,62,37,.12) 50%,rgba(18,34,20,.46) 100%),radial-gradient(circle at 26% 66%,rgba(95,141,73,.12),transparent 46%);transition:opacity 1.7s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-monitor-bloom{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(92,132,69,.04) 0%,rgba(88,131,68,.08) 5%,rgba(68,109,56,.13) 11%,rgba(41,74,40,.1) 17%,rgba(22,39,24,.05) 23%,transparent 31%);filter:blur(12px);transform:scale(.995);transition:opacity .62s cubic-bezier(.22,.61,.36,1),filter 1.28s cubic-bezier(.22,.61,.36,1),transform 1.28s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-monitor-bloom.active{opacity:1;filter:blur(24px);transform:scale(1.012)}
+        .ch1-library-green-propagation{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(91,132,69,.03) 0%,rgba(88,131,68,.08) 8%,rgba(72,115,59,.24) 18%,rgba(46,84,44,.56) 37%,rgba(18,34,20,.9) 69%,rgba(7,12,8,1) 100%);clip-path:circle(.8% at 21% 70%);filter:blur(38px) saturate(.96);transition:opacity 1.55s cubic-bezier(.22,.61,.36,1),clip-path 2.1s cubic-bezier(.19,1,.22,1),filter 1.55s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-green-propagation.active{opacity:1;clip-path:circle(182% at 21% 70%);filter:blur(8px) saturate(.98)}
+        .ch1-library-room-green{position:absolute;inset:0;z-index:8;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(40,66,38,.028),rgba(31,55,33,.16) 52%,rgba(14,28,17,.56) 100%),radial-gradient(circle at 26% 66%,rgba(88,131,68,.14),transparent 46%);transition:opacity 1.15s cubic-bezier(.22,.61,.36,1)}
         .ch1-library-room-green.active{opacity:1}
-        .ch1-library-full-green{position:absolute;inset:0;z-index:9;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(110,160,82,.08) 0%,rgba(98,149,75,.16) 8%,rgba(73,120,59,.38) 19%,rgba(42,78,41,.72) 40%,rgba(18,34,20,.96) 72%,rgba(7,12,7,1) 100%);clip-path:circle(.9% at 21% 70%);filter:blur(34px) saturate(.96);transition:opacity 2.05s cubic-bezier(.22,.61,.36,1),clip-path 2.85s cubic-bezier(.19,1,.22,1),filter 2.05s cubic-bezier(.22,.61,.36,1)}
-        .ch1-library-full-green.active{opacity:1;clip-path:circle(188% at 21% 70%);filter:blur(6px) saturate(1)}
-        .ch1-scene.ch1-scene-dissolve{opacity:1;filter:brightness(.34) saturate(.88) blur(1.4px);transition:filter 1.2s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-full-green{position:absolute;inset:0;z-index:9;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(86,125,65,.04) 0%,rgba(84,126,65,.1) 9%,rgba(68,109,56,.32) 20%,rgba(39,72,39,.78) 42%,rgba(14,28,17,.98) 74%,rgba(7,12,7,1) 100%);clip-path:circle(1.2% at 21% 70%);filter:blur(24px) saturate(.96);transition:opacity 1.2s cubic-bezier(.22,.61,.36,1),clip-path 1.6s cubic-bezier(.19,1,.22,1),filter 1.2s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-full-green.active{opacity:1;clip-path:circle(188% at 21% 70%);filter:blur(2px) saturate(.98)}
+        .ch1-library-play-cue{position:absolute;left:50%;top:50%;z-index:10;transform:translate(-50%,-50%) translateY(6px);opacity:0;pointer-events:none;color:rgba(255,255,255,.94);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:opacity .18s linear,transform .22s ease}
+        .ch1-library-play-cue.show{opacity:1;transform:translate(-50%,-50%) translateY(0)}
+        .ch1-scene.ch1-scene-dissolve{opacity:1;filter:brightness(.3) saturate(.86) blur(1px);transition:filter .35s ease-out}
         .ch1-line-block.ch1-thesis{z-index:8;opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
         .ch1-line-block.ch1-thesis.show{opacity:1;transform:translateY(0)}
         .ch1-crossing-shell{position:relative;width:100%}
-        .ch1-crossing-green-carry{position:absolute;inset:0;z-index:30;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(110,160,82,.08) 0%,rgba(98,149,75,.16) 8%,rgba(73,120,59,.38) 19%,rgba(42,78,41,.72) 40%,rgba(18,34,20,.96) 72%,rgba(7,12,7,1) 100%);opacity:1;animation:crossingGreenCarryOut 1.95s cubic-bezier(.22,.61,.36,1) forwards}
+        .ch1-crossing-green-carry{position:absolute;inset:0;z-index:30;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(86,125,65,.04) 0%,rgba(84,126,65,.1) 9%,rgba(68,109,56,.32) 20%,rgba(39,72,39,.78) 42%,rgba(14,28,17,.98) 74%,rgba(7,12,7,1) 100%);opacity:1;animation:crossingGreenCarryOut .28s ease-out forwards}
 
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
         .ch1-feedback.show{opacity:1;transform:translateY(0)}
