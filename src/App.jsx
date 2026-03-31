@@ -1302,6 +1302,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const floodTimeoutRef = useRef(null);
   const dissolveTimeoutRef = useRef(null);
   const crossingTimeoutRef = useRef(null);
+  const swoshTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState('meadow');
   const [showMeadowFeedback, setShowMeadowFeedback] = useState(false);
@@ -1311,12 +1312,16 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const [showCrossing, setShowCrossing] = useState(false);
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const [showLibraryThesis, setShowLibraryThesis] = useState(false);
-  const [libraryFloodActive, setLibraryFloodActive] = useState(false);
+  const [libraryMonitorBloom, setLibraryMonitorBloom] = useState(false);
+  const [libraryPropagationActive, setLibraryPropagationActive] = useState(false);
+  const [libraryRoomGreen, setLibraryRoomGreen] = useState(false);
   const [librarySceneDissolve, setLibrarySceneDissolve] = useState(false);
 
   const unlockAudio = useCallback(() => {
     if (!audioUnlocked) setAudioUnlocked(true);
   }, [audioUnlocked]);
+
+  const playLibrarySwosh = useLibrarySwosh();
 
   const syncVideoAudio = useCallback((video, { loop = false, visible = true, muted = true } = {}) => {
     if (!video) return;
@@ -1352,10 +1357,12 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
       if (activated) {
         fullVideo.style.display = 'block';
-        fullVideo.currentTime = 0;
+        fullVideo.currentTime = 0.22;
+        fullVideo.playbackRate = 0.92;
         const p = fullVideo.play();
         if (p?.catch) p.catch(() => {});
       } else {
+        fullVideo.playbackRate = 1;
         fullVideo.pause();
         fullVideo.currentTime = 0;
         fullVideo.style.display = 'block';
@@ -1384,6 +1391,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
       if (floodTimeoutRef.current) clearTimeout(floodTimeoutRef.current);
       if (dissolveTimeoutRef.current) clearTimeout(dissolveTimeoutRef.current);
       if (crossingTimeoutRef.current) clearTimeout(crossingTimeoutRef.current);
+      if (swoshTimeoutRef.current) clearTimeout(swoshTimeoutRef.current);
     };
   }, []);
 
@@ -1403,7 +1411,9 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setScene('library');
     setActivated(false);
     setShowLibraryThesis(false);
-    setLibraryFloodActive(false);
+    setLibraryMonitorBloom(false);
+    setLibraryPropagationActive(false);
+    setLibraryRoomGreen(false);
     setLibrarySceneDissolve(false);
   }, [unlockAudio]);
 
@@ -1411,7 +1421,9 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     if (activated) return;
     unlockAudio();
     setScene('discover');
-    setLibraryFloodActive(false);
+    setLibraryMonitorBloom(false);
+    setLibraryPropagationActive(false);
+    setLibraryRoomGreen(false);
     setLibrarySceneDissolve(false);
     setShowLibraryThesis(false);
   }, [activated, unlockAudio]);
@@ -1420,30 +1432,38 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     if (activated) return;
     unlockAudio();
     setActivated(true);
-    setLibraryFloodActive(false);
+    setLibraryMonitorBloom(false);
+    setLibraryPropagationActive(false);
+    setLibraryRoomGreen(false);
     setLibrarySceneDissolve(false);
     setShowLibraryThesis(false);
 
+    swoshTimeoutRef.current = setTimeout(() => {
+      playLibrarySwosh();
+      setLibraryMonitorBloom(true);
+    }, 80);
+
+    floodTimeoutRef.current = setTimeout(() => {
+      setLibraryPropagationActive(true);
+    }, 220);
+
     thesisTimeoutRef.current = setTimeout(() => {
       setShowLibraryThesis(true);
-    }, 320);
+    }, 560);
 
     revealTimeoutRef.current = setTimeout(() => {
       setProfileUnlocked(true);
-    }, 760);
-
-    floodTimeoutRef.current = setTimeout(() => {
-      setLibraryFloodActive(true);
-    }, 420);
+      setLibraryRoomGreen(true);
+    }, 980);
 
     dissolveTimeoutRef.current = setTimeout(() => {
       setLibrarySceneDissolve(true);
-    }, 1700);
+    }, 2250);
 
     crossingTimeoutRef.current = setTimeout(() => {
       setShowCrossing(true);
-    }, 2450);
-  }, [activated, unlockAudio]);
+    }, 3120);
+  }, [activated, unlockAudio, playLibrarySwosh]);
 
   const handleCrossingComplete = useCallback(() => {
     onRequestChapterTwo?.();
@@ -1498,8 +1518,9 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 />
                 <div className="ch1-library-glow" />
                 <div className={`ch1-library-activated-glow ${activated ? 'active' : ''}`} />
-                <div className={`ch1-library-green-flood ${libraryFloodActive ? 'active' : ''}`} />
-                <div className={`ch1-library-green-wash ${libraryFloodActive ? 'active' : ''}`} />
+                <div className={`ch1-library-monitor-bloom ${libraryMonitorBloom ? 'active' : ''}`} />
+                <div className={`ch1-library-green-propagation ${libraryPropagationActive ? 'active' : ''}`} />
+                <div className={`ch1-library-room-green ${libraryRoomGreen ? 'active' : ''}`} />
                 <div className={`ch1-line-block ch1-thesis ${showLibraryThesis ? 'show' : ''}`}>
                   <div className="ch1-line">{T.revealCopy}</div>
                 </div>
@@ -1750,15 +1771,18 @@ export default function Roberto() {
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
         .ch1-line{color:#dce7de;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}
         .ch1-library-glow{position:absolute;inset:0;z-index:3;background:radial-gradient(circle at 19% 71%,rgba(167,203,216,.13),transparent 18%);opacity:.65}
-        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;transition:opacity 1.15s cubic-bezier(.22,.61,.36,1), filter 1.15s cubic-bezier(.22,.61,.36,1);filter:brightness(1.02) contrast(1.02) saturate(1.02)}
-        .ch1-library-activation-video.active{opacity:.5;filter:brightness(1.08) contrast(1.04) saturate(1.08)}
-        .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(194,219,228,.2),transparent 16%), linear-gradient(180deg,rgba(167,203,216,.03),rgba(167,203,216,.14));transition:opacity 1s ease}
+        
+        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;clip-path:circle(1.5% at 21% 70%);transition:opacity 1.1s cubic-bezier(.22,.61,.36,1), filter 1.1s cubic-bezier(.22,.61,.36,1), clip-path 1.45s cubic-bezier(.19,1,.22,1);filter:brightness(.96) contrast(1.04) saturate(1.06)}
+        .ch1-library-activation-video.active{opacity:.76;clip-path:circle(140% at 21% 70%);filter:brightness(1.02) contrast(1.08) saturate(1.12)}
+        .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(194,219,228,.18),transparent 14%), linear-gradient(180deg,rgba(167,203,216,.02),rgba(167,203,216,.1));transition:opacity .9s ease}
         .ch1-library-activated-glow.active{opacity:1}
-        .ch1-library-green-flood{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle at 23% 69%,rgba(196,229,160,.0) 0%,rgba(196,229,160,.16) 16%,rgba(135,173,103,.44) 38%,rgba(43,68,44,.86) 100%),linear-gradient(180deg,rgba(74,111,63,.02),rgba(54,88,50,.58));mix-blend-mode:screen;filter:blur(10px);transform:scale(1.03);transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), filter 1.3s cubic-bezier(.22,.61,.36,1), transform 1.3s cubic-bezier(.22,.61,.36,1)}
-        .ch1-library-green-flood.active{opacity:.9;filter:blur(3px);transform:scale(1)}
-        .ch1-library-green-wash{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(122,163,98,.04),rgba(79,122,64,.22) 55%,rgba(26,44,27,.52) 100%);transition:opacity 1.25s cubic-bezier(.22,.61,.36,1)}
-        .ch1-library-green-wash.active{opacity:1}
-        .ch1-scene.ch1-scene-dissolve{opacity:0;filter:brightness(1.06) saturate(1.08);transition:opacity .7s ease, filter .7s ease}
+        .ch1-library-monitor-bloom{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(239,255,216,.95) 0%,rgba(205,235,165,.7) 4%,rgba(120,172,104,.32) 11%,transparent 18%);filter:blur(4px);transform:scale(.985);transition:opacity .24s ease, filter .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-monitor-bloom.active{opacity:1;filter:blur(12px);transform:scale(1.02)}
+        .ch1-library-green-propagation{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(202,236,162,0) 0%,rgba(202,236,162,.18) 10%,rgba(128,174,103,.34) 21%,rgba(43,72,43,.78) 58%,rgba(15,28,18,.9) 100%),linear-gradient(180deg,rgba(78,117,67,.03),rgba(53,87,49,.38) 62%,rgba(18,29,19,.68) 100%);mix-blend-mode:screen;clip-path:circle(2% at 21% 70%);filter:blur(10px);transition:opacity 1.2s cubic-bezier(.22,.61,.36,1), clip-path 1.55s cubic-bezier(.19,1,.22,1), filter 1.2s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-green-propagation.active{opacity:.94;clip-path:circle(145% at 21% 70%);filter:blur(2px)}
+        .ch1-library-room-green{position:absolute;inset:0;z-index:8;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(104,145,85,.03),rgba(84,127,67,.14) 50%,rgba(28,47,28,.34) 100%),radial-gradient(circle at 32% 62%,rgba(144,186,112,.16),transparent 42%);transition:opacity 1s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-room-green.active{opacity:1}
+        .ch1-scene.ch1-scene-dissolve{opacity:0;filter:brightness(.82) saturate(1.02) blur(.8px);transition:opacity .95s ease, filter .95s ease}
         .ch1-line-block.ch1-thesis{z-index:8;opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
         .ch1-line-block.ch1-thesis.show{opacity:1;transform:translateY(0)}
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
