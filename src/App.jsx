@@ -916,6 +916,31 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const targetStart = targetCenter - difficulty.targetWidth / 2;
   const targetEnd = targetCenter + difficulty.targetWidth / 2;
 
+
+
+  const baseSegments = useMemo(() => {
+    const points = [
+      { x: -120, y: 900 },
+      CROSSING_ENTRY,
+      ...CROSSING_NODES,
+      CROSSING_EXIT,
+      { x: 1880, y: 620 },
+    ];
+    const segs = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = points[i];
+      const b = points[i + 1];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      segs.push({
+        x: a.x,
+        y: a.y,
+        length: Math.hypot(dx, dy),
+        angle: Math.atan2(dy, dx) * (180 / Math.PI),
+      });
+    }
+    return segs;
+  }, []);
   const activeSegments = useMemo(() => {
     if (activatedNodes.length === 0) return [];
     const segs = [];
