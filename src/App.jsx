@@ -1350,7 +1350,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const thesisTimeoutRef = useRef(null);
   const floodTimeoutRef = useRef(null);
   const dissolveTimeoutRef = useRef(null);
-  const crossingTimeoutRef = useRef(null);
   const mountCrossingTimeoutRef = useRef(null);
   const swoshTimeoutRef = useRef(null);
 
@@ -1366,8 +1365,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const [libraryPropagationActive, setLibraryPropagationActive] = useState(false);
   const [libraryRoomGreen, setLibraryRoomGreen] = useState(false);
   const [libraryTakeoverSolid, setLibraryTakeoverSolid] = useState(false);
-  const [librarySceneDissolve, setLibrarySceneDissolve] = useState(false);
-  const [showLibraryPlayCue, setShowLibraryPlayCue] = useState(false);
 
   const unlockAudio = useCallback(() => {
     if (!audioUnlocked) setAudioUnlocked(true);
@@ -1442,7 +1439,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
       if (thesisTimeoutRef.current) clearTimeout(thesisTimeoutRef.current);
       if (floodTimeoutRef.current) clearTimeout(floodTimeoutRef.current);
       if (dissolveTimeoutRef.current) clearTimeout(dissolveTimeoutRef.current);
-      if (crossingTimeoutRef.current) clearTimeout(crossingTimeoutRef.current);
       if (mountCrossingTimeoutRef.current) clearTimeout(mountCrossingTimeoutRef.current);
       if (swoshTimeoutRef.current) clearTimeout(swoshTimeoutRef.current);
     };
@@ -1468,8 +1464,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryPropagationActive(false);
     setLibraryRoomGreen(false);
     setLibraryTakeoverSolid(false);
-    setLibrarySceneDissolve(false);
-    setShowLibraryPlayCue(false);
   }, [unlockAudio]);
 
   const handleBackOff = useCallback(() => {
@@ -1480,8 +1474,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryPropagationActive(false);
     setLibraryRoomGreen(false);
     setLibraryTakeoverSolid(false);
-    setLibrarySceneDissolve(false);
-    setShowLibraryPlayCue(false);
     setShowLibraryThesis(false);
   }, [activated, unlockAudio]);
 
@@ -1493,8 +1485,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryPropagationActive(false);
     setLibraryRoomGreen(false);
     setLibraryTakeoverSolid(false);
-    setLibrarySceneDissolve(false);
-    setShowLibraryPlayCue(false);
     setShowLibraryThesis(false);
 
     swoshTimeoutRef.current = setTimeout(() => {
@@ -1519,14 +1509,9 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
       setLibraryTakeoverSolid(true);
     }, 1320);
 
-    crossingTimeoutRef.current = setTimeout(() => {
-      setShowLibraryPlayCue(true);
-    }, 1700);
-
     mountCrossingTimeoutRef.current = setTimeout(() => {
-      setLibrarySceneDissolve(true);
       setShowCrossing(true);
-    }, 2120);
+    }, 1650);
   }, [activated, unlockAudio, playLibrarySwosh]);
 
   const handleCrossingComplete = useCallback(() => {
@@ -1570,7 +1555,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 </div>
               </section>
 
-              <section className={`ch1-scene ${scene === 'library' ? 'active' : ''} ${librarySceneDissolve ? 'ch1-scene-dissolve' : ''}`}>
+              <section className={`ch1-scene ${scene === 'library' ? 'active' : ''}`}>
                 <div className={`ch1-library-base-layer ${libraryTakeoverSolid ? 'taken' : ''}`}>
                   <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
                   <div className="ch1-library-glow" />
@@ -1591,7 +1576,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 <div className={`ch1-library-green-propagation ${libraryPropagationActive ? 'active' : ''}`} />
                 <div className={`ch1-library-room-green ${libraryRoomGreen ? 'active' : ''}`} />
                 <div className={`ch1-library-full-green ${libraryTakeoverSolid ? 'active' : ''}`} />
-                <div className={`ch1-library-play-cue ${showLibraryPlayCue ? 'show' : ''}`}>play</div>
               </section>
             </div>
 
@@ -1621,7 +1605,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
           <>
             <div className="ch1-crossing-shell">
               <ConnectionsCrossing onComplete={handleCrossingComplete} />
-              <div className="ch1-crossing-green-carry" />
             </div>
             <Ch1ProfilePanel unlocked={true} T={T} />
           </>
@@ -1856,13 +1839,9 @@ export default function Roberto() {
         .ch1-library-room-green.active{opacity:1}
         .ch1-library-full-green{position:absolute;inset:0;z-index:9;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(86,125,65,.04) 0%,rgba(84,126,65,.1) 9%,rgba(68,109,56,.32) 20%,rgba(39,72,39,.78) 42%,rgba(14,28,17,.98) 74%,rgba(7,12,7,1) 100%);clip-path:circle(1.2% at 21% 70%);filter:blur(24px) saturate(.96);transition:opacity 1.2s cubic-bezier(.22,.61,.36,1),clip-path 1.6s cubic-bezier(.19,1,.22,1),filter 1.2s cubic-bezier(.22,.61,.36,1)}
         .ch1-library-full-green.active{opacity:1;clip-path:circle(188% at 21% 70%);filter:blur(2px) saturate(.98)}
-        .ch1-library-play-cue{position:absolute;left:50%;top:50%;z-index:10;transform:translate(-50%,-50%) translateY(6px);opacity:0;pointer-events:none;color:rgba(255,255,255,.94);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:opacity .18s linear,transform .22s ease}
-        .ch1-library-play-cue.show{opacity:1;transform:translate(-50%,-50%) translateY(0)}
-        .ch1-scene.ch1-scene-dissolve{opacity:1;filter:brightness(.3) saturate(.86) blur(1px);transition:filter .35s ease-out}
         .ch1-line-block.ch1-thesis{z-index:8;opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
         .ch1-line-block.ch1-thesis.show{opacity:1;transform:translateY(0)}
         .ch1-crossing-shell{position:relative;width:100%}
-        .ch1-crossing-green-carry{position:absolute;inset:0;z-index:30;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(86,125,65,.04) 0%,rgba(84,126,65,.1) 9%,rgba(68,109,56,.32) 20%,rgba(39,72,39,.78) 42%,rgba(14,28,17,.98) 74%,rgba(7,12,7,1) 100%);opacity:1;animation:crossingGreenCarryOut .28s ease-out forwards}
 
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
         .ch1-feedback.show{opacity:1;transform:translateY(0)}
@@ -1905,7 +1884,6 @@ export default function Roberto() {
         @keyframes crossingFadeToWhite{0%{opacity:0}100%{opacity:1}}
         @keyframes crossingPhraseIn{0%{opacity:0;transform:translateY(12px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         @keyframes crossingChapter2In{0%{opacity:0}100%{opacity:1}}
-        @keyframes crossingGreenCarryOut{0%{opacity:1;filter:blur(6px) saturate(.98)}30%{opacity:1;filter:blur(4px) saturate(1)}68%{opacity:.92;filter:blur(2px) saturate(1)}100%{opacity:0;filter:blur(.2px) saturate(1)}}
         @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
         @media(max-width:600px){
