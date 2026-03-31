@@ -9,12 +9,15 @@ const GAME_ENABLED = true;
 // ASSET CONFIGURATION
 // ============================================================================
 const ASSET_BASE = "https://robertomarchesini.com/assets/chapter1";
+const ASSET_BASE_CH2 = "https://robertomarchesini.com/assets/chapter2";
 const ASSETS = {
   pratoFirstFrame: `${ASSET_BASE}/prato_first_frame.png`,
   pratoFull: `${ASSET_BASE}/pratofull.mp4`,
   discoverCrtCloseup: `${ASSET_BASE}/discover_crt_closeup_v4_color_match_precise.webp?v=4`,
   libraryLoop: `${ASSET_BASE}/loopbiblioteca.mp4`,
   libraryFull: `${ASSET_BASE}/fullbiblioteca.mp4`,
+  chapter2DeskFrame: `${ASSET_BASE_CH2}/chapter2_desk_frame.png?v=1`,
+  chapter2DeskLoop: `${ASSET_BASE_CH2}/chapter2_daynight_loop.mp4?v=1`,
 };
 
 // ============================================================================
@@ -113,6 +116,13 @@ const LANG = {
       crossingSubcopy: "Frecce / WASD o trascina.",
       crossingComplete: "Il sistema si apre.",
       backToSurface: "← Torna in superficie",
+      introTitle: "L'origine",
+    },
+    ch2: {
+      kicker: "Capitolo 2 · Conflitto",
+      subcopy: "Il tempo passa. Lui resta lì.",
+      backToSurface: "← Torna in superficie",
+      introTitle: "Il conflitto",
     }
   },
   en: {
@@ -206,6 +216,13 @@ const LANG = {
       crossingSubcopy: "Arrows / WASD or drag.",
       crossingComplete: "The system opens.",
       backToSurface: "← Back to surface",
+      introTitle: "Origin",
+    },
+    ch2: {
+      kicker: "Chapter 2 · Conflict",
+      subcopy: "Time moves. He stays there.",
+      backToSurface: "← Back to surface",
+      introTitle: "Conflict",
     }
   },
 };
@@ -1615,6 +1632,90 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 }
 
 
+
+function ChapterIntroCard({ number, title, onDone }) {
+  useEffect(() => {
+    const t = setTimeout(() => onDone?.(), 1500);
+    return () => clearTimeout(t);
+  }, [onDone]);
+
+  return (
+    <div className="chapter-card-shell" onClick={onDone} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
+      <div className="chapter-card-inner">
+        <div className="chapter-card-kicker">Capitolo {number}</div>
+        <div className="chapter-card-title">{title}</div>
+      </div>
+    </div>
+  );
+}
+
+
+function ChapterTwoScene({ T, onBack }) {
+  const deskLoopRef = useRef(null);
+  const [windowGlow, setWindowGlow] = useState(0.04);
+
+  useEffect(() => {
+    const video = deskLoopRef.current;
+    if (!video) return;
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+    const play = () => { const p = video.play(); if (p?.catch) p.catch(() => {}); };
+    play();
+
+    let raf = 0;
+    const tick = () => {
+      if (video.duration) {
+        const phase = video.currentTime / video.duration;
+        const eased = 0.5 - 0.5 * Math.cos(phase * Math.PI * 2);
+        setWindowGlow(0.025 + eased * 0.055);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      video.pause();
+    };
+  }, []);
+
+  return (
+    <div className="ch1-root">
+      <div className="ch1-wrap">
+        <div className="ch1-top">
+          <div className="ch1-kicker">{T.kicker}</div>
+          <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+        </div>
+
+        <div className="ch2-stage">
+          <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
+
+          <div className="ch2-window-mask">
+            <video
+              ref={deskLoopRef}
+              className="ch2-window-video"
+              src={ASSETS.chapter2DeskLoop}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+            />
+          </div>
+
+          <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
+          <div className="ch2-monitor-breath" />
+          <div className="ch2-room-grade" />
+          <div className="ch1-scan" />
+        </div>
+
+        <div className="ch2-subcopy">{T.subcopy}</div>
+      </div>
+    </div>
+  );
+}
+
 // ============================================================================
 // FALLING WORDS GENERATOR
 // ============================================================================
@@ -1659,6 +1760,8 @@ export default function Roberto() {
   const hasScrolled = useRef(false);
 
   const T = LANG[lang];
+  const [gameChapter, setGameChapter] = useState("chapter1");
+  const [gameIntroCard, setGameIntroCard] = useState(null);
 
   // Loading
   useEffect(() => {
@@ -1745,6 +1848,8 @@ export default function Roberto() {
   }, []);
 
   const handleTrash = () => {
+    setGameChapter("chapter1");
+    setGameIntroCard("chapter1");
     setFallingWords(genFallingWords(T));
     setFalling(true);
     setContentFading(true);
@@ -1753,8 +1858,10 @@ export default function Roberto() {
   };
 
   const handleBack = () => {
+    setGameChapter("chapter1");
+    setGameIntroCard(null);
     setFalling(false); setFallingWords([]); setContentFading(false);
-    setPhase("main"); setGlitch(true); setTimeout(() => setGlitch(false), 500);
+    setPhase("main"); setGameChapter("chapter1"); setGlitch(true); setTimeout(() => setGlitch(false), 500);
     // Reset ghost system
     setGhostReady(false);
     timeOnPage.current = 0;
@@ -1887,6 +1994,17 @@ export default function Roberto() {
         @keyframes crossingChapter2In{0%{opacity:0}100%{opacity:1}}
         @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
+        
+        .ch2-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid #161616;background:#0b0f12;box-shadow:0 0 0 1px rgba(255,255,255,.02),0 30px 70px rgba(0,0,0,.35)}
+        .ch2-fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+        .ch2-window-mask{position:absolute;inset:0;overflow:hidden;clip-path:polygon(19% 15%, 62.8% 15%, 62.8% 49.3%, 19% 49.3%);z-index:2}
+        .ch2-window-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.96) brightness(.98)}
+        .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:34.8%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 45%, rgba(192,223,255,.14), rgba(149,205,255,.05) 48%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .35s ease}
+        .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.16) 0%, rgba(155,225,255,.08) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
+        .ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.05), rgba(4,8,12,.14));mix-blend-mode:multiply}
+        .ch2-subcopy{width:100%;margin-top:14px;color:#6c7782;font-size:11px;letter-spacing:.4px;text-align:left;font-style:italic;font-family:'Playfair Display',serif}
+        @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
+
         @media(max-width:600px){
           .svc-in{flex-direction:column!important;gap:8px!important}
           .svc-tw{min-width:auto!important}
@@ -2182,15 +2300,38 @@ export default function Roberto() {
         </div>
       )}
 
+      {phase === "game" && gameIntroCard === "chapter1" && (
+        <ChapterIntroCard
+          number="1"
+          title={T.ch1.introTitle}
+          onDone={() => setGameIntroCard(null)}
+        />
+      )}
+
+      {phase === "game" && gameIntroCard === "chapter2" && (
+        <ChapterIntroCard
+          number="2"
+          title={T.ch2.introTitle}
+          onDone={() => setGameIntroCard(null)}
+        />
+      )}
+
       {/* GAME — Chapter 1 */}
-      {phase === "game" && (
+      {phase === "game" && !gameIntroCard && gameChapter === "chapter1" && (
         <ChapterOne 
           T={T.ch1} 
           onBack={handleBack}
           onRequestChapterTwo={() => {
-            // Hook per capitolo 2
-            console.log("Chapter 1 complete, ready for Chapter 2");
+            setGameChapter("chapter2");
+            setGameIntroCard("chapter2");
           }}
+        />
+      )}
+
+      {phase === "game" && !gameIntroCard && gameChapter === "chapter2" && (
+        <ChapterTwoScene
+          T={T.ch2}
+          onBack={handleBack}
         />
       )}
     </div>
