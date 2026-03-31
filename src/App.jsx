@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 // ============================================================================
+// GAME TOGGLE - Set to true when the game is ready for launch
+// ============================================================================
+const GAME_ENABLED = false;
+
+// ============================================================================
 // ASSET CONFIGURATION
 // ============================================================================
 const ASSET_BASE = "https://robertomarchesini.com/assets/chapter1";
@@ -65,7 +70,7 @@ const LANG = {
     ],
     nowBuildingLabel: "Direzione",
     nowBuilding: "La direzione si sposta verso formati AI-powered, esperienze interattive, narrative di lancio e sistemi capaci di rendere le idee più vive, leggibili e costruibili.\n\nIl lavoro sopra è il fondamento. Quello che segue è dove vado.",
-    availableFor: "Disponibile per collaborazioni selezionate — brand, eventi, esperienze digitali, sistemi creativi AI-powered.",
+    availableFor: "Disponibile per collaborazioni selezionate — brand, eventi, pmi, esperienze digitali, sistemi creativi AI-powered.",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
     hintDefault: "Questa pagina spiega il lavoro. Il resto è il motivo per cui lo faccio.",
@@ -73,6 +78,9 @@ const LANG = {
     finally: "Finalmente.", realStory: "I servizi spiegano cosa faccio. Il resto spiega come ci sono arrivato.",
     backBtn: "← Torna alla pagina noiosa", or: "o",
     footerPiva: "P.IVA 10893121003", footerPrivacy: "Privacy Policy", init: "Inizializzazione",
+    comingSoonTitle: "In costruzione.",
+    comingSoonSub: "Qui ci sarà qualcosa che vale la pena aspettare.",
+    comingSoonHint: "Nel frattempo, la pagina noiosa dice già tutto quello che serve.",
     ghostPhases: {
       early: ["Elegante. Anche troppo.", "Il bello non basta."],
       mid: ["Sì ok, ma chi sei davvero?", "Quanta cura per non dire niente.", "Manca qualcosa, no?"],
@@ -152,7 +160,7 @@ const LANG = {
     ],
     nowBuildingLabel: "Direction",
     nowBuilding: "The next layer is moving toward AI-powered formats, interactive experiences, launch narratives and systems that make ideas more alive, more legible and more buildable.\n\nThe work above is the foundation. What follows is where I'm going.",
-    availableFor: "Available for selected collaborations — brand, events, digital experiences, AI-powered creative systems.",
+    availableFor: "Available for selected collaborations — brands, events, SMEs, digital experiences, AI-powered creative systems.",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
     hintDefault: "This page explains the work. The rest is why I do it.",
@@ -160,6 +168,9 @@ const LANG = {
     finally: "Finally.", realStory: "The services explain what I do. The rest explains how I got here.",
     backBtn: "← Back to the boring page", or: "or",
     footerPiva: "VAT IT10893121003", footerPrivacy: "Privacy Policy", init: "Initializing",
+    comingSoonTitle: "Under construction.",
+    comingSoonSub: "Something worth waiting for is being built here.",
+    comingSoonHint: "In the meantime, the boring page already says everything you need.",
     ghostPhases: {
       early: ["Slick. Maybe too slick.", "Pretty isn't enough."],
       mid: ["Yeah but who are you, really?", "So much polish to say so little.", "Something's missing, no?"],
@@ -1507,7 +1518,7 @@ export default function Roberto() {
     setFalling(true);
     setContentFading(true);
     setTimeout(() => { setFalling(false); setPhase("trashed"); }, 2000);
-    setTimeout(() => setPhase("game"), 4000);
+    setTimeout(() => setPhase(GAME_ENABLED ? "game" : "comingSoon"), 4000);
   };
 
   const handleBack = () => {
@@ -1880,6 +1891,61 @@ export default function Roberto() {
             {T.realStory}
           </div>
           <div style={{ marginTop: 40, width: 50, height: 1.5, background: "#FF4D00", animation: "glowPulse 2s infinite", borderRadius: 1 }} />
+        </div>
+      )}
+
+      {/* COMING SOON — placeholder when game not ready */}
+      {phase === "comingSoon" && (
+        <div style={{ 
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", 
+          minHeight: "100vh", padding: 40, animation: "fadeIn 1s ease-out",
+          background: "radial-gradient(ellipse at center, #0A0A0A 0%, #050505 100%)",
+        }}>
+          <div style={{ 
+            fontSize: "clamp(28px, 6vw, 42px)", 
+            marginBottom: 20, 
+            fontFamily: "'Playfair Display',serif", 
+            fontStyle: "italic", 
+            color: "#E8E4DE",
+            letterSpacing: 1,
+          }}>
+            {T.comingSoonTitle}
+          </div>
+          <div style={{ 
+            fontSize: 13, color: "#777", letterSpacing: .3, textAlign: "center", 
+            lineHeight: 1.9, maxWidth: 400, marginBottom: 32,
+          }}>
+            {T.comingSoonSub}
+          </div>
+          <div style={{ 
+            width: 60, height: 2, background: "linear-gradient(90deg, transparent, #FF4D00, transparent)", 
+            marginBottom: 40, borderRadius: 1,
+            animation: "glowPulse 3s infinite",
+          }} />
+          <div style={{ 
+            fontSize: 11, color: "#555", letterSpacing: .5, textAlign: "center", 
+            lineHeight: 1.8, maxWidth: 340, marginBottom: 36,
+          }}>
+            {T.comingSoonHint}
+          </div>
+          <button 
+            onClick={handleBack}
+            style={{
+              padding: "12px 28px",
+              background: "transparent",
+              border: "1px solid #222",
+              color: "#666",
+              fontSize: 11,
+              fontFamily: "'IBM Plex Mono', monospace",
+              letterSpacing: 1.5,
+              cursor: "pointer",
+              transition: "all .25s",
+            }}
+            onMouseEnter={(e) => { e.target.style.borderColor = "#FF4D00"; e.target.style.color = "#FF4D00"; }}
+            onMouseLeave={(e) => { e.target.style.borderColor = "#222"; e.target.style.color = "#666"; }}
+          >
+            {T.backBtn}
+          </button>
         </div>
       )}
 
