@@ -1364,6 +1364,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const [libraryMonitorBloom, setLibraryMonitorBloom] = useState(false);
   const [libraryPropagationActive, setLibraryPropagationActive] = useState(false);
   const [libraryRoomGreen, setLibraryRoomGreen] = useState(false);
+  const [libraryTakeoverSolid, setLibraryTakeoverSolid] = useState(false);
   const [librarySceneDissolve, setLibrarySceneDissolve] = useState(false);
 
   const unlockAudio = useCallback(() => {
@@ -1463,6 +1464,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryMonitorBloom(false);
     setLibraryPropagationActive(false);
     setLibraryRoomGreen(false);
+    setLibraryTakeoverSolid(false);
     setLibrarySceneDissolve(false);
   }, [unlockAudio]);
 
@@ -1473,6 +1475,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryMonitorBloom(false);
     setLibraryPropagationActive(false);
     setLibraryRoomGreen(false);
+    setLibraryTakeoverSolid(false);
     setLibrarySceneDissolve(false);
     setShowLibraryThesis(false);
   }, [activated, unlockAudio]);
@@ -1484,6 +1487,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setLibraryMonitorBloom(false);
     setLibraryPropagationActive(false);
     setLibraryRoomGreen(false);
+    setLibraryTakeoverSolid(false);
     setLibrarySceneDissolve(false);
     setShowLibraryThesis(false);
 
@@ -1494,24 +1498,25 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
     floodTimeoutRef.current = setTimeout(() => {
       setLibraryPropagationActive(true);
-    }, 220);
+    }, 180);
 
     thesisTimeoutRef.current = setTimeout(() => {
       setShowLibraryThesis(true);
-    }, 560);
+    }, 460);
 
     revealTimeoutRef.current = setTimeout(() => {
       setProfileUnlocked(true);
       setLibraryRoomGreen(true);
-    }, 980);
+    }, 900);
 
     dissolveTimeoutRef.current = setTimeout(() => {
-      setLibrarySceneDissolve(true);
-    }, 2250);
+      setLibraryTakeoverSolid(true);
+    }, 1480);
 
     crossingTimeoutRef.current = setTimeout(() => {
+      setLibrarySceneDissolve(true);
       setShowCrossing(true);
-    }, 3120);
+    }, 2580);
   }, [activated, unlockAudio, playLibrarySwosh]);
 
   const handleCrossingComplete = useCallback(() => {
@@ -1556,7 +1561,13 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
               </section>
 
               <section className={`ch1-scene ${scene === 'library' ? 'active' : ''} ${librarySceneDissolve ? 'ch1-scene-dissolve' : ''}`}>
-                <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
+                <div className={`ch1-library-base-layer ${libraryTakeoverSolid ? 'taken' : ''}`}>
+                  <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
+                  <div className="ch1-library-glow" />
+                  <div className={`ch1-line-block ch1-thesis ${showLibraryThesis ? 'show' : ''}`}>
+                    <div className="ch1-line">{T.revealCopy}</div>
+                  </div>
+                </div>
                 <video
                   ref={libraryFullRef}
                   className={`ch1-fill ch1-library-activation-video ${activated ? 'active' : ''}`}
@@ -1565,14 +1576,11 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                   playsInline
                   preload="auto"
                 />
-                <div className="ch1-library-glow" />
                 <div className={`ch1-library-activated-glow ${activated ? 'active' : ''}`} />
                 <div className={`ch1-library-monitor-bloom ${libraryMonitorBloom ? 'active' : ''}`} />
                 <div className={`ch1-library-green-propagation ${libraryPropagationActive ? 'active' : ''}`} />
                 <div className={`ch1-library-room-green ${libraryRoomGreen ? 'active' : ''}`} />
-                <div className={`ch1-line-block ch1-thesis ${showLibraryThesis ? 'show' : ''}`}>
-                  <div className="ch1-line">{T.revealCopy}</div>
-                </div>
+                <div className={`ch1-library-full-green ${libraryTakeoverSolid ? 'active' : ''}`} />
               </section>
             </div>
 
@@ -1600,7 +1608,10 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
           </>
         ) : (
           <>
-            <ConnectionsCrossing onComplete={handleCrossingComplete} />
+            <div className="ch1-crossing-shell">
+              <ConnectionsCrossing onComplete={handleCrossingComplete} />
+              <div className="ch1-crossing-green-carry" />
+            </div>
             <Ch1ProfilePanel unlocked={true} T={T} />
           </>
         )}
@@ -1819,21 +1830,27 @@ export default function Roberto() {
         .ch1-line-block.ch1-reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
         .ch1-line{color:#dce7de;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}
+        .ch1-library-base-layer{position:absolute;inset:0;z-index:1;transition:opacity 1.15s cubic-bezier(.22,.61,.36,1),filter 1.15s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-base-layer.taken{opacity:.08;filter:brightness(.58) saturate(.72) blur(1.6px)}
         .ch1-library-glow{position:absolute;inset:0;z-index:3;background:radial-gradient(circle at 19% 71%,rgba(167,203,216,.13),transparent 18%);opacity:.65}
-        
-        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;clip-path:circle(1.5% at 21% 70%);transition:opacity 1.1s cubic-bezier(.22,.61,.36,1), filter 1.1s cubic-bezier(.22,.61,.36,1), clip-path 1.45s cubic-bezier(.19,1,.22,1);filter:brightness(.96) contrast(1.04) saturate(1.06)}
-        .ch1-library-activation-video.active{opacity:.76;clip-path:circle(140% at 21% 70%);filter:brightness(1.02) contrast(1.08) saturate(1.12)}
-        .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(194,219,228,.18),transparent 14%), linear-gradient(180deg,rgba(167,203,216,.02),rgba(167,203,216,.1));transition:opacity .9s ease}
+        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;clip-path:circle(1.2% at 21% 70%);transition:opacity 1.35s cubic-bezier(.22,.61,.36,1),filter 1.35s cubic-bezier(.22,.61,.36,1),clip-path 1.9s cubic-bezier(.19,1,.22,1);filter:brightness(.98) contrast(1.08) saturate(1.16) hue-rotate(-8deg)}
+        .ch1-library-activation-video.active{opacity:.94;clip-path:circle(170% at 21% 70%);filter:brightness(1.08) contrast(1.12) saturate(1.2) hue-rotate(-10deg)}
+        .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(194,219,228,.12),transparent 12%),linear-gradient(180deg,rgba(167,203,216,.01),rgba(167,203,216,.05));transition:opacity .8s ease}
         .ch1-library-activated-glow.active{opacity:1}
-        .ch1-library-monitor-bloom{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(239,255,216,.95) 0%,rgba(205,235,165,.7) 4%,rgba(120,172,104,.32) 11%,transparent 18%);filter:blur(4px);transform:scale(.985);transition:opacity .24s ease, filter .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1)}
-        .ch1-library-monitor-bloom.active{opacity:1;filter:blur(12px);transform:scale(1.02)}
-        .ch1-library-green-propagation{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(202,236,162,0) 0%,rgba(202,236,162,.18) 10%,rgba(128,174,103,.34) 21%,rgba(43,72,43,.78) 58%,rgba(15,28,18,.9) 100%),linear-gradient(180deg,rgba(78,117,67,.03),rgba(53,87,49,.38) 62%,rgba(18,29,19,.68) 100%);mix-blend-mode:screen;clip-path:circle(2% at 21% 70%);filter:blur(10px);transition:opacity 1.2s cubic-bezier(.22,.61,.36,1), clip-path 1.55s cubic-bezier(.19,1,.22,1), filter 1.2s cubic-bezier(.22,.61,.36,1)}
-        .ch1-library-green-propagation.active{opacity:.94;clip-path:circle(145% at 21% 70%);filter:blur(2px)}
-        .ch1-library-room-green{position:absolute;inset:0;z-index:8;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(104,145,85,.03),rgba(84,127,67,.14) 50%,rgba(28,47,28,.34) 100%),radial-gradient(circle at 32% 62%,rgba(144,186,112,.16),transparent 42%);transition:opacity 1s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-monitor-bloom{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(243,255,214,1) 0%,rgba(210,242,154,.9) 5%,rgba(129,182,96,.44) 12%,transparent 20%);filter:blur(6px);transform:scale(.985);transition:opacity .28s ease,filter .85s cubic-bezier(.22,.61,.36,1),transform .85s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-monitor-bloom.active{opacity:1;filter:blur(16px);transform:scale(1.03)}
+        .ch1-library-green-propagation{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(232,255,194,.98) 0%,rgba(191,236,138,.82) 5%,rgba(133,192,98,.62) 16%,rgba(60,110,55,.72) 34%,rgba(20,38,20,.9) 66%,rgba(8,14,9,1) 100%);clip-path:circle(1.5% at 21% 70%);filter:blur(24px);transition:opacity 1.55s cubic-bezier(.22,.61,.36,1),clip-path 2.15s cubic-bezier(.19,1,.22,1),filter 1.55s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-green-propagation.active{opacity:1;clip-path:circle(172% at 21% 70%);filter:blur(3px)}
+        .ch1-library-room-green{position:absolute;inset:0;z-index:8;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(126,177,96,.04),rgba(96,148,72,.22) 52%,rgba(30,54,29,.48) 100%),radial-gradient(circle at 28% 64%,rgba(170,213,122,.22),transparent 45%);transition:opacity 1.15s cubic-bezier(.22,.61,.36,1)}
         .ch1-library-room-green.active{opacity:1}
-        .ch1-scene.ch1-scene-dissolve{opacity:0;filter:brightness(.82) saturate(1.02) blur(.8px);transition:opacity .95s ease, filter .95s ease}
+        .ch1-library-full-green{position:absolute;inset:0;z-index:9;opacity:0;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(241,255,206,1) 0%,rgba(200,241,144,.96) 6%,rgba(135,190,101,.88) 18%,rgba(67,114,58,.92) 40%,rgba(23,41,23,.98) 72%,rgba(8,14,8,1) 100%);clip-path:circle(1% at 21% 70%);filter:blur(22px) saturate(1.12);transition:opacity 1.35s cubic-bezier(.22,.61,.36,1),clip-path 1.8s cubic-bezier(.19,1,.22,1),filter 1.35s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-full-green.active{opacity:1;clip-path:circle(178% at 21% 70%);filter:blur(1px) saturate(1.04)}
+        .ch1-scene.ch1-scene-dissolve{opacity:0;filter:brightness(.48) saturate(.9) blur(1.2px);transition:opacity .85s ease,filter .85s ease}
         .ch1-line-block.ch1-thesis{z-index:8;opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
         .ch1-line-block.ch1-thesis.show{opacity:1;transform:translateY(0)}
+        .ch1-crossing-shell{position:relative;width:100%}
+        .ch1-crossing-green-carry{position:absolute;inset:0;z-index:30;pointer-events:none;background:radial-gradient(circle at 21% 70%,rgba(241,255,206,1) 0%,rgba(202,242,145,.98) 8%,rgba(135,190,101,.92) 22%,rgba(67,114,58,.94) 44%,rgba(23,41,23,.98) 72%,rgba(8,14,8,1) 100%);opacity:1;animation:crossingGreenCarryOut 1.45s cubic-bezier(.22,.61,.36,1) forwards}
+
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
         .ch1-feedback.show{opacity:1;transform:translateY(0)}
         .ch1-controls{width:100%;display:grid;gap:10px;margin-top:14px}
@@ -1875,6 +1892,7 @@ export default function Roberto() {
         @keyframes crossingFadeToWhite{0%{opacity:0}100%{opacity:1}}
         @keyframes crossingPhraseIn{0%{opacity:0;transform:translateY(12px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         @keyframes crossingChapter2In{0%{opacity:0}100%{opacity:1}}
+        @keyframes crossingGreenCarryOut{0%{opacity:1;filter:blur(2px)}55%{opacity:1;filter:blur(1px)}100%{opacity:0;filter:blur(0)}}
         @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
         @media(max-width:600px){
