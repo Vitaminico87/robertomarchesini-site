@@ -813,7 +813,8 @@ function useLandingSound() {
   return playNote;
 }
 
-function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3500 }) {
+
+function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3200 }) {
   const [currentNodeIndex, setCurrentNodeIndex] = useState(-1);
   const [activatedNodes, setActivatedNodes] = useState([]);
   const [isJumping, setIsJumping] = useState(false);
@@ -823,25 +824,13 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const [characterVisible, setCharacterVisible] = useState(true);
   const [scenePulse, setScenePulse] = useState(null);
   const [showHint, setShowHint] = useState(false);
-  const [trail, setTrail] = useState([]);
   const [squash, setSquash] = useState(false);
   const [transition, setTransition] = useState(null);
-  const [particles, setParticles] = useState([]);
-  const [birds, setBirds] = useState([]);
-  
-  // Audio
-  const playLandingNote = useLandingSound();
-  
-  // Effetti fondale
-  const [bgBreath, setBgBreath] = useState(1);
-  const [bgSaturation, setBgSaturation] = useState(1);
-  const [bgShake, setBgShake] = useState(0);
   const [allNodesGlow, setAllNodesGlow] = useState(false);
-  
-  // Timing bar state
   const [pulsePosition, setPulsePosition] = useState(0);
   const [timingMiss, setTimingMiss] = useState(false);
-  const [timingHit, setTimingHit] = useState(false);
+
+  const playLandingNote = useLandingSound();
 
   const rafRef = useRef(null);
   const pulseRafRef = useRef(null);
@@ -849,42 +838,38 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const hintTimeoutRef = useRef(null);
   const squashTimeoutRef = useRef(null);
   const missTimeoutRef = useRef(null);
-  const breathTimeoutRef = useRef(null);
-  const shakeTimeoutRef = useRef(null);
   const hasInteracted = useRef(false);
   const pulseStartTime = useRef(0);
-  const birdIntervalRef = useRef(null);
 
   const toPercentX = (x) => `${(x / CROSSING_BASE_W) * 100}%`;
   const toPercentY = (y) => `${(y / CROSSING_BASE_H) * 100}%`;
 
-  // Current difficulty
   const nextJumpIndex = currentNodeIndex + 1;
   const difficulty = TIMING_DIFFICULTY[Math.min(nextJumpIndex, TIMING_DIFFICULTY.length - 1)];
   const targetCenter = 0.5;
   const targetStart = targetCenter - difficulty.targetWidth / 2;
   const targetEnd = targetCenter + difficulty.targetWidth / 2;
 
-  // Segmenti attivi
   const activeSegments = useMemo(() => {
     if (activatedNodes.length === 0) return [];
     const segs = [];
     if (activatedNodes.length >= 1) {
       const a = CROSSING_ENTRY;
       const b = CROSSING_NODES[activatedNodes[0]];
-      const dx = b.x - a.x, dy = b.y - a.y;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
       segs.push({ x: a.x, y: a.y, length: Math.hypot(dx, dy), angle: Math.atan2(dy, dx) * (180 / Math.PI) });
     }
     for (let i = 1; i < activatedNodes.length; i++) {
       const a = CROSSING_NODES[activatedNodes[i - 1]];
       const b = CROSSING_NODES[activatedNodes[i]];
-      const dx = b.x - a.x, dy = b.y - a.y;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
       segs.push({ x: a.x, y: a.y, length: Math.hypot(dx, dy), angle: Math.atan2(dy, dx) * (180 / Math.PI) });
     }
     return segs;
   }, [activatedNodes]);
 
-  // Pulse animation
   useEffect(() => {
     if (isJumping || isComplete || isFinalJump || transition) return;
     pulseStartTime.current = performance.now();
@@ -895,102 +880,20 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       pulseRafRef.current = requestAnimationFrame(animatePulse);
     };
     pulseRafRef.current = requestAnimationFrame(animatePulse);
-    return () => { if (pulseRafRef.current) cancelAnimationFrame(pulseRafRef.current); };
+    return () => {
+      if (pulseRafRef.current) cancelAnimationFrame(pulseRafRef.current);
+    };
   }, [isJumping, isComplete, isFinalJump, transition, difficulty.cycleDuration, currentNodeIndex]);
 
-  // Particelle ambientali
-  useEffect(() => {
-    const createParticle = () => ({
-      id: Date.now() + Math.random(),
-      x: Math.random() * 100,
-      y: 30 + Math.random() * 55,
-      size: 2 + Math.random() * 2.5,
-      speed: 0.25 + Math.random() * 0.35,
-      opacity: 0.15 + Math.random() * 0.25,
-      drift: (Math.random() - 0.5) * 0.4,
-    });
-    setParticles(Array(6).fill(0).map(createParticle));
-    const interval = setInterval(() => {
-      setParticles(prev => {
-        const updated = prev.map(p => ({
-          ...p, x: p.x + p.speed,
-          y: p.y + p.drift + Math.sin(Date.now() / 1200 + p.id) * 0.08,
-        })).filter(p => p.x < 105);
-        if (updated.length < 6 && Math.random() > 0.6) {
-          updated.push({ ...createParticle(), x: -2 });
-        }
-        return updated;
-      });
-    }, 60);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Uccelli pixel
-  useEffect(() => {
-    const createBird = (startX = -5, isStormBird = false) => ({
-      id: Date.now() + Math.random(),
-      x: startX,
-      y: isStormBird ? (20 + Math.random() * 35) : (15 + Math.random() * 25),
-      speed: 0.15 + Math.random() * 0.12, // Molto più lenti
-      size: 3 + Math.random() * 2,
-      wingPhase: Math.random() * Math.PI * 2,
-      fleeing: false,
-    });
-    
-    // Spawn uccelli ogni 10-18 secondi
-    const spawnBird = () => {
-      if (Math.random() > 0.5) {
-        setBirds(prev => {
-          if (prev.length < 3) return [...prev, createBird()];
-          return prev;
-        });
-      }
-    };
-    
-    birdIntervalRef.current = setInterval(spawnBird, 10000 + Math.random() * 8000);
-    
-    // Movimento uccelli
-    const moveInterval = setInterval(() => {
-      setBirds(prev => prev.map(b => ({
-        ...b,
-        x: b.x + (b.fleeing ? b.speed * 4 : b.speed),
-        y: b.y + Math.sin(Date.now() / 400 + b.wingPhase) * 0.08 + (b.fleeing ? -0.15 : 0),
-        wingPhase: b.wingPhase + 0.1,
-      })).filter(b => b.x < 115));
-    }, 50);
-    
-    return () => {
-      if (birdIntervalRef.current) clearInterval(birdIntervalRef.current);
-      clearInterval(moveInterval);
-    };
-  }, []);
-  
-  // Funzione per spawnare stormo finale
-  const spawnFinalFlock = useCallback(() => {
-    const flockBirds = [];
-    for (let i = 0; i < 6; i++) {
-      flockBirds.push({
-        id: Date.now() + Math.random() + i,
-        x: -8 - Math.random() * 15,
-        y: 25 + Math.random() * 30,
-        speed: 0.4 + Math.random() * 0.2,
-        size: 2.5 + Math.random() * 2,
-        wingPhase: Math.random() * Math.PI * 2,
-        fleeing: true, // Partono già in volo rapido
-      });
-    }
-    setBirds(prev => [...prev, ...flockBirds]);
-  }, []);
-
-  // Hint
   useEffect(() => {
     hintTimeoutRef.current = setTimeout(() => {
       if (!hasInteracted.current) setShowHint(true);
-    }, 2000);
-    return () => { if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current); };
+    }, 1800);
+    return () => {
+      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    };
   }, []);
 
-  // Cleanup
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -998,206 +901,187 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
       if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
       if (missTimeoutRef.current) clearTimeout(missTimeoutRef.current);
-      if (breathTimeoutRef.current) clearTimeout(breathTimeoutRef.current);
-      if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
     };
   }, []);
 
-  const triggerLandingFx = (nodeIndex) => {
+  const triggerLandingFx = useCallback((nodeIndex) => {
     const node = CROSSING_NODES[nodeIndex];
     const intensity = LANDING_INTENSITY[Math.min(nodeIndex, LANDING_INTENSITY.length - 1)];
-    
-    // Suona la nota
+
     playLandingNote(nodeIndex);
-    
-    // Flash locale con intensità
     setScenePulse({ key: `${nodeIndex}-${Date.now()}`, x: node.x, y: node.y, intensity: intensity.flash });
-    
-    // Squash
+
     setSquash(true);
     if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
-    squashTimeoutRef.current = setTimeout(() => setSquash(false), 140);
-    
-    // Breath del fondale
-    setBgBreath(intensity.breath);
-    setBgSaturation(intensity.saturation);
-    if (breathTimeoutRef.current) clearTimeout(breathTimeoutRef.current);
-    breathTimeoutRef.current = setTimeout(() => {
-      setBgBreath(1);
-      setBgSaturation(s => Math.min(s, 1 + nodeIndex * 0.015)); // Mantiene un po' di saturazione
-    }, 400);
-    
-    // Shake (solo da salto 3 in poi)
-    if (intensity.shake > 0) {
-      setBgShake(intensity.shake);
-      if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
-      shakeTimeoutRef.current = setTimeout(() => setBgShake(0), 300);
-    }
-    
-    // Uccelli: si alzano in volo dopo salto 4, volano via tutti al salto 6
-    if (nodeIndex >= 3) {
-      setBirds(prev => prev.map(b => ({ ...b, fleeing: true })));
-    }
-    
-    // Ultimo nodo: effetto speciale "innesco" + salto automatico
-    if (nodeIndex === CROSSING_NODES.length - 1) {
-      // Tutti i nodi brillano insieme
-      setAllNodesGlow(true);
-      setTimeout(() => setAllNodesGlow(false), 800);
-      // Spawn stormo finale che attraversa
-      spawnFinalFlock();
-      // Salto automatico dopo pausa drammatica (nota che tiene + stormo passa)
-      setIsComplete(true);
-      setTimeout(() => doFinalJump(), 1800);
-    }
-    
-    if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
-    scenePulseTimeoutRef.current = setTimeout(() => setScenePulse(null), 500 + intensity.flash * 200);
-  };
+    squashTimeoutRef.current = setTimeout(() => setSquash(false), 130);
 
-  const doFinalJump = () => {
+    if (nodeIndex === CROSSING_NODES.length - 1) {
+      setAllNodesGlow(true);
+      setTimeout(() => setAllNodesGlow(false), 700);
+      setIsComplete(true);
+      setTimeout(() => doFinalJump(), 1100);
+    }
+
+    if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
+    scenePulseTimeoutRef.current = setTimeout(() => setScenePulse(null), 520);
+  }, [playLandingNote]);
+
+  const doFinalJump = useCallback(() => {
     const start = CROSSING_NODES[CROSSING_NODES.length - 1];
     const end = CROSSING_EXIT;
     setIsFinalJump(true);
     setIsJumping(true);
-    setTrail([]);
-    
-    // Uccelli volano via tutti
-    setBirds(prev => prev.map(b => ({ ...b, fleeing: true, speed: b.speed * 2 })));
-    
+
     const startedAt = performance.now();
-    const dur = 700;
-    let lastTrailTime = 0;
+    const dur = 680;
+
     const tick = (now) => {
       const p = Math.min((now - startedAt) / dur, 1);
-      const arc = (arcHeight * 1.5) * Math.sin(p * Math.PI);
+      const arc = (arcHeight * 1.35) * Math.sin(p * Math.PI);
       const x = start.x + (end.x - start.x) * p;
       const y = start.y + (end.y - start.y) * p - arc;
       setCharacterPos({ x, y });
-      if (now - lastTrailTime > 25) { lastTrailTime = now; setTrail(prev => [...prev.slice(-12), { x, y, id: now }]); }
-      if (p < 1) { rafRef.current = requestAnimationFrame(tick); return; }
+
+      if (p < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
       setCharacterVisible(false);
-      setTrail([]);
       setIsJumping(false);
       setTimeout(() => setTransition('fadeWhite'), 100);
-      setTimeout(() => setTransition('phrase'), 900);
-      setTimeout(() => setTransition('chapter2'), 2600);
+      setTimeout(() => setTransition('chapter2'), 1150);
       setTimeout(() => onComplete?.(), finalPause);
     };
-    rafRef.current = requestAnimationFrame(tick);
-  };
 
-  const doJump = (targetIndex) => {
+    rafRef.current = requestAnimationFrame(tick);
+  }, [arcHeight, finalPause, onComplete]);
+
+  const doJump = useCallback((targetIndex) => {
     const start = currentNodeIndex >= 0 ? CROSSING_NODES[currentNodeIndex] : CROSSING_ENTRY;
     const end = CROSSING_NODES[targetIndex];
     setIsJumping(true);
-    setTrail([]);
+
     const startedAt = performance.now();
-    let lastTrailTime = 0;
+
     const tick = (now) => {
       const p = Math.min((now - startedAt) / jumpDuration, 1);
       const arc = arcHeight * Math.sin(p * Math.PI);
       const x = start.x + (end.x - start.x) * p;
       const y = start.y + (end.y - start.y) * p - arc;
       setCharacterPos({ x, y });
-      if (now - lastTrailTime > 38) { lastTrailTime = now; setTrail(prev => [...prev.slice(-6), { x, y, id: now }]); }
-      if (p < 1) { rafRef.current = requestAnimationFrame(tick); return; }
+
+      if (p < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
       setCharacterPos(end);
       setIsJumping(false);
-      setTrail([]);
       setCurrentNodeIndex(targetIndex);
       setActivatedNodes(prev => [...prev, targetIndex]);
       triggerLandingFx(targetIndex);
       pulseStartTime.current = performance.now();
     };
+
     rafRef.current = requestAnimationFrame(tick);
-  };
+  }, [arcHeight, currentNodeIndex, jumpDuration, triggerLandingFx]);
 
   const handleAdvance = () => {
     if (isJumping || isComplete || isFinalJump || timingMiss) return;
-    if (!hasInteracted.current) { hasInteracted.current = true; setShowHint(false); }
-    
+    if (!hasInteracted.current) {
+      hasInteracted.current = true;
+      setShowHint(false);
+    }
+
     const isInTarget = pulsePosition >= targetStart && pulsePosition <= targetEnd;
-    
+
     if (!isInTarget) {
       setTimingMiss(true);
       if (missTimeoutRef.current) clearTimeout(missTimeoutRef.current);
-      missTimeoutRef.current = setTimeout(() => setTimingMiss(false), 400);
+      missTimeoutRef.current = setTimeout(() => setTimingMiss(false), 360);
       pulseStartTime.current = performance.now();
       return;
     }
-    
-    setTimingHit(true);
-    setTimeout(() => setTimingHit(false), 300);
-    
+
     const targetIndex = currentNodeIndex + 1;
     if (targetIndex >= CROSSING_NODES.length) return;
     doJump(targetIndex);
   };
 
   const spriteSrc = isJumping ? CROSSING_ASSETS.jump : CROSSING_ASSETS.idle;
-  const characterTransform = squash 
-    ? "translate(-50%, -100%) scaleX(-1.12) scaleY(0.88)"
+  const characterTransform = squash
+    ? "translate(-50%, -100%) scaleX(-1.1) scaleY(0.9)"
     : "translate(-50%, -100%) scaleX(-1)";
 
   const showTimingBar = !isJumping && !isComplete && !isFinalJump && !transition;
-  
-  // Stile fondale con effetti dinamici - ora procedurale
+
   const bgStyle = {
-    position: "relative", width: "100%", aspectRatio: "4 / 3",
+    position: "relative",
+    width: "100%",
+    aspectRatio: "4 / 3",
     maxHeight: "65vh",
     overflow: "hidden",
-    backgroundColor: "#0a0d0b", // Nero/verde petrolio profondo
+    backgroundColor: "#0a0d0b",
     cursor: isJumping || isComplete ? "default" : "pointer",
-    userSelect: "none", touchAction: "manipulation", borderRadius: 8,
-    transform: `scale(${bgBreath}) translateX(${bgShake ? (Math.random() - 0.5) * bgShake : 0}px)`,
-    transition: "transform 0.15s ease-out",
+    userSelect: "none",
+    touchAction: "manipulation",
+    borderRadius: 8,
   };
 
   return (
     <div
-      role="button" tabIndex={0}
+      role="button"
+      tabIndex={0}
       aria-label="Attraversa. Tocca quando la luce è al centro."
       onPointerDown={handleAdvance}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleAdvance(); } }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleAdvance();
+        }
+      }}
       style={bgStyle}
     >
-      {/* VOID SYNAPSE BACKGROUND - Procedurale */}
-      <VoidSynapseBackground 
+      <VoidSynapseBackground
         activatedNodes={activatedNodes}
         scenePulse={scenePulse}
         allNodesGlow={allNodesGlow}
       />
-      
-      {/* TIMING BAR - Fascio di luce minimal */}
+
       {showTimingBar && (() => {
         const isInTarget = pulsePosition >= targetStart && pulsePosition <= targetEnd;
         const distFromCenter = Math.abs(pulsePosition - 0.5);
         const centerIntensity = Math.max(0, 1 - distFromCenter * 2.5);
-        
+
         return (
           <div style={{
             position: "absolute",
-            top: "5%", left: "50%",
+            top: "5%",
+            left: "50%",
             transform: "translateX(-50%)",
-            width: "55%", maxWidth: 360,
+            width: "55%",
+            maxWidth: 360,
             height: 6,
             pointerEvents: "none",
             zIndex: 20,
             animation: timingMiss ? "crossingTimingShake 0.35s ease-out" : "none",
           }}>
             <div style={{
-              position: "absolute", inset: 0,
+              position: "absolute",
+              inset: 0,
               background: "linear-gradient(90deg, transparent 5%, rgba(199,212,160,0.08) 30%, rgba(199,212,160,0.12) 50%, rgba(199,212,160,0.08) 70%, transparent 95%)",
               borderRadius: 10,
             }} />
             <div style={{
               position: "absolute",
-              left: "50%", top: "50%",
+              left: "50%",
+              top: "50%",
               transform: "translate(-50%, -50%)",
-              width: "40%", height: 20,
-              background: `radial-gradient(ellipse, rgba(199,212,160,${0.15 + centerIntensity * 0.5}) 0%, transparent 70%)`,
-              filter: `blur(${4 + centerIntensity * 6}px)`,
+              width: "40%",
+              height: 20,
+              background: `radial-gradient(ellipse, rgba(199,212,160,${0.12 + centerIntensity * 0.45}) 0%, transparent 70%)`,
+              filter: `blur(${4 + centerIntensity * 5}px)`,
               transition: "all 0.08s ease-out",
             }} />
             <div style={{
@@ -1205,32 +1089,22 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
               left: `${pulsePosition * 100}%`,
               top: "50%",
               transform: "translate(-50%, -50%)",
-              width: isInTarget ? 18 : 10,
-              height: isInTarget ? 18 : 10,
+              width: isInTarget ? 16 : 10,
+              height: isInTarget ? 16 : 10,
               borderRadius: "50%",
               background: isInTarget
-                ? `radial-gradient(circle, rgba(235,242,225,${0.9 + centerIntensity * 0.1}) 0%, rgba(199,212,160,0.7) 40%, transparent 70%)`
-                : "radial-gradient(circle, rgba(199,212,160,0.6) 0%, rgba(126,143,99,0.3) 50%, transparent 70%)",
+                ? `radial-gradient(circle, rgba(235,242,225,${0.88 + centerIntensity * 0.1}) 0%, rgba(199,212,160,0.68) 40%, transparent 70%)`
+                : "radial-gradient(circle, rgba(199,212,160,0.58) 0%, rgba(126,143,99,0.28) 50%, transparent 70%)",
               boxShadow: isInTarget
-                ? `0 0 ${12 + centerIntensity * 18}px rgba(199,212,160,${0.6 + centerIntensity * 0.4})`
-                : "0 0 6px rgba(126,143,99,0.25)",
+                ? `0 0 ${10 + centerIntensity * 14}px rgba(199,212,160,${0.55 + centerIntensity * 0.3})`
+                : "0 0 6px rgba(126,143,99,0.22)",
               transition: "width 0.12s, height 0.12s, box-shadow 0.08s",
             }} />
-            {isInTarget && centerIntensity > 0.6 && (
-              <div style={{
-                position: "absolute",
-                left: "50%", top: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 60, height: 30,
-                background: `radial-gradient(ellipse, rgba(235,242,225,${centerIntensity * 0.4}) 0%, transparent 60%)`,
-                filter: "blur(8px)",
-                pointerEvents: "none",
-              }} />
-            )}
             {timingMiss && (
               <div style={{
-                position: "absolute", inset: -4,
-                background: "radial-gradient(ellipse at center, rgba(255,100,100,0.15) 0%, transparent 70%)",
+                position: "absolute",
+                inset: -4,
+                background: "radial-gradient(ellipse at center, rgba(255,100,100,0.12) 0%, transparent 70%)",
                 borderRadius: 20,
               }} />
             )}
@@ -1238,114 +1112,62 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         );
       })()}
 
-      {/* Color grade overlay */}
-
-      {/* Uccelli pixel */}
-      {birds.map(bird => (
-        <div key={bird.id} style={{
-          position: "absolute",
-          left: `${bird.x}%`,
-          top: `${bird.y}%`,
-          width: bird.size * 2,
-          height: bird.size,
-          pointerEvents: "none",
-          zIndex: 5,
-        }}>
-          {/* Corpo */}
-          <div style={{
-            position: "absolute",
-            left: "50%", top: "50%",
-            transform: "translate(-50%, -50%)",
-            width: bird.size,
-            height: bird.size * 0.6,
-            background: "rgba(40,45,35,0.8)",
-            borderRadius: "50%",
-          }} />
-          {/* Ali */}
-          <div style={{
-            position: "absolute",
-            left: "50%", top: "50%",
-            transform: `translate(-50%, -50%) rotate(${Math.sin(bird.wingPhase) * 25}deg)`,
-            width: bird.size * 1.8,
-            height: bird.size * 0.3,
-            background: "rgba(50,55,45,0.7)",
-            borderRadius: "50%",
-            transformOrigin: "center",
-          }} />
-        </div>
-      ))}
-
-      {/* Particelle ambientali */}
-      {particles.map(p => (
-        <div key={p.id} style={{
-          position: "absolute", left: `${p.x}%`, top: `${p.y}%`,
-          width: p.size, height: p.size, borderRadius: "50%",
-          background: `rgba(199,212,160,${p.opacity})`,
-          boxShadow: `0 0 ${p.size * 1.5}px rgba(199,212,160,${p.opacity * 0.4})`,
-          pointerEvents: "none", filter: "blur(0.5px)",
-        }} />
-      ))}
-
-      {/* FLASH SINAPTICO FULLSCREEN con intensità progressiva */}
       {scenePulse && (
-        <>
-          <div key={`flash-${scenePulse.key}`} style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: `radial-gradient(circle at ${toPercentX(scenePulse.x)} ${toPercentY(scenePulse.y)}, 
-              rgba(235,242,225,${0.7 + scenePulse.intensity * 0.3}) 0%, 
-              rgba(199,212,160,${0.5 * scenePulse.intensity}) ${8 + scenePulse.intensity * 8}%, 
-              rgba(199,212,160,${0.25 * scenePulse.intensity}) ${20 + scenePulse.intensity * 15}%, 
-              rgba(126,143,99,${0.08 * scenePulse.intensity}) ${40 + scenePulse.intensity * 20}%,
-              transparent ${60 + scenePulse.intensity * 25}%)`,
-            animation: `crossingSynapseFlash ${400 + scenePulse.intensity * 150}ms ease-out forwards`,
-          }} />
-          {/* Overlay fullscreen per salti intensi */}
-          {scenePulse.intensity > 0.5 && (
-            <div key={`glow-${scenePulse.key}`} style={{
-              position: "absolute", inset: 0, pointerEvents: "none",
-              background: `rgba(199,212,160,${0.08 * scenePulse.intensity})`,
-              animation: "crossingSynapseGlow 400ms ease-out forwards",
-            }} />
-          )}
-        </>
+        <div
+          key={`flash-${scenePulse.key}`}
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            background: `radial-gradient(circle at ${toPercentX(scenePulse.x)} ${toPercentY(scenePulse.y)},
+              rgba(235,242,225,${0.62 + scenePulse.intensity * 0.22}) 0%,
+              rgba(199,212,160,${0.38 * scenePulse.intensity}) ${10 + scenePulse.intensity * 8}%,
+              rgba(126,143,99,${0.08 * scenePulse.intensity}) ${32 + scenePulse.intensity * 14}%,
+              transparent ${56 + scenePulse.intensity * 16}%)`,
+            animation: "crossingSynapseFlash 420ms ease-out forwards",
+          }}
+        />
       )}
 
-      {/* Linee connessione */}
       {activeSegments.map((seg, i) => (
         <div key={`seg-${i}`} style={{
           position: "absolute",
-          left: toPercentX(seg.x), top: toPercentY(seg.y),
+          left: toPercentX(seg.x),
+          top: toPercentY(seg.y),
           width: `${(seg.length / CROSSING_BASE_W) * 100}%`,
-          height: "0.3%", minHeight: 2,
+          height: "0.3%",
+          minHeight: 2,
           transformOrigin: "0 50%",
           transform: `translateY(-50%) rotate(${seg.angle}deg)`,
           borderRadius: 999,
-          background: allNodesGlow 
-            ? "linear-gradient(90deg, rgba(235,242,225,0.4), rgba(199,212,160,0.7))"
-            : "linear-gradient(90deg, rgba(199,212,160,0.08), rgba(199,212,160,0.35))",
+          background: allNodesGlow
+            ? "linear-gradient(90deg, rgba(235,242,225,0.38), rgba(199,212,160,0.62))"
+            : "linear-gradient(90deg, rgba(199,212,160,0.08), rgba(199,212,160,0.28))",
           boxShadow: allNodesGlow
-            ? "0 0 15px rgba(199,212,160,0.5)"
-            : "0 0 8px rgba(199,212,160,0.18)",
+            ? "0 0 12px rgba(199,212,160,0.38)"
+            : "0 0 6px rgba(199,212,160,0.14)",
           animation: "crossingLineGlow 2.2s ease-in-out infinite",
           transition: "all 0.3s ease-out",
           pointerEvents: "none",
         }} />
       ))}
 
-      {/* Nodi attivati */}
       {CROSSING_NODES.map((node, index) => {
         if (!activatedNodes.includes(index)) return null;
         const isGlowing = allNodesGlow;
         return (
           <div key={`node-${index}`} style={{
             position: "absolute",
-            left: toPercentX(node.x), top: toPercentY(node.y),
-            width: isGlowing ? 14 : 8, height: isGlowing ? 14 : 8, borderRadius: 999,
+            left: toPercentX(node.x),
+            top: toPercentY(node.y),
+            width: isGlowing ? 12 : 8,
+            height: isGlowing ? 12 : 8,
+            borderRadius: 999,
             transform: "translate(-50%, -50%)",
-            background: isGlowing ? "rgba(235,242,225,0.95)" : "rgba(199,212,160,0.75)",
-            boxShadow: isGlowing 
-              ? "0 0 25px rgba(199,212,160,0.8), 0 0 50px rgba(199,212,160,0.4)"
-              : "0 0 12px rgba(199,212,160,0.35)",
+            background: isGlowing ? "rgba(235,242,225,0.94)" : "rgba(199,212,160,0.72)",
+            boxShadow: isGlowing
+              ? "0 0 20px rgba(199,212,160,0.58)"
+              : "0 0 10px rgba(199,212,160,0.28)",
             animation: "crossingNodeBreath 2.2s ease-in-out infinite",
             transition: "all 0.3s ease-out",
             pointerEvents: "none",
@@ -1353,132 +1175,122 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         );
       })}
 
-      {/* Trail */}
-      {trail.map((point, i) => (
-        <div key={point.id} style={{
-          position: "absolute",
-          left: toPercentX(point.x), top: toPercentY(point.y),
-          width: 4 - i * 0.4, height: 4 - i * 0.4,
-          borderRadius: 999,
-          background: `rgba(199,212,160,${0.28 - i * 0.03})`,
-          transform: "translate(-50%, -50%)",
-          filter: "blur(1px)",
-          pointerEvents: "none",
-        }} />
-      ))}
-
-      {/* Ombra personaggio */}
       {characterVisible && (
         <div style={{
           position: "absolute",
-          left: toPercentX(characterPos.x), top: toPercentY(characterPos.y + 10),
-          width: "clamp(14px, 2%, 24px)", height: "clamp(2px, 0.4%, 4px)",
-          borderRadius: "50%", background: "rgba(0,0,0,0.22)",
-          filter: "blur(2px)", transform: "translate(-50%, 0)",
+          left: toPercentX(characterPos.x),
+          top: toPercentY(characterPos.y + 10),
+          width: "clamp(14px, 2%, 24px)",
+          height: "clamp(2px, 0.4%, 4px)",
+          borderRadius: "50%",
+          background: "rgba(0,0,0,0.22)",
+          filter: "blur(2px)",
+          transform: "translate(-50%, 0)",
           pointerEvents: "none",
           opacity: isJumping ? 0.25 : 0.5,
         }} />
       )}
 
-      {/* Personaggio */}
       {characterVisible && (
         <img src={spriteSrc} alt="" draggable={false} style={{
           position: "absolute",
-          left: toPercentX(characterPos.x), top: toPercentY(characterPos.y),
+          left: toPercentX(characterPos.x),
+          top: toPercentY(characterPos.y),
           width: "clamp(32px, 4.5%, 70px)",
-          height: "auto", transform: characterTransform,
+          height: "auto",
+          transform: characterTransform,
           transformOrigin: "center bottom",
           transition: squash ? "transform 0.07s ease-out" : "transform 0.09s ease-out",
-          imageRendering: "pixelated", pointerEvents: "none",
+          imageRendering: "pixelated",
+          pointerEvents: "none",
           animation: !isJumping && !squash ? "crossingIdleFloat 2s ease-in-out infinite" : "none",
           filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4)) brightness(1.8) saturate(0.3) contrast(0.9)",
         }} />
       )}
 
-      {/* Tap hint - sotto la barra, al centro */}
       {showHint && (
         <div style={{
           position: "absolute",
-          left: 0, right: 0, top: "10%",
-          display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
-          pointerEvents: "none", animation: "crossingHintPulse 1.4s ease-in-out infinite",
+          left: 0,
+          right: 0,
+          top: "10%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 4,
+          pointerEvents: "none",
+          animation: "crossingHintPulse 1.4s ease-in-out infinite",
         }}>
           <div style={{
-            color: "rgba(199,212,160,0.85)", fontSize: "clamp(9px, 2.5vw, 11px)",
-            fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 1, textTransform: "uppercase",
-            textAlign: "center", lineHeight: 1.4,
+            color: "rgba(199,212,160,0.84)",
+            fontSize: "clamp(9px, 2.5vw, 11px)",
+            fontFamily: "'IBM Plex Mono', monospace",
+            letterSpacing: 1,
+            textTransform: "uppercase",
+            textAlign: "center",
+            lineHeight: 1.4,
             textShadow: "0 1px 4px rgba(0,0,0,0.6)",
             padding: "0 10px",
           }}>
             Tap quando la luce è al centro
           </div>
-          <div style={{
-            width: 0, height: 0,
-            borderLeft: "5px solid transparent",
-            borderRight: "5px solid transparent",
-            borderBottom: "6px solid rgba(199,212,160,0.4)",
-            marginTop: 3,
-          }} />
         </div>
       )}
 
-      {/* === TRANSIZIONI FINALI === */}
-      
       {transition && (
         <div style={{
-          position: "absolute", inset: 0, pointerEvents: "none",
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
           background: "rgba(235,242,225,1)",
           opacity: transition === 'fadeWhite' ? 0 : 1,
           animation: transition === 'fadeWhite' ? "crossingFadeToWhite 800ms ease-in-out forwards" : "none",
         }} />
       )}
 
-      {transition === 'phrase' && (
-        <div style={{
-          position: "absolute", inset: 0,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: "rgba(235,242,225,1)", pointerEvents: "none",
-        }}>
-          <div style={{
-            color: "#191E1B", fontFamily: "Georgia, serif", fontStyle: "italic",
-            fontSize: "clamp(15px, 2.4vw, 24px)", textAlign: "center", padding: "0 28px",
-            opacity: 0, animation: "crossingPhraseIn 1.5s ease-out forwards",
-          }}>
-            Ogni salto lascia un segno.
-          </div>
-        </div>
-      )}
-
       {transition === 'chapter2' && (
         <div style={{
-          position: "absolute", inset: 0,
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6,
-          background: "#191E1B", pointerEvents: "none",
-          opacity: 0, animation: "crossingChapter2In 900ms ease-out forwards",
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 6,
+          background: "#191E1B",
+          pointerEvents: "none",
+          opacity: 0,
+          animation: "crossingChapter2In 900ms ease-out forwards",
         }}>
           <div style={{
-            color: "rgba(199,212,160,0.45)", fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: "clamp(8px, 1.1vw, 10px)", letterSpacing: 4, textTransform: "uppercase",
+            color: "rgba(199,212,160,0.45)",
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: "clamp(8px, 1.1vw, 10px)",
+            letterSpacing: 4,
+            textTransform: "uppercase",
           }}>Capitolo</div>
           <div style={{
-            color: "#C7D4A0", fontFamily: "Georgia, serif",
-            fontSize: "clamp(28px, 4.5vw, 48px)", fontWeight: 400,
+            color: "#C7D4A0",
+            fontFamily: "Georgia, serif",
+            fontSize: "clamp(28px, 4.5vw, 48px)",
+            fontWeight: 400,
           }}>2</div>
         </div>
       )}
 
-      {/* Vignette dinamica */}
       <div style={{
-        position: "absolute", inset: 0, pointerEvents: "none",
-        boxShadow: `inset 0 0 ${90 + (activatedNodes.length * 5)}px rgba(0,0,0,${0.28 - activatedNodes.length * 0.02})`,
+        position: "absolute",
+        inset: 0,
+        pointerEvents: "none",
+        boxShadow: `inset 0 0 ${86 + (activatedNodes.length * 4)}px rgba(0,0,0,${0.3 - activatedNodes.length * 0.018})`,
         transition: "box-shadow 0.5s ease-out",
       }} />
 
-      {/* Scanlines */}
       <div className="ch1-scan" />
     </div>
   );
 }
+
 
 
 function ChapterOne({ T, onBack, onRequestChapterTwo }) {
@@ -1486,6 +1298,8 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const libraryLoopRef = useRef(null);
   const libraryFullRef = useRef(null);
   const revealTimeoutRef = useRef(null);
+  const thesisTimeoutRef = useRef(null);
+  const crossingTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState('meadow');
   const [showMeadowFeedback, setShowMeadowFeedback] = useState(false);
@@ -1493,10 +1307,9 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const [activated, setActivated] = useState(false);
   const [profileUnlocked, setProfileUnlocked] = useState(false);
   const [showCrossing, setShowCrossing] = useState(false);
-  const [crossingDone, setCrossingDone] = useState(false);
   const [audioUnlocked, setAudioUnlocked] = useState(false);
+  const [showLibraryThesis, setShowLibraryThesis] = useState(false);
 
-  // Unlock audio on first user interaction
   const unlockAudio = useCallback(() => {
     if (!audioUnlocked) setAudioUnlocked(true);
   }, [audioUnlocked]);
@@ -1508,8 +1321,12 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     video.playsInline = true;
     video.preload = 'auto';
     video.style.display = visible ? 'block' : 'none';
-    if (visible) { const p = video.play(); if (p?.catch) p.catch(() => {}); }
-    else video.pause();
+    if (visible) {
+      const p = video.play();
+      if (p?.catch) p.catch(() => {});
+    } else {
+      video.pause();
+    }
   }, []);
 
   useEffect(() => {
@@ -1521,36 +1338,46 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     const loopVideo = libraryLoopRef.current;
     const fullVideo = libraryFullRef.current;
     if (!loopVideo || !fullVideo) return;
+
     if (scene === 'library') {
-      if (!activated) {
-        syncVideoAudio(loopVideo, { loop: true, visible: true, muted: !audioUnlocked });
-        fullVideo.pause(); fullVideo.currentTime = 0; fullVideo.style.display = 'none';
+      syncVideoAudio(loopVideo, { loop: true, visible: true, muted: !audioUnlocked });
+
+      fullVideo.muted = true;
+      fullVideo.playsInline = true;
+      fullVideo.preload = 'auto';
+
+      if (activated) {
+        fullVideo.style.display = 'block';
+        fullVideo.currentTime = 0;
+        const p = fullVideo.play();
+        if (p?.catch) p.catch(() => {});
       } else {
-        loopVideo.pause(); loopVideo.style.display = 'none';
-        syncVideoAudio(fullVideo, { loop: false, visible: true, muted: !audioUnlocked });
+        fullVideo.pause();
+        fullVideo.currentTime = 0;
+        fullVideo.style.display = 'block';
       }
     } else {
-      loopVideo.pause(); fullVideo.pause();
-      loopVideo.style.display = 'none'; fullVideo.style.display = 'none';
+      loopVideo.pause();
+      loopVideo.style.display = 'none';
+      fullVideo.pause();
+      fullVideo.currentTime = 0;
+      fullVideo.style.display = 'none';
     }
   }, [activated, scene, syncVideoAudio, audioUnlocked]);
 
   useEffect(() => {
-    if (scene !== 'discover') { setShowApproach(false); return; }
+    if (scene !== 'discover') {
+      setShowApproach(false);
+      return;
+    }
     setShowApproach(true);
   }, [scene]);
 
   useEffect(() => {
-    const fullVideo = libraryFullRef.current;
-    if (!fullVideo) return;
-    const onEnded = () => { setShowCrossing(true); setScene('crossing'); };
-    fullVideo.addEventListener('ended', onEnded);
-    return () => fullVideo.removeEventListener('ended', onEnded);
-  }, []);
-
-  useEffect(() => {
     return () => {
       if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
+      if (thesisTimeoutRef.current) clearTimeout(thesisTimeoutRef.current);
+      if (crossingTimeoutRef.current) clearTimeout(crossingTimeoutRef.current);
     };
   }, []);
 
@@ -1560,9 +1387,18 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setTimeout(() => setShowMeadowFeedback(false), 2000);
   }, [unlockAudio]);
 
-  const handleToDiscover = useCallback(() => { unlockAudio(); setScene('discover'); }, [unlockAudio]);
-  const handleApproach = useCallback(() => { unlockAudio(); setScene('library'); }, [unlockAudio]);
-  
+  const handleToDiscover = useCallback(() => {
+    unlockAudio();
+    setScene('discover');
+  }, [unlockAudio]);
+
+  const handleApproach = useCallback(() => {
+    unlockAudio();
+    setScene('library');
+    setActivated(false);
+    setShowLibraryThesis(false);
+  }, [unlockAudio]);
+
   const handleBackOff = useCallback(() => {
     if (activated) return;
     unlockAudio();
@@ -1573,15 +1409,21 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     if (activated) return;
     unlockAudio();
     setActivated(true);
+
+    thesisTimeoutRef.current = setTimeout(() => {
+      setShowLibraryThesis(true);
+    }, 260);
+
     revealTimeoutRef.current = setTimeout(() => {
       setProfileUnlocked(true);
-      const fullVideo = libraryFullRef.current;
-      if (fullVideo) fullVideo.currentTime = 0;
-    }, 450);
+    }, 520);
+
+    crossingTimeoutRef.current = setTimeout(() => {
+      setShowCrossing(true);
+    }, 1650);
   }, [activated, unlockAudio]);
 
   const handleCrossingComplete = useCallback(() => {
-    setCrossingDone(true);
     onRequestChapterTwo?.();
   }, [onRequestChapterTwo]);
 
@@ -1624,9 +1466,17 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
               <section className={`ch1-scene ${scene === 'library' ? 'active' : ''}`}>
                 <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
-                <video ref={libraryFullRef} className="ch1-fill" src={ASSETS.libraryFull} muted playsInline preload="auto" style={{ display: 'none' }} />
+                <video
+                  ref={libraryFullRef}
+                  className={`ch1-fill ch1-library-activation-video ${activated ? 'active' : ''}`}
+                  src={ASSETS.libraryFull}
+                  muted
+                  playsInline
+                  preload="auto"
+                />
                 <div className="ch1-library-glow" />
-                <div className={`ch1-line-block ch1-reveal ${scene === 'library' && !activated ? 'show' : ''}`}>
+                <div className={`ch1-library-activated-glow ${activated ? 'active' : ''}`} />
+                <div className={`ch1-line-block ch1-thesis ${showLibraryThesis ? 'show' : ''}`}>
                   <div className="ch1-line">{T.revealCopy}</div>
                 </div>
               </section>
@@ -1664,6 +1514,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     </div>
   );
 }
+
 
 // ============================================================================
 // FALLING WORDS GENERATOR
@@ -1875,6 +1726,12 @@ export default function Roberto() {
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
         .ch1-line{color:#dce7de;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}
         .ch1-library-glow{position:absolute;inset:0;z-index:3;background:radial-gradient(circle at 19% 71%,rgba(167,203,216,.13),transparent 18%);opacity:.65}
+        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;transition:opacity .45s ease;filter:brightness(1.05) contrast(1.02)}
+        .ch1-library-activation-video.active{opacity:.24}
+        .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(194,219,228,.18),transparent 16%), linear-gradient(180deg,rgba(167,203,216,.02),rgba(167,203,216,.12));transition:opacity .45s ease}
+        .ch1-library-activated-glow.active{opacity:1}
+        .ch1-line-block.ch1-thesis{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+        .ch1-line-block.ch1-thesis.show{opacity:1;transform:translateY(0)}
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
         .ch1-feedback.show{opacity:1;transform:translateY(0)}
         .ch1-controls{width:100%;display:grid;gap:10px;margin-top:14px}
