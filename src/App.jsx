@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from "react"
 // ============================================================================
 // GAME TOGGLE - Set to true when the game is ready for launch
 // ============================================================================
-const GAME_ENABLED = false;
+const GAME_ENABLED = true;
 
 // ============================================================================
 // ASSET CONFIGURATION
@@ -24,33 +24,35 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Creatività, narrativa e AI per dare forma a brand, esperienze e sistemi con una logica chiara.",
+    hero: "Creatività, strategia e AI per costruire brand, lanci ed esperienze con una logica chiara.",
     heroSub: "Aiuto brand e progetti a diventare chiari, desiderabili e difficili da ignorare.",
-    proofStrip: "Brand narrative · Launch thinking · AI-powered systems",
+    proofStrip: "Brand · Lanci · Sistemi AI",
     whatido: "Cosa faccio",
     services: [
-      { title: "Position", desc: "Definisco il posizionamento, la narrativa e la distinzione. Aiuto brand e progetti a capire cosa sono, come parlano e perché dovrebbero importare." },
-      { title: "Shape", desc: "Direzione creativa, worldbuilding, format. Do forma visiva e narrativa a idee che altrimenti resterebbero astratte o generiche." },
-      { title: "Launch", desc: "Strategie di lancio, esperienze di go-to-market, rollout creativi. Porto le idee nel mondo con una logica chiara e un'esecuzione che si fa notare." },
-      { title: "Build", desc: "AI systems, prototipi, workflow, nuovi formati. Costruisco strumenti e processi che rendono la creatività più veloce, scalabile e intelligente." },
+      { title: "Position", subtitle: "Rendere chiaro cosa ti distingue", desc: "Definisco posizionamento, tono e messaggio, così un brand o un progetto smette di sembrare intercambiabile." },
+      { title: "Shape", subtitle: "Dare forma visiva e narrativa alle idee", desc: "Costruisco identità, contenuti e direzione creativa con un linguaggio coerente, riconoscibile e vivo." },
+      { title: "Launch", subtitle: "Portare un progetto nel mondo nel modo giusto", desc: "Lavoro su lanci, attivazioni ed esperienze per far arrivare un'idea con più chiarezza, forza e desiderabilità." },
+      { title: "Build", subtitle: "Usare l'AI per creare meglio, non solo più in fretta", desc: "Progetto sistemi, flussi e nuovi formati che aumentano qualità, velocità e possibilità creative." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali, impegni a lungo termine.",
+    selectedWorkSub: "Progetti reali, responsabilità vere, lavoro che ha dovuto reggere nel tempo.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Sistema narrativo e promozionale per uno spazio culturale con 150+ eventi l'anno e oltre 1M di visualizzazioni mensili.",
-        technical: "Brand system · Narrative direction · Launch logic",
+        narrative: "Creative direction e sistema di comunicazione per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        narrative2: "Identità, promozione e continuità editoriale costruite per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
+        technical: "Identità · Promozione · Continuità editoriale",
         tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Dodici anni di direzione creativa per uno dei live brand più riconoscibili in Italia, con un'audience digitale cresciuta fino a 400K+ persone.",
-        technical: "Narrative direction · Brand system · Audience growth",
+        narrative: "Dodici anni di direzione creativa per comunicazione e contenuti digitali di uno dei live brand più riconoscibili in Italia.",
+        narrative2: "Un sistema di contenuti costruito nel tempo, con un'audience cresciuta oltre 400K persone.",
+        technical: "Direzione creativa · Contenuti · Crescita audience",
         tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
       {
@@ -58,19 +60,21 @@ const LANG = {
         period: "2025",
         status: "active",
         narrative: "Posizionamento premium, website direction e architettura digitale per un brand eventi orientato a credibilità e lead qualificati.",
-        technical: "Positioning clarity · Digital experience · Conversion logic",
+        narrative2: "Un'identità più chiara, un tono più forte e una presenza digitale pensata per essere ricordata e contattata.",
+        technical: "Posizionamento · Website · Architettura digitale",
         tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
     ],
     howLabel: "Come lavoro",
     method: [
-      { title: "Narrativa prima del rumore", desc: "Ogni progetto parte da una storia chiara. Il resto — visual, campagne, sistemi — viene dopo e ne è conseguenza." },
-      { title: "Standard alto, sistemi intelligenti", desc: "Produco a un livello alto con processi più leggeri. L'AI amplifica, non sostituisce." },
-      { title: "Reality check", desc: "Audience, contesto, impatto. La creatività non vive fuori dalla realtà — ogni scelta passa da analisi e verifica." },
+      { title: "Chiarezza prima del rumore", desc: "Ogni progetto parte da una domanda semplice: cosa deve essere capito, percepito o ricordato davvero?" },
+      { title: "Standard alto, processi intelligenti", desc: "Uso l'AI per aumentare qualità, velocità e possibilità, non per abbassare il livello o riempire spazio." },
+      { title: "Creatività che regge nella realtà", desc: "Le idee devono essere forti, ma anche leggibili per il pubblico, coerenti con il contesto e utili per chi le commissiona." },
     ],
     nowBuildingLabel: "Direzione",
-    nowBuilding: "La direzione si sposta verso formati AI-powered, esperienze interattive, narrative di lancio e sistemi capaci di rendere le idee più vive, leggibili e costruibili.\n\nIl lavoro sopra è il fondamento. Quello che segue è dove vado.",
-    availableFor: "Disponibile per collaborazioni selezionate — brand, eventi, pmi, esperienze digitali, sistemi creativi AI-powered.",
+    nowBuilding: "Gli stessi principi — chiarezza, narrativa, sistemi, attenzione al pubblico — applicati a formati nuovi: AI-powered content, esperienze interattive, strumenti creativi e narrazioni non lineari.\n\nIl lavoro sopra è la base. Quello che sto costruendo adesso è il passo successivo.",
+    availableFor: "Disponibile per collaborazioni selezionate — brand, lanci, esperienze digitali, sistemi creativi AI-powered.",
+    ctaHint: "Se hai un progetto che deve essere capito meglio, percepito meglio o lanciato meglio, possiamo parlarne.",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
     hintDefault: "Questa pagina spiega il lavoro. Il resto è il motivo per cui lo faccio.",
@@ -114,33 +118,35 @@ const LANG = {
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "Creativity, narrative, and AI to shape brands, experiences, and systems with a clear logic.",
+    hero: "Creativity, strategy, and AI to build brands, launches, and experiences with a clear logic.",
     heroSub: "I help brands and projects become clearer, more desirable, and harder to ignore.",
-    proofStrip: "Brand narrative · Launch thinking · AI-powered systems",
+    proofStrip: "Brand · Launches · AI Systems",
     whatido: "What I do",
     services: [
-      { title: "Position", desc: "I define positioning, narrative, and distinction. I help brands and projects understand what they are, how they speak, and why they should matter." },
-      { title: "Shape", desc: "Creative direction, worldbuilding, format. I give visual and narrative form to ideas that would otherwise stay abstract or generic." },
-      { title: "Launch", desc: "Launch strategies, go-to-market experiences, creative rollouts. I bring ideas into the world with clear logic and execution that gets noticed." },
-      { title: "Build", desc: "AI systems, prototypes, workflows, new formats. I build tools and processes that make creativity faster, scalable, and smarter." },
+      { title: "Position", subtitle: "Make clear what sets you apart", desc: "I define positioning, tone, and message, so a brand or project stops looking interchangeable." },
+      { title: "Shape", subtitle: "Give visual and narrative form to ideas", desc: "I build identity, content, and creative direction with a coherent, recognizable, and living language." },
+      { title: "Launch", subtitle: "Bring a project into the world the right way", desc: "I work on launches, activations, and experiences to make an idea land with more clarity, strength, and desirability." },
+      { title: "Build", subtitle: "Use AI to create better, not just faster", desc: "I design systems, workflows, and new formats that increase quality, speed, and creative possibilities." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Real projects, long-term commitments.",
+    selectedWorkSub: "Real projects, real responsibilities, work that had to hold up over time.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
-        narrative: "Narrative and promotion system for a cultural venue with 150+ events per year and over 1M monthly views.",
-        technical: "Brand system · Narrative direction · Launch logic",
+        narrative: "Creative direction and communication system for a venue with weekly programming and over 150 events a year.",
+        narrative2: "Identity, promotion, and editorial continuity built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
+        technical: "Identity · Promotion · Editorial continuity",
         tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Twelve years of creative direction for one of Italy's most recognizable live brands, with a digital audience grown to 400K+ people.",
-        technical: "Narrative direction · Brand system · Audience growth",
+        narrative: "Twelve years of creative direction for the communications and digital content of one of Italy's most recognizable live brands.",
+        narrative2: "A content system built over time, with an audience grown to over 400K people.",
+        technical: "Creative direction · Content · Audience growth",
         tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
       {
@@ -148,19 +154,21 @@ const LANG = {
         period: "2025",
         status: "active",
         narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
-        technical: "Positioning clarity · Digital experience · Conversion logic",
+        narrative2: "A clearer identity, a stronger tone, and a digital presence designed to be remembered and contacted.",
+        technical: "Positioning · Website · Digital architecture",
         tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
     ],
     howLabel: "How I work",
     method: [
-      { title: "Narrative before noise", desc: "Every project starts from a clear story. Everything else — visuals, campaigns, systems — follows from that." },
-      { title: "High standards, smart systems", desc: "I produce at a high level with lighter processes. AI amplifies, it doesn't replace." },
-      { title: "Reality check", desc: "Audience, context, impact. Creativity doesn't live outside reality — every choice goes through analysis and verification." },
+      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered?" },
+      { title: "High standards, smart processes", desc: "I use AI to increase quality, speed, and possibilities — not to lower the bar or fill space." },
+      { title: "Creativity that holds up in reality", desc: "Ideas need to be strong, but also readable for the audience, consistent with context, and useful for whoever commissions them." },
     ],
     nowBuildingLabel: "Direction",
-    nowBuilding: "The next layer is moving toward AI-powered formats, interactive experiences, launch narratives and systems that make ideas more alive, more legible and more buildable.\n\nThe work above is the foundation. What follows is where I'm going.",
-    availableFor: "Available for selected collaborations — brands, events, SMEs, digital experiences, AI-powered creative systems.",
+    nowBuilding: "The same principles — clarity, narrative, systems, attention to audience — applied to new formats: AI-powered content, interactive experiences, creative tools, and non-linear storytelling.\n\nThe work above is the foundation. What I'm building now is the next step.",
+    availableFor: "Available for selected collaborations — brands, launches, digital experiences, AI-powered creative systems.",
+    ctaHint: "If you have a project that needs to be understood better, perceived better, or launched better, let's talk.",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
     hintDefault: "This page explains the work. The rest is why I do it.",
@@ -428,10 +436,297 @@ const LANDING_NOTES = [
 ];
 
 const CROSSING_ASSETS = {
-  bg: "https://robertomarchesini.com/assets/chapter1/connections_field_bg.png?v=2",
   idle: "https://robertomarchesini.com/assets/chapter1/boy-idle.png?v=2",
   jump: "https://robertomarchesini.com/assets/chapter1/boy-jump.png?v=2",
 };
+
+// ============================================================================
+// VOID SYNAPSE BACKGROUND - Procedurale
+// ============================================================================
+
+// Venature predefinite - curve organiche che collegano i nodi
+const VOID_VEINS = [
+  // Venatura principale che attraversa tutto il campo
+  { points: [{x: 50, y: 920}, {x: 200, y: 870}, {x: 400, y: 830}, {x: 650, y: 780}, {x: 900, y: 760}, {x: 1150, y: 790}, {x: 1400, y: 850}], width: 3 },
+  // Venature secondarie - rami
+  { points: [{x: 100, y: 950}, {x: 250, y: 880}, {x: 350, y: 850}], width: 2 },
+  { points: [{x: 500, y: 900}, {x: 620, y: 820}, {x: 750, y: 780}], width: 2 },
+  { points: [{x: 850, y: 850}, {x: 950, y: 780}, {x: 1100, y: 760}], width: 2 },
+  { points: [{x: 1200, y: 900}, {x: 1300, y: 850}, {x: 1450, y: 820}], width: 2 },
+  // Venature terziarie - più sottili
+  { points: [{x: 180, y: 980}, {x: 280, y: 900}, {x: 320, y: 860}], width: 1.5 },
+  { points: [{x: 700, y: 920}, {x: 800, y: 830}, {x: 870, y: 770}], width: 1.5 },
+  { points: [{x: 1050, y: 880}, {x: 1150, y: 810}, {x: 1250, y: 800}], width: 1.5 },
+];
+
+function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const pulseWavesRef = useRef([]); // Onde di impulso attive
+  const revealLevelRef = useRef(0); // Livello di rivelazione accumulato (0-1)
+  
+  // Calcola quale percentuale del campo è "rivelata" in base ai nodi attivati
+  const revealLevel = Math.min(1, activatedNodes.length / CROSSING_NODES.length);
+  
+  // Aggiorna il livello di rivelazione con smoothing
+  useEffect(() => {
+    revealLevelRef.current = revealLevel;
+  }, [revealLevel]);
+  
+  // Aggiungi onda di impulso quando scenePulse cambia
+  useEffect(() => {
+    if (scenePulse) {
+      pulseWavesRef.current.push({
+        x: scenePulse.x,
+        y: scenePulse.y,
+        startTime: performance.now(),
+        intensity: scenePulse.intensity,
+        maxRadius: 400,
+        duration: 800,
+      });
+    }
+  }, [scenePulse?.key]);
+  
+  // Main render loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Setup canvas size
+    const updateSize = () => {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    updateSize();
+    
+    const render = (now) => {
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      const scaleX = w / CROSSING_BASE_W;
+      const scaleY = h / CROSSING_BASE_H;
+      
+      // Clear con colore base - nero/verde petrolio profondo
+      ctx.fillStyle = '#0a0d0b';
+      ctx.fillRect(0, 0, w, h);
+      
+      // Layer 1: Texture sottile (quasi impercettibile)
+      const reveal = revealLevelRef.current;
+      ctx.globalAlpha = 0.015 + reveal * 0.01;
+      for (let i = 0; i < 40; i++) {
+        const x = (Math.sin(i * 0.7 + now * 0.0001) * 0.5 + 0.5) * w;
+        const y = (Math.cos(i * 0.5 + now * 0.00008) * 0.5 + 0.5) * h;
+        const r = 80 + Math.sin(i * 1.3) * 40;
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
+        gradient.addColorStop(0, 'rgba(30, 40, 35, 0.3)');
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      }
+      ctx.globalAlpha = 1;
+      
+      // Layer 2: Venature dormienti
+      VOID_VEINS.forEach((vein, veinIndex) => {
+        if (vein.points.length < 2) return;
+        
+        // Calcola se questa venatura è "vicina" a nodi attivati
+        let veinActivation = 0.03; // Base quasi invisibile
+        
+        activatedNodes.forEach(nodeIdx => {
+          const node = CROSSING_NODES[nodeIdx];
+          vein.points.forEach(pt => {
+            const dist = Math.hypot(pt.x - node.x, pt.y - node.y);
+            if (dist < 300) {
+              veinActivation = Math.max(veinActivation, 0.15 * (1 - dist / 300));
+            }
+          });
+        });
+        
+        // Effetto onde di impulso sulle venature
+        pulseWavesRef.current.forEach(wave => {
+          const elapsed = now - wave.startTime;
+          if (elapsed < wave.duration) {
+            const progress = elapsed / wave.duration;
+            const radius = progress * wave.maxRadius;
+            const fade = 1 - progress;
+            
+            vein.points.forEach(pt => {
+              const dist = Math.hypot(pt.x - wave.x, pt.y - wave.y);
+              if (Math.abs(dist - radius) < 80) {
+                veinActivation = Math.max(veinActivation, 0.4 * fade * wave.intensity);
+              }
+            });
+          }
+        });
+        
+        // Glow finale
+        if (allNodesGlow) {
+          veinActivation = Math.max(veinActivation, 0.5);
+        }
+        
+        // Disegna la venatura
+        ctx.beginPath();
+        ctx.moveTo(vein.points[0].x * scaleX, vein.points[0].y * scaleY);
+        
+        // Curva smooth attraverso i punti
+        for (let i = 1; i < vein.points.length - 1; i++) {
+          const xc = (vein.points[i].x + vein.points[i + 1].x) / 2 * scaleX;
+          const yc = (vein.points[i].y + vein.points[i + 1].y) / 2 * scaleY;
+          ctx.quadraticCurveTo(
+            vein.points[i].x * scaleX, 
+            vein.points[i].y * scaleY, 
+            xc, yc
+          );
+        }
+        const last = vein.points[vein.points.length - 1];
+        ctx.lineTo(last.x * scaleX, last.y * scaleY);
+        
+        ctx.strokeStyle = `rgba(80, 100, 75, ${veinActivation})`;
+        ctx.lineWidth = vein.width * (0.8 + veinActivation * 2);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+        
+        // Glow per venature attive
+        if (veinActivation > 0.1) {
+          ctx.strokeStyle = `rgba(140, 170, 120, ${veinActivation * 0.5})`;
+          ctx.lineWidth = vein.width * 4;
+          ctx.filter = 'blur(8px)';
+          ctx.stroke();
+          ctx.filter = 'none';
+        }
+      });
+      
+      // Layer 3: Nodi dormienti
+      CROSSING_NODES.forEach((node, index) => {
+        const isActivated = activatedNodes.includes(index);
+        const x = node.x * scaleX;
+        const y = node.y * scaleY;
+        
+        // Stato base del nodo
+        let nodeAlpha = 0.04; // Dormiente, quasi invisibile
+        let nodeSize = 4;
+        let glowSize = 0;
+        
+        if (isActivated) {
+          nodeAlpha = 0.6 + Math.sin(now * 0.003 + index) * 0.1;
+          nodeSize = 8;
+          glowSize = 25;
+        }
+        
+        // Effetto onde di impulso sui nodi
+        pulseWavesRef.current.forEach(wave => {
+          const elapsed = now - wave.startTime;
+          if (elapsed < wave.duration) {
+            const progress = elapsed / wave.duration;
+            const radius = progress * wave.maxRadius;
+            const dist = Math.hypot(node.x - wave.x, node.y - wave.y);
+            if (Math.abs(dist - radius) < 60) {
+              const fade = 1 - progress;
+              nodeAlpha = Math.max(nodeAlpha, 0.5 * fade * wave.intensity);
+              nodeSize = Math.max(nodeSize, 6);
+            }
+          }
+        });
+        
+        // Glow finale
+        if (allNodesGlow) {
+          nodeAlpha = 0.9;
+          nodeSize = 10;
+          glowSize = 40;
+        }
+        
+        // Glow esterno
+        if (glowSize > 0) {
+          const glowGrad = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
+          glowGrad.addColorStop(0, `rgba(199, 212, 160, ${nodeAlpha * 0.4})`);
+          glowGrad.addColorStop(0.5, `rgba(140, 170, 120, ${nodeAlpha * 0.15})`);
+          glowGrad.addColorStop(1, 'transparent');
+          ctx.fillStyle = glowGrad;
+          ctx.beginPath();
+          ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
+        // Nodo core
+        const coreGrad = ctx.createRadialGradient(x, y, 0, x, y, nodeSize);
+        coreGrad.addColorStop(0, `rgba(235, 242, 225, ${nodeAlpha})`);
+        coreGrad.addColorStop(0.6, `rgba(199, 212, 160, ${nodeAlpha * 0.7})`);
+        coreGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = coreGrad;
+        ctx.beginPath();
+        ctx.arc(x, y, nodeSize, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      
+      // Layer 4: Onde di impulso (rendering)
+      pulseWavesRef.current = pulseWavesRef.current.filter(wave => {
+        const elapsed = now - wave.startTime;
+        if (elapsed >= wave.duration) return false;
+        
+        const progress = elapsed / wave.duration;
+        const radius = progress * wave.maxRadius * scaleX;
+        const fade = (1 - progress) * wave.intensity;
+        const x = wave.x * scaleX;
+        const y = wave.y * scaleY;
+        
+        // Onda circolare che si espande
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(199, 212, 160, ${fade * 0.3})`;
+        ctx.lineWidth = 2 + fade * 4;
+        ctx.stroke();
+        
+        // Glow dell'onda
+        const waveGrad = ctx.createRadialGradient(x, y, radius * 0.8, x, y, radius * 1.2);
+        waveGrad.addColorStop(0, 'transparent');
+        waveGrad.addColorStop(0.5, `rgba(140, 170, 120, ${fade * 0.1})`);
+        waveGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = waveGrad;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        return true;
+      });
+      
+      // Layer 5: Vignette sottile
+      const vignetteGrad = ctx.createRadialGradient(w/2, h/2, h * 0.3, w/2, h/2, h * 0.9);
+      vignetteGrad.addColorStop(0, 'transparent');
+      vignetteGrad.addColorStop(1, 'rgba(5, 8, 6, 0.4)');
+      ctx.fillStyle = vignetteGrad;
+      ctx.fillRect(0, 0, w, h);
+      
+      animationRef.current = requestAnimationFrame(render);
+    };
+    
+    animationRef.current = requestAnimationFrame(render);
+    
+    window.addEventListener('resize', updateSize);
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      window.removeEventListener('resize', updateSize);
+    };
+  }, [activatedNodes, allNodesGlow]);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+      }}
+    />
+  );
+}
 
 // Hook per generare suoni con Web Audio API
 function useLandingSound() {
@@ -860,19 +1155,16 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
   const showTimingBar = !isJumping && !isComplete && !isFinalJump && !transition;
   
-  // Stile fondale con effetti dinamici
+  // Stile fondale con effetti dinamici - ora procedurale
   const bgStyle = {
     position: "relative", width: "100%", aspectRatio: "4 / 3",
-    maxHeight: "65vh", // Limita altezza su mobile
+    maxHeight: "65vh",
     overflow: "hidden",
-    backgroundColor: "#191E1B",
-    backgroundImage: `url(${CROSSING_ASSETS.bg})`,
-    backgroundSize: "cover", backgroundPosition: "center bottom", backgroundRepeat: "no-repeat",
+    backgroundColor: "#0a0d0b", // Nero/verde petrolio profondo
     cursor: isJumping || isComplete ? "default" : "pointer",
     userSelect: "none", touchAction: "manipulation", borderRadius: 8,
     transform: `scale(${bgBreath}) translateX(${bgShake ? (Math.random() - 0.5) * bgShake : 0}px)`,
-    filter: `saturate(${bgSaturation})`,
-    transition: "transform 0.15s ease-out, filter 0.3s ease-out",
+    transition: "transform 0.15s ease-out",
   };
 
   return (
@@ -883,6 +1175,13 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleAdvance(); } }}
       style={bgStyle}
     >
+      {/* VOID SYNAPSE BACKGROUND - Procedurale */}
+      <VoidSynapseBackground 
+        activatedNodes={activatedNodes}
+        scenePulse={scenePulse}
+        allNodesGlow={allNodesGlow}
+      />
+      
       {/* TIMING BAR - Fascio di luce minimal */}
       {showTimingBar && (() => {
         const isInTarget = pulsePosition >= targetStart && pulsePosition <= targetEnd;
@@ -953,11 +1252,6 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       })()}
 
       {/* Color grade overlay */}
-      <div style={{
-        position: "absolute", inset: 0, pointerEvents: "none",
-        background: "linear-gradient(to bottom, rgba(126,143,99,0.06), rgba(25,30,27,0.12))",
-        mixBlendMode: "multiply",
-      }} />
 
       {/* Uccelli pixel */}
       {birds.map(bird => (
@@ -1762,7 +2056,8 @@ export default function Roberto() {
                         )}
                       </div>
                     </div>
-                    <div style={{ fontSize: 13, color: "#AAA", lineHeight: 1.7, marginBottom: 10, maxWidth: 540 }}>{work.narrative}</div>
+                    <div style={{ fontSize: 13, color: "#AAA", lineHeight: 1.7, marginBottom: 6, maxWidth: 540 }}>{work.narrative}</div>
+                    {work.narrative2 && <div style={{ fontSize: 12, color: "#777", lineHeight: 1.7, marginBottom: 10, maxWidth: 540 }}>{work.narrative2}</div>}
                     <div style={{ fontSize: 11, color: "#666", lineHeight: 1.6, marginBottom: 14, letterSpacing: .3 }}>{work.technical}</div>
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                       {work.tags.map((tag, j) => (
@@ -1786,13 +2081,14 @@ export default function Roberto() {
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {T.services.map((svc, i) => (
                   <div key={i} className="svc">
-                    <div className="svc-in" style={{ display: "flex", gap: 24, alignItems: "baseline" }}>
+                    <div className="svc-in" style={{ display: "flex", gap: 24, alignItems: "baseline", flexWrap: "wrap" }}>
                       <div className="svc-tw" style={{ minWidth: 105, flexShrink: 0 }}>
                         <span className="svc-t" style={{ fontSize: 28, fontWeight: 600, color: "#E8E4DE", fontFamily: "'Playfair Display',serif", fontStyle: "italic", transition: "all .25s" }}>
                           {svc.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
                         </span>
+                        {svc.subtitle && <div style={{ fontSize: 11, color: "#888", marginTop: 4, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{svc.subtitle}</div>}
                       </div>
-                      <div style={{ fontSize: 13, color: "#AAA", lineHeight: 1.85 }}>{svc.desc}</div>
+                      <div style={{ fontSize: 13, color: "#AAA", lineHeight: 1.85, flex: 1, minWidth: 200 }}>{svc.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -1861,6 +2157,11 @@ export default function Roberto() {
               <div style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "#666", fontFamily: "'IBM Plex Mono', monospace" }}>
                 {T.availableFor}
               </div>
+              {T.ctaHint && (
+                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "#888", lineHeight: 1.7, maxWidth: 420, margin: "16px auto 0" }}>
+                  {T.ctaHint}
+                </div>
+              )}
               <div style={{ textAlign: "center", marginTop: 14, fontSize: 11, color: "#555", fontStyle: "italic", fontFamily: "'Playfair Display',serif", letterSpacing: .5 }}>
                 {hoverTrash ? T.hintTrash : T.hintDefault}
               </div>
