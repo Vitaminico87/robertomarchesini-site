@@ -71,10 +71,10 @@ const LANG = {
       { title: "Standard alto, processi intelligenti", desc: "Uso l'AI per aumentare qualità, velocità e possibilità, non per abbassare il livello o riempire spazio." },
       { title: "Creatività che regge nella realtà", desc: "Le idee devono essere forti, ma anche leggibili per il pubblico, coerenti con il contesto e utili per chi le commissiona." },
     ],
-    nowBuildingLabel: "Direzione",
-    nowBuilding: "Gli stessi principi — chiarezza, narrativa, sistemi, attenzione al pubblico — applicati a formati nuovi: AI-powered content, esperienze interattive, strumenti creativi e narrazioni non lineari.",
-    availableFor: "Disponibile per collaborazioni selezionate — brand, lanci, esperienze digitali, sistemi creativi AI-powered.",
-    ctaHint: "Se hai un progetto che deve essere capito meglio, percepito meglio o lanciato meglio, possiamo parlarne.",
+    nowBuildingLabel: "",
+    nowBuilding: "",
+    availableFor: "Disponibile per collaborazioni selezionate.",
+    ctaHint: "",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
     hintDefault: "Questa pagina spiega il lavoro. Il resto è il motivo per cui lo faccio.",
@@ -165,10 +165,10 @@ const LANG = {
       { title: "High standards, smart processes", desc: "I use AI to increase quality, speed, and possibilities — not to lower the bar or fill space." },
       { title: "Creativity that holds up in reality", desc: "Ideas need to be strong, but also readable for the audience, consistent with context, and useful for whoever commissions them." },
     ],
-    nowBuildingLabel: "Direction",
-    nowBuilding: "The same principles — clarity, narrative, systems, attention to audience — applied to new formats: AI-powered content, interactive experiences, creative tools, and non-linear storytelling.",
-    availableFor: "Available for selected collaborations — brands, launches, digital experiences, AI-powered creative systems.",
-    ctaHint: "If you have a project that needs to be understood better, perceived better, or launched better, let's talk.",
+    nowBuildingLabel: "",
+    nowBuilding: "",
+    availableFor: "Available for selected collaborations.",
+    ctaHint: "",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
     hintDefault: "This page explains the work. The rest is why I do it.",
@@ -462,47 +462,30 @@ const VOID_VEINS = [
 function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
-  const pulseWavesRef = useRef([]); // Onde di impulso attive
-  const revealLevelRef = useRef(0); // Livello di rivelazione accumulato (0-1)
+  const pulseWavesRef = useRef([]);
+  const revealLevelRef = useRef(0);
   
-  // Calcola quale percentuale del campo è "rivelata" in base ai nodi attivati
   const revealLevel = Math.min(1, activatedNodes.length / CROSSING_NODES.length);
   
-  // Aggiorna il livello di rivelazione con smoothing
   useEffect(() => {
     revealLevelRef.current = revealLevel;
   }, [revealLevel]);
   
-  // Aggiungi onda di impulso quando scenePulse cambia - CRESCENDO: onde più grandi verso la fine
+  // Onde di impulso - PIU' LEGGERE
   useEffect(() => {
     if (scenePulse) {
       const nodeCount = activatedNodes.length;
-      const intensityMultiplier = 1 + nodeCount * 0.25; // Cresce col progresso
       pulseWavesRef.current.push({
         x: scenePulse.x,
         y: scenePulse.y,
         startTime: performance.now(),
-        intensity: scenePulse.intensity * intensityMultiplier,
-        maxRadius: 350 + nodeCount * 80, // Onde più grandi verso la fine
-        duration: 700 + nodeCount * 100, // Durano di più
+        intensity: scenePulse.intensity * (1 + nodeCount * 0.12),
+        maxRadius: 300 + nodeCount * 40,
+        duration: 600 + nodeCount * 50,
       });
-      // Aggiungi seconda onda ritardata per ultimi salti
-      if (nodeCount >= 4) {
-        setTimeout(() => {
-          pulseWavesRef.current.push({
-            x: scenePulse.x,
-            y: scenePulse.y,
-            startTime: performance.now(),
-            intensity: scenePulse.intensity * 0.6,
-            maxRadius: 500,
-            duration: 1000,
-          });
-        }, 150);
-      }
     }
   }, [scenePulse?.key, activatedNodes.length]);
   
-  // Main render loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -510,7 +493,6 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
     
-    // Setup canvas size
     const updateSize = () => {
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
@@ -529,162 +511,130 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
       const reveal = revealLevelRef.current;
       const nodeCount = activatedNodes.length;
       
-      // Clear con colore base - nero/verde petrolio profondo, si schiarisce leggermente col progresso
-      const baseBrightness = 10 + reveal * 8;
-      ctx.fillStyle = `rgb(${baseBrightness}, ${baseBrightness + 5}, ${baseBrightness + 2})`;
+      // Fondo nero/verde
+      ctx.fillStyle = '#080b09';
       ctx.fillRect(0, 0, w, h);
       
-      // Layer 1: Texture sottile - PIU' VERDE, cresce col progresso
-      ctx.globalAlpha = 0.02 + reveal * 0.03;
-      for (let i = 0; i < 50; i++) {
-        const x = (Math.sin(i * 0.7 + now * 0.0001) * 0.5 + 0.5) * w;
-        const y = (Math.cos(i * 0.5 + now * 0.00008) * 0.5 + 0.5) * h;
-        const r = 100 + Math.sin(i * 1.3) * 50 + reveal * 30;
+      // Texture sottile - RIDOTTA
+      ctx.globalAlpha = 0.015 + reveal * 0.015;
+      for (let i = 0; i < 25; i++) {
+        const x = (Math.sin(i * 0.7 + now * 0.00008) * 0.5 + 0.5) * w;
+        const y = (Math.cos(i * 0.5 + now * 0.00006) * 0.5 + 0.5) * h;
+        const r = 80 + Math.sin(i * 1.3) * 30;
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
-        gradient.addColorStop(0, `rgba(40, 70, 45, ${0.3 + reveal * 0.2})`);
+        gradient.addColorStop(0, `rgba(35, 60, 40, 0.25)`);
         gradient.addColorStop(1, 'transparent');
         ctx.fillStyle = gradient;
         ctx.fillRect(x - r, y - r, r * 2, r * 2);
       }
       ctx.globalAlpha = 1;
       
-      // Layer 1.5: Ambient glow verde che cresce - CRESCENDO
-      if (reveal > 0) {
-        const ambientGlow = ctx.createRadialGradient(w * 0.5, h * 0.7, 0, w * 0.5, h * 0.7, h * 0.8);
-        ambientGlow.addColorStop(0, `rgba(60, 100, 60, ${reveal * 0.15})`);
-        ambientGlow.addColorStop(0.5, `rgba(40, 80, 50, ${reveal * 0.08})`);
+      // Ambient glow - PIU' SOTTILE
+      if (reveal > 0.2) {
+        const ambientGlow = ctx.createRadialGradient(w * 0.5, h * 0.7, 0, w * 0.5, h * 0.7, h * 0.7);
+        ambientGlow.addColorStop(0, `rgba(50, 90, 55, ${reveal * 0.08})`);
         ambientGlow.addColorStop(1, 'transparent');
         ctx.fillStyle = ambientGlow;
         ctx.fillRect(0, 0, w, h);
       }
       
-      // Layer 2: Venature dormienti - PIU' VERDI e più visibili col progresso
-      VOID_VEINS.forEach((vein, veinIndex) => {
+      // Venature - SEMPLIFICATE
+      VOID_VEINS.forEach((vein) => {
         if (vein.points.length < 2) return;
         
-        // Base visibility cresce col progresso
-        let veinActivation = 0.04 + reveal * 0.06;
+        let veinActivation = 0.03 + reveal * 0.04;
         
-        // Boost per vicinanza a nodi attivati
         activatedNodes.forEach(nodeIdx => {
           const node = CROSSING_NODES[nodeIdx];
           vein.points.forEach(pt => {
             const dist = Math.hypot(pt.x - node.x, pt.y - node.y);
-            if (dist < 350) {
-              const boost = 0.25 * (1 - dist / 350) * (1 + nodeIdx * 0.1); // Più forte per nodi successivi
-              veinActivation = Math.max(veinActivation, boost);
+            if (dist < 300) {
+              veinActivation = Math.max(veinActivation, 0.18 * (1 - dist / 300));
             }
           });
         });
         
-        // Effetto onde di impulso sulle venature
         pulseWavesRef.current.forEach(wave => {
           const elapsed = now - wave.startTime;
           if (elapsed < wave.duration) {
             const progress = elapsed / wave.duration;
             const radius = progress * wave.maxRadius;
             const fade = 1 - progress;
-            
             vein.points.forEach(pt => {
               const dist = Math.hypot(pt.x - wave.x, pt.y - wave.y);
-              if (Math.abs(dist - radius) < 100) {
-                veinActivation = Math.max(veinActivation, 0.6 * fade * wave.intensity);
+              if (Math.abs(dist - radius) < 80) {
+                veinActivation = Math.max(veinActivation, 0.35 * fade * wave.intensity);
               }
             });
           }
         });
         
-        // Glow finale - MOLTO PIU' INTENSO
-        if (allNodesGlow) {
-          veinActivation = 0.8;
-        }
+        if (allNodesGlow) veinActivation = 0.6;
         
-        // Disegna la venatura - PIU' VERDE
         ctx.beginPath();
         ctx.moveTo(vein.points[0].x * scaleX, vein.points[0].y * scaleY);
-        
         for (let i = 1; i < vein.points.length - 1; i++) {
           const xc = (vein.points[i].x + vein.points[i + 1].x) / 2 * scaleX;
           const yc = (vein.points[i].y + vein.points[i + 1].y) / 2 * scaleY;
           ctx.quadraticCurveTo(vein.points[i].x * scaleX, vein.points[i].y * scaleY, xc, yc);
         }
-        const last = vein.points[vein.points.length - 1];
-        ctx.lineTo(last.x * scaleX, last.y * scaleY);
+        ctx.lineTo(vein.points[vein.points.length - 1].x * scaleX, vein.points[vein.points.length - 1].y * scaleY);
         
-        // Colore più verde
-        ctx.strokeStyle = `rgba(70, 130, 80, ${veinActivation})`;
-        ctx.lineWidth = vein.width * (1 + veinActivation * 3);
+        ctx.strokeStyle = `rgba(60, 110, 70, ${veinActivation})`;
+        ctx.lineWidth = vein.width * (1 + veinActivation * 2);
         ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
         ctx.stroke();
         
-        // Glow per venature attive - PIU' INTENSO
-        if (veinActivation > 0.1) {
-          ctx.strokeStyle = `rgba(100, 180, 100, ${veinActivation * 0.6})`;
-          ctx.lineWidth = vein.width * 6;
-          ctx.filter = 'blur(10px)';
-          ctx.stroke();
-          ctx.filter = 'none';
-        }
-        
-        // Glow extra per ultimi salti
-        if (veinActivation > 0.3 && nodeCount >= 4) {
-          ctx.strokeStyle = `rgba(150, 220, 140, ${veinActivation * 0.3})`;
-          ctx.lineWidth = vein.width * 10;
-          ctx.filter = 'blur(18px)';
+        // Glow solo se abbastanza attivo
+        if (veinActivation > 0.15) {
+          ctx.strokeStyle = `rgba(90, 160, 95, ${veinActivation * 0.4})`;
+          ctx.lineWidth = vein.width * 4;
+          ctx.filter = 'blur(6px)';
           ctx.stroke();
           ctx.filter = 'none';
         }
       });
       
-      // Layer 3: Nodi - PIU' VISIBILI e crescendo
+      // Nodi - SEMPLIFICATI
       CROSSING_NODES.forEach((node, index) => {
         const isActivated = activatedNodes.includes(index);
         const x = node.x * scaleX;
         const y = node.y * scaleY;
         
-        // Base visibility - nodi dormienti più visibili col progresso
-        let nodeAlpha = 0.06 + reveal * 0.08;
-        let nodeSize = 5 + reveal * 2;
-        let glowSize = reveal * 15;
+        let nodeAlpha = 0.05 + reveal * 0.05;
+        let nodeSize = 4;
+        let glowSize = 0;
         
         if (isActivated) {
-          // Intensità cresce per nodi successivi - CRESCENDO
-          const activationBoost = 1 + index * 0.15;
-          nodeAlpha = (0.7 + Math.sin(now * 0.003 + index) * 0.15) * activationBoost;
-          nodeAlpha = Math.min(nodeAlpha, 1);
-          nodeSize = 10 + index * 1.5;
-          glowSize = 35 + index * 8;
+          nodeAlpha = 0.7 + Math.sin(now * 0.002 + index) * 0.1;
+          nodeSize = 8 + index * 0.5;
+          glowSize = 25 + index * 4;
         }
         
-        // Effetto onde di impulso sui nodi
         pulseWavesRef.current.forEach(wave => {
           const elapsed = now - wave.startTime;
           if (elapsed < wave.duration) {
             const progress = elapsed / wave.duration;
             const radius = progress * wave.maxRadius;
             const dist = Math.hypot(node.x - wave.x, node.y - wave.y);
-            if (Math.abs(dist - radius) < 80) {
+            if (Math.abs(dist - radius) < 60) {
               const fade = 1 - progress;
-              nodeAlpha = Math.max(nodeAlpha, 0.7 * fade * wave.intensity);
-              nodeSize = Math.max(nodeSize, 8);
-              glowSize = Math.max(glowSize, 30);
+              nodeAlpha = Math.max(nodeAlpha, 0.5 * fade * wave.intensity);
+              nodeSize = Math.max(nodeSize, 6);
             }
           }
         });
         
-        // Glow finale - MOLTO PIU' INTENSO
         if (allNodesGlow) {
           nodeAlpha = 1;
-          nodeSize = 14;
-          glowSize = 60;
+          nodeSize = 12;
+          glowSize = 45;
         }
         
-        // Glow esterno - PIU' VERDE
+        // Glow
         if (glowSize > 0) {
           const glowGrad = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
-          glowGrad.addColorStop(0, `rgba(180, 230, 160, ${nodeAlpha * 0.5})`);
-          glowGrad.addColorStop(0.4, `rgba(100, 180, 100, ${nodeAlpha * 0.25})`);
+          glowGrad.addColorStop(0, `rgba(160, 210, 150, ${nodeAlpha * 0.4})`);
           glowGrad.addColorStop(1, 'transparent');
           ctx.fillStyle = glowGrad;
           ctx.beginPath();
@@ -692,21 +642,10 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
           ctx.fill();
         }
         
-        // Glow extra per nodi attivi negli ultimi salti
-        if (isActivated && index >= 3 && glowSize > 0) {
-          const outerGlow = ctx.createRadialGradient(x, y, 0, x, y, glowSize * 1.8);
-          outerGlow.addColorStop(0, `rgba(150, 220, 130, ${nodeAlpha * 0.2})`);
-          outerGlow.addColorStop(1, 'transparent');
-          ctx.fillStyle = outerGlow;
-          ctx.beginPath();
-          ctx.arc(x, y, glowSize * 1.8, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        
-        // Nodo core - PIU' LUMINOSO
+        // Core
         const coreGrad = ctx.createRadialGradient(x, y, 0, x, y, nodeSize);
-        coreGrad.addColorStop(0, `rgba(240, 255, 230, ${nodeAlpha})`);
-        coreGrad.addColorStop(0.5, `rgba(180, 230, 160, ${nodeAlpha * 0.8})`);
+        coreGrad.addColorStop(0, `rgba(230, 250, 220, ${nodeAlpha})`);
+        coreGrad.addColorStop(0.6, `rgba(160, 210, 150, ${nodeAlpha * 0.7})`);
         coreGrad.addColorStop(1, 'transparent');
         ctx.fillStyle = coreGrad;
         ctx.beginPath();
@@ -714,7 +653,7 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
         ctx.fill();
       });
       
-      // Layer 4: Onde di impulso - PIU' VISIBILI
+      // Onde - SEMPLIFICATE
       pulseWavesRef.current = pulseWavesRef.current.filter(wave => {
         const elapsed = now - wave.startTime;
         if (elapsed >= wave.duration) return false;
@@ -725,40 +664,28 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
         const x = wave.x * scaleX;
         const y = wave.y * scaleY;
         
-        // Onda circolare - PIU' VERDE e visibile
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(140, 220, 140, ${fade * 0.5})`;
-        ctx.lineWidth = 3 + fade * 6;
+        ctx.strokeStyle = `rgba(120, 190, 120, ${fade * 0.35})`;
+        ctx.lineWidth = 2 + fade * 3;
         ctx.stroke();
-        
-        // Glow dell'onda - PIU' INTENSO
-        const waveGrad = ctx.createRadialGradient(x, y, radius * 0.7, x, y, radius * 1.3);
-        waveGrad.addColorStop(0, 'transparent');
-        waveGrad.addColorStop(0.5, `rgba(100, 180, 100, ${fade * 0.2})`);
-        waveGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = waveGrad;
-        ctx.beginPath();
-        ctx.arc(x, y, radius * 1.3, 0, Math.PI * 2);
-        ctx.fill();
         
         return true;
       });
       
-      // Layer 5: Flash centrale per glow finale
+      // Flash finale
       if (allNodesGlow) {
-        const finalFlash = ctx.createRadialGradient(w * 0.5, h * 0.65, 0, w * 0.5, h * 0.65, h * 0.7);
-        finalFlash.addColorStop(0, 'rgba(180, 240, 160, 0.25)');
-        finalFlash.addColorStop(0.4, 'rgba(100, 180, 100, 0.12)');
+        const finalFlash = ctx.createRadialGradient(w * 0.5, h * 0.65, 0, w * 0.5, h * 0.65, h * 0.6);
+        finalFlash.addColorStop(0, 'rgba(150, 220, 140, 0.18)');
         finalFlash.addColorStop(1, 'transparent');
         ctx.fillStyle = finalFlash;
         ctx.fillRect(0, 0, w, h);
       }
       
-      // Layer 6: Vignette sottile
-      const vignetteGrad = ctx.createRadialGradient(w/2, h/2, h * 0.25, w/2, h/2, h * 0.95);
+      // Vignette
+      const vignetteGrad = ctx.createRadialGradient(w/2, h/2, h * 0.3, w/2, h/2, h * 0.9);
       vignetteGrad.addColorStop(0, 'transparent');
-      vignetteGrad.addColorStop(1, `rgba(5, 10, 8, ${0.5 - reveal * 0.15})`);
+      vignetteGrad.addColorStop(1, `rgba(5, 8, 6, ${0.45 - reveal * 0.1})`);
       ctx.fillStyle = vignetteGrad;
       ctx.fillRect(0, 0, w, h);
       
@@ -2068,16 +1995,16 @@ export default function Roberto() {
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>Creative Director · AI Systems</div>
-              <div style={{ fontSize: 13, color: "#999", marginTop: 16, lineHeight: 1.9, maxWidth: 520 }}>{T.hero}</div>
-              <div style={{ fontSize: 12, color: "#777", marginTop: 10, lineHeight: 1.8, maxWidth: 520 }}>{T.heroSub}</div>
+              <div style={{ fontSize: 14, color: "#888", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>Creative Director · AI Systems</div>
+              <div style={{ fontSize: 14, color: "#BBB", marginTop: 18, lineHeight: 1.85, maxWidth: 500 }}>{T.hero}</div>
+              <div style={{ fontSize: 13, color: "#999", marginTop: 12, lineHeight: 1.8, maxWidth: 500 }}>{T.heroSub}</div>
             </div>
           </Section>
 
           {/* 2. PROOF STRIP */}
           <Section delay={0.08}>
             <div style={{ marginBottom: 32, textAlign: "center" }}>
-              <div style={{ fontSize: 10, letterSpacing: 3, color: "#555", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{T.proofStrip}</div>
+              <div style={{ fontSize: 10, letterSpacing: 3, color: "#777", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{T.proofStrip}</div>
             </div>
           </Section>
 
@@ -2090,7 +2017,7 @@ export default function Roberto() {
           <Section delay={0.12}>
             <div style={{ marginBottom: 56 }}>
               <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 6, opacity: .6 }}>{T.selectedWorkLabel}</div>
-              <div style={{ fontSize: 11, color: "#555", marginBottom: 28, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{T.selectedWorkSub}</div>
+              <div style={{ fontSize: 11, color: "#777", marginBottom: 28, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{T.selectedWorkSub}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
                   <div key={i} className="work-card" style={{
@@ -2116,15 +2043,15 @@ export default function Roberto() {
                         )}
                       </div>
                     </div>
-                    <div style={{ fontSize: 13, color: "#AAA", lineHeight: 1.7, marginBottom: 6, maxWidth: 540 }}>{work.narrative}</div>
-                    {work.narrative2 && <div style={{ fontSize: 12, color: "#777", lineHeight: 1.7, marginBottom: 10, maxWidth: 540 }}>{work.narrative2}</div>}
-                    <div style={{ fontSize: 11, color: "#666", lineHeight: 1.6, marginBottom: 14, letterSpacing: .3 }}>{work.technical}</div>
+                    <div style={{ fontSize: 13, color: "#BBB", lineHeight: 1.75, marginBottom: 8, maxWidth: 540 }}>{work.narrative}</div>
+                    {work.narrative2 && <div style={{ fontSize: 12, color: "#999", lineHeight: 1.7, marginBottom: 12, maxWidth: 540 }}>{work.narrative2}</div>}
+                    <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6, marginBottom: 14, letterSpacing: .3 }}>{work.technical}</div>
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                       {work.tags.map((tag, j) => (
                         <span key={j} style={{ 
-                          fontSize: 9, letterSpacing: 1.2, color: "#555", textTransform: "uppercase", 
+                          fontSize: 9, letterSpacing: 1.2, color: "#777", textTransform: "uppercase", 
                           fontFamily: "'IBM Plex Mono', monospace",
-                          padding: "3px 8px", border: "1px solid #1A1A1A", borderRadius: 2,
+                          padding: "3px 8px", border: "1px solid #2A2A2A", borderRadius: 2,
                         }}>{tag}</span>
                       ))}
                     </div>
@@ -2148,8 +2075,8 @@ export default function Roberto() {
                         </span>
                       </div>
                       <div>
-                        {svc.subtitle && <div style={{ fontSize: 11, color: "#777", marginBottom: 6, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{svc.subtitle}</div>}
-                        <div style={{ fontSize: 13, color: "#AAA", lineHeight: 1.85 }}>{svc.desc}</div>
+                        {svc.subtitle && <div style={{ fontSize: 11, color: "#999", marginBottom: 6, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{svc.subtitle}</div>}
+                        <div style={{ fontSize: 13, color: "#BBB", lineHeight: 1.85 }}>{svc.desc}</div>
                       </div>
                     </div>
                   </div>
@@ -2165,67 +2092,41 @@ export default function Roberto() {
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {T.method.map((m, i) => (
                   <div key={i} className="mth">
-                    <div className="mth-t" style={{ fontSize: 12, fontWeight: 500, color: "#CCC", marginBottom: 3, transition: "all .2s", letterSpacing: .3 }}>{m.title}</div>
-                    <div style={{ fontSize: 11, color: "#777", lineHeight: 1.7 }}>{m.desc}</div>
+                    <div className="mth-t" style={{ fontSize: 12, fontWeight: 500, color: "#DDD", marginBottom: 4, transition: "all .2s", letterSpacing: .3 }}>{m.title}</div>
+                    <div style={{ fontSize: 12, color: "#999", lineHeight: 1.75 }}>{m.desc}</div>
                   </div>
                 ))}
               </div>
             </div>
           </Section>
 
-          {/* 7. NOW BUILDING */}
+          {/* DIVIDER */}
           <Section delay={0.2}>
-            <div style={{ marginBottom: 48 }}>
-              <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 16, opacity: .6 }}>{T.nowBuildingLabel}</div>
-              <div style={{ fontSize: 12, color: "#777", lineHeight: 1.8, whiteSpace: "pre-line" }}>{T.nowBuilding}</div>
-            </div>
-          </Section>
-
-          {/* 8. DIVIDER */}
-          <Section delay={0.22}>
             <div style={{ height: 1, background: "linear-gradient(to right,transparent,#1A1A1A,transparent)", marginBottom: 40 }} />
           </Section>
 
-          {/* 9. CTA + CESTINA */}
-          <Section delay={0.24}>
+          {/* CTA + CESTINA - SEMPLIFICATO */}
+          <Section delay={0.22}>
             <div style={{ marginBottom: 8 }}>
-              <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
-                  <button className="btn-trash" onClick={handleTrash}
-                    onMouseEnter={() => setHoverTrash(true)}
-                    onMouseLeave={() => setHoverTrash(false)}
-                    onTouchStart={() => setHoverTrash(true)}
-                    onTouchEnd={() => { setTimeout(() => setHoverTrash(false), 150); }}
-                    style={{
-                      animation: "trashBreath 4s ease-in-out infinite",
-                    }}>
-                    {hoverTrash ? T.trashHover : (trashGlitchText || T.trashBtn)}
-                  </button>
-                  <span className="orsep" style={{ fontSize: 11, color: "#222" }}>{T.or}</span>
-                  <button className="btn-talk" onClick={openContact}
-                    onMouseEnter={() => setHoverContact(true)} onMouseLeave={() => setHoverContact(false)}>
-                    {hoverContact ? T.contactHover : T.contactBtn}
-                  </button>
-                </div>
-                {/* Indicatore sotto Cestina */}
-                <div style={{ 
-                  marginTop: 12, 
-                  color: "#FF4D00", 
-                  fontSize: 16, 
-                  animation: "trashArrow 2s ease-in-out infinite",
-                  opacity: 0.4,
-                }}>↓</div>
-              </div>
-              <div style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "#666", fontFamily: "'IBM Plex Mono', monospace" }}>
+              <div style={{ textAlign: "center", marginBottom: 20, fontSize: 11, color: "#888", fontFamily: "'IBM Plex Mono', monospace" }}>
                 {T.availableFor}
               </div>
-              {T.ctaHint && (
-                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "#888", lineHeight: 1.7, maxWidth: 420, margin: "16px auto 0" }}>
-                  {T.ctaHint}
-                </div>
-              )}
-              <div style={{ textAlign: "center", marginTop: 14, fontSize: 11, color: "#555", fontStyle: "italic", fontFamily: "'Playfair Display',serif", letterSpacing: .5 }}>
-                {hoverTrash ? T.hintTrash : T.hintDefault}
+              <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center" }}>
+                <button className="btn-trash" onClick={handleTrash}
+                  onMouseEnter={() => setHoverTrash(true)}
+                  onMouseLeave={() => setHoverTrash(false)}
+                  onTouchStart={() => setHoverTrash(true)}
+                  onTouchEnd={() => { setTimeout(() => setHoverTrash(false), 150); }}
+                  style={{
+                    animation: "trashBreath 4s ease-in-out infinite",
+                  }}>
+                  {hoverTrash ? T.trashHover : (trashGlitchText || T.trashBtn)}
+                </button>
+                <span className="orsep" style={{ fontSize: 11, color: "#333" }}>{T.or}</span>
+                <button className="btn-talk" onClick={openContact}
+                  onMouseEnter={() => setHoverContact(true)} onMouseLeave={() => setHoverContact(false)}>
+                  {hoverContact ? T.contactHover : T.contactBtn}
+                </button>
               </div>
             </div>
           </Section>
