@@ -120,7 +120,15 @@ const LANG = {
     },
     ch2: {
       kicker: "Capitolo 2 · Conflitto",
-      subcopy: "Il tempo passa. Lui resta lì.",
+      introCopy: "Di giorno studiavo all’università. Di notte costruivo altro.",
+      continueBuildBtn: "Continua a costruire",
+      stepOutBtn: "Esci un momento",
+      continueFeedback: [
+        "Come se non avessi già abbastanza cose aperte.",
+        "Un problema solo era chiaramente troppo semplice.",
+        "Ovviamente ho deciso di aggiungerne un altro.",
+      ],
+      stepOutFeedback: "Fuori, almeno, il rumore cambiava forma.",
       backToSurface: "← Torna in superficie",
       introTitle: "Il conflitto",
     }
@@ -220,7 +228,15 @@ const LANG = {
     },
     ch2: {
       kicker: "Chapter 2 · Conflict",
-      subcopy: "Time moves. He stays there.",
+      introCopy: "By day I studied at university. By night I built something else.",
+      continueBuildBtn: "Keep building",
+      stepOutBtn: "Step outside for a moment",
+      continueFeedback: [
+        "As if I didn't already have enough things open.",
+        "One problem was obviously far too simple.",
+        "Naturally, I decided to add another one.",
+      ],
+      stepOutFeedback: "Outside, at least, the noise changed shape.",
       backToSurface: "← Back to surface",
       introTitle: "Conflict",
     }
@@ -895,6 +911,8 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const [allNodesGlow, setAllNodesGlow] = useState(false);
   const [pulsePosition, setPulsePosition] = useState(0);
   const [timingMiss, setTimingMiss] = useState(false);
+  const [finalTimingBurst, setFinalTimingBurst] = useState(false);
+  const [finalTimingFill, setFinalTimingFill] = useState(0);
 
   const playLandingNote = useLandingSound();
 
@@ -995,6 +1013,31 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     };
   }, []);
 
+  const triggerFinalTimingBurst = useCallback(() => {
+    setFinalTimingBurst(true);
+    setFinalTimingFill(0);
+
+    if (finalTimingRafRef.current) cancelAnimationFrame(finalTimingRafRef.current);
+    if (finalTimingTimeoutRef.current) clearTimeout(finalTimingTimeoutRef.current);
+
+    const startedAt = performance.now();
+    const duration = 520;
+
+    const tick = (now) => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      setFinalTimingFill(progress);
+      if (progress < 1) {
+        finalTimingRafRef.current = requestAnimationFrame(tick);
+      }
+    };
+
+    finalTimingRafRef.current = requestAnimationFrame(tick);
+    finalTimingTimeoutRef.current = setTimeout(() => {
+      setFinalTimingBurst(false);
+      setFinalTimingFill(0);
+    }, 1250);
+  }, []);
+
   const triggerLandingFx = useCallback((nodeIndex) => {
     const node = CROSSING_NODES[nodeIndex];
     const intensity = LANDING_INTENSITY[Math.min(nodeIndex, LANDING_INTENSITY.length - 1)];
@@ -1008,6 +1051,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
     if (nodeIndex === CROSSING_NODES.length - 1) {
       setAllNodesGlow(true);
+      triggerFinalTimingBurst();
       setTimeout(() => setAllNodesGlow(false), 700);
       setIsComplete(true);
       setTimeout(() => doFinalJump(), 1100);
@@ -1015,7 +1059,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
     if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
     scenePulseTimeoutRef.current = setTimeout(() => setScenePulse(null), 520);
-  }, [playLandingNote]);
+  }, [playLandingNote, triggerFinalTimingBurst]);
 
   const doFinalJump = useCallback(() => {
     const start = CROSSING_NODES[CROSSING_NODES.length - 1];
@@ -1041,7 +1085,6 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       setCharacterVisible(false);
       setIsJumping(false);
       setTimeout(() => setTransition('fadeWhite'), 100);
-      setTimeout(() => setTransition('chapter2'), 1150);
       setTimeout(() => onComplete?.(), finalPause);
     };
 
@@ -1140,10 +1183,11 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         allNodesGlow={allNodesGlow}
       />
 
-      {showTimingBar && (() => {
-        const isInTarget = pulsePosition >= targetStart && pulsePosition <= targetEnd;
+      {(showTimingBar || finalTimingBurst) && (() => {
+        const isFinalBar = finalTimingBurst;
+        const isInTarget = !isFinalBar && pulsePosition >= targetStart && pulsePosition <= targetEnd;
         const distFromCenter = Math.abs(pulsePosition - 0.5);
-        const centerIntensity = Math.max(0, 1 - distFromCenter * 2.5);
+        const centerIntensity = isFinalBar ? 1 : Math.max(0, 1 - distFromCenter * 2.5);
 
         return (
           <div style={{
@@ -1156,13 +1200,30 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
             height: 6,
             pointerEvents: "none",
             zIndex: 20,
-            animation: timingMiss ? "crossingTimingShake 0.35s ease-out" : "none",
+            animation: timingMiss && !isFinalBar ? "crossingTimingShake 0.35s ease-out" : "none",
           }}>
             <div style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(90deg, transparent 5%, rgba(199,212,160,0.08) 30%, rgba(199,212,160,0.12) 50%, rgba(199,212,160,0.08) 70%, transparent 95%)",
+              background: isFinalBar
+                ? "linear-gradient(90deg, rgba(199,212,160,0.08) 0%, rgba(199,212,160,0.14) 100%)"
+                : "linear-gradient(90deg, transparent 5%, rgba(199,212,160,0.08) 30%, rgba(199,212,160,0.12) 50%, rgba(199,212,160,0.08) 70%, transparent 95%)",
               borderRadius: 10,
+            }} />
+            <div style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: isFinalBar ? `${finalTimingFill * 100}%` : "0%",
+              borderRadius: 10,
+              background: isFinalBar
+                ? "linear-gradient(90deg, rgba(210,226,175,0.18) 0%, rgba(235,242,225,0.72) 55%, rgba(210,226,175,0.28) 100%)"
+                : "transparent",
+              boxShadow: isFinalBar
+                ? `0 0 ${10 + finalTimingFill * 20}px rgba(199,212,160,${0.25 + finalTimingFill * 0.45})`
+                : "none",
+              transition: isFinalBar ? "none" : "width 0.1s linear",
             }} />
             <div style={{
               position: "absolute",
@@ -1177,21 +1238,35 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
             }} />
             <div style={{
               position: "absolute",
-              left: `${pulsePosition * 100}%`,
+              left: isFinalBar ? `${finalTimingFill * 100}%` : `${pulsePosition * 100}%`,
               top: "50%",
               transform: "translate(-50%, -50%)",
-              width: isInTarget ? 16 : 10,
-              height: isInTarget ? 16 : 10,
+              width: isFinalBar ? 18 + finalTimingFill * 4 : (isInTarget ? 16 : 10),
+              height: isFinalBar ? 18 + finalTimingFill * 4 : (isInTarget ? 16 : 10),
               borderRadius: "50%",
-              background: isInTarget
+              background: isFinalBar
+                ? `radial-gradient(circle, rgba(255,255,245,${0.88 + finalTimingFill * 0.12}) 0%, rgba(235,242,225,${0.78 + finalTimingFill * 0.14}) 35%, rgba(199,212,160,0.72) 55%, transparent 75%)`
+                : isInTarget
                 ? `radial-gradient(circle, rgba(235,242,225,${0.88 + centerIntensity * 0.1}) 0%, rgba(199,212,160,0.68) 40%, transparent 70%)`
                 : "radial-gradient(circle, rgba(199,212,160,0.58) 0%, rgba(126,143,99,0.28) 50%, transparent 70%)",
-              boxShadow: isInTarget
+              boxShadow: isFinalBar
+                ? `0 0 ${18 + finalTimingFill * 24}px rgba(235,242,225,${0.45 + finalTimingFill * 0.35}), 0 0 ${28 + finalTimingFill * 32}px rgba(199,212,160,${0.22 + finalTimingFill * 0.22})`
+                : isInTarget
                 ? `0 0 ${10 + centerIntensity * 14}px rgba(199,212,160,${0.55 + centerIntensity * 0.3})`
                 : "0 0 6px rgba(126,143,99,0.22)",
               transition: "width 0.12s, height 0.12s, box-shadow 0.08s",
             }} />
-            {timingMiss && (
+            {isFinalBar && (
+              <div style={{
+                position: "absolute",
+                inset: -10,
+                borderRadius: 20,
+                background: `radial-gradient(ellipse at center, rgba(235,242,225,${0.08 + finalTimingFill * 0.16}) 0%, rgba(199,212,160,${0.05 + finalTimingFill * 0.08}) 45%, transparent 75%)`,
+                filter: `blur(${8 + finalTimingFill * 8}px)`,
+                pointerEvents: "none",
+              }} />
+            )}
+            {timingMiss && !isFinalBar && (
               <div style={{
                 position: "absolute",
                 inset: -4,
@@ -1354,36 +1429,6 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
           opacity: transition === 'fadeWhite' ? 0 : 1,
           animation: transition === 'fadeWhite' ? "crossingFadeToWhite 800ms ease-in-out forwards" : "none",
         }} />
-      )}
-
-      {transition === 'chapter2' && (
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 6,
-          background: "#191E1B",
-          pointerEvents: "none",
-          opacity: 0,
-          animation: "crossingChapter2In 900ms ease-out forwards",
-        }}>
-          <div style={{
-            color: "rgba(199,212,160,0.45)",
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: "clamp(8px, 1.1vw, 10px)",
-            letterSpacing: 4,
-            textTransform: "uppercase",
-          }}>Capitolo</div>
-          <div style={{
-            color: "#C7D4A0",
-            fontFamily: "Georgia, serif",
-            fontSize: "clamp(28px, 4.5vw, 48px)",
-            fontWeight: 400,
-          }}>2</div>
-        </div>
       )}
 
       <div style={{
@@ -1680,7 +1725,7 @@ function ChapterIntroCard({ number, title, onDone }) {
   useEffect(() => {
     const t = setTimeout(() => {
       if (typeof onDone === "function") onDone();
-    }, 2700);
+    }, 3600);
     return () => clearTimeout(t);
   }, []);
 
@@ -1701,7 +1746,11 @@ function ChapterIntroCard({ number, title, onDone }) {
 
 function ChapterTwoScene({ T, onBack }) {
   const deskLoopRef = useRef(null);
-  const [windowGlow, setWindowGlow] = useState(0.04);
+  const [windowGlow, setWindowGlow] = useState(0.08);
+  const [roomDayLift, setRoomDayLift] = useState(0.08);
+  const [roomNightShade, setRoomNightShade] = useState(0.16);
+  const [feedbackText, setFeedbackText] = useState("");
+  const continueIdxRef = useRef(0);
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -1718,7 +1767,9 @@ function ChapterTwoScene({ T, onBack }) {
       if (video.duration) {
         const phase = video.currentTime / video.duration;
         const eased = 0.5 - 0.5 * Math.cos(phase * Math.PI * 2);
-        setWindowGlow(0.025 + eased * 0.055);
+        setWindowGlow(0.05 + eased * 0.13);
+        setRoomDayLift(0.05 + eased * 0.18);
+        setRoomNightShade(0.24 - eased * 0.14);
       }
       raf = requestAnimationFrame(tick);
     };
@@ -1728,6 +1779,18 @@ function ChapterTwoScene({ T, onBack }) {
       video.pause();
     };
   }, []);
+
+  const handleContinueBuild = useCallback(() => {
+    const lines = T.continueFeedback || [];
+    if (!lines.length) return;
+    const idx = continueIdxRef.current % lines.length;
+    setFeedbackText(lines[idx]);
+    continueIdxRef.current = idx + 1;
+  }, [T]);
+
+  const handleStepOut = useCallback(() => {
+    setFeedbackText(T.stepOutFeedback || "");
+  }, [T]);
 
   return (
     <div className="ch1-root">
@@ -1754,12 +1817,22 @@ function ChapterTwoScene({ T, onBack }) {
           </div>
 
           <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
+          <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
+          <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
           <div className="ch2-monitor-breath" />
           <div className="ch2-room-grade" />
+          <div className="ch2-line-block">
+            <div className="ch2-line">{T.introCopy}</div>
+          </div>
           <div className="ch1-scan" />
         </div>
 
-        <div className="ch2-subcopy">{T.subcopy}</div>
+        <div className="ch1-controls ch2-controls">
+          <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
+          <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+        </div>
+
+        <div className={`ch2-feedback ${feedbackText ? "show" : ""}`}>{feedbackText}</div>
       </div>
     </div>
   );
@@ -2043,19 +2116,19 @@ export default function Roberto() {
         @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
         
-                .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 2.7s ease-in-out both;display:flex;justify-content:center;align-items:flex-start;padding-top:14%}
-        .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 2.7s ease-in-out both;padding:0 24px}
+                .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 3.6s cubic-bezier(.22,.61,.36,1) both;display:flex;justify-content:center;align-items:flex-start;padding-top:14%}
+        .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 3.6s cubic-bezier(.22,.61,.36,1) both;padding:0 24px}
         .chapter-intro-kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7d756c;margin-bottom:14px}
         .chapter-intro-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(38px,7vw,72px);line-height:1.02;color:#101010;letter-spacing:-0.5px;text-rendering:geometricPrecision}
 
 .ch2-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid #161616;background:#0b0f12;box-shadow:0 0 0 1px rgba(255,255,255,.02),0 30px 70px rgba(0,0,0,.35)}
         .ch2-fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-        .ch2-window-mask{position:absolute;inset:0;overflow:hidden;clip-path:polygon(19% 15%, 62.8% 15%, 62.8% 49.3%, 19% 49.3%);z-index:2}
-        .ch2-window-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.96) brightness(.98)}
-        .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:34.8%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 45%, rgba(192,223,255,.14), rgba(149,205,255,.05) 48%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .35s ease}
-        .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.16) 0%, rgba(155,225,255,.08) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
-        .ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.05), rgba(4,8,12,.14));mix-blend-mode:multiply}
-        .ch2-subcopy{width:100%;margin-top:14px;color:#6c7782;font-size:11px;letter-spacing:.4px;text-align:left;font-style:italic;font-family:'Playfair Display',serif}
+        .ch2-window-mask{position:absolute;inset:0;overflow:hidden;clip-path:polygon(19.2% 15.2%, 62.7% 15.2%, 62.7% 43.8%, 19.2% 43.8%);z-index:2}
+        .ch2-window-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.02) brightness(1.06) contrast(1.02)}
+        .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:34.8%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
+        .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
+        .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
+        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback{width:100%;margin-top:14px;color:#7f8b99;font-size:12px;line-height:1.6;text-align:left;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease;min-height:24px}.ch2-feedback.show{opacity:1;transform:translateY(0)}
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
 
         @media(max-width:600px){
