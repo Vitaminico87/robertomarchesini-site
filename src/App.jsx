@@ -453,8 +453,8 @@ const LANDING_NOTES = [
 ];
 
 const CROSSING_ASSETS = {
-  idle: "https://robertomarchesini.com/assets/chapter1/boy-idle.png?v=2",
-  jump: "https://robertomarchesini.com/assets/chapter1/boy-jump.png?v=2",
+  idle: "https://www.robertomarchesini.com/assets/chapter1/boy-idle.png?v=3",
+  jump: "https://www.robertomarchesini.com/assets/chapter1/boy-jump.png?v=3",
 };
 
 // ============================================================================
@@ -1195,6 +1195,21 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         />
       )}
 
+      {baseSegments.map((seg, i) => (
+        <div key={`base-seg-${i}`} style={{
+          position: "absolute",
+          left: toPercentX(seg.x), top: toPercentY(seg.y),
+          width: `${(seg.length / CROSSING_BASE_W) * 100}%`,
+          height: "0.22%", minHeight: 1,
+          transformOrigin: "0 50%",
+          transform: `translateY(-50%) rotate(${seg.angle}deg)`,
+          borderRadius: 999,
+          background: "linear-gradient(90deg, rgba(199,212,160,0.045), rgba(199,212,160,0.12))",
+          boxShadow: "0 0 4px rgba(199,212,160,0.06)",
+          pointerEvents: "none",
+        }} />
+      ))}
+
       {activeSegments.map((seg, i) => (
         <div key={`seg-${i}`} style={{
           position: "absolute",
@@ -1270,7 +1285,9 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
           imageRendering: "pixelated",
           pointerEvents: "none",
           animation: !isJumping && !squash ? "crossingIdleFloat 2s ease-in-out infinite" : "none",
-          filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4)) brightness(1.8) saturate(0.3) contrast(0.9)",
+          filter: "none",
+          opacity: 1,
+          mixBlendMode: "normal",
         }} />
       )}
 
@@ -1635,15 +1652,61 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
 function ChapterIntroCard({ number, title, onDone }) {
   useEffect(() => {
-    const t = setTimeout(() => onDone?.(), 1500);
+    const t = setTimeout(() => onDone?.(), 1700);
     return () => clearTimeout(t);
   }, [onDone]);
 
   return (
-    <div className="chapter-card-shell" onClick={onDone} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
-      <div className="chapter-card-inner">
-        <div className="chapter-card-kicker">Capitolo {number}</div>
-        <div className="chapter-card-title">{title}</div>
+    <div
+      onClick={onDone}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}
+      style={{
+        minHeight: "100vh",
+        background: "#f5f2eb",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingTop: "13vh",
+        paddingLeft: 24,
+        paddingRight: 24,
+        cursor: "pointer",
+        animation: "chapterCardFadeIn 420ms ease-out both",
+      }}
+    >
+      <div
+        style={{
+          textAlign: "center",
+          animation: "chapterCardTextDrift 1350ms ease-out both",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 11,
+            letterSpacing: 4,
+            textTransform: "uppercase",
+            color: "#8b8176",
+            marginBottom: 14,
+          }}
+        >
+          Capitolo {number}
+        </div>
+        <div
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: "italic",
+            fontWeight: 600,
+            fontSize: "clamp(38px, 7vw, 72px)",
+            lineHeight: 1.02,
+            color: "#111111",
+            letterSpacing: -0.5,
+            textRendering: "geometricPrecision",
+          }}
+        >
+          {title}
+        </div>
       </div>
     </div>
   );
@@ -1885,6 +1948,8 @@ export default function Roberto() {
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+        @keyframes chapterCardFadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes chapterCardTextDrift{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
         .work-card{transition:all .3s}
         .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
         .svc{padding:22px 24px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
