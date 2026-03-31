@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import discoverCrtCloseupV2 from "./discover_crt_closeup_v2.webp";
 
 // ============================================================================
 // GAME TOGGLE - Set to true when the game is ready for launch
@@ -13,7 +12,7 @@ const ASSET_BASE = "https://robertomarchesini.com/assets/chapter1";
 const ASSETS = {
   pratoFirstFrame: `${ASSET_BASE}/prato_first_frame.png`,
   pratoFull: `${ASSET_BASE}/pratofull.mp4`,
-  discoverCrtCloseup: discoverCrtCloseupV2,
+  discoverCrtCloseup: `${ASSET_BASE}/discover_crt_closeup_v2.webp?v=2`,
   libraryLoop: `${ASSET_BASE}/loopbiblioteca.mp4`,
   libraryFull: `${ASSET_BASE}/fullbiblioteca.mp4`,
 };
