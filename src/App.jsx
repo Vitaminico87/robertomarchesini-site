@@ -19,15 +19,15 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Creatività, strategia e AI per brand che vogliono distinguersi davvero.",
-    heroSub: "Costruisco sistemi creativi, contenuti, campagne ed esperienze digitali con uno standard alto e una logica chiara.",
-    proofStrip: "Creative systems · Growth-minded execution · AI-enhanced workflows",
+    hero: "Creatività, narrativa e AI per dare forma a brand, esperienze e sistemi con una logica chiara.",
+    heroSub: "Aiuto brand e progetti a diventare chiari, desiderabili e difficili da ignorare.",
+    proofStrip: "Brand narrative · Launch thinking · AI-powered systems",
     whatido: "Cosa faccio",
     services: [
-      { title: "Create", desc: "Direzione creativa, identità visiva, contenuti. Do al tuo brand una voce chiara, un linguaggio coerente e un'estetica che non sembri presa in prestito." },
-      { title: "Grow", desc: "Campagne paid, strategia di crescita, crescita del pubblico. Non inseguo metriche decorative: costruisco attenzione, risposta e risultati leggibili nei dati." },
-      { title: "Evolve", desc: "AI nei flussi di lavoro, processi più rapidi, nuovi formati. Uso l'AI per aumentare qualità, velocità e possibilità creative — non per produrre contenuti generici più in fretta." },
-      { title: "Teach", desc: "Workshop, onboarding, consulenza operativa. Aiuto team e professionisti a usare l'AI nel processo creativo con metodo, criterio e autonomia." },
+      { title: "Position", desc: "Definisco il posizionamento, la narrativa e la distinzione. Aiuto brand e progetti a capire cosa sono, come parlano e perché dovrebbero importare." },
+      { title: "Shape", desc: "Direzione creativa, worldbuilding, format. Do forma visiva e narrativa a idee che altrimenti resterebbero astratte o generiche." },
+      { title: "Launch", desc: "Strategie di lancio, esperienze di go-to-market, rollout creativi. Porto le idee nel mondo con una logica chiara e un'esecuzione che si fa notare." },
+      { title: "Build", desc: "AI systems, prototipi, workflow, nuovi formati. Costruisco strumenti e processi che rendono la creatività più veloce, scalabile e intelligente." },
     ],
     selectedWorkLabel: "Lavori scelti",
     selectedWorkSub: "Progetti reali, impegni a lungo termine.",
@@ -36,36 +36,36 @@ const LANG = {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Creative direction e content engine per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
-        technical: "Identity · Promotion architecture · Editorial consistency",
-        tags: ["Venue marketing", "Creative system", "Weekly execution"]
+        narrative: "Sistema narrativo e promozionale per uno spazio culturale con 150+ eventi l'anno e oltre 1M di visualizzazioni mensili.",
+        technical: "Brand system · Narrative direction · Launch logic",
+        tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Dodici anni di direzione creativa per comunicazione e contenuti digitali di uno dei live brand più riconoscibili in Italia, con un'audience cresciuta oltre 400K persone.",
-        technical: "Content & digital creative direction · Content system · Audience growth",
-        tags: ["Live entertainment", "Growth", "Content system"]
+        narrative: "Dodici anni di direzione creativa per uno dei live brand più riconoscibili in Italia, con un'audience digitale cresciuta fino a 400K+ persone.",
+        technical: "Narrative direction · Brand system · Audience growth",
+        tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
         narrative: "Posizionamento premium, website direction e architettura digitale per un brand eventi orientato a credibilità e lead qualificati.",
-        technical: "Website direction · Brand tone · Conversion logic",
-        tags: ["Website", "Positioning", "Lead architecture"]
+        technical: "Positioning clarity · Digital experience · Conversion logic",
+        tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
     ],
     howLabel: "Come lavoro",
     method: [
-      { title: "Sperimentare, non sfruttare", desc: "Mi interessa l'AI quando aumenta possibilità e qualità. Non quando serve a produrre di più abbassando il livello." },
-      { title: "Standard alto, pipeline intelligenti", desc: "Produco visual, motion e contenuti con uno standard alto e un processo più leggero, rapido e controllato." },
-      { title: "Decisioni basate sui dati", desc: "La creatività non vive fuori dalla realtà. Ogni scelta importante passa da analisi, test e lettura dei dati." },
+      { title: "Narrativa prima del rumore", desc: "Ogni progetto parte da una storia chiara. Il resto — visual, campagne, sistemi — viene dopo e ne è conseguenza." },
+      { title: "Standard alto, sistemi intelligenti", desc: "Produco a un livello alto con processi più leggeri. L'AI amplifica, non sostituisce." },
+      { title: "Reality check", desc: "Audience, contesto, impatto. La creatività non vive fuori dalla realtà — ogni scelta passa da analisi e verifica." },
     ],
-    nowBuildingLabel: "Now building",
-    nowBuilding: "Stessi principi — sistemi, narrazione, dati — applicati a formati nuovi: AI-driven content, esperienze interattive, narrative non lineari.\n\nIl lavoro sopra è il fondamento. Quello che segue è la direzione.",
-    availableFor: "Available for selected collaborations — brand, events, digital experiences, AI-led creative systems.",
+    nowBuildingLabel: "Direzione",
+    nowBuilding: "La direzione si sposta verso formati AI-powered, esperienze interattive, narrative di lancio e sistemi capaci di rendere le idee più vive, leggibili e costruibili.\n\nIl lavoro sopra è il fondamento. Quello che segue è dove vado.",
+    availableFor: "Disponibile per collaborazioni selezionate — brand, eventi, esperienze digitali, sistemi creativi AI-powered.",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
     hintDefault: "Questa pagina spiega il lavoro. Il resto è il motivo per cui lo faccio.",
@@ -106,15 +106,15 @@ const LANG = {
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "Creativity, strategy, and AI for brands that want to stand out for real.",
-    heroSub: "I build creative systems, content, campaigns, and digital experiences with a high standard and a clear logic.",
-    proofStrip: "Creative systems · Growth-minded execution · AI-enhanced workflows",
+    hero: "Creativity, narrative, and AI to shape brands, experiences, and systems with a clear logic.",
+    heroSub: "I help brands and projects become clearer, more desirable, and harder to ignore.",
+    proofStrip: "Brand narrative · Launch thinking · AI-powered systems",
     whatido: "What I do",
     services: [
-      { title: "Create", desc: "Creative direction, visual identity, content. I give your brand a clear voice, a coherent language, and an aesthetic that doesn't look borrowed." },
-      { title: "Grow", desc: "Paid campaigns, growth strategy, audience growth. I don't chase decorative metrics — I build attention, response, and results you can read in the data." },
-      { title: "Evolve", desc: "AI in your workflows, faster processes, new formats. I use AI to increase quality, speed, and creative possibilities — not to produce generic content faster." },
-      { title: "Teach", desc: "Workshops, onboarding, hands-on consulting. I help teams and professionals use AI in the creative process with method, judgement, and autonomy." },
+      { title: "Position", desc: "I define positioning, narrative, and distinction. I help brands and projects understand what they are, how they speak, and why they should matter." },
+      { title: "Shape", desc: "Creative direction, worldbuilding, format. I give visual and narrative form to ideas that would otherwise stay abstract or generic." },
+      { title: "Launch", desc: "Launch strategies, go-to-market experiences, creative rollouts. I bring ideas into the world with clear logic and execution that gets noticed." },
+      { title: "Build", desc: "AI systems, prototypes, workflows, new formats. I build tools and processes that make creativity faster, scalable, and smarter." },
     ],
     selectedWorkLabel: "Selected Work",
     selectedWorkSub: "Real projects, long-term commitments.",
@@ -123,36 +123,36 @@ const LANG = {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
-        narrative: "Creative direction and content engine for a venue with weekly programming and over 150 events a year.",
-        technical: "Identity · Promotion architecture · Editorial consistency",
-        tags: ["Venue marketing", "Creative system", "Weekly execution"]
+        narrative: "Narrative and promotion system for a cultural venue with 150+ events per year and over 1M monthly views.",
+        technical: "Brand system · Narrative direction · Launch logic",
+        tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Twelve years of creative direction for the communications and digital content of one of Italy's most recognizable live brands, with an audience grown to over 400K.",
-        technical: "Content & digital creative direction · Content system · Audience growth",
-        tags: ["Live entertainment", "Growth", "Content system"]
+        narrative: "Twelve years of creative direction for one of Italy's most recognizable live brands, with a digital audience grown to 400K+ people.",
+        technical: "Narrative direction · Brand system · Audience growth",
+        tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
         narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
-        technical: "Website direction · Brand tone · Conversion logic",
-        tags: ["Website", "Positioning", "Lead architecture"]
+        technical: "Positioning clarity · Digital experience · Conversion logic",
+        tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
     ],
     howLabel: "How I work",
     method: [
-      { title: "Experiment, don't exploit", desc: "I care about AI when it increases possibilities and quality. Not when it's used to produce more while lowering the standard." },
-      { title: "High standard, smart pipelines", desc: "I produce visuals, motion, and content at a high standard with a lighter, faster, more controlled process." },
-      { title: "Data-backed decisions", desc: "Creativity doesn't live outside reality. Every important choice goes through analysis, testing, and reading the data." },
+      { title: "Narrative before noise", desc: "Every project starts from a clear story. Everything else — visuals, campaigns, systems — follows from that." },
+      { title: "High standards, smart systems", desc: "I produce at a high level with lighter processes. AI amplifies, it doesn't replace." },
+      { title: "Reality check", desc: "Audience, context, impact. Creativity doesn't live outside reality — every choice goes through analysis and verification." },
     ],
-    nowBuildingLabel: "Now building",
-    nowBuilding: "Same principles — systems, narrative, data — applied to new formats: AI-driven content, interactive experiences, non-linear storytelling.\n\nThe work above is the foundation. What follows is the direction.",
-    availableFor: "Available for selected collaborations — brand, events, digital experiences, AI-led creative systems.",
+    nowBuildingLabel: "Direction",
+    nowBuilding: "The next layer is moving toward AI-powered formats, interactive experiences, launch narratives and systems that make ideas more alive, more legible and more buildable.\n\nThe work above is the foundation. What follows is where I'm going.",
+    availableFor: "Available for selected collaborations — brand, events, digital experiences, AI-powered creative systems.",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
     hintDefault: "This page explains the work. The rest is why I do it.",
@@ -1531,7 +1531,8 @@ export default function Roberto() {
         @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(255,77,0,.12)}50%{box-shadow:0 0 35px rgba(255,77,0,.25)}}
         @keyframes nameGlow{0%,100%{text-shadow:0 0 30px rgba(255,77,0,.04)}50%{text-shadow:0 0 50px rgba(255,77,0,.08)}}
         @keyframes trashPulse{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.12)}}
-        @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.08), 0 0 40px rgba(255,77,0,.04)}50%{box-shadow:0 0 35px rgba(255,77,0,.18), 0 0 70px rgba(255,77,0,.08)}}
+        @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.12), 0 0 40px rgba(255,77,0,.06);transform:scale(1)}50%{box-shadow:0 0 40px rgba(255,77,0,.25), 0 0 80px rgba(255,77,0,.12);transform:scale(1.02)}}
+        @keyframes trashArrow{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.6;transform:translateY(4px)}}
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
@@ -1651,9 +1652,6 @@ export default function Roberto() {
 
       {/* Blackout for transitions */}
       <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "#050505", opacity: blackout ? 1 : 0, pointerEvents: "none", transition: "opacity .15s" }} />
-
-      {/* Ghost annotations */}
-      {phase === "main" && <GhostLayer ghostPhases={T.ghostPhases} active={ghostReady} scrollProgress={scrollProgress} />}
 
       {/* Falling words */}
       {falling && (
@@ -1822,24 +1820,34 @@ export default function Roberto() {
           {/* 9. CTA + CESTINA */}
           <Section delay={0.24}>
             <div style={{ marginBottom: 8 }}>
-              <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center" }}>
-                <button className="btn-trash" onClick={handleTrash}
-                  onMouseEnter={() => setHoverTrash(true)}
-                  onMouseLeave={() => setHoverTrash(false)}
-                  onTouchStart={() => setHoverTrash(true)}
-                  onTouchEnd={() => { setTimeout(() => setHoverTrash(false), 150); }}
-                  style={{
-                    animation: "trashBreath 4s ease-in-out infinite",
-                  }}>
-                  {hoverTrash ? T.trashHover : (trashGlitchText || T.trashBtn)}
-                </button>
-                <span className="orsep" style={{ fontSize: 11, color: "#222" }}>{T.or}</span>
-                <button className="btn-talk" onClick={openContact}
-                  onMouseEnter={() => setHoverContact(true)} onMouseLeave={() => setHoverContact(false)}>
-                  {hoverContact ? T.contactHover : T.contactBtn}
-                </button>
+              <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+                <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+                  <button className="btn-trash" onClick={handleTrash}
+                    onMouseEnter={() => setHoverTrash(true)}
+                    onMouseLeave={() => setHoverTrash(false)}
+                    onTouchStart={() => setHoverTrash(true)}
+                    onTouchEnd={() => { setTimeout(() => setHoverTrash(false), 150); }}
+                    style={{
+                      animation: "trashBreath 4s ease-in-out infinite",
+                    }}>
+                    {hoverTrash ? T.trashHover : (trashGlitchText || T.trashBtn)}
+                  </button>
+                  <span className="orsep" style={{ fontSize: 11, color: "#222" }}>{T.or}</span>
+                  <button className="btn-talk" onClick={openContact}
+                    onMouseEnter={() => setHoverContact(true)} onMouseLeave={() => setHoverContact(false)}>
+                    {hoverContact ? T.contactHover : T.contactBtn}
+                  </button>
+                </div>
+                {/* Indicatore sotto Cestina */}
+                <div style={{ 
+                  marginTop: 12, 
+                  color: "#FF4D00", 
+                  fontSize: 16, 
+                  animation: "trashArrow 2s ease-in-out infinite",
+                  opacity: 0.4,
+                }}>↓</div>
               </div>
-              <div style={{ textAlign: "center", marginTop: 16, fontSize: 11, color: "#666", fontFamily: "'IBM Plex Mono', monospace" }}>
+              <div style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "#666", fontFamily: "'IBM Plex Mono', monospace" }}>
                 {T.availableFor}
               </div>
               <div style={{ textAlign: "center", marginTop: 14, fontSize: 11, color: "#555", fontStyle: "italic", fontFamily: "'Playfair Display',serif", letterSpacing: .5 }}>
