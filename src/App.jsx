@@ -1299,6 +1299,8 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const libraryFullRef = useRef(null);
   const revealTimeoutRef = useRef(null);
   const thesisTimeoutRef = useRef(null);
+  const floodTimeoutRef = useRef(null);
+  const dissolveTimeoutRef = useRef(null);
   const crossingTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState('meadow');
@@ -1309,6 +1311,8 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   const [showCrossing, setShowCrossing] = useState(false);
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const [showLibraryThesis, setShowLibraryThesis] = useState(false);
+  const [libraryFloodActive, setLibraryFloodActive] = useState(false);
+  const [librarySceneDissolve, setLibrarySceneDissolve] = useState(false);
 
   const unlockAudio = useCallback(() => {
     if (!audioUnlocked) setAudioUnlocked(true);
@@ -1377,6 +1381,8 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     return () => {
       if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
       if (thesisTimeoutRef.current) clearTimeout(thesisTimeoutRef.current);
+      if (floodTimeoutRef.current) clearTimeout(floodTimeoutRef.current);
+      if (dissolveTimeoutRef.current) clearTimeout(dissolveTimeoutRef.current);
       if (crossingTimeoutRef.current) clearTimeout(crossingTimeoutRef.current);
     };
   }, []);
@@ -1397,30 +1403,46 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     setScene('library');
     setActivated(false);
     setShowLibraryThesis(false);
+    setLibraryFloodActive(false);
+    setLibrarySceneDissolve(false);
   }, [unlockAudio]);
 
   const handleBackOff = useCallback(() => {
     if (activated) return;
     unlockAudio();
     setScene('discover');
+    setLibraryFloodActive(false);
+    setLibrarySceneDissolve(false);
+    setShowLibraryThesis(false);
   }, [activated, unlockAudio]);
 
   const handleContinue = useCallback(() => {
     if (activated) return;
     unlockAudio();
     setActivated(true);
+    setLibraryFloodActive(false);
+    setLibrarySceneDissolve(false);
+    setShowLibraryThesis(false);
 
     thesisTimeoutRef.current = setTimeout(() => {
       setShowLibraryThesis(true);
-    }, 260);
+    }, 320);
 
     revealTimeoutRef.current = setTimeout(() => {
       setProfileUnlocked(true);
-    }, 520);
+    }, 760);
+
+    floodTimeoutRef.current = setTimeout(() => {
+      setLibraryFloodActive(true);
+    }, 420);
+
+    dissolveTimeoutRef.current = setTimeout(() => {
+      setLibrarySceneDissolve(true);
+    }, 1700);
 
     crossingTimeoutRef.current = setTimeout(() => {
       setShowCrossing(true);
-    }, 1650);
+    }, 2450);
   }, [activated, unlockAudio]);
 
   const handleCrossingComplete = useCallback(() => {
@@ -1464,7 +1486,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 </div>
               </section>
 
-              <section className={`ch1-scene ${scene === 'library' ? 'active' : ''}`}>
+              <section className={`ch1-scene ${scene === 'library' ? 'active' : ''} ${librarySceneDissolve ? 'ch1-scene-dissolve' : ''}`}>
                 <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
                 <video
                   ref={libraryFullRef}
@@ -1476,6 +1498,8 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 />
                 <div className="ch1-library-glow" />
                 <div className={`ch1-library-activated-glow ${activated ? 'active' : ''}`} />
+                <div className={`ch1-library-green-flood ${libraryFloodActive ? 'active' : ''}`} />
+                <div className={`ch1-library-green-wash ${libraryFloodActive ? 'active' : ''}`} />
                 <div className={`ch1-line-block ch1-thesis ${showLibraryThesis ? 'show' : ''}`}>
                   <div className="ch1-line">{T.revealCopy}</div>
                 </div>
@@ -1726,11 +1750,16 @@ export default function Roberto() {
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
         .ch1-line{color:#dce7de;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}
         .ch1-library-glow{position:absolute;inset:0;z-index:3;background:radial-gradient(circle at 19% 71%,rgba(167,203,216,.13),transparent 18%);opacity:.65}
-        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;transition:opacity .45s ease;filter:brightness(1.05) contrast(1.02)}
-        .ch1-library-activation-video.active{opacity:.24}
-        .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(194,219,228,.18),transparent 16%), linear-gradient(180deg,rgba(167,203,216,.02),rgba(167,203,216,.12));transition:opacity .45s ease}
+        .ch1-library-activation-video{z-index:4;opacity:0;mix-blend-mode:screen;transition:opacity 1.15s cubic-bezier(.22,.61,.36,1), filter 1.15s cubic-bezier(.22,.61,.36,1);filter:brightness(1.02) contrast(1.02) saturate(1.02)}
+        .ch1-library-activation-video.active{opacity:.5;filter:brightness(1.08) contrast(1.04) saturate(1.08)}
+        .ch1-library-activated-glow{position:absolute;inset:0;z-index:5;opacity:0;background:radial-gradient(circle at 21% 70%,rgba(194,219,228,.2),transparent 16%), linear-gradient(180deg,rgba(167,203,216,.03),rgba(167,203,216,.14));transition:opacity 1s ease}
         .ch1-library-activated-glow.active{opacity:1}
-        .ch1-line-block.ch1-thesis{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+        .ch1-library-green-flood{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle at 23% 69%,rgba(196,229,160,.0) 0%,rgba(196,229,160,.16) 16%,rgba(135,173,103,.44) 38%,rgba(43,68,44,.86) 100%),linear-gradient(180deg,rgba(74,111,63,.02),rgba(54,88,50,.58));mix-blend-mode:screen;filter:blur(10px);transform:scale(1.03);transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), filter 1.3s cubic-bezier(.22,.61,.36,1), transform 1.3s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-green-flood.active{opacity:.9;filter:blur(3px);transform:scale(1)}
+        .ch1-library-green-wash{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(122,163,98,.04),rgba(79,122,64,.22) 55%,rgba(26,44,27,.52) 100%);transition:opacity 1.25s cubic-bezier(.22,.61,.36,1)}
+        .ch1-library-green-wash.active{opacity:1}
+        .ch1-scene.ch1-scene-dissolve{opacity:0;filter:brightness(1.06) saturate(1.08);transition:opacity .7s ease, filter .7s ease}
+        .ch1-line-block.ch1-thesis{z-index:8;opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
         .ch1-line-block.ch1-thesis.show{opacity:1;transform:translateY(0)}
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
         .ch1-feedback.show{opacity:1;transform:translateY(0)}
