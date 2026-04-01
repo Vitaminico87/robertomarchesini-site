@@ -524,7 +524,7 @@ function PixelDownloadIcon() {
   );
 }
 
-function HomeSocialRail() {
+function HomeSocialRail({ mobile = false }) {
   const links = [
     {
       href: 'https://www.instagram.com/roberto_marchesini_/',
@@ -547,12 +547,12 @@ function HomeSocialRail() {
   ];
 
   return (
-    <div className="home-social-rail" aria-label="Social links">
+    <div className={mobile ? "home-social-rail home-social-rail-mobile" : "home-social-rail"} aria-label="Social links">
       {links.map((link) => (
         <a
           key={link.label}
           href={link.href}
-          className="pixel-social-link"
+          className={mobile ? "pixel-social-link pixel-social-link-mobile" : "pixel-social-link"}
           target={link.external ? '_blank' : undefined}
           rel={link.external ? 'noopener noreferrer' : undefined}
           download={link.download ? true : undefined}
@@ -3085,8 +3085,10 @@ export default function Roberto() {
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         .home-hero-shell{position:relative;overflow:visible}
         .home-social-rail{position:absolute;top:8px;right:-98px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;z-index:6}
+        .home-social-rail-mobile{position:relative;top:auto;right:auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
         .pixel-social-link{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1px solid rgba(255,255,255,.08);border-radius:4px;background:rgba(5,5,5,.82);color:#8b8b8b;text-decoration:none;transition:border-color .22s ease,color .22s ease,transform .22s ease,background .22s ease}
         .pixel-social-link:hover{border-color:rgba(255,77,0,.34);color:#FF4D00;background:rgba(16,10,8,.92);transform:translateX(-2px)}
+        .pixel-social-link-mobile{padding:8px 10px;background:rgba(7,7,7,.9)}
         .pixel-social-icon{display:flex;align-items:center;justify-content:center;flex:0 0 auto}
         .pixel-social-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;line-height:1}
         
@@ -3303,7 +3305,7 @@ export default function Roberto() {
         .ch2-debug-src{word-break:break-all;color:#b68f79}
 
         @media(max-width:1024px){
-          .home-social-rail{display:none!important}
+          .home-social-rail:not(.home-social-rail-mobile){display:none!important}
         }
 
         @media(max-width:600px){
@@ -3327,7 +3329,10 @@ export default function Roberto() {
           .svc-in{display:block!important;grid-template-columns:1fr!important;gap:0!important}
           .svc-tw{margin-bottom:10px!important}
           .svc-in > div:last-child{margin-top:0!important}
-          .home-section-kicker{font-size:24px!important;line-height:1.08!important;margin-bottom:0!important}
+          .home-social-rail-mobile{display:flex!important}
+          .pixel-social-link-mobile{min-width:0}
+          .pixel-social-link-mobile .pixel-social-label{font-size:8px;letter-spacing:1.2px}
+          .home-section-kicker{font-size:24px!important;line-height:1.08!important;margin-bottom:12px!important}
           .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
           .home-work-narrative{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important;max-width:100%!important}
           .home-work-secondary{display:none!important}
@@ -3366,9 +3371,9 @@ export default function Roberto() {
           .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
           .ch2-game-complete-card{left:14px;right:14px;top:14px;width:auto;transform:none;padding:12px 12px 13px}
           .ch2-game-complete-line{font-size:22px;line-height:1.14}
-          .ch2-game-grid{grid-template-columns:1fr;gap:8px}
-          .ch2-game-object{padding:12px 12px 13px}
-          .ch2-game-object-title{font-size:18px}
+          .ch2-game-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+          .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+          .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
           .chapter-intro-inner{transform:translateY(0)}
         }
       `}</style>
@@ -3438,7 +3443,7 @@ export default function Roberto() {
               <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 20, lineHeight: isMobileViewport ? 1.78 : 1.92, maxWidth: isMobileViewport ? 420 : 470 }}>{T.hero}</div>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 12 : 14, lineHeight: isMobileViewport ? 1.78 : 1.9, maxWidth: isMobileViewport ? 400 : 470 }}>{heroSubText}</div>
-              {!isMobileViewport ? <HomeSocialRail /> : null}
+              {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
 
