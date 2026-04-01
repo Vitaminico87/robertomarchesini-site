@@ -1040,6 +1040,37 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     finalTimingRafRef.current = requestAnimationFrame(tick);
   }, []);
 
+  const doFinalJump = useCallback(() => {
+    const start = CROSSING_NODES[CROSSING_NODES.length - 1];
+    const end = CROSSING_EXIT;
+    setIsFinalJump(true);
+    setIsJumping(true);
+
+    const startedAt = performance.now();
+    const dur = 680;
+
+    const tick = (now) => {
+      const p = Math.min((now - startedAt) / dur, 1);
+      const arc = (arcHeight * 1.35) * Math.sin(p * Math.PI);
+      const x = start.x + (end.x - start.x) * p;
+      const y = start.y + (end.y - start.y) * p - arc;
+      setCharacterPos({ x, y });
+
+      if (p < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      setCharacterVisible(false);
+      setIsJumping(false);
+      setTimeout(() => setTransition('fadeWhite'), 100);
+      setTimeout(() => onComplete?.(), finalPause);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+  }, [arcHeight, finalPause, onComplete]);
+
+
   const triggerLandingFx = useCallback((nodeIndex) => {
     const node = CROSSING_NODES[nodeIndex];
     const intensity = LANDING_INTENSITY[Math.min(nodeIndex, LANDING_INTENSITY.length - 1)];
@@ -1070,36 +1101,6 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
     scenePulseTimeoutRef.current = setTimeout(() => setScenePulse(null), 520);
   }, [doFinalJump, playLandingNote, triggerFinalTimingBurst]);
-
-  const doFinalJump = useCallback(() => {
-    const start = CROSSING_NODES[CROSSING_NODES.length - 1];
-    const end = CROSSING_EXIT;
-    setIsFinalJump(true);
-    setIsJumping(true);
-
-    const startedAt = performance.now();
-    const dur = 680;
-
-    const tick = (now) => {
-      const p = Math.min((now - startedAt) / dur, 1);
-      const arc = (arcHeight * 1.35) * Math.sin(p * Math.PI);
-      const x = start.x + (end.x - start.x) * p;
-      const y = start.y + (end.y - start.y) * p - arc;
-      setCharacterPos({ x, y });
-
-      if (p < 1) {
-        rafRef.current = requestAnimationFrame(tick);
-        return;
-      }
-
-      setCharacterVisible(false);
-      setIsJumping(false);
-      setTimeout(() => setTransition('fadeWhite'), 100);
-      setTimeout(() => onComplete?.(), finalPause);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-  }, [arcHeight, finalPause, onComplete]);
 
   const doJump = useCallback((targetIndex) => {
     const start = currentNodeIndex >= 0 ? CROSSING_NODES[currentNodeIndex] : CROSSING_ENTRY;
