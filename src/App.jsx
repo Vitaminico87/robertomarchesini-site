@@ -21,6 +21,7 @@ const ASSETS = {
   chapter2DeskLoop: `${ASSET_BASE_CH2}/chapter2_daynight_loop.mp4?v=1`,
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
   chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
+  chapter3Frame1,
 };
 const CV_DOWNLOAD_URL = "/assets/roberto-marchesini-cv.pdf";
 
@@ -142,7 +143,7 @@ const LANG = {
       kicker: "Capitolo 2 · Conflitto",
       introCopy: "Di giorno studiavo all’università. Di notte costruivo altro.",
       continueBuildBtn: "Continua a costruire",
-      stepOutBtn: "Esci un momento",
+      stepOutBtn: "Capisci cosa tenere",
       continueFeedback: [
         "Come se non avessi già abbastanza cose aperte.",
         "Un problema solo era chiaramente troppo semplice.",
@@ -167,9 +168,9 @@ const LANG = {
       ],
       streetResolveFeedback: "Non dovevo tenere tutto. Solo quello che avrebbe retto.",
       streetBridgeHint: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
-      gameSlotsLabel: "Zaino · 4 slot",
-      gameIntroLine: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
-      gameMobilePrompt: "Scegli i 4 oggetti che porto con me.",
+      gameSlotsLabel: "Zaino · 3 slot",
+      gameIntroLine: "Non potevo portarmi dietro tutto. Dovevo scegliere cosa restava davvero.",
+      gameMobilePrompt: "Scegli i 3 oggetti che porto con me.",
       gameDuplicate: "Quello è già dentro. Non serve convincersi due volte.",
       gameOrderWrong: "Ci sta. Ma non è il prossimo tassello.",
       gameCompleteKicker: "Scelta corretta.",
@@ -178,7 +179,11 @@ const LANG = {
       introTitle: "Il conflitto",
     },
     ch3: {
+      kicker: "Capitolo 3 · Sintesi",
       introTitle: "Sintesi",
+      line: "Quando tutto si muove, serve un centro fermo.",
+      continueBtn: "Continua",
+      backToSurface: "← Torna in superficie",
     }
   },
   en: {
@@ -293,7 +298,7 @@ const LANG = {
       kicker: "Chapter 2 · Conflict",
       introCopy: "By day I studied at university. By night I built something else.",
       continueBuildBtn: "Keep building",
-      stepOutBtn: "Step outside for a moment",
+      stepOutBtn: "Decide what stays",
       continueFeedback: [
         "As if I didn't already have enough things open.",
         "One problem was obviously far too simple.",
@@ -318,9 +323,9 @@ const LANG = {
       ],
       streetResolveFeedback: "I didn't need to keep everything. Only what would hold.",
       streetBridgeHint: "I couldn't carry everything forward. I had to figure out what remained.",
-      gameSlotsLabel: "Backpack · 4 slots",
-      gameIntroLine: "I couldn't carry everything forward. I had to figure out what remained.",
-      gameMobilePrompt: "Choose the 4 objects I carry with me.",
+      gameSlotsLabel: "Backpack · 3 slots",
+      gameIntroLine: "I couldn't carry everything forward. I had to choose what truly remained.",
+      gameMobilePrompt: "Choose the 3 objects I carry with me.",
       gameDuplicate: "That's already in. No need to convince yourself twice.",
       gameOrderWrong: "Fair. But it's not the next piece.",
       gameCompleteKicker: "Correct choice.",
@@ -329,7 +334,11 @@ const LANG = {
       introTitle: "Conflict",
     },
     ch3: {
+      kicker: "Chapter 3 · Synthesis",
       introTitle: "Synthesis",
+      line: "When everything moves, you need a steady center.",
+      continueBtn: "Continue",
+      backToSurface: "← Back to surface",
     }
   },
 };
@@ -406,36 +415,30 @@ const EMERGED_PROFILE = {
 const CH2_OBJECTS = {
   it: [
     { id: "vinyl", label: "Vinile", type: "decoy", description: "Bella presenza. Funzione discutibile.", wrongLine: "Molto atmosfera. Poco avanzamento." },
-    { id: "notebook", label: "Taccuino", type: "correct", description: "Per idee, appunti, connessioni.", placedLine: "Prima di capire cosa fare, di solito scrivevo." },
+    { id: "notebook", label: "Taccuino", type: "correct", description: "Per idee, appunti, connessioni.", wrongLine: "Da solo non basta. Ma senza questo mancava una base.", placedLine: "Prima di capire cosa fare, di solito scrivevo." },
     { id: "badge", label: "Badge corporate", type: "decoy", description: "Arriverà. Ma non da qui.", wrongLine: "Un po' presto per fingersi già risolto." },
-    { id: "camera", label: "Macchina fotografica", type: "correct", description: "Per imparare a guardare davvero.", placedLine: "Guardare bene veniva prima di spiegare bene." },
-    { id: "diploma", label: "Diploma incorniciato", type: "decoy", description: "Rispettiamolo, ma non è il motore.", wrongLine: "Appeso al muro forse. Nello zaino no." },
-    { id: "floppy", label: "Floppy disk", type: "correct", description: "Per il lato sistema, memoria, macchina.", placedLine: "Una parte di tutto questo passava già da una macchina." },
+    { id: "camera", label: "Macchina fotografica", type: "correct", description: "Per imparare a guardare davvero.", wrongLine: "Serve. Ma non è il primo tassello.", placedLine: "Guardare bene veniva prima di spiegare bene." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "Per il lato sistema, memoria, macchina.", wrongLine: "Ci arrivo. Ma non ancora.", placedLine: "Una parte di tutto questo passava già da una macchina." },
     { id: "ticket", label: "Biglietto aereo", type: "decoy", description: "Tentazione chiara. Tempismo sbagliato.", wrongLine: "Prima la traiettoria. Poi l'aeroporto." },
-    { id: "cdr", label: "CD masterizzato", type: "correct", description: "Per ritmo, montaggio, memoria visiva e sonora.", placedLine: "Mi serviva qualcosa che tenesse insieme gusto, ritmo e memoria." },
   ],
   en: [
     { id: "vinyl", label: "Vinyl", type: "decoy", description: "Great presence. Questionable function.", wrongLine: "A lot of atmosphere. Not much progress." },
-    { id: "notebook", label: "Notebook", type: "correct", description: "For ideas, notes, connections.", placedLine: "Before figuring out what to do, I usually wrote." },
+    { id: "notebook", label: "Notebook", type: "correct", description: "For ideas, notes, connections.", wrongLine: "Not enough on its own. But without it, the base was missing.", placedLine: "Before figuring out what to do, I usually wrote." },
     { id: "badge", label: "Corporate badge", type: "decoy", description: "That comes later. Not from here.", wrongLine: "A little early to pretend it was already solved." },
-    { id: "camera", label: "Camera", type: "correct", description: "To learn how to really look.", placedLine: "Looking well came before explaining well." },
-    { id: "diploma", label: "Framed diploma", type: "decoy", description: "Respect it, but it wasn't the engine.", wrongLine: "Maybe on the wall. Not in the backpack." },
-    { id: "floppy", label: "Floppy disk", type: "correct", description: "For the system side: memory, machine, structure.", placedLine: "Part of all this already passed through a machine." },
+    { id: "camera", label: "Camera", type: "correct", description: "To learn how to really look.", wrongLine: "It matters. But it's not the first piece.", placedLine: "Looking well came before explaining well." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "For the system side: memory, machine, structure.", wrongLine: "I get there. But not yet.", placedLine: "Part of all this already passed through a machine." },
     { id: "ticket", label: "Plane ticket", type: "decoy", description: "Clear temptation. Wrong timing.", wrongLine: "First the trajectory. Then the airport." },
-    { id: "cdr", label: "Burned CD", type: "correct", description: "For rhythm, editing, visual and sonic memory.", placedLine: "I needed something that could hold taste, rhythm, and memory together." },
   ],
 };
 
-const CH2_OBJECT_ORDER = ["notebook", "camera", "floppy", "cdr"];
+const CH2_OBJECT_ORDER = ["notebook", "camera", "floppy"];
 const CH2_OBJECT_ICONS = {
   vinyl: "◎",
   notebook: "✎",
   badge: "▣",
   camera: "◉",
-  diploma: "◆",
   floppy: "◫",
   ticket: "➝",
-  cdr: "◌",
 };
 
 function shuffleArray(list) {
@@ -2490,7 +2493,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
 
     if (item.id !== expectedId) {
       triggerShake(item.id);
-      setFeedback(T.gameOrderWrong);
+      setFeedback(item.wrongLine || T.gameOrderWrong);
       return;
     }
 
@@ -2535,7 +2538,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
         <div className="ch2-game-slot-shell">
           <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
           <div className="ch2-game-slot-grid">
-            {Array.from({ length: 4 }).map((_, index) => {
+            {Array.from({ length: CH2_OBJECT_ORDER.length }).map((_, index) => {
               const placedId = placedIds[index];
               const placedItem = items.find((item) => item.id === placedId);
               return (
@@ -2562,7 +2565,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       <div className="ch2-game-slot-shell ch2-game-slot-shell-mobile">
         <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
         <div className="ch2-game-slot-grid">
-          {Array.from({ length: 4 }).map((_, index) => {
+          {Array.from({ length: CH2_OBJECT_ORDER.length }).map((_, index) => {
             const placedId = placedIds[index];
             const placedItem = items.find((item) => item.id === placedId);
             return (
@@ -2589,7 +2592,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
                 disabled={isComplete}
                 className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && showNextHint && item.id === expectedId ? 'is-next' : ''}`}
               >
-                <span className="ch2-game-object-icon" aria-hidden="true">{CH2_OBJECT_ICONS[item.id] || "◇"}</span>
+                <span className="ch2-game-object-icon" aria-hidden="true">{CH2_OBJECT_ICONS[item.id] || "◻"}</span>
                 <span className="ch2-game-object-title">{item.label}</span>
                 <span className="ch2-game-object-desc">{item.description}</span>
               </button>
@@ -2601,20 +2604,18 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   );
 }
 
+
 function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const deskLoopRef = useRef(null);
-  const streetPulseTimeoutRef = useRef(null);
   const continueIdxRef = useRef(0);
-  const streetAmbience = useStreetAmbience();
+  const selectionTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState("desk");
   const [windowGlow, setWindowGlow] = useState(0.08);
   const [roomDayLift, setRoomDayLift] = useState(0.08);
   const [roomNightShade, setRoomNightShade] = useState(0.16);
   const [deskFeedbackText, setDeskFeedbackText] = useState("");
-  const [streetAmbientPulse, setStreetAmbientPulse] = useState(false);
-  const [streetResolved, setStreetResolved] = useState(false);
-  const [streetTransitioning, setStreetTransitioning] = useState(false);
+  const [deskTransitioning, setDeskTransitioning] = useState(false);
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -2652,71 +2653,35 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 
   useEffect(() => {
     return () => {
-      if (streetPulseTimeoutRef.current) clearTimeout(streetPulseTimeoutRef.current);
-      streetAmbience.stop();
+      if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
     };
-  }, [streetAmbience]);
-
-  useEffect(() => {
-    if (scene === "street") {
-      streetAmbience.start();
-    } else {
-      streetAmbience.stop();
-    }
-  }, [scene, streetAmbience]);
+  }, []);
 
   const handleContinueBuild = useCallback(() => {
+    if (deskTransitioning) return;
     const lines = T.continueFeedback || [];
     if (!lines.length) return;
     const idx = continueIdxRef.current % lines.length;
     setDeskFeedbackText(lines[idx]);
     continueIdxRef.current = idx + 1;
-  }, [T]);
+  }, [T, deskTransitioning]);
 
   const handleStepOut = useCallback(() => {
-    setDeskFeedbackText("");
-    setStreetAmbientPulse(false);
-    setStreetResolved(false);
-    setStreetTransitioning(false);
-    streetAmbience.start();
-    setScene("street");
-  }, [streetAmbience]);
-
-  const handleStayInRain = useCallback(() => {
-    setStreetAmbientPulse(true);
-    if (streetPulseTimeoutRef.current) clearTimeout(streetPulseTimeoutRef.current);
-    streetPulseTimeoutRef.current = setTimeout(() => setStreetAmbientPulse(false), 1600);
-  }, []);
-
-  const handleResolveStreet = useCallback(() => {
-    setStreetResolved(true);
-    setStreetTransitioning(false);
+    if (deskTransitioning) return;
+    setDeskFeedbackText(T.streetBridgeHint);
+    setDeskTransitioning(true);
     onUnlockProfile?.("conflict");
-    streetAmbience.stop();
-    setScene("selection");
-  }, [onUnlockProfile, streetAmbience]);
-
-  const handleBackToDesk = useCallback(() => {
-    setStreetAmbientPulse(false);
-    setStreetResolved(false);
-    setStreetTransitioning(false);
-    streetAmbience.stop();
-    setScene("desk");
-  }, [streetAmbience]);
-
-  const handleForceSelection = useCallback(() => {
-    setStreetAmbientPulse(false);
-    setStreetResolved(true);
-    setStreetTransitioning(false);
-    streetAmbience.stop();
-    setScene("selection");
-  }, [streetAmbience]);
+    if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
+    selectionTimeoutRef.current = setTimeout(() => {
+      setScene("selection");
+    }, 950);
+  }, [T, deskTransitioning, onUnlockProfile]);
 
   useEffect(() => {
     if (CH2_DEBUG) {
-      console.log("[CH2 DEBUG]", { scene, streetResolved, streetTransitioning });
+      console.log("[CH2 DEBUG]", { scene, deskTransitioning });
     }
-  }, [scene, streetResolved, streetTransitioning]);
+  }, [scene, deskTransitioning]);
 
   return (
     <div className="ch1-root">
@@ -2731,15 +2696,13 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
         {CH2_DEBUG ? (
           <div className="ch2-debug-panel ch2-debug-panel-global">
             <div>scene: {scene}</div>
-            <div>resolved: {streetResolved ? "yes" : "no"}</div>
-            <div>transitioning: {streetTransitioning ? "yes" : "no"}</div>
-            <button type="button" className="ch2-debug-btn" onClick={handleForceSelection}>debug: forza quadro 3</button>
+            <div>transitioning: {deskTransitioning ? "yes" : "no"}</div>
           </div>
         ) : null}
 
         {scene === "desk" ? (
           <>
-            <div className="ch2-stage">
+            <div className={`ch2-stage ${deskTransitioning ? "ch2-stage-transitioning" : ""}`}>
               <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
 
               <div className="ch2-window-mask">
@@ -2763,61 +2726,17 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
               <div className="ch2-line-block">
                 <div className="ch2-line">{T.introCopy}</div>
               </div>
-              <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""}`}>{deskFeedbackText}</div>
+              <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""} ${deskTransitioning ? "is-bridge" : ""}`}>{deskFeedbackText}</div>
               <div className="ch1-scan" />
             </div>
             <div className="ch1-controls-slot">
-              <div className="ch1-controls ch2-controls">
-                <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
-                <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
-              </div>
-            </div>
-          </>
-        ) : scene === "street" ? (
-          <>
-            <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""} ${streetTransitioning ? "is-transitioning" : ""}`}>
-              <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
-              <div className="ch2-street-grade" />
-              <div className="ch2-street-cool-wash" />
-              <div className="ch2-street-door-bloom" />
-              <div className="ch2-street-reflection-boost" />
-              <div className="ch2-street-rain ch2-street-rain-back" />
-              <div className="ch2-street-rain ch2-street-rain-front" />
-              <div className="ch2-street-headlights ch2-street-headlights-back" />
-              <div className="ch2-street-headlights ch2-street-headlights-front" />
-              <div className="ch2-street-vignette" />
-
-              <div className="ch2-street-narrative-wrap">
-                <div className="ch2-street-narrative">
-              {(T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
-                <span key={idx} className="ch2-street-narrative-line">{line}</span>
-              ))}
-            </div>
-              </div>
-              <div className="ch2-line-block ch2-street-line-block">
-                <div className="ch2-line">{T.streetCopy}</div>
-              </div>
-              <div className="ch1-scan" />
-            </div>
-
-            <div className="ch2-street-mobile-copy">
-              <div className="ch2-street-narrative ch2-street-narrative-mobile">
-                {(T.streetNarrativeMobileLines || T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
-                  <span key={idx} className="ch2-street-narrative-line">{line}</span>
-                ))}
-              </div>
-              <div className="ch2-line ch2-street-line-mobile">{T.streetCopy}</div>
-            </div>
-
-            <div className="ch1-controls-slot">
-              {!streetResolved ? (
-                <div className="ch1-controls ch2-controls">
-                  <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
-                  <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
-                  {CH2_DEBUG ? <button type="button" className="ch2-debug-btn" onClick={handleForceSelection}>debug: forza quadro 3</button> : null}
-                </div>
+              {deskTransitioning ? (
+                <div className="ch2-desk-transition-copy">{T.streetBridgeHint}</div>
               ) : (
-                <div className="ch2-street-transition-copy">{T.streetBridgeHint}</div>
+                <div className="ch1-controls ch2-controls">
+                  <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
+                  <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+                </div>
               )}
             </div>
           </>
@@ -2834,11 +2753,52 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
             currentId={currentProfileId}
             currentLabel={profileUi.currentLabel}
           />
-          {scene === "street" ? (
-            <button className="ch2-street-back-link" onClick={handleBackToDesk}>
-              {T.stepOutBtn} · {T.continueBuildBtn.toLowerCase()}
-            </button>
-          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
+  useEffect(() => {
+    onUnlockProfile?.("synthesis");
+  }, [onUnlockProfile]);
+
+  return (
+    <div className="ch1-root">
+      <div className="ch1-wrap">
+        <div className="ch1-top-slot">
+          <div className="ch1-top">
+            <div className="ch1-kicker">{T.kicker}</div>
+            <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+          </div>
+        </div>
+
+        <div className="ch2-stage ch3-stage">
+          <img className="ch2-fill" src={ASSETS.chapter3Frame1} alt="" />
+          <div className="ch3-grade" />
+          <div className="ch3-vignette" />
+          <div className="ch2-line-block ch3-line-block">
+            <div className="ch2-line ch3-line">{T.line}</div>
+          </div>
+          <div className="ch1-scan" />
+        </div>
+
+        <div className="ch1-controls-slot">
+          <div className="ch1-controls ch2-controls">
+            <Ch1ChoiceButton onClick={onComplete}>{T.continueBtn}</Ch1ChoiceButton>
+          </div>
+        </div>
+
+        <div className="ch1-profile-slot ch2-profile-slot">
+          <EmergingProfilePanel
+            title={profileUi.title}
+            idle={profileUi.idle}
+            profiles={profileEntries}
+            unlockedIds={unlockedProfileIds}
+            currentId={currentProfileId}
+            currentLabel={profileUi.currentLabel}
+          />
         </div>
       </div>
     </div>
@@ -2904,6 +2864,64 @@ export default function Roberto() {
   const selectedWorkSubText = isMobileViewport ? (T.selectedWorkMobileSub || T.selectedWorkSub) : T.selectedWorkSub;
   const [gameFlow, setGameFlow] = useState("chapter1");
   const [unlockedProfileIds, setUnlockedProfileIds] = useState([]);
+  const scanAudioCtxRef = useRef(null);
+  const scrollScanPlayedRef = useRef(false);
+
+  const playScrollScan = useCallback(() => {
+    try {
+      if (!scanAudioCtxRef.current) {
+        scanAudioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = scanAudioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const now = ctx.currentTime;
+      const duration = 0.42;
+
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1280, now);
+      osc.frequency.exponentialRampToValueAtTime(460, now + duration);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.012, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(920, now);
+      filter.Q.setValueAtTime(0.8, now);
+
+      const noiseBuffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * duration)), ctx.sampleRate);
+      const data = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < data.length; i += 1) {
+        data[i] = (Math.random() * 2 - 1) * (1 - (i / data.length)) * 0.22;
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = noiseBuffer;
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.0001, now);
+      noiseGain.gain.linearRampToValueAtTime(0.009, now + 0.02);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = 'highpass';
+      noiseFilter.frequency.setValueAtTime(2200, now);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+
+      osc.start(now);
+      noise.start(now);
+      osc.stop(now + duration + 0.02);
+      noise.stop(now + duration + 0.02);
+    } catch (e) {}
+  }, []);
 
   // Loading
   useEffect(() => {
@@ -2956,7 +2974,14 @@ export default function Roberto() {
       const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = docHeight > 0 ? scrollY / docHeight : 0;
-      if (scrollY > 20) { hasScrolled.current = true; setScrolled(true); }
+      if (scrollY > 20) {
+        hasScrolled.current = true;
+        setScrolled(true);
+        if (!scrollScanPlayedRef.current) {
+          scrollScanPlayedRef.current = true;
+          playScrollScan();
+        }
+      }
       setScrollProgress(progress);
     };
     window.addEventListener("scroll", fn, { passive: true });
@@ -3004,6 +3029,7 @@ export default function Roberto() {
   }, []);
 
   const handleTrash = () => {
+    scrollScanPlayedRef.current = false;
     setUnlockedProfileIds([]);
     setGameFlow("chapter1Intro");
     setFallingWords(genFallingWords(T));
@@ -3014,6 +3040,7 @@ export default function Roberto() {
   };
 
   const handleBack = () => {
+    scrollScanPlayedRef.current = false;
     setUnlockedProfileIds([]);
     setGameFlow("chapter1");
     setFalling(false);
@@ -3205,7 +3232,7 @@ export default function Roberto() {
         .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:31.9%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
         .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
         .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
-        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}
+        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:50%;transform:translateY(-50%);left:36px;right:36px;font-size:clamp(20px,2.3vw,28px);line-height:1.18}.ch2-feedback-overlay.show.is-bridge{transform:translateY(-50%)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-desk-transition-copy{width:100%;max-width:620px;margin:0 auto;border-top:1px solid rgba(192,218,244,.14);padding-top:12px;color:rgba(226,232,239,.9);font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;animation:fadeIn .24s ease-out}
         .ch2-street-stage{background:#081012}
         .ch2-street-frame{filter:saturate(1.03) contrast(1.03) brightness(.95);transform:scale(1.006);animation:ch2StreetFrameDrift 10s ease-in-out infinite}
         .ch2-street-grade,.ch2-street-cool-wash,.ch2-street-door-bloom,.ch2-street-reflection-boost,.ch2-street-rain,.ch2-street-headlights,.ch2-street-vignette{position:absolute;pointer-events:none}
@@ -3274,7 +3301,7 @@ export default function Roberto() {
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
         .ch2-game-slot-shell-mobile{display:none;position:relative;left:auto;right:auto;bottom:auto;margin-top:12px;background:rgba(3,8,10,.72)}
         .ch2-game-slot-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(223,232,238,.56);margin-bottom:10px}
-        .ch2-game-slot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+        .ch2-game-slot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
         .ch2-game-slot{min-height:54px;border-radius:8px;border:1px dashed rgba(162,186,198,.2);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px;color:#6b7880;font-size:10px;line-height:1.35;text-transform:uppercase;letter-spacing:1px}
         .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}
         .ch2-object-controls-slot{min-height:auto;display:block}
@@ -3285,7 +3312,7 @@ export default function Roberto() {
         .ch2-game-complete-kicker{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:rgba(255,192,152,.78);margin-bottom:8px}
         .ch2-game-complete-line{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(21px,2.25vw,28px);line-height:1.02;color:#f1e8df;text-align:center}
         .ch2-game-complete-line span{display:block;text-wrap:initial;white-space:nowrap}.ch2-game-complete-line .is-top{letter-spacing:-.01em}.ch2-game-complete-line .is-bottom{letter-spacing:-.015em}
-        .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+        .ch2-game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
         .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
         .ch2-game-object-icon{display:none;font-size:18px;line-height:1;color:#ddd2c4;margin-bottom:8px}
         .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
@@ -3303,6 +3330,11 @@ export default function Roberto() {
         .ch2-debug-panel-global{align-self:stretch}
         .ch2-debug-btn{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,77,0,.45);background:transparent;color:#FF4D00;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.8px;cursor:pointer;justify-self:start}
         .ch2-debug-src{word-break:break-all;color:#b68f79}
+        .ch3-stage{background:#0a0908}
+        .ch3-grade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(13,8,6,.08), rgba(7,5,5,.18)), radial-gradient(circle at 50% 34%, rgba(255,204,132,.08), rgba(0,0,0,0) 42%);mix-blend-mode:screen}
+        .ch3-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,.20) 100%)}
+        .ch3-line-block{border-top-color:rgba(255,194,146,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.22) 72%,transparent 100%)}
+        .ch3-line{white-space:nowrap}
 
         @media(max-width:1024px){
           .home-social-rail:not(.home-social-rail-mobile){display:none!important}
@@ -3310,6 +3342,7 @@ export default function Roberto() {
 
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
+          .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
           .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
@@ -3682,7 +3715,7 @@ export default function Roberto() {
           number="3"
           title={T.ch3.introTitle}
           label={lang === "it" ? "Capitolo" : "Chapter"}
-          onDone={() => setPhase("comingSoon")}
+          onDone={() => setGameFlow("chapter3")}
         />
       )}
 
@@ -3718,6 +3751,23 @@ export default function Roberto() {
           profileEntries={profileMeta.entries}
           unlockedProfileIds={unlockedProfileIds}
           currentProfileId={unlockedProfileIds.includes("conflict") ? null : "conflict"}
+          onUnlockProfile={unlockProfile}
+        />
+      )}
+
+      {phase === "game" && gameFlow === "chapter3" && (
+        <ChapterThreeScene
+          T={T.ch3}
+          onBack={handleBack}
+          onComplete={() => setPhase("comingSoon")}
+          profileUi={{
+            title: T.ch1.profileTitle,
+            idle: T.ch1.profileIdle,
+            currentLabel: profileMeta.currentLabel,
+          }}
+          profileEntries={profileMeta.entries}
+          unlockedProfileIds={unlockedProfileIds}
+          currentProfileId={unlockedProfileIds.includes("synthesis") ? null : "synthesis"}
           onUnlockProfile={unlockProfile}
         />
       )}
