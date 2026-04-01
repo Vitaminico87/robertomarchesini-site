@@ -32,22 +32,26 @@ const LANG = {
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
     hero: "Costruisco sistemi creativi per brand, lanci ed esperienze che devono reggere davvero.",
     heroSub: "Unisco direzione creativa, narrativa e AI per trasformare idee sparse in strutture leggibili, con una logica dietro.",
+    heroMobileSub: "Unisco direzione creativa, narrativa e AI per dare forma e struttura alle idee.",
     proofStrip: "Direzione narrativa · Sistemi creativi · Processi con AI",
+    proofStripMobile: "Direzione narrativa · Sistemi creativi · AI",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura del linguaggio, così un brand smette di disperdersi e inizia a farsi riconoscere." },
-      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e materiali sparsi in una struttura visiva e narrativa coerente e leggibile." },
-      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Costruisco contenuti, ritmo, gerarchia e punti di contatto perché un progetto non venga solo pubblicato, ma capito e desiderato." },
-      { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per rendere il processo creativo più solido: ricerca, sviluppo, varianti, adattamenti e controllo qualità." },
+      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura del linguaggio, così un brand smette di disperdersi e inizia a farsi riconoscere.", mobileDesc: "Rendo chiari posizionamento, messaggio e linguaggio." },
+      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e materiali sparsi in una struttura visiva e narrativa coerente e leggibile.", mobileDesc: "Trasformo materiali sparsi in una struttura visiva e narrativa coerente." },
+      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Costruisco contenuti, ritmo, gerarchia e punti di contatto perché un progetto non venga solo pubblicato, ma capito e desiderato.", mobileDesc: "Organizzo contenuti, ritmo e gerarchia perché un progetto venga capito." },
+      { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per rendere il processo creativo più solido: ricerca, sviluppo, varianti, adattamenti e controllo qualità.", mobileDesc: "Uso l’AI per sviluppare meglio, più velocemente e con controllo." },
     ],
     selectedWorkLabel: "Lavori scelti",
     selectedWorkSub: "Progetti reali, responsabilità concrete, strutture creative che hanno dovuto reggere ritmo, pressione e tempo.",
+    selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Sistemi che hanno dovuto reggere.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
         narrative: "Direzione creativa e sistema di contenuti per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        mobileNarrative: "Direzione creativa e sistema contenuti per un venue con oltre 150 eventi l'anno.",
         narrative2: "Un impianto editoriale e promozionale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
         technical: "Identità · Sistema contenuti · Continuità editoriale",
         tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
@@ -57,6 +61,7 @@ const LANG = {
         period: "2012 – 2024",
         status: "completed",
         narrative: "Dodici anni di direzione creativa e sistema contenuti per la comunicazione digitale di uno dei live brand più riconoscibili in Italia.",
+        mobileNarrative: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia.",
         narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
         technical: "Direzione creativa · Sistema contenuti · Crescita audience",
         tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
@@ -66,6 +71,7 @@ const LANG = {
         period: "2025",
         status: "active",
         narrative: "Posizionamento premium, direzione del sito e architettura digitale per un brand eventi orientato a credibilità e contatti qualificati.",
+        mobileNarrative: "Posizionamento premium, sito e architettura digitale per un brand eventi orientato a credibilità e contatti.",
         narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
         technical: "Posizionamento · Sito · Architettura digitale",
         tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
@@ -73,9 +79,9 @@ const LANG = {
     ],
     howLabel: "Metodo",
     method: [
-      { title: "Chiarezza prima del rumore", desc: "Ogni progetto parte da una domanda semplice: cosa deve essere capito, percepito o ricordato davvero? Il resto viene dopo." },
-      { title: "Gli strumenti non bastano", desc: "Gli strumenti contano meno della struttura in cui lavorano. Uso l’AI per aumentare qualità e possibilità, non per riempire spazio." },
-      { title: "Creatività che regge nella realtà", desc: "Un progetto creativo deve reggere nella realtà: tempi, adattamenti, contesto e pressione." },
+      { title: "Chiarezza prima del rumore", desc: "Ogni progetto parte da una domanda semplice: cosa deve essere capito, percepito o ricordato davvero? Il resto viene dopo.", mobileDesc: "Si parte da ciò che deve restare." },
+      { title: "Gli strumenti non bastano", desc: "Gli strumenti contano meno della struttura in cui lavorano. Uso l’AI per aumentare qualità e possibilità, non per riempire spazio.", mobileDesc: "Gli strumenti valgono dentro una struttura." },
+      { title: "Creatività che regge nella realtà", desc: "Un progetto creativo deve reggere nella realtà: tempi, adattamenti, contesto e pressione.", mobileDesc: "La creatività deve reggere tempi, contesto e pressione." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
@@ -171,22 +177,26 @@ const LANG = {
     statusLabel: { listening: "listening to", watching: "last watched" },
     hero: "I design creative systems for brands, launches, and experiences that need to hold up in the real world.",
     heroSub: "I combine creative direction, narrative, and AI to give ideas a form that is more coherent, more controlled, and more alive.",
+    heroMobileSub: "I combine creative direction, narrative, and AI to give ideas structure and form.",
     proofStrip: "Narrative direction · Creative systems · AI workflows",
+    proofStripMobile: "Narrative direction · Creative systems · AI",
     whatido: "What I build",
     services: [
-      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and rules of language, so a brand stops dispersing and starts becoming recognizable." },
-      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and scattered materials into a visual and narrative system that feels coherent, readable, and alive." },
-      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build the creative release of a project: content, rhythm, hierarchy, touchpoints, so an idea is not just published, but perceived, understood, and desired." },
-      { title: "Build", subtitle: "Use AI to build better", desc: "I design AI-assisted creative workflows: research, development, variations, adaptations, and quality control, without lowering the standard." },
+      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and rules of language, so a brand stops dispersing and starts becoming recognizable.", mobileDesc: "I clarify positioning, message, and language." },
+      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and scattered materials into a visual and narrative system that feels coherent, readable, and alive.", mobileDesc: "I turn scattered materials into a coherent visual and narrative system." },
+      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build the creative release of a project: content, rhythm, hierarchy, touchpoints, so an idea is not just published, but perceived, understood, and desired.", mobileDesc: "I organize content, rhythm, and hierarchy so a project lands clearly." },
+      { title: "Build", subtitle: "Use AI to build better", desc: "I design AI-assisted creative workflows: research, development, variations, adaptations, and quality control, without lowering the standard.", mobileDesc: "I use AI to build faster, better, and with control." },
     ],
     selectedWorkLabel: "Selected Work",
     selectedWorkSub: "Real projects, real responsibility, creative systems that had to hold up under pressure and over time.",
+    selectedWorkMobileSub: "Real projects. Real responsibility. Systems that had to hold up.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
         narrative: "Creative direction and content system for a venue with weekly programming and over 150 events a year.",
+        mobileNarrative: "Creative direction and content system for a venue with over 150 events a year.",
         narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
         technical: "Identity · Content system · Editorial continuity",
         tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
@@ -196,6 +206,7 @@ const LANG = {
         period: "2012 – 2024",
         status: "completed",
         narrative: "Twelve years of creative direction and content system design for the digital communication of one of Italy's most recognizable live brands.",
+        mobileNarrative: "Twelve years of creative direction and content systems for one of Italy's strongest live brands.",
         narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
         technical: "Creative direction · Content system · Audience growth",
         tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
@@ -205,6 +216,7 @@ const LANG = {
         period: "2025",
         status: "active",
         narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
+        mobileNarrative: "Premium positioning, website, and digital architecture for an event brand built on credibility and leads.",
         narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
         technical: "Positioning · Website · Digital architecture",
         tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
@@ -212,9 +224,9 @@ const LANG = {
     ],
     howLabel: "Method",
     method: [
-      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered? The rest comes later." },
-      { title: "Tools are not enough", desc: "Tools matter less than the system they live in. I use AI to increase quality, speed, and possibilities, not to fill space." },
-      { title: "Creativity that holds up in reality", desc: "A creative system has to hold up in reality: timing, adaptations, context, audience, and pressure." },
+      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered? The rest comes later.", mobileDesc: "Start from what needs to remain." },
+      { title: "Tools are not enough", desc: "Tools matter less than the system they live in. I use AI to increase quality, speed, and possibilities, not to fill space.", mobileDesc: "Tools matter inside a structure." },
+      { title: "Creativity that holds up in reality", desc: "A creative system has to hold up in reality: timing, adaptations, context, audience, and pressure.", mobileDesc: "Creativity has to survive timing, context, and pressure." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
@@ -2446,8 +2458,8 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       </div>
 
       <div className="ch1-controls-slot ch2-object-controls-slot">
-        {!isComplete ? <div className="ch2-game-prompt">{T.gameMobilePrompt}</div> : null}
         <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
+        {!isComplete ? <div className="ch2-game-prompt">{T.gameMobilePrompt}</div> : null}
         <div className="ch2-game-grid">
           {items.map((item) => {
             const isPlaced = placedSet.has(item.id);
@@ -2636,16 +2648,6 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
               <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""}`}>{deskFeedbackText}</div>
               <div className="ch1-scan" />
             </div>
-
-            <div className="ch2-street-mobile-copy">
-              <div className="ch2-street-narrative ch2-street-narrative-mobile">
-                {(T.streetNarrativeMobileLines || T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
-                  <span key={idx} className="ch2-street-narrative-line">{line}</span>
-                ))}
-              </div>
-              <div className="ch2-line ch2-street-line-mobile">{T.streetCopy}</div>
-            </div>
-
             <div className="ch1-controls-slot">
               <div className="ch1-controls ch2-controls">
                 <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
@@ -2764,11 +2766,15 @@ export default function Roberto() {
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [ghostReady, setGhostReady] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const timeOnPage = useRef(0);
   const hasScrolled = useRef(false);
 
   const T = LANG[lang];
   const profileMeta = EMERGED_PROFILE[lang];
+  const heroSubText = isMobileViewport ? (T.heroMobileSub || T.heroSub) : T.heroSub;
+  const proofStripText = isMobileViewport ? (T.proofStripMobile || T.proofStrip) : T.proofStrip;
+  const selectedWorkSubText = isMobileViewport ? (T.selectedWorkMobileSub || T.selectedWorkSub) : T.selectedWorkSub;
   const [gameFlow, setGameFlow] = useState("chapter1");
   const [unlockedProfileIds, setUnlockedProfileIds] = useState([]);
 
@@ -2792,6 +2798,16 @@ export default function Roberto() {
     const iv = setInterval(() => { if (Math.random() > .93) { setFlicker(true); setTimeout(() => setFlicker(false), 50 + Math.random() * 80); } }, 5000);
     return () => clearInterval(iv);
   }, [phase]);
+
+  useEffect(() => {
+    const updateViewport = () => {
+      if (typeof window === "undefined") return;
+      setIsMobileViewport(window.innerWidth <= 600);
+    };
+    updateViewport();
+    window.addEventListener("resize", updateViewport, { passive: true });
+    return () => window.removeEventListener("resize", updateViewport);
+  }, []);
 
   // Smart ghost trigger
   useEffect(() => {
@@ -3095,8 +3111,7 @@ export default function Roberto() {
         .ch2-street-narrative-wrap{position:absolute;left:50%;top:46px;z-index:9;width:min(calc(100% - 56px),760px);transform:translateX(-50%)}
         .ch2-street-narrative{color:rgba(239,233,224,.96);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.88);background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));padding:12px 20px;border-top:1px solid rgba(255,203,154,.20);border-radius:8px;backdrop-filter:blur(5px)}
         .ch2-street-narrative-line{display:block}
-        .ch2-street-mobile-copy{display:none}
-        .ch2-game-prompt{width:100%;margin:0 0 10px 0;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,77,0,.18);background:rgba(255,77,0,.04);color:#e6d5c9;font-size:11px;line-height:1.7;letter-spacing:.01em;text-align:center}
+                .ch2-game-prompt{width:100%;margin:0 0 10px 0;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,77,0,.18);background:rgba(255,77,0,.04);color:#e6d5c9;font-size:11px;line-height:1.7;letter-spacing:.01em;text-align:center}
         .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.82;filter:blur(24px)}
         .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.84}
         .ch2-street-stage.is-transitioning .ch2-street-frame{filter:saturate(.98) contrast(1.04) brightness(.92);transform:scale(1.01)}
@@ -3151,24 +3166,24 @@ export default function Roberto() {
         .ch2-debug-src{word-break:break-all;color:#b68f79}
 
         @media(max-width:600px){
-          .ch2-stage{aspect-ratio:4 / 4.6}
-          .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
+          .ch2-stage{aspect-ratio:4 / 3}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
-          .ch2-street-narrative-mobile{position:relative;left:auto;right:auto;top:auto;max-width:none;font-size:11px;line-height:1.7;padding:10px 12px;text-align:center}
-          .ch2-street-line-mobile{font-size:clamp(16px,4.9vw,22px);line-height:1.15;text-align:center}
-          .ch2-game-prompt{font-size:12px;padding:11px 14px}
+          .ch2-game-prompt{font-size:12px;padding:11px 14px;margin-top:2px;margin-bottom:10px}
 
-          .svc-in{flex-direction:column!important;gap:10px!important}
-          .home-section-kicker{font-size:24px!important;line-height:1.08!important}.home-section-sub{font-size:15px!important;line-height:1.72!important;max-width:100%!important}
-          .home-service-title{font-size:34px!important;line-height:1.02!important}
-          .home-service-sub{font-size:14px!important;line-height:1.52!important;margin-bottom:9px!important}
-          .home-service-desc{font-size:13px!important;line-height:1.92!important}
-          .home-method-title{font-size:15px!important;line-height:1.5!important;margin-bottom:8px!important}
-          .home-method-desc{font-size:13px!important;line-height:1.92!important;max-width:100%!important}
+          .svc-in{flex-direction:column!important;gap:8px!important}
+          .home-section-kicker{font-size:24px!important;line-height:1.08!important}
+          .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
+          .home-work-narrative{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important;max-width:100%!important}
+          .home-work-secondary{display:none!important}
+          .home-service-title{font-size:30px!important;line-height:1.02!important}
+          .home-service-sub{font-size:13px!important;line-height:1.5!important;margin-bottom:8px!important;color:#9a9a9a!important}
+          .home-service-desc{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important}
+          .home-method-title{font-size:14px!important;line-height:1.48!important;margin-bottom:7px!important}
+          .home-method-desc{font-size:12px!important;line-height:1.82!important;max-width:100%!important;color:#9e9e9e!important}
           .svc-tw{min-width:auto!important}
-          .wrap{padding:60px 18px 40px!important}
-          .nm{font-size:38px!important}
+          .wrap{padding:58px 20px 40px!important}
+          .nm{font-size:38px!important;line-height:1.02!important}
           .brow{flex-direction:column!important;gap:12px!important}
           .brow .orsep{display:none}
           .crt-vignette{box-shadow:inset 0 0 50px 25px rgba(0,0,0,.5),inset 0 0 20px 8px rgba(0,0,0,.25)!important}
@@ -3192,7 +3207,7 @@ export default function Roberto() {
           .ch2-game-slot-grid{gap:6px}
           .ch2-game-slot{min-height:48px;font-size:9px}
           .ch2-game-slot.is-filled{font-size:10px}
-          .ch2-game-feedback{font-size:11px;line-height:1.7;min-height:42px}
+          .ch2-game-feedback{font-size:11px;line-height:1.68;min-height:42px;margin-bottom:10px}
           .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
           .ch2-game-complete-card{left:14px;right:14px;top:14px;width:auto;transform:none;padding:12px 12px 13px}
           .ch2-game-complete-line{font-size:22px;line-height:1.14}
@@ -3265,16 +3280,16 @@ export default function Roberto() {
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
-              <div style={{ fontSize: 14, color: "#888", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
-              <div className="home-pretty" style={{ fontSize: 14, color: "#BBB", marginTop: 18, lineHeight: 1.88, maxWidth: 510 }}>{T.hero}</div>
-              <div className="home-pretty" style={{ fontSize: 13, color: "#999", marginTop: 12, lineHeight: 1.86, maxWidth: 510 }}>{T.heroSub}</div>
+              <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
+              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 18, lineHeight: isMobileViewport ? 1.78 : 1.88, maxWidth: isMobileViewport ? 420 : 510 }}>{T.hero}</div>
+              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 10 : 12, lineHeight: isMobileViewport ? 1.78 : 1.86, maxWidth: isMobileViewport ? 400 : 510 }}>{heroSubText}</div>
             </div>
           </Section>
 
           {/* 2. PROOF STRIP */}
           <Section delay={0.08}>
             <div style={{ marginBottom: 32, textAlign: "center" }}>
-              <div style={{ fontSize: 10, letterSpacing: 3, color: "#777", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{T.proofStrip}</div>
+              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : 3, color: "#777", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.3, maxWidth: isMobileViewport ? 320 : "none", marginInline: "auto" }}>{proofStripText}</div>
             </div>
           </Section>
 
@@ -3287,7 +3302,7 @@ export default function Roberto() {
           <Section delay={0.12}>
             <div style={{ marginBottom: 56 }}>
               <div className="home-section-kicker" style={{ marginBottom: 8 }}>{T.selectedWorkLabel}</div>
-              <div className="home-section-sub">{T.selectedWorkSub}</div>
+              <div className="home-section-sub">{selectedWorkSubText}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
                   <div key={i} className="work-card" style={{
@@ -3313,8 +3328,8 @@ export default function Roberto() {
                         )}
                       </div>
                     </div>
-                    <div className="home-work-narrative">{work.narrative}</div>
-                    {work.narrative2 && <div className="home-work-secondary">{work.narrative2}</div>}
+                    <div className="home-work-narrative">{isMobileViewport ? (work.mobileNarrative || work.narrative) : work.narrative}</div>
+                    {(!isMobileViewport && work.narrative2) && <div className="home-work-secondary">{work.narrative2}</div>}
                     <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6, marginBottom: 14, letterSpacing: .3 }}>{work.technical}</div>
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                       {work.tags.map((tag, j) => (
@@ -3346,7 +3361,7 @@ export default function Roberto() {
                       </div>
                       <div>
                         {svc.subtitle && <div className="home-service-sub">{svc.subtitle}</div>}
-                        <div className="home-service-desc">{svc.desc}</div>
+                        <div className="home-service-desc">{isMobileViewport ? (svc.mobileDesc || svc.desc) : svc.desc}</div>
                       </div>
                     </div>
                   </div>
@@ -3363,7 +3378,7 @@ export default function Roberto() {
                 {T.method.map((m, i) => (
                   <div key={i} className="mth">
                     <div className="mth-t home-method-title">{m.title}</div>
-                    <div className="home-method-desc">{m.desc}</div>
+                    <div className="home-method-desc">{isMobileViewport ? (m.mobileDesc || m.desc) : m.desc}</div>
                   </div>
                 ))}
               </div>
