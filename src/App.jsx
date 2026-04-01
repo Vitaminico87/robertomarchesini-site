@@ -1764,6 +1764,7 @@ function ChapterIntroCard({ number, title, onDone }) {
   return (
     <div className="ch1-root">
       <div className="ch1-wrap">
+        <div className="chapter-intro-spacer" aria-hidden="true" />
         <div className="chapter-intro-stage" onClick={onDone} role="button" tabIndex={0}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
           <div className="chapter-intro-inner">
@@ -1893,22 +1894,6 @@ function genFallingWords(t) {
     bold: special.includes(w),
     italic: ["Create", "Grow", "Evolve", "Teach"].includes(w),
   }));
-
-  falling.push({
-    text: "PORTFOLIO",
-    x: 50,
-    y: 12,
-    del: 1.08,
-    dur: 1.42,
-    rot: -6,
-    size: 78,
-    color: "#F0ECE6",
-    serif: true,
-    bold: true,
-    italic: false,
-    central: true,
-    shatter: true,
-  });
 
   return falling;
 }
@@ -2057,9 +2042,6 @@ export default function Roberto() {
         @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.12), 0 0 40px rgba(255,77,0,.06);transform:scale(1)}50%{box-shadow:0 0 40px rgba(255,77,0,.25), 0 0 80px rgba(255,77,0,.12);transform:scale(1.02)}}
         @keyframes trashArrow{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.6;transform:translateY(4px)}}
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
-        @keyframes portfolioFall{0%{transform:translateX(-50%) translateY(0) rotate(0deg) scale(1);opacity:1}64%{transform:translateX(-50%) translateY(50vh) rotate(-1deg) scale(1);opacity:1}82%{transform:translateX(-50%) translateY(67vh) rotate(-3deg) scale(1.01);opacity:1}90%{transform:translateX(-50%) translateY(74vh) rotate(-4deg) scale(1.03);opacity:1}100%{transform:translateX(-50%) translateY(74vh) rotate(-4deg) scale(1.03);opacity:0}}
-        @keyframes portfolioCoreFade{0%,86%{opacity:1}100%{opacity:0}}
-        @keyframes portfolioShard{0%,84%{opacity:0;transform:translate3d(0,0,0) rotate(0deg) scale(1)}88%{opacity:1;transform:translate3d(0,0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate3d(var(--sx),var(--sy),0) rotate(var(--sr)) scale(.62)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
@@ -2079,10 +2061,6 @@ export default function Roberto() {
         .btn-talk:hover{background:#E8E4DE;color:#050505;border-color:#E8E4DE;box-shadow:0 0 20px rgba(232,228,222,.12)}
         .fl-word{position:absolute;white-space:nowrap;opacity:0}
         .fl-word.go{animation:fall var(--dur) var(--del) ease-in forwards}
-        .portfolio-shatter{position:absolute;white-space:nowrap;pointer-events:none;animation:portfolioFall var(--dur) var(--del) cubic-bezier(.22,.74,.18,1) forwards}
-        .portfolio-core{display:inline-block;animation:portfolioCoreFade var(--dur) var(--del) linear forwards}
-        .portfolio-fragments{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-        .portfolio-fragment{position:absolute;left:0;top:0;opacity:0;animation:portfolioShard var(--dur) var(--del) cubic-bezier(.2,.7,.2,1) forwards}
         .top-btn{background:transparent;border:1px solid #161616;border-radius:3px;padding:5px 12px;cursor:pointer;transition:all .25s;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#333}
         .top-btn:hover{border-color:rgba(255,77,0,.4);color:#FF4D00}
         .foot-l{transition:color .2s;cursor:pointer;color:#444}
@@ -2093,8 +2071,8 @@ export default function Roberto() {
         
         /* Chapter 1 styles */
         .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:center;justify-content:center;padding:20px 16px;padding-bottom:env(safe-area-inset-bottom,20px)}
-        .ch1-wrap{width:min(94vw,880px);display:flex;flex-direction:column;align-items:center;padding-top:0;padding-bottom:18px}
-        .ch1-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+        .ch1-wrap{width:min(94vw,880px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0;padding-bottom:18px}
+        .ch1-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:nowrap;margin-bottom:14px;min-height:34px}
         .ch1-kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,77,0,.72)}
         .ch1-back-btn{background:transparent;border:1px solid #222;border-radius:3px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#444;transition:all .25s}
         .ch1-back-btn:hover{border-color:rgba(255,77,0,.4);color:#FF4D00}
@@ -2179,7 +2157,8 @@ export default function Roberto() {
         
         
                 .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 4.6s cubic-bezier(.22,.61,.36,1) both;display:flex;justify-content:center;align-items:center}
-        .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 4.6s cubic-bezier(.22,.61,.36,1) both;padding:0 24px;transform:translateY(-4%)}
+        .chapter-intro-spacer{width:100%;height:48px;flex:0 0 48px}
+        .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 4.6s cubic-bezier(.22,.61,.36,1) both;padding:0 24px;transform:translateY(-1.5%)}
         .chapter-intro-kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7d756c;margin-bottom:14px}
         .chapter-intro-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(38px,7vw,72px);line-height:1.02;color:#101010;letter-spacing:-0.5px;text-rendering:geometricPrecision}
 
@@ -2202,9 +2181,14 @@ export default function Roberto() {
           .brow .orsep{display:none}
           .crt-vignette{box-shadow:inset 0 0 50px 25px rgba(0,0,0,.5),inset 0 0 20px 8px rgba(0,0,0,.25)!important}
           .ghost-phrase{font-size:11px!important}
-          .ch1-root{padding:18px;align-items:center}
+          .ch1-root{padding:16px;align-items:center}
+          .ch1-wrap{width:min(94vw,760px)}
           .ch1-line-block,.ch1-feedback{left:16px;right:16px;bottom:18px}
-          .ch1-top{flex-direction:column;align-items:flex-start;gap:8px}
+          .ch1-top{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;margin-bottom:12px;min-height:32px}
+          .ch1-kicker{font-size:9px;letter-spacing:2.4px}
+          .ch1-back-btn{padding:4px 10px;font-size:9px}
+          .chapter-intro-spacer{height:44px;flex-basis:44px}
+          .chapter-intro-inner{transform:translateY(0)}
         }
       `}</style>
 
@@ -2223,59 +2207,14 @@ export default function Roberto() {
       {/* Falling words */}
       {falling && (
         <div style={{ position: "fixed", inset: 0, zIndex: 70, pointerEvents: "none", overflow: "hidden" }}>
-          {fallingWords.map((w, i) => {
-            if (w.shatter) {
-              const letters = w.text.split("");
-              const offsets = [
-                [-92, 18, '-18deg'], [-70, -8, '-12deg'], [-46, 26, '-8deg'],
-                [-22, -26, '-4deg'], [8, 34, '4deg'], [34, -10, '8deg'],
-                [60, 24, '12deg'], [84, -4, '16deg'], [112, 18, '20deg'],
-              ];
-              return (
-                <div
-                  key={i}
-                  className="portfolio-shatter"
-                  style={{
-                    left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
-                    fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
-                    fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
-                    letterSpacing: 1.6, textShadow: "0 10px 28px rgba(0,0,0,.34), 0 2px 6px rgba(0,0,0,.24)", textAlign: "center",
-                    "--dur": `${w.dur}s`, "--del": `${w.del}s`,
-                  }}
-                >
-                  <span className="portfolio-core">{w.text}</span>
-                  <span className="portfolio-fragments" aria-hidden="true">
-                    {letters.map((ch, li) => (
-                      <span
-                        key={li}
-                        className="portfolio-fragment"
-                        style={{
-                          transform: `translate(${(li - (letters.length - 1) / 2) * 0.62}em, -0.04em)`,
-                          "--sx": `${offsets[li][0]}px`,
-                          "--sy": `${offsets[li][1]}px`,
-                          "--sr": offsets[li][2],
-                        }}
-                      >
-                        {ch}
-                      </span>
-                    ))}
-                  </span>
-                </div>
-              );
-            }
-            return (
-              <div key={i} className="fl-word go" style={{
-                left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
-                fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
-                fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
-                letterSpacing: w.central ? 1.2 : 0,
-                textShadow: w.central ? "0 4px 16px rgba(0,0,0,.28)" : "none",
-                transform: w.central ? "translateX(-50%)" : undefined,
-                textAlign: w.central ? "center" : undefined,
-                "--dur": `${w.dur}s`, "--del": `${w.del}s`, "--rot": `${w.rot}deg`,
-              }}>{w.text}</div>
-            );
-          })}
+          {fallingWords.map((w, i) => (
+            <div key={i} className="fl-word go" style={{
+              left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
+              fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
+              fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
+              "--dur": `${w.dur}s`, "--del": `${w.del}s`, "--rot": `${w.rot}deg`,
+            }}>{w.text}</div>
+          ))}
         </div>
       )}
 
