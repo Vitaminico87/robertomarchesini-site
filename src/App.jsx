@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from "react"
 // GAME TOGGLE - Set to true when the game is ready for launch
 // ============================================================================
 const GAME_ENABLED = true;
+const CH2_DEBUG = false;
 
 // ============================================================================
 // ASSET CONFIGURATION
@@ -19,6 +20,7 @@ const ASSETS = {
   chapter2DeskFrame: `${ASSET_BASE_CH2}/chapter2_desk_frame.png?v=1`,
   chapter2DeskLoop: `${ASSET_BASE_CH2}/chapter2_daynight_loop.mp4?v=1`,
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
+  chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
 };
 
 // ============================================================================
@@ -97,7 +99,7 @@ const LANG = {
     // Chapter 1 strings
     ch1: {
       kicker: "Capitolo 1 · Origine",
-      meadowIntro: "Ero un bambino isola. I libri erano oceani, e io ci annegavo volentieri.",
+      meadowIntro: "Da bambino ero un\'isola. I libri erano oceani, e io ci annegavo volentieri.",
       discoverCopy: "Quel giorno, in biblioteca, c'era qualcosa che non avevo mai visto.",
       revealCopy: "Prima li trovavo nei libri. Poi ho scoperto che potevo entrarci.",
       stayBtn: "Resta nell'erba",
@@ -133,6 +135,10 @@ const LANG = {
       ],
       streetCopy: "Fuori, almeno, il rumore cambiava forma.",
       streetNarrative: "Per schiarirmi le idee, sono uscito a mangiare qualcosa sotto la pioggia. Avevo bisogno di svuotare la testa per capire cosa tenere davvero.",
+      streetNarrativeLines: [
+        "Per schiarirmi le idee, sono uscito a mangiare qualcosa sotto la pioggia.",
+        "Avevo bisogno di svuotare la testa per capire cosa tenere davvero.",
+      ],
       streetStayBtn: "Resta lì un altro minuto",
       streetFocusBtn: "Capisci cosa tenere",
       streetWaitFeedback: [
@@ -141,64 +147,73 @@ const LANG = {
         "Il punto non era sparire. Era togliere rumore.",
       ],
       streetResolveFeedback: "Non dovevo tenere tutto. Solo quello che avrebbe retto.",
-      streetBridgeHint: "Poi sarebbe arrivato il momento di scegliere cosa portarmi dietro.",
+      streetBridgeHint: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
+      gameSlotsLabel: "Zaino · 4 slot",
+      gameIntroLine: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
+      gameDuplicate: "Quello è già dentro. Non serve convincersi due volte.",
+      gameOrderWrong: "Ci sta. Ma non è il prossimo tassello.",
+      gameCompleteKicker: "Scelta corretta.",
+      gameFinalLine: "Non avevo ancora un ruolo. Avevo già una direzione.",
       backToSurface: "← Torna in superficie",
       introTitle: "Il conflitto",
+    },
+    ch3: {
+      introTitle: "Sintesi",
     }
   },
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "Creativity, strategy, and AI to build brands, launches, and experiences that work.",
-    heroSub: "I help brands and projects become clearer, more desirable, and harder to ignore.",
-    proofStrip: "Brand · Launches · AI Systems",
-    whatido: "What I do",
+    hero: "I design creative systems for brands, launches, and experiences that need to hold up in the real world.",
+    heroSub: "I combine creative direction, narrative, and AI to give ideas a form that is more coherent, more controlled, and more alive.",
+    proofStrip: "Narrative direction · Creative systems · AI workflows",
+    whatido: "What I build",
     services: [
-      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and tone, so a brand or project stops feeling generic and starts becoming recognizable." },
-      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and identities into content, language, and creative direction that feel coherent, readable, and alive." },
-      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build launches, campaigns, and experiences so an idea is not just published, but perceived, understood, and desired." },
-      { title: "Build", subtitle: "Use AI to build better", desc: "I design systems, workflows, and new formats that increase quality, speed, and creative possibility without lowering the standard." },
+      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and rules of language, so a brand stops dispersing and starts becoming recognizable." },
+      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and scattered materials into a visual and narrative system that feels coherent, readable, and alive." },
+      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build the creative release of a project: content, rhythm, hierarchy, touchpoints, so an idea is not just published, but perceived, understood, and desired." },
+      { title: "Build", subtitle: "Use AI to build better", desc: "I design AI-assisted creative workflows: research, development, variations, adaptations, and quality control, without lowering the standard." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Real projects, real responsibility, work that had to hold up under pressure and over time.",
+    selectedWorkSub: "Real projects, real responsibility, creative systems that had to hold up under pressure and over time.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
-        narrative: "Creative direction and communication system for a venue with weekly programming and over 150 events a year.",
-        narrative2: "Identity, promotion, and editorial continuity built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
-        technical: "Identity · Promotion · Editorial continuity",
-        tags: ["Cultural venue", "Brand system", "Weekly execution"]
+        narrative: "Creative direction and content system for a venue with weekly programming and over 150 events a year.",
+        narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
+        technical: "Identity · Content system · Editorial continuity",
+        tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Twelve years of creative direction for the communications and digital content of one of Italy's most recognizable live brands.",
-        narrative2: "A content system built over time, with an audience grown to over 400K people.",
-        technical: "Creative direction · Content · Audience growth",
-        tags: ["Live entertainment", "Brand narrative", "Digital experience"]
+        narrative: "Twelve years of creative direction and content system design for the digital communication of one of Italy's most recognizable live brands.",
+        narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
+        technical: "Creative direction · Content system · Audience growth",
+        tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
         narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
-        narrative2: "A clearer identity, a stronger tone, and a digital presence designed to be remembered and contacted.",
+        narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
         technical: "Positioning · Website · Digital architecture",
-        tags: ["Positioning", "Digital experience", "Lead architecture"]
+        tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
       }
     ],
-    howLabel: "How I work",
+    howLabel: "Method",
     method: [
-      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered?" },
-      { title: "High standards, smart processes", desc: "I use AI to increase quality, speed, and possibilities — not to lower the bar or fill space." },
-      { title: "Creativity that holds up in reality", desc: "Ideas need to be strong, but also readable for the audience, consistent with context, and useful for whoever commissions them." },
+      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered? The rest comes later." },
+      { title: "Tools are not enough", desc: "Tools matter less than the system they live in. I use AI to increase quality, speed, and possibilities, not to fill space." },
+      { title: "Creativity that holds up in reality", desc: "A creative system has to hold up in reality: timing, adaptations, context, audience, and pressure." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    availableFor: "Available for selected collaborations.",
+    availableFor: "Available for selected collaborations on creative systems, narrative direction, and AI workflows.",
     ctaHint: "",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
@@ -253,6 +268,10 @@ const LANG = {
       ],
       streetCopy: "Outside, at least, the noise changed shape.",
       streetNarrative: "To clear my head, I stepped out to eat something in the rain. I needed to empty it out and understand what was actually worth keeping.",
+      streetNarrativeLines: [
+        "To clear my head, I stepped out to eat something in the rain.",
+        "I needed to empty it out and understand what was actually worth keeping.",
+      ],
       streetStayBtn: "Stay there a little longer",
       streetFocusBtn: "Decide what stays",
       streetWaitFeedback: [
@@ -261,9 +280,18 @@ const LANG = {
         "The point wasn't to disappear. It was to remove noise.",
       ],
       streetResolveFeedback: "I didn't need to keep everything. Only what would hold.",
-      streetBridgeHint: "Then the moment would come to decide what I would carry forward.",
+      streetBridgeHint: "I couldn't carry everything forward. I had to figure out what remained.",
+      gameSlotsLabel: "Backpack · 4 slots",
+      gameIntroLine: "I couldn't carry everything forward. I had to figure out what remained.",
+      gameDuplicate: "That's already in. No need to convince yourself twice.",
+      gameOrderWrong: "Fair. But it's not the next piece.",
+      gameCompleteKicker: "Correct choice.",
+      gameFinalLine: "I didn't have a role yet. I already had a direction.",
       backToSurface: "← Back to surface",
       introTitle: "Conflict",
+    },
+    ch3: {
+      introTitle: "Synthesis",
     }
   },
 };
@@ -336,6 +364,40 @@ const EMERGED_PROFILE = {
     ],
   },
 };
+
+const CH2_OBJECTS = {
+  it: [
+    { id: "vinyl", label: "Vinile", type: "decoy", description: "Bella presenza. Funzione discutibile.", wrongLine: "Molto atmosfera. Poco avanzamento." },
+    { id: "notebook", label: "Taccuino", type: "correct", description: "Per idee, appunti, connessioni.", placedLine: "Prima di capire cosa fare, di solito scrivevo." },
+    { id: "badge", label: "Badge corporate", type: "decoy", description: "Arriverà. Ma non da qui.", wrongLine: "Un po' presto per fingersi già risolto." },
+    { id: "camera", label: "Macchina fotografica", type: "correct", description: "Per imparare a guardare davvero.", placedLine: "Guardare bene veniva prima di spiegare bene." },
+    { id: "diploma", label: "Diploma incorniciato", type: "decoy", description: "Rispettiamolo, ma non è il motore.", wrongLine: "Appeso al muro forse. Nello zaino no." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "Per il lato sistema, memoria, macchina.", placedLine: "Una parte di tutto questo passava già da una macchina." },
+    { id: "ticket", label: "Biglietto aereo", type: "decoy", description: "Tentazione chiara. Tempismo sbagliato.", wrongLine: "Prima la traiettoria. Poi l'aeroporto." },
+    { id: "cdr", label: "CD masterizzato", type: "correct", description: "Per ritmo, montaggio, memoria visiva e sonora.", placedLine: "Mi serviva qualcosa che tenesse insieme gusto, ritmo e memoria." },
+  ],
+  en: [
+    { id: "vinyl", label: "Vinyl", type: "decoy", description: "Great presence. Questionable function.", wrongLine: "A lot of atmosphere. Not much progress." },
+    { id: "notebook", label: "Notebook", type: "correct", description: "For ideas, notes, connections.", placedLine: "Before figuring out what to do, I usually wrote." },
+    { id: "badge", label: "Corporate badge", type: "decoy", description: "That comes later. Not from here.", wrongLine: "A little early to pretend it was already solved." },
+    { id: "camera", label: "Camera", type: "correct", description: "To learn how to really look.", placedLine: "Looking well came before explaining well." },
+    { id: "diploma", label: "Framed diploma", type: "decoy", description: "Respect it, but it wasn't the engine.", wrongLine: "Maybe on the wall. Not in the backpack." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "For the system side: memory, machine, structure.", placedLine: "Part of all this already passed through a machine." },
+    { id: "ticket", label: "Plane ticket", type: "decoy", description: "Clear temptation. Wrong timing.", wrongLine: "First the trajectory. Then the airport." },
+    { id: "cdr", label: "Burned CD", type: "correct", description: "For rhythm, editing, visual and sonic memory.", placedLine: "I needed something that could hold taste, rhythm, and memory together." },
+  ],
+};
+
+const CH2_OBJECT_ORDER = ["notebook", "camera", "floppy", "cdr"];
+
+function shuffleArray(list) {
+  const copy = [...list];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
 
 // ============================================================================
 // UTILITY COMPONENTS
@@ -542,12 +604,11 @@ const CROSSING_BASE_H = 1200;
 const CROSSING_ENTRY = { x: 110, y: 880 };
 const CROSSING_EXIT = { x: 1750, y: 650 }; // Fuori schermo a destra
 const CROSSING_NODES = [
-  { x: 220, y: 860 },   // basso sinistra
-  { x: 420, y: 820 },   // sale
-  { x: 640, y: 770 },   // sale ancora  
+  { x: 420, y: 820 },   // ingresso già dentro il ritmo
+  { x: 640, y: 770 },   // sale
   { x: 880, y: 750 },   // picco centrale
   { x: 1120, y: 780 },  // scende
-  { x: 1320, y: 830 },  // scende ancora
+  { x: 1320, y: 830 },  // uscita verso il salto finale
 ];
 
 // Difficoltà progressiva
@@ -561,23 +622,21 @@ const TIMING_DIFFICULTY = [
   { cycleDuration: 1600, targetWidth: 0.35 },
 ];
 
-// Intensità effetti per salto (0-5)
+// Intensità effetti per salto (5 nodi attivi)
 const LANDING_INTENSITY = [
-  { flash: 0.3, shake: 0, breath: 1.005, saturation: 1.0 },   // Salto 1 - sottile
-  { flash: 0.4, shake: 0, breath: 1.008, saturation: 1.02 },  // Salto 2 - leggero
-  { flash: 0.55, shake: 1, breath: 1.012, saturation: 1.05 }, // Salto 3 - medio
-  { flash: 0.7, shake: 2, breath: 1.018, saturation: 1.08 },  // Salto 4 - forte
-  { flash: 0.85, shake: 3, breath: 1.025, saturation: 1.12 }, // Salto 5 - intenso
-  { flash: 1.0, shake: 4, breath: 1.035, saturation: 1.18 },  // Salto 6 - massimo (innesco)
+  { flash: 0.34, shake: 0, breath: 1.006, saturation: 1.01 },  // Salto 1
+  { flash: 0.48, shake: 1, breath: 1.011, saturation: 1.04 },  // Salto 2
+  { flash: 0.62, shake: 1, breath: 1.016, saturation: 1.07 },  // Salto 3
+  { flash: 0.78, shake: 2, breath: 1.022, saturation: 1.11 },  // Salto 4
+  { flash: 1.0, shake: 4, breath: 1.035, saturation: 1.18 },   // Salto 5 finale
 ];
 
-// Note musicali per ogni salto (scala ascendente in Hz)
+// Note musicali per ogni salto (5 nodi, ultima nota tenuta)
 const LANDING_NOTES = [
-  { freq: 262, duration: 280 },  // Do4
-  { freq: 294, duration: 280 },  // Re4
-  { freq: 330, duration: 300 },  // Mi4
-  { freq: 392, duration: 320 },  // Sol4
-  { freq: 440, duration: 340 },  // La4
+  { freq: 262, duration: 280 },   // Do4
+  { freq: 294, duration: 290 },   // Re4
+  { freq: 330, duration: 310 },   // Mi4
+  { freq: 392, duration: 330 },   // Sol4
   { freq: 523, duration: 2200, hold: true },  // Do5 - ultimo, tiene a lungo
 ];
 
@@ -1068,6 +1127,7 @@ function useStreetAmbience() {
   const activeRef = useRef(false);
   const loopNodesRef = useRef([]);
   const carTimeoutRef = useRef(null);
+  const clinkTimeoutRef = useRef(null);
 
   const ensureContext = useCallback(() => {
     if (!audioCtxRef.current) {
@@ -1096,6 +1156,13 @@ function useStreetAmbience() {
     }
   }, []);
 
+  const clearClinks = useCallback(() => {
+    if (clinkTimeoutRef.current) {
+      clearTimeout(clinkTimeoutRef.current);
+      clinkTimeoutRef.current = null;
+    }
+  }, []);
+
   const playCarPass = useCallback((ctx, master) => {
     const now = ctx.currentTime;
     const duration = 3.6;
@@ -1113,8 +1180,8 @@ function useStreetAmbience() {
     lowpass.frequency.exponentialRampToValueAtTime(920, now + duration);
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.0105, now + 1.05);
-    gain.gain.linearRampToValueAtTime(0.008, now + 2.25);
+    gain.gain.linearRampToValueAtTime(0.024, now + 0.9);
+    gain.gain.linearRampToValueAtTime(0.013, now + 2.15);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     const panner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
     if (panner) {
@@ -1137,7 +1204,7 @@ function useStreetAmbience() {
 
   const scheduleCars = useCallback(() => {
     clearCars();
-    const delay = 7000 + Math.random() * 5000;
+    const delay = 2400 + Math.random() * 2600;
     carTimeoutRef.current = setTimeout(() => {
       if (!activeRef.current || !audioCtxRef.current || !masterGainRef.current) return;
       playCarPass(audioCtxRef.current, masterGainRef.current);
@@ -1145,9 +1212,54 @@ function useStreetAmbience() {
     }, delay);
   }, [clearCars, playCarPass]);
 
+  const playDishClink = useCallback((ctx, master) => {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1380 + Math.random() * 520, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.0105, now + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+    const bandpass = ctx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.setValueAtTime(1900, now);
+    bandpass.Q.setValueAtTime(3.4, now);
+
+    const panner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
+    if (panner) {
+      panner.pan.setValueAtTime(0.26 + Math.random() * 0.18, now);
+    }
+
+    osc.connect(gain);
+    gain.connect(bandpass);
+    if (panner) {
+      bandpass.connect(panner);
+      panner.connect(master);
+    } else {
+      bandpass.connect(master);
+    }
+
+    osc.start(now);
+    osc.stop(now + 0.26);
+  }, []);
+
+  const scheduleClinks = useCallback(() => {
+    clearClinks();
+    const delay = 2800 + Math.random() * 3600;
+    clinkTimeoutRef.current = setTimeout(() => {
+      if (!activeRef.current || !audioCtxRef.current || !masterGainRef.current) return;
+      playDishClink(audioCtxRef.current, masterGainRef.current);
+      scheduleClinks();
+    }, delay);
+  }, [clearClinks, playDishClink]);
+
   const stop = useCallback(() => {
     activeRef.current = false;
     clearCars();
+    clearClinks();
 
     const ctx = audioCtxRef.current;
     const master = masterGainRef.current;
@@ -1175,7 +1287,7 @@ function useStreetAmbience() {
         masterGainRef.current = null;
       }
     }, 1000);
-  }, [clearCars]);
+  }, [clearCars, clearClinks]);
 
   const start = useCallback(() => {
     try {
@@ -1188,7 +1300,7 @@ function useStreetAmbience() {
 
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.0001, now);
-      master.gain.linearRampToValueAtTime(0.16, now + 1.4);
+      master.gain.linearRampToValueAtTime(0.42, now + 0.85);
       master.connect(ctx.destination);
       masterGainRef.current = master;
 
@@ -1197,12 +1309,12 @@ function useStreetAmbience() {
       rainSource.loop = true;
       const rainHigh = ctx.createBiquadFilter();
       rainHigh.type = 'highpass';
-      rainHigh.frequency.setValueAtTime(2600, now);
+      rainHigh.frequency.setValueAtTime(1800, now);
       const rainLow = ctx.createBiquadFilter();
       rainLow.type = 'lowpass';
       rainLow.frequency.setValueAtTime(7600, now);
       const rainGain = ctx.createGain();
-      rainGain.gain.setValueAtTime(0.028, now);
+      rainGain.gain.setValueAtTime(0.088, now);
       rainSource.connect(rainHigh);
       rainHigh.connect(rainLow);
       rainLow.connect(rainGain);
@@ -1217,7 +1329,7 @@ function useStreetAmbience() {
       roomBand.frequency.setValueAtTime(540, now);
       roomBand.Q.setValueAtTime(0.35, now);
       const roomGain = ctx.createGain();
-      roomGain.gain.setValueAtTime(0.0105, now);
+      roomGain.gain.setValueAtTime(0.034, now);
       roomSource.connect(roomBand);
       roomBand.connect(roomGain);
       roomGain.connect(master);
@@ -1228,18 +1340,61 @@ function useStreetAmbience() {
       roomBed.frequency.setValueAtTime(142, now);
       const roomBedGain = ctx.createGain();
       roomBedGain.gain.setValueAtTime(0.0001, now);
-      roomBedGain.gain.linearRampToValueAtTime(0.0035, now + 1.1);
-      roomBedGain.gain.linearRampToValueAtTime(0.0026, now + 4.2);
+      roomBedGain.gain.linearRampToValueAtTime(0.0068, now + 0.9);
+      roomBedGain.gain.linearRampToValueAtTime(0.0052, now + 4.2);
       roomBed.connect(roomBedGain);
       roomBedGain.connect(master);
       roomBed.start(now);
 
-      loopNodesRef.current = [rainSource, roomSource, roomBed];
+      const restaurantSource = ctx.createBufferSource();
+      restaurantSource.buffer = createNoiseBuffer(ctx, 4.2);
+      restaurantSource.loop = true;
+      const restaurantHigh = ctx.createBiquadFilter();
+      restaurantHigh.type = 'highpass';
+      restaurantHigh.frequency.setValueAtTime(260, now);
+      const restaurantBand = ctx.createBiquadFilter();
+      restaurantBand.type = 'bandpass';
+      restaurantBand.frequency.setValueAtTime(880, now);
+      restaurantBand.Q.setValueAtTime(0.52, now);
+      const restaurantLow = ctx.createBiquadFilter();
+      restaurantLow.type = 'lowpass';
+      restaurantLow.frequency.setValueAtTime(2200, now);
+      const restaurantGain = ctx.createGain();
+      restaurantGain.gain.setValueAtTime(0.022, now);
+
+      const restaurantLfo = ctx.createOscillator();
+      restaurantLfo.type = 'sine';
+      restaurantLfo.frequency.setValueAtTime(0.11, now);
+      const restaurantLfoGain = ctx.createGain();
+      restaurantLfoGain.gain.setValueAtTime(0.0062, now);
+      restaurantLfo.connect(restaurantLfoGain);
+      restaurantLfoGain.connect(restaurantGain.gain);
+
+      const restaurantPanner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
+      if (restaurantPanner) {
+        restaurantPanner.pan.setValueAtTime(0.18, now);
+      }
+
+      restaurantSource.connect(restaurantHigh);
+      restaurantHigh.connect(restaurantBand);
+      restaurantBand.connect(restaurantLow);
+      restaurantLow.connect(restaurantGain);
+      if (restaurantPanner) {
+        restaurantGain.connect(restaurantPanner);
+        restaurantPanner.connect(master);
+      } else {
+        restaurantGain.connect(master);
+      }
+      restaurantSource.start(now);
+      restaurantLfo.start(now);
+
+      loopNodesRef.current = [rainSource, roomSource, roomBed, restaurantSource, restaurantLfo];
       scheduleCars();
+      scheduleClinks();
     } catch (e) {
       // Audio non supportato, ignora silenziosamente
     }
-  }, [createNoiseBuffer, ensureContext, scheduleCars]);
+  }, [createNoiseBuffer, ensureContext, scheduleCars, scheduleClinks]);
 
   useEffect(() => () => stop(), [stop]);
 
@@ -2131,8 +2286,186 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
   );
 }
 
-function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
+function ChapterTwoObjectGame({ lang, T, onComplete }) {
+  const baseItems = CH2_OBJECTS[lang] || CH2_OBJECTS.it;
+  const items = useMemo(() => shuffleArray(baseItems), [baseItems]);
+  const [placedIds, setPlacedIds] = useState([]);
+  const [feedback, setFeedback] = useState(T.gameIntroLine);
+  const [shakeId, setShakeId] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
+  const [showNextHint, setShowNextHint] = useState(false);
+  const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
+  const [imageState, setImageState] = useState("loading");
+  const completeTimeoutRef = useRef(null);
+  const shakeTimeoutRef = useRef(null);
+  const hintTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+      if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
+      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    };
+  }, []);
+
+  const placedSet = useMemo(() => new Set(placedIds), [placedIds]);
+  const expectedId = CH2_OBJECT_ORDER[placedIds.length];
+  const finalLineParts = lang === 'it'
+    ? ["Non avevo ancora un ruolo.", "Avevo già una direzione."]
+    : ["I didn't have a role yet.", "I already had a direction."];
+
+  useEffect(() => {
+    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    setShowNextHint(false);
+
+    if (!expectedId || isComplete) return;
+
+    hintTimeoutRef.current = setTimeout(() => {
+      setShowNextHint(true);
+    }, 2400);
+
+    return () => {
+      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    };
+  }, [expectedId, isComplete]);
+
+  const triggerShake = useCallback((id) => {
+    setShakeId(id);
+    if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
+    shakeTimeoutRef.current = setTimeout(() => setShakeId(null), 320);
+  }, []);
+
+  const handlePick = useCallback((item) => {
+    if (isComplete) return;
+
+    if (placedSet.has(item.id)) {
+      setFeedback(T.gameDuplicate);
+      return;
+    }
+
+    if (item.type === 'decoy') {
+      triggerShake(item.id);
+      setFeedback(item.wrongLine);
+      return;
+    }
+
+    if (item.id !== expectedId) {
+      triggerShake(item.id);
+      setFeedback(T.gameOrderWrong);
+      return;
+    }
+
+    const nextPlaced = [...placedIds, item.id];
+    setPlacedIds(nextPlaced);
+    setFeedback(item.placedLine);
+
+    if (nextPlaced.length === CH2_OBJECT_ORDER.length) {
+      setIsComplete(true);
+      setFeedback(T.gameFinalLine);
+      completeTimeoutRef.current = setTimeout(() => {
+        onComplete?.();
+      }, 2400);
+    }
+  }, [T.gameDuplicate, T.gameFinalLine, T.gameOrderWrong, expectedId, isComplete, onComplete, placedIds, placedSet, triggerShake]);
+
+  return (
+    <>
+      <div className="ch2-stage ch2-game-stage">
+        <img
+          className="ch2-fill"
+          src={gameBaseSrc}
+          alt=""
+          onLoad={() => setImageState("loaded")}
+          onError={() => {
+            if (gameBaseSrc !== ASSETS.chapter2DeskFrame) {
+              setImageState("fallback");
+              setGameBaseSrc(ASSETS.chapter2DeskFrame);
+            } else {
+              setImageState("error");
+            }
+          }}
+        />
+        <div className="ch2-game-vignette" />
+        {CH2_DEBUG ? (
+          <div className="ch2-debug-panel ch2-debug-panel-game">
+            <div>scene: selection</div>
+            <div>image: {imageState}</div>
+            <div className="ch2-debug-src">{gameBaseSrc}</div>
+          </div>
+        ) : null}
+        <div className="ch2-game-slot-shell">
+          <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
+          <div className="ch2-game-slot-grid">
+            {Array.from({ length: 4 }).map((_, index) => {
+              const placedId = placedIds[index];
+              const placedItem = items.find((item) => item.id === placedId);
+              return (
+                <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''}`}>
+                  {placedItem ? placedItem.label : <span>Slot {index + 1}</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        {isComplete ? (
+          <div className="ch2-game-complete-card">
+            <div className="ch2-game-complete-kicker">{T.gameCompleteKicker}</div>
+            <div className="ch2-game-complete-line">
+              {finalLineParts.map((line, index) => (
+                <span key={index} className={index === 0 ? 'is-top' : 'is-bottom'}>{line}</span>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        <div className="ch1-scan" />
+      </div>
+
+      <div className="ch2-game-slot-shell ch2-game-slot-shell-mobile">
+        <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
+        <div className="ch2-game-slot-grid">
+          {Array.from({ length: 4 }).map((_, index) => {
+            const placedId = placedIds[index];
+            const placedItem = items.find((item) => item.id === placedId);
+            return (
+              <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''}`}>
+                {placedItem ? placedItem.label : <span>Slot {index + 1}</span>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="ch1-controls-slot ch2-object-controls-slot">
+        <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
+        <div className="ch2-game-grid">
+          {items.map((item) => {
+            const isPlaced = placedSet.has(item.id);
+            const isWrong = item.type === 'decoy';
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handlePick(item)}
+                disabled={isComplete}
+                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && showNextHint && item.id === expectedId ? 'is-next' : ''}`}
+              >
+                <span className="ch2-game-object-title">{item.label}</span>
+                <span className="ch2-game-object-desc">{item.description}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const deskLoopRef = useRef(null);
+  const streetPulseTimeoutRef = useRef(null);
+  const continueIdxRef = useRef(0);
+  const streetAmbience = useStreetAmbience();
+
   const [scene, setScene] = useState("desk");
   const [windowGlow, setWindowGlow] = useState(0.08);
   const [roomDayLift, setRoomDayLift] = useState(0.08);
@@ -2140,9 +2473,7 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
   const [deskFeedbackText, setDeskFeedbackText] = useState("");
   const [streetAmbientPulse, setStreetAmbientPulse] = useState(false);
   const [streetResolved, setStreetResolved] = useState(false);
-  const continueIdxRef = useRef(0);
-  const streetPulseTimeoutRef = useRef(null);
-  const streetAmbience = useStreetAmbience();
+  const [streetTransitioning, setStreetTransitioning] = useState(false);
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -2205,6 +2536,7 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
     setDeskFeedbackText("");
     setStreetAmbientPulse(false);
     setStreetResolved(false);
+    setStreetTransitioning(false);
     streetAmbience.start();
     setScene("street");
   }, [streetAmbience]);
@@ -2217,15 +2549,33 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
 
   const handleResolveStreet = useCallback(() => {
     setStreetResolved(true);
+    setStreetTransitioning(false);
     onUnlockProfile?.("conflict");
-  }, [onUnlockProfile]);
+    streetAmbience.stop();
+    setScene("selection");
+  }, [onUnlockProfile, streetAmbience]);
 
   const handleBackToDesk = useCallback(() => {
     setStreetAmbientPulse(false);
     setStreetResolved(false);
+    setStreetTransitioning(false);
     streetAmbience.stop();
     setScene("desk");
   }, [streetAmbience]);
+
+  const handleForceSelection = useCallback(() => {
+    setStreetAmbientPulse(false);
+    setStreetResolved(true);
+    setStreetTransitioning(false);
+    streetAmbience.stop();
+    setScene("selection");
+  }, [streetAmbience]);
+
+  useEffect(() => {
+    if (CH2_DEBUG) {
+      console.log("[CH2 DEBUG]", { scene, streetResolved, streetTransitioning });
+    }
+  }, [scene, streetResolved, streetTransitioning]);
 
   return (
     <div className="ch1-root">
@@ -2237,69 +2587,104 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
           </div>
         </div>
 
+        {CH2_DEBUG ? (
+          <div className="ch2-debug-panel ch2-debug-panel-global">
+            <div>scene: {scene}</div>
+            <div>resolved: {streetResolved ? "yes" : "no"}</div>
+            <div>transitioning: {streetTransitioning ? "yes" : "no"}</div>
+            <button type="button" className="ch2-debug-btn" onClick={handleForceSelection}>debug: forza quadro 3</button>
+          </div>
+        ) : null}
+
         {scene === "desk" ? (
-          <div className="ch2-stage">
-            <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
+          <>
+            <div className="ch2-stage">
+              <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
 
-            <div className="ch2-window-mask">
-              <video
-                ref={deskLoopRef}
-                className="ch2-window-video"
-                src={ASSETS.chapter2DeskLoop}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-              />
+              <div className="ch2-window-mask">
+                <video
+                  ref={deskLoopRef}
+                  className="ch2-window-video"
+                  src={ASSETS.chapter2DeskLoop}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+
+              <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
+              <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
+              <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
+              <div className="ch2-monitor-breath" />
+              <div className="ch2-room-grade" />
+              <div className="ch2-line-block">
+                <div className="ch2-line">{T.introCopy}</div>
+              </div>
+              <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""}`}>{deskFeedbackText}</div>
+              <div className="ch1-scan" />
             </div>
 
-            <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
-            <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
-            <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
-            <div className="ch2-monitor-breath" />
-            <div className="ch2-room-grade" />
-            <div className="ch2-line-block">
-              <div className="ch2-line">{T.introCopy}</div>
+            <div className="ch2-street-mobile-copy">
+              <div className="ch2-street-narrative ch2-street-narrative-mobile">
+                {(T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
+                  <span key={idx} className="ch2-street-narrative-line">{line}</span>
+                ))}
+              </div>
+              <div className="ch2-line ch2-street-line-mobile">{T.streetCopy}</div>
             </div>
-            <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""}`}>{deskFeedbackText}</div>
-            <div className="ch1-scan" />
-          </div>
+
+            <div className="ch1-controls-slot">
+              <div className="ch1-controls ch2-controls">
+                <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
+                <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+              </div>
+            </div>
+          </>
+        ) : scene === "street" ? (
+          <>
+            <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""} ${streetTransitioning ? "is-transitioning" : ""}`}>
+              <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
+              <div className="ch2-street-grade" />
+              <div className="ch2-street-cool-wash" />
+              <div className="ch2-street-door-bloom" />
+              <div className="ch2-street-reflection-boost" />
+              <div className="ch2-street-rain ch2-street-rain-back" />
+              <div className="ch2-street-rain ch2-street-rain-front" />
+              <div className="ch2-street-headlights ch2-street-headlights-back" />
+              <div className="ch2-street-headlights ch2-street-headlights-front" />
+              <div className="ch2-street-vignette" />
+
+              <div className="ch2-street-narrative-wrap">
+                <div className="ch2-street-narrative">
+              {(T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
+                <span key={idx} className="ch2-street-narrative-line">{line}</span>
+              ))}
+            </div>
+              </div>
+              <div className="ch2-line-block ch2-street-line-block">
+                <div className="ch2-line">{T.streetCopy}</div>
+              </div>
+              <div className="ch1-scan" />
+            </div>
+
+            <div className="ch1-controls-slot">
+              {!streetResolved ? (
+                <div className="ch1-controls ch2-controls">
+                  <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
+                  <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
+                  {CH2_DEBUG ? <button type="button" className="ch2-debug-btn" onClick={handleForceSelection}>debug: forza quadro 3</button> : null}
+                </div>
+              ) : (
+                <div className="ch2-street-transition-copy">{T.streetBridgeHint}</div>
+              )}
+            </div>
+          </>
         ) : (
-          <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""}`}>
-            <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
-            <div className="ch2-street-grade" />
-            <div className="ch2-street-cool-wash" />
-            <div className="ch2-street-door-bloom" />
-            <div className="ch2-street-reflection-boost" />
-            <div className="ch2-street-rain ch2-street-rain-back" />
-            <div className="ch2-street-rain ch2-street-rain-front" />
-            <div className="ch2-street-headlights ch2-street-headlights-back" />
-            <div className="ch2-street-headlights ch2-street-headlights-front" />
-            <div className="ch2-street-vignette" />
-
-            <div className="ch2-street-narrative">{T.streetNarrative}</div>
-            <div className="ch2-line-block ch2-street-line-block">
-              <div className="ch2-line">{T.streetCopy}</div>
-            </div>
-            <div className={`ch2-street-bridge ${streetResolved ? "show" : ""}`}>{T.streetBridgeHint}</div>
-            <div className="ch1-scan" />
-          </div>
+          <ChapterTwoObjectGame lang={lang} T={T} onComplete={onComplete} />
         )}
 
-        <div className="ch1-controls-slot">
-          {scene === "desk" ? (
-            <div className="ch1-controls ch2-controls">
-              <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
-              <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
-            </div>
-          ) : (
-            <div className="ch1-controls ch2-controls">
-              <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
-              <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
-            </div>
-          )}
-        </div>
         <div className="ch1-profile-slot ch2-profile-slot">
           <EmergingProfilePanel
             title={profileUi.title}
@@ -2694,12 +3079,17 @@ export default function Roberto() {
         .ch2-street-vignette{inset:0;background:
           radial-gradient(ellipse at center, transparent 36%, rgba(0,0,0,.14) 68%, rgba(0,0,0,.5) 100%),
           linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.14) 100%)}
-        .ch2-street-line-block{border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.26) 70%,transparent 100%)}
-        .ch2-street-narrative{position:absolute;left:22px;right:22px;top:22px;z-index:9;max-width:560px;color:rgba(236,229,217,.86);font-size:12px;line-height:1.75;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-shadow:0 2px 10px rgba(0,0,0,.82)}
-        .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.76;filter:blur(24px)}
-        .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.78}
-        .ch2-street-bridge{position:absolute;left:22px;right:22px;top:auto;bottom:84px;z-index:9;max-width:430px;font-size:11px;line-height:1.8;color:rgba(234,223,210,.82);opacity:0;transform:translateY(8px);transition:opacity .32s ease,transform .32s ease;letter-spacing:.01em}
-        .ch2-street-bridge.show{opacity:1;transform:translateY(0)}
+        .ch2-street-line-block{left:50%;right:auto;bottom:20px;width:min(calc(100% - 34px),690px);transform:translateX(-50%);border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.68) 0%,rgba(0,0,0,.28) 70%,transparent 100%)}
+        .ch2-street-line-block .ch2-line{text-align:center;font-size:clamp(18px,2.2vw,26px);white-space:nowrap}
+        .ch2-street-narrative-wrap{position:absolute;left:50%;top:46px;z-index:9;width:min(calc(100% - 56px),760px);transform:translateX(-50%)}
+        .ch2-street-narrative{color:rgba(239,233,224,.96);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.88);background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));padding:12px 20px;border-top:1px solid rgba(255,203,154,.20);border-radius:8px;backdrop-filter:blur(5px)}
+        .ch2-street-narrative-line{display:block}
+        .ch2-street-mobile-copy{display:none}
+        .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.82;filter:blur(24px)}
+        .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.84}
+        .ch2-street-stage.is-transitioning .ch2-street-frame{filter:saturate(.98) contrast(1.04) brightness(.92);transform:scale(1.01)}
+        .ch2-street-stage.is-transitioning .ch2-street-line-block{opacity:.82}
+        .ch2-street-transition-copy{width:100%;max-width:620px;margin:0 auto;border-top:1px solid rgba(255,203,154,.16);padding-top:12px;color:rgba(234,223,210,.94);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;animation:fadeIn .28s ease-out}
         .ch2-street-back-link{margin-top:12px;background:transparent;border:0;padding:0;color:#6e6e70;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:color .22s ease;align-self:flex-start}.ch2-street-back-link:hover{color:#FF4D00}
         @keyframes ch2StreetFrameDrift{0%,100%{transform:scale(1.006) translateY(0)}50%{transform:scale(1.01) translateY(-0.35%)}}
         @keyframes ch2DoorBloomPulse{0%,100%{opacity:.52;filter:blur(16px)}50%{opacity:.68;filter:blur(21px)}}
@@ -2710,18 +3100,72 @@ export default function Roberto() {
         @keyframes ch2LampPulse{0%,100%{opacity:.74;transform:scale(1)}50%{opacity:.96;transform:scale(1.04)}}
         @keyframes ch2RainBackShift{0%{background-position:0 -6px, 12px 18px}100%{background-position:-18px 56px, -8px 82px}}
         @keyframes ch2RainFrontShift{0%{background-position:8px -10px, 20px 10px}100%{background-position:-22px 72px, -10px 96px}}
+@keyframes ch2NextObjectGlow{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.14)}}
         @keyframes ch2HeadlightSweepBack{0%,18%{transform:translateX(0) skewX(-16deg);opacity:0}30%,56%{opacity:.34}78%{transform:translateX(-195%) skewX(-16deg);opacity:.18}100%{transform:translateX(-195%) skewX(-16deg);opacity:0}}
         @keyframes ch2HeadlightSweepFront{0%,22%{transform:translateX(0) skewX(-16deg);opacity:0}34%,58%{opacity:.48}82%{transform:translateX(-214%) skewX(-16deg);opacity:.22}100%{transform:translateX(-214%) skewX(-16deg);opacity:0}}
+        @keyframes ch2GameShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+        .ch2-game-stage{background:#0a0f12}
+        .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
+        .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
+        .ch2-game-slot-shell-mobile{display:none;position:relative;left:auto;right:auto;bottom:auto;margin-top:12px;background:rgba(3,8,10,.72)}
+        .ch2-game-slot-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(223,232,238,.56);margin-bottom:10px}
+        .ch2-game-slot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+        .ch2-game-slot{min-height:54px;border-radius:8px;border:1px dashed rgba(162,186,198,.2);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px;color:#6b7880;font-size:10px;line-height:1.35;text-transform:uppercase;letter-spacing:1px}
+        .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}
+        .ch2-object-controls-slot{min-height:auto;display:block}
+        .ch2-game-feedback{width:100%;margin-top:2px;margin-bottom:14px;min-height:52px;padding:13px 16px;border-radius:8px;border:1px solid rgba(148,174,188,.18);background:rgba(3,8,10,.72);color:#d8e0e6;font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease,opacity .2s ease}
+        .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
+        .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
+        .ch2-game-complete-card{position:absolute;left:50%;top:22px;z-index:9;width:min(calc(100% - 40px),540px);transform:translateX(-50%);padding:14px 18px 15px;border-radius:10px;border:1px solid rgba(255,77,0,.18);background:linear-gradient(180deg, rgba(18,9,6,.82), rgba(8,6,6,.58));backdrop-filter:blur(6px);text-align:center;animation:fadeIn .24s ease-out}
+        .ch2-game-complete-kicker{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:rgba(255,192,152,.78);margin-bottom:8px}
+        .ch2-game-complete-line{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(21px,2.25vw,28px);line-height:1.02;color:#f1e8df;text-align:center}
+        .ch2-game-complete-line span{display:block;text-wrap:initial;white-space:nowrap}.ch2-game-complete-line .is-top{letter-spacing:-.01em}.ch2-game-complete-line .is-bottom{letter-spacing:-.015em}
+        .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+        .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
+        .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
+        .ch2-game-object.is-decoy:hover{border-color:rgba(138,138,138,.28);background:rgba(255,255,255,.015)}
+        .ch2-game-object.is-placed{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.08)}
+.ch2-game-object.is-next{border-color:rgba(255,77,0,.22);box-shadow:0 0 0 rgba(255,77,0,0);animation:ch2NextObjectGlow 3.2s ease-in-out infinite}
+        .ch2-game-object.is-shaking{animation:ch2GameShake .28s ease-out}
+        .ch2-game-object-title{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:1.05;color:#f0ece6;margin-bottom:8px}
+        .ch2-game-object-desc{display:block;font-size:11px;line-height:1.7;color:#9ea4a8}
+        .ch2-game-object:disabled{cursor:default}
+
+        
+        .ch2-debug-panel{width:100%;margin:0 0 12px 0;padding:10px 12px;border:1px dashed rgba(255,77,0,.35);border-radius:8px;background:rgba(255,77,0,.06);color:#d8c7bb;font-size:10px;letter-spacing:.4px;display:grid;gap:6px}
+        .ch2-debug-panel-game{position:absolute;left:12px;top:12px;z-index:11;width:auto;max-width:78%;margin:0;background:rgba(5,5,5,.8);backdrop-filter:blur(4px)}
+        .ch2-debug-panel-global{align-self:stretch}
+        .ch2-debug-btn{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,77,0,.45);background:transparent;color:#FF4D00;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.8px;cursor:pointer;justify-self:start}
+        .ch2-debug-src{word-break:break-all;color:#b68f79}
 
         @media(max-width:600px){
           .wrap{
-            padding:calc(88px + env(safe-area-inset-top,0px)) 18px 40px!important;
+            padding:calc(84px + env(safe-area-inset-top,0px)) 18px 38px!important;
+            max-width:100%!important;
           }
           .top-btn{
             padding:5px 10px!important;
             font-size:10px!important;
           }
           .nm{font-size:38px!important}
+          .ghost-phrase{font-size:11px!important}
+          .crt-vignette{box-shadow:inset 0 0 50px 25px rgba(0,0,0,.5),inset 0 0 20px 8px rgba(0,0,0,.25)!important}
+
+          .home-section-kicker{
+            font-size:24px!important;
+            line-height:1.08!important;
+            margin-bottom:10px!important;
+          }
+          .home-section-sub{
+            font-size:15px!important;
+            line-height:1.72!important;
+            max-width:100%!important;
+            margin-bottom:22px!important;
+          }
+
+          .svc{
+            padding:22px 18px!important;
+          }
           .svc-in{
             display:block!important;
           }
@@ -2730,21 +3174,8 @@ export default function Roberto() {
             width:100%!important;
             margin-bottom:10px!important;
           }
-          .svc{
-            padding:22px 18px!important;
-          }
-          .home-section-kicker{
-            font-size:24px!important;
-            line-height:1.08!important;
-          }
-          .home-section-sub{
-            font-size:15px!important;
-            line-height:1.72!important;
-            max-width:100%!important;
-            margin-bottom:22px!important;
-          }
           .home-service-title{
-            font-size:30px!important;
+            font-size:31px!important;
             line-height:1.02!important;
             display:block!important;
             margin-bottom:6px!important;
@@ -2752,26 +3183,17 @@ export default function Roberto() {
           .home-service-sub{
             display:block!important;
             font-size:14px!important;
-            line-height:1.45!important;
+            line-height:1.46!important;
             margin:0 0 12px 0!important;
             max-width:100%!important;
           }
           .home-service-desc{
-            font-size:14px!important;
-            line-height:1.9!important;
-            max-width:100%!important;
             display:block!important;
-          }
-          .home-work-narrative,
-          .home-work-secondary,
-          .home-method-desc{
             max-width:100%!important;
+            font-size:14px!important;
+            line-height:1.88!important;
           }
-          .home-method-title{
-            font-size:15px!important;
-            line-height:1.5!important;
-            margin-bottom:8px!important;
-          }
+
           .work-card{
             padding-top:22px!important;
             padding-bottom:22px!important;
@@ -2782,21 +3204,47 @@ export default function Roberto() {
             background:none!important;
             border-left-color:transparent!important;
           }
+          .home-work-narrative{
+            font-size:13px!important;
+            line-height:1.82!important;
+            max-width:100%!important;
+          }
+          .home-work-secondary{
+            font-size:12px!important;
+            line-height:1.78!important;
+            max-width:100%!important;
+          }
           .work-card > div:first-child{
             gap:8px!important;
+            margin-bottom:12px!important;
           }
           .work-card > div:first-child > div:first-child{
             font-size:22px!important;
             line-height:1.08!important;
+          }
+          .work-card > div:last-child{
+            gap:5px!important;
           }
           .work-card span[style*="text-transform: uppercase"]{
             font-size:8px!important;
             letter-spacing:1px!important;
             padding:3px 7px!important;
           }
+
+          .home-method-title{
+            font-size:15px!important;
+            line-height:1.5!important;
+            margin-bottom:8px!important;
+          }
+          .home-method-desc{
+            font-size:13px!important;
+            line-height:1.9!important;
+            max-width:100%!important;
+          }
           .mth{
             padding:2px 0 2px 14px!important;
           }
+
           .brow{
             flex-direction:column!important;
             gap:12px!important;
@@ -2810,8 +3258,7 @@ export default function Roberto() {
             max-width:320px!important;
             min-width:0!important;
           }
-          .ghost-phrase{font-size:11px!important}
-          .crt-vignette{box-shadow:inset 0 0 50px 25px rgba(0,0,0,.5),inset 0 0 20px 8px rgba(0,0,0,.25)!important}
+
           .ch1-root{padding:18px 16px 16px;align-items:flex-start}
           .ch1-wrap{width:min(94vw,760px)}
           .ch1-line-block,.ch1-feedback{left:16px;right:16px;bottom:18px}
@@ -2820,10 +3267,23 @@ export default function Roberto() {
           .ch1-controls-slot{min-height:114px;margin-top:12px}
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
-          .ch2-street-bridge{left:16px;right:16px;bottom:76px;max-width:none;font-size:10px;line-height:1.7}
-          .ch2-street-narrative{left:16px;right:16px;top:18px;max-width:none;font-size:10px;line-height:1.7}
+
+          .ch2-street-transition-copy{max-width:none;font-size:11px;line-height:1.72}
+          .ch2-street-line-block{width:min(calc(100% - 24px),620px);bottom:16px}
+          .ch2-street-line-block .ch2-line{white-space:normal;font-size:clamp(17px,5.2vw,24px)}
+          .ch2-street-narrative-wrap{left:50%;right:auto;top:26px;width:min(calc(100% - 20px),560px);transform:translateX(-50%)}
+          .ch2-street-narrative{font-size:10px;line-height:1.68;padding:10px 12px}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
           .ch2-street-reflection-boost{height:42%}
+          .ch2-game-slot-shell{display:none}
+          .ch2-game-slot-shell-mobile{display:block}
+          .ch2-game-feedback{font-size:11px;line-height:1.7;min-height:42px}
+          .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
+          .ch2-game-complete-card{left:14px;right:14px;top:14px;width:auto;transform:none;padding:12px 12px 13px}
+          .ch2-game-complete-line{font-size:22px;line-height:1.14}
+          .ch2-game-grid{grid-template-columns:1fr;gap:8px}
+          .ch2-game-object{padding:12px 12px 13px}
+          .ch2-game-object-title{font-size:18px}
           .chapter-intro-inner{transform:translateY(0)}
         }
       `}</style>
@@ -3126,6 +3586,15 @@ export default function Roberto() {
         />
       )}
 
+      {phase === "game" && gameFlow === "chapter3Intro" && (
+        <ChapterIntroCard
+          number="3"
+          title={T.ch3.introTitle}
+          label={lang === "it" ? "Capitolo" : "Chapter"}
+          onDone={() => setPhase("comingSoon")}
+        />
+      )}
+
       {phase === "game" && gameFlow === "chapter1" && (
         <ChapterOne 
           T={T.ch1}
@@ -3146,8 +3615,10 @@ export default function Roberto() {
 
       {phase === "game" && gameFlow === "chapter2" && (
         <ChapterTwoScene
+          lang={lang}
           T={T.ch2}
           onBack={handleBack}
+          onComplete={() => setGameFlow("chapter3Intro")}
           profileUi={{
             title: T.ch1.profileTitle,
             idle: T.ch1.profileIdle,
