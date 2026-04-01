@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from "react"
 // GAME TOGGLE - Set to true when the game is ready for launch
 // ============================================================================
 const GAME_ENABLED = true;
-const CH2_DEBUG = true;
+const CH2_DEBUG = false;
 
 // ============================================================================
 // ASSET CONFIGURATION
@@ -145,7 +145,7 @@ const LANG = {
       streetResolveFeedback: "Non dovevo tenere tutto. Solo quello che avrebbe retto.",
       streetBridgeHint: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
       gameSlotsLabel: "Zaino · 4 slot",
-      gameIntroLine: "Non tutto meritava spazio.",
+      gameIntroLine: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
       gameDuplicate: "Quello è già dentro. Non serve convincersi due volte.",
       gameOrderWrong: "Ci sta. Ma non è il prossimo tassello.",
       gameFinalLine: "Non avevo ancora un ruolo. Avevo già una direzione.",
@@ -273,7 +273,7 @@ const LANG = {
       streetResolveFeedback: "I didn't need to keep everything. Only what would hold.",
       streetBridgeHint: "I couldn't carry everything forward. I had to figure out what remained.",
       gameSlotsLabel: "Backpack · 4 slots",
-      gameIntroLine: "Not everything deserved space.",
+      gameIntroLine: "I couldn't carry everything forward. I had to figure out what remained.",
       gameDuplicate: "That's already in. No need to convince yourself twice.",
       gameOrderWrong: "Fair. But it's not the next piece.",
       gameFinalLine: "I didn't have a role yet. I already had a direction.",
@@ -585,12 +585,11 @@ const CROSSING_BASE_H = 1200;
 const CROSSING_ENTRY = { x: 110, y: 880 };
 const CROSSING_EXIT = { x: 1750, y: 650 }; // Fuori schermo a destra
 const CROSSING_NODES = [
-  { x: 220, y: 860 },   // basso sinistra
-  { x: 420, y: 820 },   // sale
-  { x: 640, y: 770 },   // sale ancora  
+  { x: 420, y: 820 },   // ingresso già dentro il ritmo
+  { x: 640, y: 770 },   // sale
   { x: 880, y: 750 },   // picco centrale
   { x: 1120, y: 780 },  // scende
-  { x: 1320, y: 830 },  // scende ancora
+  { x: 1320, y: 830 },  // uscita verso il salto finale
 ];
 
 // Difficoltà progressiva
@@ -1164,7 +1163,7 @@ function useStreetAmbience() {
     lowpass.frequency.exponentialRampToValueAtTime(920, now + duration);
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.018, now + 0.95);
+    gain.gain.linearRampToValueAtTime(0.024, now + 0.9);
     gain.gain.linearRampToValueAtTime(0.013, now + 2.15);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     const panner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
@@ -1204,7 +1203,7 @@ function useStreetAmbience() {
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.0072, now + 0.004);
+    gain.gain.linearRampToValueAtTime(0.0105, now + 0.004);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
 
     const bandpass = ctx.createBiquadFilter();
@@ -1284,7 +1283,7 @@ function useStreetAmbience() {
 
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.0001, now);
-      master.gain.linearRampToValueAtTime(0.30, now + 0.9);
+      master.gain.linearRampToValueAtTime(0.42, now + 0.85);
       master.connect(ctx.destination);
       masterGainRef.current = master;
 
@@ -1298,7 +1297,7 @@ function useStreetAmbience() {
       rainLow.type = 'lowpass';
       rainLow.frequency.setValueAtTime(7600, now);
       const rainGain = ctx.createGain();
-      rainGain.gain.setValueAtTime(0.065, now);
+      rainGain.gain.setValueAtTime(0.088, now);
       rainSource.connect(rainHigh);
       rainHigh.connect(rainLow);
       rainLow.connect(rainGain);
@@ -1313,7 +1312,7 @@ function useStreetAmbience() {
       roomBand.frequency.setValueAtTime(540, now);
       roomBand.Q.setValueAtTime(0.35, now);
       const roomGain = ctx.createGain();
-      roomGain.gain.setValueAtTime(0.024, now);
+      roomGain.gain.setValueAtTime(0.034, now);
       roomSource.connect(roomBand);
       roomBand.connect(roomGain);
       roomGain.connect(master);
@@ -2355,7 +2354,6 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
             <div className="ch2-debug-src">{gameBaseSrc}</div>
           </div>
         ) : null}
-        <div className={`ch2-game-feedback ch2-game-feedback-overlay ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         <div className="ch2-game-slot-shell">
           <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
           <div className="ch2-game-slot-grid">
@@ -2374,6 +2372,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       </div>
 
       <div className="ch1-controls-slot ch2-object-controls-slot">
+        <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         <div className="ch2-game-grid">
           {items.map((item) => {
             const isPlaced = placedSet.has(item.id);
@@ -2400,7 +2399,6 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
 function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const deskLoopRef = useRef(null);
   const streetPulseTimeoutRef = useRef(null);
-  const streetTransitionTimeoutRef = useRef(null);
   const continueIdxRef = useRef(0);
   const streetAmbience = useStreetAmbience();
 
@@ -2450,7 +2448,6 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
   useEffect(() => {
     return () => {
       if (streetPulseTimeoutRef.current) clearTimeout(streetPulseTimeoutRef.current);
-      if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
       streetAmbience.stop();
     };
   }, [streetAmbience]);
@@ -2488,27 +2485,21 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 
   const handleResolveStreet = useCallback(() => {
     setStreetResolved(true);
-    setStreetTransitioning(true);
+    setStreetTransitioning(false);
     onUnlockProfile?.("conflict");
-    if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
-    streetTransitionTimeoutRef.current = setTimeout(() => {
-      streetAmbience.stop();
-      setStreetTransitioning(false);
-      setScene("selection");
-    }, 420);
+    streetAmbience.stop();
+    setScene("selection");
   }, [onUnlockProfile, streetAmbience]);
 
   const handleBackToDesk = useCallback(() => {
     setStreetAmbientPulse(false);
     setStreetResolved(false);
     setStreetTransitioning(false);
-    if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
     streetAmbience.stop();
     setScene("desk");
   }, [streetAmbience]);
 
   const handleForceSelection = useCallback(() => {
-    if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
     setStreetAmbientPulse(false);
     setStreetResolved(true);
     setStreetTransitioning(false);
@@ -3013,8 +3004,8 @@ export default function Roberto() {
           linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.14) 100%)}
         .ch2-street-line-block{left:50%;right:auto;bottom:22px;width:min(calc(100% - 44px),620px);transform:translateX(-50%);border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.68) 0%,rgba(0,0,0,.28) 70%,transparent 100%)}
         .ch2-street-line-block .ch2-line{text-align:center;font-size:clamp(20px,2.5vw,31px)}
-        .ch2-street-narrative-wrap{position:absolute;left:50%;top:34px;z-index:9;width:min(calc(100% - 44px),640px);transform:translateX(-50%)}
-        .ch2-street-narrative{color:rgba(236,229,217,.94);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.86);background:linear-gradient(180deg, rgba(3,8,10,.56), rgba(3,8,10,.24));padding:12px 16px;border-top:1px solid rgba(255,203,154,.16);border-radius:6px;backdrop-filter:blur(4px)}
+        .ch2-street-narrative-wrap{position:absolute;left:50%;top:52px;z-index:9;width:min(calc(100% - 64px),560px);transform:translateX(-50%)}
+        .ch2-street-narrative{color:rgba(239,233,224,.96);font-size:12px;line-height:1.86;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.88);background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));padding:13px 18px;border-top:1px solid rgba(255,203,154,.20);border-radius:8px;backdrop-filter:blur(5px)}
         .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.82;filter:blur(24px)}
         .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.84}
         .ch2-street-stage.is-transitioning .ch2-street-frame{filter:saturate(.98) contrast(1.04) brightness(.92);transform:scale(1.01)}
@@ -3041,7 +3032,7 @@ export default function Roberto() {
         .ch2-game-slot{min-height:54px;border-radius:8px;border:1px dashed rgba(162,186,198,.2);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px;color:#6b7880;font-size:10px;line-height:1.35;text-transform:uppercase;letter-spacing:1px}
         .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}
         .ch2-object-controls-slot{min-height:auto;display:block}
-        .ch2-game-feedback{margin-top:2px;margin-bottom:14px;min-height:44px;padding:12px 14px;border-radius:8px;border:1px solid rgba(31,31,31,.9);background:rgba(0,0,0,.28);color:#b5bcc2;font-size:12px;line-height:1.75;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease}
+        .ch2-game-feedback{width:100%;margin-top:2px;margin-bottom:14px;min-height:52px;padding:13px 16px;border-radius:8px;border:1px solid rgba(148,174,188,.18);background:rgba(3,8,10,.72);color:#d8e0e6;font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease,opacity .2s ease}
         .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
         .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -3085,8 +3076,8 @@ export default function Roberto() {
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
           .ch2-street-transition-copy{max-width:none;font-size:11px;line-height:1.72}
-          .ch2-street-narrative-wrap{left:50%;right:auto;top:24px;width:min(calc(100% - 32px),560px);transform:translateX(-50%)}
-          .ch2-street-narrative{font-size:10px;line-height:1.72;padding:10px 12px}
+          .ch2-street-narrative-wrap{left:50%;right:auto;top:36px;width:min(calc(100% - 28px),520px);transform:translateX(-50%)}
+          .ch2-street-narrative{font-size:10px;line-height:1.72;padding:11px 12px}
           .ch2-street-narrative{font-size:10px;line-height:1.74}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
           .ch2-street-reflection-boost{height:42%}
