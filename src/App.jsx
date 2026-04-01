@@ -22,6 +22,8 @@ const ASSETS = {
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
   chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
 };
+const CV_DOWNLOAD_URL = "/assets/roberto-marchesini-cv.pdf";
+
 
 // ============================================================================
 // LANGUAGE STRINGS
@@ -124,6 +126,13 @@ const LANG = {
       crossingCopy: "Trova il varco.",
       crossingSubcopy: "Frecce / WASD o trascina.",
       crossingComplete: "Il sistema si apre.",
+      crossingUnlockLines: [
+        "Sinapsi attiva.",
+        "+1 immaginazione.",
+        "Apertura di mondi.",
+        "Connessioni in corso.",
+        "Sistema quasi aperto.",
+      ],
       crossingTapHint: "Tocca quando la luce è al centro",
       crossingAria: "Attraversa. Tocca quando la luce è al centro.",
       backToSurface: "← Torna in superficie",
@@ -268,6 +277,13 @@ const LANG = {
       crossingCopy: "Find the gap.",
       crossingSubcopy: "Arrows / WASD or drag.",
       crossingComplete: "The system opens.",
+      crossingUnlockLines: [
+        "Synapse active.",
+        "+1 imagination.",
+        "Worlds opening.",
+        "Connections online.",
+        "System almost open.",
+      ],
       crossingTapHint: "Tap when the light is centered",
       crossingAria: "Cross. Tap when the light is centered.",
       backToSurface: "← Back to surface",
@@ -411,6 +427,16 @@ const CH2_OBJECTS = {
 };
 
 const CH2_OBJECT_ORDER = ["notebook", "camera", "floppy", "cdr"];
+const CH2_OBJECT_ICONS = {
+  vinyl: "◎",
+  notebook: "✎",
+  badge: "▣",
+  camera: "◉",
+  diploma: "◆",
+  floppy: "◫",
+  ticket: "➝",
+  cdr: "◌",
+};
 
 function shuffleArray(list) {
   const copy = [...list];
@@ -461,6 +487,82 @@ function Section({ children, delay = 0 }) {
       transform: visible ? "translateY(0)" : "translateY(28px)",
       transition: `opacity 0.6s ${delay}s ease-out, transform 0.6s ${delay}s ease-out`,
     }}>{children}</div>
+  );
+}
+
+
+function PixelInstagramIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" shapeRendering="crispEdges">
+      <rect x="3" y="3" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" />
+      <rect x="8" y="8" width="8" height="8" fill="none" stroke="currentColor" strokeWidth="2" />
+      <rect x="16" y="6" width="2" height="2" fill="currentColor" />
+    </svg>
+  );
+}
+
+function PixelLinkedinIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" shapeRendering="crispEdges">
+      <rect x="3" y="3" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" />
+      <rect x="7" y="10" width="2" height="7" fill="currentColor" />
+      <rect x="7" y="7" width="2" height="2" fill="currentColor" />
+      <path d="M11 10h2v1h1v-1h2v7h-2v-4h-1v4h-2z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function PixelDownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" shapeRendering="crispEdges">
+      <rect x="3" y="18" width="18" height="3" fill="currentColor" />
+      <rect x="11" y="4" width="2" height="9" fill="currentColor" />
+      <rect x="9" y="11" width="2" height="2" fill="currentColor" />
+      <rect x="13" y="11" width="2" height="2" fill="currentColor" />
+      <rect x="8" y="13" width="8" height="2" fill="currentColor" />
+    </svg>
+  );
+}
+
+function HomeSocialRail() {
+  const links = [
+    {
+      href: 'https://www.instagram.com/roberto_marchesini_/',
+      label: 'Instagram',
+      icon: <PixelInstagramIcon />,
+      external: true,
+    },
+    {
+      href: 'https://www.linkedin.com/in/robertocreativegrowth/',
+      label: 'LinkedIn',
+      icon: <PixelLinkedinIcon />,
+      external: true,
+    },
+    {
+      href: CV_DOWNLOAD_URL,
+      label: 'CV',
+      icon: <PixelDownloadIcon />,
+      download: true,
+    },
+  ];
+
+  return (
+    <div className="home-social-rail" aria-label="Social links">
+      {links.map((link) => (
+        <a
+          key={link.label}
+          href={link.href}
+          className="pixel-social-link"
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener noreferrer' : undefined}
+          download={link.download ? true : undefined}
+          aria-label={link.label}
+        >
+          <span className="pixel-social-icon">{link.icon}</span>
+          <span className="pixel-social-label">{link.label}</span>
+        </a>
+      ))}
+    </div>
   );
 }
 
@@ -1424,7 +1526,7 @@ function useStreetAmbience() {
 }
 
 
-function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3200, hintText = "Tap when the light is centered", ariaLabel = "Cross. Tap when the light is centered." }) {
+function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3200, hintText = "Tap when the light is centered", ariaLabel = "Cross. Tap when the light is centered.", unlockLines = [] }) {
   const [currentNodeIndex, setCurrentNodeIndex] = useState(-1);
   const [activatedNodes, setActivatedNodes] = useState([]);
   const [isJumping, setIsJumping] = useState(false);
@@ -1441,6 +1543,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const [timingMiss, setTimingMiss] = useState(false);
   const [finalTimingBurst, setFinalTimingBurst] = useState(false);
   const [finalTimingFill, setFinalTimingFill] = useState(0);
+  const [unlockCue, setUnlockCue] = useState("");
 
   const playLandingNote = useLandingSound();
 
@@ -1453,6 +1556,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const hintTimeoutRef = useRef(null);
   const squashTimeoutRef = useRef(null);
   const missTimeoutRef = useRef(null);
+  const unlockCueTimeoutRef = useRef(null);
   const hasInteracted = useRef(false);
   const pulseStartTime = useRef(0);
 
@@ -1542,6 +1646,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
       if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
       if (missTimeoutRef.current) clearTimeout(missTimeoutRef.current);
+      if (unlockCueTimeoutRef.current) clearTimeout(unlockCueTimeoutRef.current);
       if (finalTimingTimeoutRef.current) clearTimeout(finalTimingTimeoutRef.current);
       if (finalJumpTimeoutRef.current) clearTimeout(finalJumpTimeoutRef.current);
     };
@@ -1606,6 +1711,13 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     playLandingNote(nodeIndex);
     setScenePulse({ key: `${nodeIndex}-${Date.now()}`, x: node.x, y: node.y, intensity: intensity.flash });
 
+    const nextCue = unlockLines[nodeIndex];
+    if (nextCue) {
+      setUnlockCue(nextCue);
+      if (unlockCueTimeoutRef.current) clearTimeout(unlockCueTimeoutRef.current);
+      unlockCueTimeoutRef.current = setTimeout(() => setUnlockCue(""), 1150);
+    }
+
     setSquash(true);
     if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
     squashTimeoutRef.current = setTimeout(() => setSquash(false), 130);
@@ -1628,7 +1740,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
     if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
     scenePulseTimeoutRef.current = setTimeout(() => setScenePulse(null), 520);
-  }, [doFinalJump, playLandingNote, triggerFinalTimingBurst]);
+  }, [doFinalJump, playLandingNote, triggerFinalTimingBurst, unlockLines]);
 
   const doJump = useCallback((targetIndex) => {
     const start = currentNodeIndex >= 0 ? CROSSING_NODES[currentNodeIndex] : CROSSING_ENTRY;
@@ -1955,6 +2067,10 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
         </div>
       )}
 
+      {unlockCue ? (
+        <div className="ch1-crossing-unlock-cue">{unlockCue}</div>
+      ) : null}
+
       {transition && (
         <div style={{
           position: "absolute",
@@ -2260,6 +2376,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
                 onComplete={handleCrossingComplete}
                 hintText={T.crossingTapHint}
                 ariaLabel={T.crossingAria}
+                unlockLines={T.crossingUnlockLines}
               />
             </div>
             <div className="ch1-controls-slot" aria-hidden="true" />
@@ -2472,6 +2589,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
                 disabled={isComplete}
                 className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && showNextHint && item.id === expectedId ? 'is-next' : ''}`}
               >
+                <span className="ch2-game-object-icon" aria-hidden="true">{CH2_OBJECT_ICONS[item.id] || "◇"}</span>
                 <span className="ch2-game-object-title">{item.label}</span>
                 <span className="ch2-game-object-desc">{item.description}</span>
               </button>
@@ -2965,6 +3083,12 @@ export default function Roberto() {
         .home-method-desc{font-size:13px;color:#a6a6a6;line-height:1.96;max-width:520px;text-wrap:pretty}
         .ghost-mobile{text-align:center}
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
+        .home-hero-shell{position:relative;overflow:visible}
+        .home-social-rail{position:absolute;top:8px;right:-98px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;z-index:6}
+        .pixel-social-link{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1px solid rgba(255,255,255,.08);border-radius:4px;background:rgba(5,5,5,.82);color:#8b8b8b;text-decoration:none;transition:border-color .22s ease,color .22s ease,transform .22s ease,background .22s ease}
+        .pixel-social-link:hover{border-color:rgba(255,77,0,.34);color:#FF4D00;background:rgba(16,10,8,.92);transform:translateX(-2px)}
+        .pixel-social-icon{display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+        .pixel-social-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;line-height:1}
         
         /* Chapter 1 styles */
         .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,5vh,44px) 16px 20px;padding-bottom:env(safe-area-inset-bottom,20px)}
@@ -3049,6 +3173,7 @@ export default function Roberto() {
         .ch1-crossing-subcopy{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(7,12,7,.48)}
         .ch1-crossing-complete{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:6;background:rgba(215,225,183,.14);backdrop-filter:blur(2px)}
         .ch1-crossing-complete-line{color:#111611;font-family:Georgia,serif;font-style:italic;font-size:clamp(24px,2.8vw,32px)}
+        .ch1-crossing-unlock-cue{position:absolute;right:14px;top:16%;z-index:21;padding:8px 10px;border:1px solid rgba(199,212,160,.18);border-radius:999px;background:rgba(6,12,8,.72);color:rgba(220,232,188,.92);font-size:10px;line-height:1;letter-spacing:1px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;text-shadow:0 1px 4px rgba(0,0,0,.65);backdrop-filter:blur(6px);pointer-events:none;animation:crossingUnlockCueIn 1.12s ease-out forwards}
         
         /* ConnectionsCrossing animations */
         @keyframes crossingIdleFloat{0%{transform:translate(-50%,-100%) scaleX(-1) translateY(0)}50%{transform:translate(-50%,-100%) scaleX(-1) translateY(-3px)}100%{transform:translate(-50%,-100%) scaleX(-1) translateY(0)}}
@@ -3057,6 +3182,7 @@ export default function Roberto() {
         @keyframes crossingSynapseFlash{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.6)}}
         @keyframes crossingSynapseGlow{0%{opacity:1}100%{opacity:0}}
         @keyframes crossingHintPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.06)}}
+        @keyframes crossingUnlockCueIn{0%{opacity:0;transform:translateY(-8px)}18%{opacity:1;transform:translateY(0)}82%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-6px)}}
         @keyframes crossingFadeToWhite{0%{opacity:0}100%{opacity:1}}
         @keyframes crossingPhraseIn{0%{opacity:0;transform:translateY(12px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         @keyframes crossingChapter2In{0%{opacity:0}100%{opacity:1}}
@@ -3159,6 +3285,7 @@ export default function Roberto() {
         .ch2-game-complete-line span{display:block;text-wrap:initial;white-space:nowrap}.ch2-game-complete-line .is-top{letter-spacing:-.01em}.ch2-game-complete-line .is-bottom{letter-spacing:-.015em}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
         .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
+        .ch2-game-object-icon{display:none;font-size:18px;line-height:1;color:#ddd2c4;margin-bottom:8px}
         .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
         .ch2-game-object.is-decoy:hover{border-color:rgba(138,138,138,.28);background:rgba(255,255,255,.015)}
         .ch2-game-object.is-placed{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.08)}
@@ -3175,6 +3302,10 @@ export default function Roberto() {
         .ch2-debug-btn{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,77,0,.45);background:transparent;color:#FF4D00;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.8px;cursor:pointer;justify-self:start}
         .ch2-debug-src{word-break:break-all;color:#b68f79}
 
+        @media(max-width:1024px){
+          .home-social-rail{display:none!important}
+        }
+
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
           .ch2-street-narrative-wrap{display:none}
@@ -3184,7 +3315,13 @@ export default function Roberto() {
           .ch2-street-line-mobile{font-size:clamp(16px,4.9vw,22px);line-height:1.18;text-align:center;color:#e0e9f2}
           .ch2-game-slot-shell{display:none}
           .ch2-game-slot-shell-mobile{display:block}
-          .ch2-game-prompt{font-size:12px;padding:11px 14px;margin-top:2px;margin-bottom:10px}
+          .ch2-game-prompt{font-size:11px;padding:10px 12px;margin-top:2px;margin-bottom:10px;line-height:1.65}
+          .ch2-game-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+          .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+          .ch2-game-object-icon{display:block;font-size:16px;margin-bottom:6px}
+          .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
+          .ch2-game-object-desc{display:none}
+          .ch2-game-feedback{font-size:11px;line-height:1.66;min-height:40px;padding:10px 12px;margin-bottom:10px}
 
           .svc{padding:18px 18px!important}
           .svc-in{display:block!important;grid-template-columns:1fr!important;gap:0!important}
@@ -3293,7 +3430,7 @@ export default function Roberto() {
         }}>
           {/* 1. HERO */}
           <Section delay={0.05}>
-            <div style={{ marginBottom: isMobileViewport ? 34 : 40 }}>
+            <div className="home-hero-shell" style={{ marginBottom: isMobileViewport ? 34 : 40 }}>
               <h1 className="nm" style={{ fontFamily: "'Playfair Display',serif", fontSize: 52, fontWeight: 700, lineHeight: 1.02, margin: "0 0 10px", color: "#F0ECE6", animation: "nameGlow 6s ease-in-out infinite" }}>
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
@@ -3301,6 +3438,7 @@ export default function Roberto() {
               <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 20, lineHeight: isMobileViewport ? 1.78 : 1.92, maxWidth: isMobileViewport ? 420 : 470 }}>{T.hero}</div>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 12 : 14, lineHeight: isMobileViewport ? 1.78 : 1.9, maxWidth: isMobileViewport ? 400 : 470 }}>{heroSubText}</div>
+              {!isMobileViewport ? <HomeSocialRail /> : null}
             </div>
           </Section>
 
@@ -3371,8 +3509,8 @@ export default function Roberto() {
               <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 16 : 22 }}>
                 {T.services.map((svc, i) => (
                   <div key={i} className="svc">
-                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "136px 1fr", gap: isMobileViewport ? 0 : 24, alignItems: "start" }}>
-                      <div className="svc-tw" style={{ marginBottom: isMobileViewport ? 10 : 0 }}>
+                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "196px minmax(0,1fr)", gap: isMobileViewport ? 0 : 36, alignItems: "start" }}>
+                      <div className="svc-tw" style={{ marginBottom: isMobileViewport ? 10 : 0, paddingRight: isMobileViewport ? 0 : 8 }}>
                         <span className="svc-t home-service-title">
                           {svc.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
                         </span>
