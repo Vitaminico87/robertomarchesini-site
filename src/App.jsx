@@ -32,13 +32,13 @@ const LANG = {
     proofStrip: "Brand · Lanci · Sistemi AI",
     whatido: "Cosa faccio",
     services: [
-      { title: "Position", subtitle: "Rendere chiaro cosa ti distingue", desc: "Definisco posizionamento, tono e messaggio, così un brand o un progetto smette di sembrare intercambiabile." },
-      { title: "Shape", subtitle: "Dare forma visiva e narrativa alle idee", desc: "Costruisco identità, contenuti e direzione creativa con un linguaggio coerente, riconoscibile e vivo." },
-      { title: "Launch", subtitle: "Portare un progetto nel mondo nel modo giusto", desc: "Lavoro su lanci, attivazioni ed esperienze per far arrivare un'idea con più chiarezza, forza e desiderabilità." },
-      { title: "Build", subtitle: "Usare l'AI per creare meglio, non solo più in fretta", desc: "Progetto sistemi, flussi e nuovi formati che aumentano qualità, velocità e possibilità creative." },
+      { title: "Position", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e tono, così un brand o un progetto smette di sembrare generico e inizia a risultare riconoscibile." },
+      { title: "Shape", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e identità in contenuti, linguaggi e direzione creativa coerenti, leggibili e vivi." },
+      { title: "Launch", subtitle: "Far arrivare un progetto nel modo giusto", desc: "Costruisco lanci, campagne ed esperienze perché un'idea non venga solo pubblicata, ma percepita, capita e desiderata." },
+      { title: "Build", subtitle: "Usare l'AI per costruire meglio", desc: "Progetto sistemi, workflow e nuovi formati che aumentano qualità, velocità e possibilità creative, senza abbassare il livello." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali, responsabilità vere, lavoro che ha dovuto reggere nel tempo.",
+    selectedWorkSub: "Progetti reali, responsabilità concrete, lavoro che ha dovuto reggere ritmo, pressione e tempo.",
     selectedWork: [
       {
         title: "Largo Venue",
@@ -115,6 +115,8 @@ const LANG = {
       crossingCopy: "Trova il varco.",
       crossingSubcopy: "Frecce / WASD o trascina.",
       crossingComplete: "Il sistema si apre.",
+      crossingTapHint: "Tocca quando la luce è al centro",
+      crossingAria: "Attraversa. Tocca quando la luce è al centro.",
       backToSurface: "← Torna in superficie",
       introTitle: "L'origine",
     },
@@ -141,13 +143,13 @@ const LANG = {
     proofStrip: "Brand · Launches · AI Systems",
     whatido: "What I do",
     services: [
-      { title: "Position", subtitle: "Make clear what sets you apart", desc: "I define positioning, tone, and message, so a brand or project stops looking interchangeable." },
-      { title: "Shape", subtitle: "Give visual and narrative form to ideas", desc: "I build identity, content, and creative direction with a coherent, recognizable, and living language." },
-      { title: "Launch", subtitle: "Bring a project into the world the right way", desc: "I work on launches, activations, and experiences to make an idea land with more clarity, strength, and desirability." },
-      { title: "Build", subtitle: "Use AI to create better, not just faster", desc: "I design systems, workflows, and new formats that increase quality, speed, and creative possibilities." },
+      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and tone, so a brand or project stops feeling generic and starts becoming recognizable." },
+      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and identities into content, language, and creative direction that feel coherent, readable, and alive." },
+      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build launches, campaigns, and experiences so an idea is not just published, but perceived, understood, and desired." },
+      { title: "Build", subtitle: "Use AI to build better", desc: "I design systems, workflows, and new formats that increase quality, speed, and creative possibility without lowering the standard." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Real projects, real responsibilities, work that had to hold up over time.",
+    selectedWorkSub: "Real projects, real responsibility, work that had to hold up under pressure and over time.",
     selectedWork: [
       {
         title: "Largo Venue",
@@ -223,6 +225,8 @@ const LANG = {
       crossingCopy: "Find the gap.",
       crossingSubcopy: "Arrows / WASD or drag.",
       crossingComplete: "The system opens.",
+      crossingTapHint: "Tap when the light is centered",
+      crossingAria: "Cross. Tap when the light is centered.",
       backToSurface: "← Back to surface",
       introTitle: "Origin",
     },
@@ -921,7 +925,7 @@ function useLibrarySwosh() {
 }
 
 
-function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3200 }) {
+function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3200, hintText = "Tap when the light is centered", ariaLabel = "Cross. Tap when the light is centered." }) {
   const [currentNodeIndex, setCurrentNodeIndex] = useState(-1);
   const [activatedNodes, setActivatedNodes] = useState([]);
   const [isJumping, setIsJumping] = useState(false);
@@ -1203,7 +1207,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     <div
       role="button"
       tabIndex={0}
-      aria-label="Attraversa. Tocca quando la luce è al centro."
+      aria-label={ariaLabel}
       onPointerDown={handleAdvance}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -1447,7 +1451,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
             textShadow: "0 1px 4px rgba(0,0,0,0.6)",
             padding: "0 10px",
           }}>
-            Tap quando la luce è al centro
+            {hintText}
           </div>
         </div>
       )}
@@ -1740,7 +1744,11 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
         ) : (
           <>
             <div className="ch1-crossing-shell">
-              <ConnectionsCrossing onComplete={handleCrossingComplete} />
+              <ConnectionsCrossing
+                onComplete={handleCrossingComplete}
+                hintText={T.crossingTapHint}
+                ariaLabel={T.crossingAria}
+              />
             </div>
             <Ch1ProfilePanel unlocked={true} T={T} />
           </>
@@ -1753,7 +1761,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
 
 
 
-function ChapterIntroCard({ number, title, onDone }) {
+function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
   useEffect(() => {
     const t = setTimeout(() => {
       if (typeof onDone === "function") onDone();
@@ -1768,7 +1776,7 @@ function ChapterIntroCard({ number, title, onDone }) {
         <div className="chapter-intro-stage" onClick={onDone} role="button" tabIndex={0}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
           <div className="chapter-intro-inner">
-            <div className="chapter-intro-kicker">Capitolo {number}</div>
+            <div className="chapter-intro-kicker">{label} {number}</div>
             <div className="chapter-intro-title">{title}</div>
           </div>
         </div>
@@ -2019,10 +2027,17 @@ export default function Roberto() {
 
   const handleBack = () => {
     setGameFlow("chapter1");
-    setFalling(false); setFallingWords([]); setContentFading(false);
-    setPhase("main"); setGameChapter("chapter1"); setGlitch(true); setTimeout(() => setGlitch(false), 500);
+    setFalling(false);
+    setFallingWords([]);
+    setContentFading(false);
+    setPhase("main");
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    setGlitch(true);
+    setTimeout(() => setGlitch(false), 500);
     // Reset ghost system
     setGhostReady(false);
+    setScrollProgress(0);
+    setScrolled(false);
     timeOnPage.current = 0;
     hasScrolled.current = false;
   };
@@ -2048,13 +2063,13 @@ export default function Roberto() {
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         .work-card{transition:all .3s}
         .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
-        .svc{padding:22px 24px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
+        .svc{padding:24px 26px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
         .svc:hover{border-color:rgba(255,77,0,.35);background:rgba(255,77,0,.02)}
         .svc:hover .svc-t{color:#FF4D00!important;text-shadow:0 0 15px rgba(255,77,0,.12)}
         .work-card{transition:all .3s;padding-left:0;border-left:3px solid transparent}
         .work-card:hover{border-left-color:#FF4D00;padding-left:20px;background:linear-gradient(90deg,rgba(255,77,0,.025) 0%,transparent 40%)}
-        .mth{padding-left:16px;border-left:2px solid #161616;transition:all .25s;cursor:default}
-        .mth:hover{border-left-color:#FF4D00;padding-left:20px}
+        .mth{padding:2px 0 2px 18px;border-left:2px solid #161616;transition:all .25s;cursor:default}
+        .mth:hover{border-left-color:#FF4D00;padding-left:22px}
         .mth:hover .mth-t{color:#FF4D00!important}
         .btn-trash{min-width:140px;padding:16px 38px;background:transparent;border:1px solid #FF4D00;color:#FF4D00;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:background .2s,color .2s}
         .btn-talk{padding:16px 38px;background:transparent;border:1px solid #444;color:#AAA;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:all .25s}
@@ -2066,6 +2081,17 @@ export default function Roberto() {
         .foot-l{transition:color .2s;cursor:pointer;color:#444}
         .foot-l:hover{color:#888}
         .ghost-phrase{line-height:1.5}
+        .home-pretty{text-wrap:pretty}
+        .home-balance{text-wrap:balance}
+        .home-section-kicker{display:inline-block;font-size:clamp(22px,2.8vw,28px);letter-spacing:0;color:#E8E4DE;text-transform:none;opacity:1;font-family:'Playfair Display',serif;font-style:italic;line-height:1.08;text-wrap:balance}
+        .home-section-sub{font-size:14px;color:#9a9a9a;margin-bottom:32px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.68;max-width:560px;text-wrap:pretty}
+        .home-work-narrative{font-size:13px;color:#BBB;line-height:1.82;margin-bottom:8px;max-width:540px;text-wrap:pretty}
+        .home-work-secondary{font-size:12px;color:#999;line-height:1.78;margin-bottom:12px;max-width:540px;text-wrap:pretty}
+        .home-service-title{font-size:33px;font-weight:600;color:#E8E4DE;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.04;text-wrap:balance}
+        .home-service-sub{font-size:13px;color:#a3a3a3;margin-bottom:8px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.5;text-wrap:pretty}
+        .home-service-desc{font-size:13px;color:#BBB;line-height:1.9;text-wrap:pretty}
+        .home-method-title{font-size:15px;font-weight:500;color:#e2ddd5;margin-bottom:8px;transition:all .2s;letter-spacing:.15px;line-height:1.48;text-wrap:balance}
+        .home-method-desc{font-size:13px;color:#a6a6a6;line-height:1.92;max-width:580px;text-wrap:pretty}
         .ghost-mobile{text-align:center}
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         
@@ -2173,9 +2199,15 @@ export default function Roberto() {
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
 
         @media(max-width:600px){
-          .svc-in{flex-direction:column!important;gap:8px!important}
+          .svc-in{flex-direction:column!important;gap:10px!important}
+          .home-section-kicker{font-size:24px!important;line-height:1.08!important}.home-section-sub{font-size:15px!important;line-height:1.72!important;max-width:100%!important}
+          .home-service-title{font-size:34px!important;line-height:1.02!important}
+          .home-service-sub{font-size:14px!important;line-height:1.52!important;margin-bottom:9px!important}
+          .home-service-desc{font-size:13px!important;line-height:1.92!important}
+          .home-method-title{font-size:15px!important;line-height:1.5!important;margin-bottom:8px!important}
+          .home-method-desc{font-size:13px!important;line-height:1.92!important;max-width:100%!important}
           .svc-tw{min-width:auto!important}
-          .wrap{padding:60px 20px 40px!important}
+          .wrap{padding:60px 18px 40px!important}
           .nm{font-size:38px!important}
           .brow{flex-direction:column!important;gap:12px!important}
           .brow .orsep{display:none}
@@ -2255,8 +2287,8 @@ export default function Roberto() {
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
               <div style={{ fontSize: 14, color: "#888", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>Creative Director · AI Systems</div>
-              <div style={{ fontSize: 14, color: "#BBB", marginTop: 18, lineHeight: 1.85, maxWidth: 500 }}>{T.hero}</div>
-              <div style={{ fontSize: 13, color: "#999", marginTop: 12, lineHeight: 1.8, maxWidth: 500 }}>{T.heroSub}</div>
+              <div className="home-pretty" style={{ fontSize: 14, color: "#BBB", marginTop: 18, lineHeight: 1.88, maxWidth: 510 }}>{T.hero}</div>
+              <div className="home-pretty" style={{ fontSize: 13, color: "#999", marginTop: 12, lineHeight: 1.86, maxWidth: 510 }}>{T.heroSub}</div>
             </div>
           </Section>
 
@@ -2275,8 +2307,8 @@ export default function Roberto() {
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
             <div style={{ marginBottom: 56 }}>
-              <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 6, opacity: .6 }}>{T.selectedWorkLabel}</div>
-              <div style={{ fontSize: 11, color: "#777", marginBottom: 28, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{T.selectedWorkSub}</div>
+              <div className="home-section-kicker" style={{ marginBottom: 8 }}>{T.selectedWorkLabel}</div>
+              <div className="home-section-sub">{T.selectedWorkSub}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
                   <div key={i} className="work-card" style={{
@@ -2302,8 +2334,8 @@ export default function Roberto() {
                         )}
                       </div>
                     </div>
-                    <div style={{ fontSize: 13, color: "#BBB", lineHeight: 1.75, marginBottom: 8, maxWidth: 540 }}>{work.narrative}</div>
-                    {work.narrative2 && <div style={{ fontSize: 12, color: "#999", lineHeight: 1.7, marginBottom: 12, maxWidth: 540 }}>{work.narrative2}</div>}
+                    <div className="home-work-narrative">{work.narrative}</div>
+                    {work.narrative2 && <div className="home-work-secondary">{work.narrative2}</div>}
                     <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6, marginBottom: 14, letterSpacing: .3 }}>{work.technical}</div>
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                       {work.tags.map((tag, j) => (
@@ -2323,19 +2355,19 @@ export default function Roberto() {
           {/* 5. WHAT I DO */}
           <Section delay={0.15}>
             <div style={{ marginBottom: 52 }}>
-              <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 24, opacity: .6 }}>{T.whatido}</div>
+              <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.whatido}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                 {T.services.map((svc, i) => (
                   <div key={i} className="svc">
-                    <div className="svc-in" style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: 20, alignItems: "start" }}>
+                    <div className="svc-in" style={{ display: "grid", gridTemplateColumns: "136px 1fr", gap: 22, alignItems: "start" }}>
                       <div className="svc-tw">
-                        <span className="svc-t" style={{ fontSize: 28, fontWeight: 600, color: "#E8E4DE", fontFamily: "'Playfair Display',serif", fontStyle: "italic", transition: "all .25s", display: "block" }}>
+                        <span className="svc-t home-service-title">
                           {svc.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
                         </span>
                       </div>
                       <div>
-                        {svc.subtitle && <div style={{ fontSize: 11, color: "#999", marginBottom: 6, fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{svc.subtitle}</div>}
-                        <div style={{ fontSize: 13, color: "#BBB", lineHeight: 1.85 }}>{svc.desc}</div>
+                        {svc.subtitle && <div className="home-service-sub">{svc.subtitle}</div>}
+                        <div className="home-service-desc">{svc.desc}</div>
                       </div>
                     </div>
                   </div>
@@ -2347,12 +2379,12 @@ export default function Roberto() {
           {/* 6. HOW I WORK */}
           <Section delay={0.18}>
             <div style={{ marginBottom: 52 }}>
-              <div style={{ fontSize: 10, letterSpacing: 4, color: "#FF4D00", textTransform: "uppercase", marginBottom: 20, opacity: .6 }}>{T.howLabel}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.howLabel}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                 {T.method.map((m, i) => (
                   <div key={i} className="mth">
-                    <div className="mth-t" style={{ fontSize: 12, fontWeight: 500, color: "#DDD", marginBottom: 4, transition: "all .2s", letterSpacing: .3 }}>{m.title}</div>
-                    <div style={{ fontSize: 12, color: "#999", lineHeight: 1.75 }}>{m.desc}</div>
+                    <div className="mth-t home-method-title">{m.title}</div>
+                    <div className="home-method-desc">{m.desc}</div>
                   </div>
                 ))}
               </div>
@@ -2367,7 +2399,7 @@ export default function Roberto() {
           {/* CTA + CESTINA - SEMPLIFICATO */}
           <Section delay={0.22}>
             <div style={{ marginBottom: 8 }}>
-              <div style={{ textAlign: "center", marginBottom: 20, fontSize: 11, color: "#888", fontFamily: "'IBM Plex Mono', monospace" }}>
+              <div className="home-pretty" style={{ textAlign: "center", marginBottom: 20, fontSize: 11, color: "#888", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.8, maxWidth: 420, marginInline: "auto" }}>
                 {T.availableFor}
               </div>
               <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center" }}>
@@ -2476,6 +2508,7 @@ export default function Roberto() {
         <ChapterIntroCard
           number="1"
           title={T.ch1.introTitle}
+          label={lang === "it" ? "Capitolo" : "Chapter"}
           onDone={() => setGameFlow("chapter1")}
         />
       )}
@@ -2484,6 +2517,7 @@ export default function Roberto() {
         <ChapterIntroCard
           number="2"
           title={T.ch2.introTitle}
+          label={lang === "it" ? "Capitolo" : "Chapter"}
           onDone={() => setGameFlow("chapter2")}
         />
       )}
