@@ -28,6 +28,151 @@ const ASSETS = {
 const CV_DOWNLOAD_URL = "/assets/roberto-marchesini-cv.pdf";
 
 
+const CASE_STUDIES = {
+  it: {
+    largo: {
+      backLabel: "← Torna ai lavori",
+      openLabel: "Apri case study",
+      kicker: "Case study",
+      meta: "Direzione creativa · Sistema contenuti · Continuità editoriale",
+      lead: "Un sistema contenuti costruito per reggere una venue con programmazione continua, oltre 150 eventi l’anno e una presenza editoriale che non poteva diventare generica.",
+      proof: ["150+ eventi l’anno", "1M+ visualizzazioni mensili", "palinsesto settimanale continuo"],
+      sections: [
+        {
+          title: "Il problema",
+          body: "Largo non aveva bisogno di singoli post riusciti. Aveva bisogno di una struttura capace di sostenere ritmo, varietà e identità, settimana dopo settimana, senza collassare nella ripetizione."
+        },
+        {
+          title: "Il sistema costruito",
+          body: "Ho impostato un impianto editoriale e promozionale capace di tenere insieme programmazione, format ricorrenti, annunci, repertorio fotografico e tono di voce. Non una sequenza di output isolati, ma una macchina creativa leggibile e continua."
+        },
+        {
+          title: "Cosa ha retto davvero",
+          body: "La continuità. La riconoscibilità. La capacità di far convivere serate, pubblici e linguaggi diversi senza perdere la sensazione di un luogo con una firma precisa."
+        }
+      ],
+      closing: "Un sistema creativo utile non serve solo a pubblicare di più. Serve a reggere meglio nel tempo."
+    },
+    ndp: {
+      backLabel: "← Torna ai lavori",
+      openLabel: "Apri case study",
+      kicker: "Case study",
+      meta: "Direzione creativa · Sistema contenuti · Crescita audience",
+      lead: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia. Un lavoro lungo, costruito per dare continuità e scala a un racconto che non poteva disperdersi.",
+      proof: ["12 anni di continuità", "400K+ audience", "narrazione a scala nazionale"],
+      sections: [
+        {
+          title: "Il problema",
+          body: "Notre Dame de Paris non chiedeva solo comunicazione. Chiedeva una struttura narrativa capace di restare coerente nel tempo, reggere cicli lunghi, tournée, riaperture e un pubblico molto ampio senza perdere riconoscibilità."
+        },
+        {
+          title: "Il sistema costruito",
+          body: "Ho lavorato su direzione creativa, contenuti e architettura del racconto digitale, tenendo insieme continuità, desiderabilità e memoria del progetto. Il punto non era produrre di più, ma dare al brand una traiettoria leggibile e persistente."
+        },
+        {
+          title: "Cosa ha retto davvero",
+          body: "La capacità di far crescere il racconto insieme all’audience, mantenendo riconoscibilità e tenuta anche nel lungo periodo. È qui che la narrativa è diventata sistema, non ornamento."
+        }
+      ],
+      closing: "Quando un progetto dura davvero, la creatività da sola non basta. Serve una struttura che sappia reggere il tempo."
+    },
+    theia: {
+      backLabel: "← Torna ai lavori",
+      openLabel: "Apri case study",
+      kicker: "Case study",
+      meta: "Posizionamento · Sito · Architettura digitale",
+      lead: "Un lavoro di posizionamento, direzione del sito e struttura digitale pensato per aumentare credibilità, chiarezza e capacità di contatto di un brand eventi premium.",
+      proof: ["posizionamento premium", "brand + landing + tracking", "architettura orientata al lead"],
+      sections: [
+        {
+          title: "Il problema",
+          body: "THEIA non aveva bisogno di un sito decorativo. Aveva bisogno di una presenza digitale capace di sostenere percezione premium, chiarezza dell’offerta e qualità del contatto commerciale."
+        },
+        {
+          title: "Il sistema costruito",
+          body: "Ho lavorato su tono, struttura delle pagine, gerarchia dei contenuti e architettura del sito per costruire un’esperienza più credibile, più leggibile e più utile come macchina di presentazione e di acquisizione."
+        },
+        {
+          title: "Cosa ha retto davvero",
+          body: "L’allineamento tra percezione del brand, navigazione e qualità del lead. Non solo un’estetica premium, ma una struttura digitale pensata per sostenere fiducia e contatto."
+        }
+      ],
+      closing: "Quando posizionamento e struttura lavorano insieme, il sito smette di essere vetrina e diventa sistema."
+    }
+  },
+  en: {
+    largo: {
+      backLabel: "← Back to work",
+      openLabel: "Open case study",
+      kicker: "Case study",
+      meta: "Creative direction · Content system · Editorial continuity",
+      lead: "A content system built to sustain a venue with continuous programming, 150+ events per year, and an editorial presence that could not afford to become generic.",
+      proof: ["150+ events per year", "1M+ monthly views", "continuous weekly system"],
+      sections: [
+        {
+          title: "The problem",
+          body: "Largo did not need isolated good posts. It needed a structure able to sustain rhythm, variety, and identity week after week, without collapsing into repetition."
+        },
+        {
+          title: "The system built",
+          body: "I designed an editorial and promotional structure able to hold programming, recurring formats, announcements, live photography, and tone of voice together. Not a sequence of isolated outputs, but a readable and continuous creative machine."
+        },
+        {
+          title: "What actually held up",
+          body: "Continuity. Recognizability. The ability to let different nights, audiences, and tones coexist without losing the feeling of a place with a precise signature."
+        }
+      ],
+      closing: "A useful creative system is not there to publish more. It is there to hold up better over time."
+    },
+    ndp: {
+      backLabel: "← Back to work",
+      openLabel: "Open case study",
+      kicker: "Case study",
+      meta: "Creative direction · Content system · Audience growth",
+      lead: "Twelve years of creative direction and content system design for one of Italy’s most recognizable live brands. Long-term work built to give continuity and scale to a narrative that could not afford to disperse.",
+      proof: ["12 years of continuity", "400K+ audience", "national-scale narrative"],
+      sections: [
+        {
+          title: "The problem",
+          body: "Notre Dame de Paris did not need communication alone. It needed a narrative structure able to stay coherent over time, hold up through long cycles, tours, and relaunches, and speak to a very large audience without losing recognizability."
+        },
+        {
+          title: "The system built",
+          body: "I worked on creative direction, content, and digital narrative architecture, keeping continuity, desirability, and memory of the project together. The point was not to produce more, but to give the brand a readable and persistent trajectory."
+        },
+        {
+          title: "What actually held up",
+          body: "The ability to let the narrative grow with the audience while keeping recognizability and long-term consistency. This is where narrative became system, not ornament."
+        }
+      ],
+      closing: "When a project truly lasts, creativity alone is not enough. It needs a structure that can hold time."
+    },
+    theia: {
+      backLabel: "← Back to work",
+      openLabel: "Open case study",
+      kicker: "Case study",
+      meta: "Positioning · Website · Digital architecture",
+      lead: "A positioning, website direction, and digital structure project designed to increase credibility, clarity, and lead quality for a premium event brand.",
+      proof: ["premium positioning", "brand + landing + tracking", "lead-oriented architecture"],
+      sections: [
+        {
+          title: "The problem",
+          body: "THEIA did not need a decorative website. It needed a digital presence able to sustain premium perception, clarity of offer, and the quality of commercial contact."
+        },
+        {
+          title: "The system built",
+          body: "I worked on tone, page structure, content hierarchy, and website architecture to build an experience that was more credible, more readable, and more useful as both a presentation layer and an acquisition system."
+        },
+        {
+          title: "What actually held up",
+          body: "The alignment between brand perception, navigation, and lead quality. Not just a premium aesthetic, but a digital structure designed to sustain trust and contact."
+        }
+      ],
+      closing: "When positioning and structure work together, the website stops being a showcase and becomes a system."
+    }
+  }
+};
+
 // ============================================================================
 // LANGUAGE STRINGS
 // ============================================================================
@@ -35,21 +180,21 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Costruisco sistemi creativi per brand, lanci ed esperienze che devono reggere davvero.",
-    heroSub: "Unisco direzione creativa, narrativa e AI per dare alle idee forma, struttura e direzione.",
-    heroMobileSub: "Direzione creativa, narrativa e AI per dare forma alle idee.",
-    proofStrip: "Direzione narrativa · Sistemi creativi · Processi con AI",
-    proofStripMobile: "Direzione narrativa · Sistemi creativi · AI",
+    hero: "Costruisco sistemi creativi per trasformare idee complesse in contenuti, prodotti ed esperienze che reggano davvero.",
+    heroSub: "Direzione creativa, narrativa e AI per dare ai progetti più forma e peso.",
+    heroMobileSub: "Direzione creativa, narrativa e AI dove servono davvero.",
+    proofStrip: "Sistemi creativi — Workflow narrativi — Strutture che reggono",
+    proofStripMobile: "Sistemi creativi · Workflow narrativi · AI",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura del linguaggio.", mobileDesc: "Rendo chiari posizionamento, messaggio e linguaggio." },
-      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee e materiali sparsi in una struttura visiva e narrativa coerente.", mobileDesc: "Trasformo materiali sparsi in una struttura coerente." },
-      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Organizzo contenuti, ritmo e gerarchia perché un progetto venga capito.", mobileDesc: "Organizzo contenuti, ritmo e gerarchia." },
-      { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per ricerca, sviluppo, varianti e controllo qualità.", mobileDesc: "Uso l’AI per sviluppare meglio e con controllo." },
+      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura, così un progetto smette di disperdersi e inizia a farsi leggere meglio.", mobileDesc: "Definisco posizionamento, messaggio e struttura." },
+      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee e materiali sparsi in una struttura visiva e narrativa più coerente, leggibile e replicabile.", mobileDesc: "Trasformo materiali sparsi in una struttura più coerente." },
+      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Organizzo contenuti, gerarchie e touchpoint perché un progetto non venga solo pubblicato, ma capito e usato nel modo giusto.", mobileDesc: "Organizzo contenuti, gerarchie e touchpoint." },
+      { title: "Sistema", subtitle: "Costruire meglio, con controllo", desc: "Progetto workflow creativi con AI per aumentare velocità, varianti e controllo qualitativo senza abbassare il livello.", mobileDesc: "Progetto workflow creativi con AI per aumentare velocità e controllo." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali. Responsabilità vere. Sistemi che hanno dovuto reggere.",
-    selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Sistemi che hanno dovuto reggere.",
+    selectedWorkSub: "Progetti reali. Responsabilità vere. Strutture che hanno dovuto reggere nel tempo.",
+    selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Strutture che hanno dovuto reggere.",
     selectedWork: [
       {
         title: "Largo Venue",
@@ -59,6 +204,7 @@ const LANG = {
         mobileNarrative: "Direzione creativa e sistema contenuti per una venue con oltre 150 eventi l'anno.",
         narrative2: "Un impianto editoriale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
         technical: "Identità · Sistema contenuti · Continuità editoriale",
+        proof: ["150+ eventi/anno", "1M+ view/mese", "sistema continuativo"],
         tags: ["Cultural venue", "Content system", "Weekly execution"]
       },
       {
@@ -69,6 +215,7 @@ const LANG = {
         mobileNarrative: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia.",
         narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
         technical: "Direzione creativa · Sistema contenuti · Crescita audience",
+        proof: ["12 anni di continuità", "audience oltre 400K", "sistema a scala nazionale"],
         tags: ["Live entertainment", "Project narrative", "Digital experience"]
       },
       {
@@ -79,18 +226,19 @@ const LANG = {
         mobileNarrative: "Posizionamento premium, sito e architettura digitale per un brand eventi orientato a credibilità e contatti.",
         narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
         technical: "Posizionamento · Sito · Architettura digitale",
+        proof: ["posizionamento premium", "architettura orientata al lead", "brand + landing + tracking"],
         tags: ["Positioning", "Digital experience", "Qualified leads"]
       }
     ],
     howLabel: "Metodo",
     method: [
       { title: "Chiarezza prima del rumore", desc: "Si parte da ciò che deve essere capito, percepito o ricordato.", mobileDesc: "Si parte da ciò che deve restare." },
-      { title: "Gli strumenti non bastano", desc: "Gli strumenti contano meno della struttura in cui lavorano. Uso l’AI per aumentare qualità, non rumore.", mobileDesc: "Gli strumenti valgono dentro una struttura." },
-      { title: "Creatività che regge nella realtà", desc: "Un progetto creativo deve reggere tempi, contesto e pressione.", mobileDesc: "La creatività deve reggere tempi, contesto e pressione." },
+      { title: "Gli strumenti non bastano", desc: "Gli strumenti valgono per quello che rendono possibile, ma solo dentro una struttura che li governa.", mobileDesc: "Gli strumenti valgono dentro una struttura." },
+      { title: "Creatività che regge nella realtà", desc: "Un sistema creativo deve reggere tempi, adattamenti, contesto e pressione.", mobileDesc: "La creatività deve reggere tempi, contesto e pressione." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    availableFor: "Disponibile per collaborazioni selezionate.",
+    availableFor: "Aperto a poche collaborazioni, quando vale davvero la pena costruire insieme.",
     trashPlay: "Gioca",
     ctaHint: "",
     trashBtn: "Cestina", trashHover: "Fallo.",
@@ -176,7 +324,7 @@ const LANG = {
       gameMobilePrompt: "Scegli i 3 oggetti che porto con me.",
       gameDuplicate: "Quello è già dentro. Non serve convincersi due volte.",
       gameOrderWrong: "Ci sta. Ma non è il prossimo tassello.",
-      gameCompleteKicker: "Scelta corretta.",
+      gameCompleteKicker: "Non tutto. Questo sì.",
       gameFinalLine: "Non avevo ancora un ruolo. Avevo già una direzione.",
       backToSurface: "← Torna in superficie",
       introTitle: "Il conflitto",
@@ -199,21 +347,21 @@ const LANG = {
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "I design creative systems for brands, launches, and experiences that need to hold up in the real world.",
-    heroSub: "I combine creative direction, narrative, and AI to give ideas a clearer form, with logic behind it.",
-    heroMobileSub: "I combine creative direction, narrative, and AI to give ideas structure and form.",
-    proofStrip: "Narrative direction · Creative systems · AI workflows",
-    proofStripMobile: "Narrative direction · Creative systems · AI",
+    hero: "I build creative systems to turn complex ideas into content, products, and experiences that truly hold up.",
+    heroSub: "Creative direction, narrative, and AI to give projects more form and weight.",
+    heroMobileSub: "Creative direction, narrative, and AI where they actually help.",
+    proofStrip: "Creative systems — Narrative workflows — Structures that hold",
+    proofStripMobile: "Creative systems · Narrative workflows · AI",
     whatido: "What I build",
     services: [
-      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and rules of language, so a brand stops dispersing and starts becoming recognizable.", mobileDesc: "I clarify positioning, message, and language." },
-      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and scattered materials into a visual and narrative system that feels coherent, readable, and alive.", mobileDesc: "I turn scattered materials into a coherent visual and narrative system." },
-      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build the creative release of a project: content, rhythm, hierarchy, touchpoints, so an idea is not just published, but perceived, understood, and desired.", mobileDesc: "I organize content, rhythm, and hierarchy so a project lands clearly." },
-      { title: "Build", subtitle: "Use AI to build better", desc: "I design AI-assisted creative workflows: research, development, variations, adaptations, and quality control, without lowering the standard.", mobileDesc: "I use AI to build faster, better, and with control." },
+      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and structure so a project stops dispersing and starts reading more clearly.", mobileDesc: "I define positioning, message, and structure." },
+      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas and scattered materials into a visual and narrative structure that is more coherent, readable, and repeatable.", mobileDesc: "I turn scattered materials into a more coherent structure." },
+      { title: "Launch", subtitle: "Make a project land the right way", desc: "I organize content, hierarchy, and touchpoints so a project is not just published, but understood and used in the right way.", mobileDesc: "I organize content, hierarchy, and touchpoints." },
+      { title: "System", subtitle: "Build better, with control", desc: "I design AI-assisted creative workflows to increase speed, variation, and quality control without lowering the standard.", mobileDesc: "I design AI-assisted workflows to increase speed and control." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Real projects, real responsibility, creative systems built to hold up for real.",
-    selectedWorkMobileSub: "Real projects. Real responsibility. Systems that had to hold up.",
+    selectedWorkSub: "Real projects. Real responsibility. Structures that had to hold up over time.",
+    selectedWorkMobileSub: "Real projects. Real responsibility. Structures that had to hold up.",
     selectedWork: [
       {
         title: "Largo Venue",
@@ -223,6 +371,7 @@ const LANG = {
         mobileNarrative: "Creative direction and content system for a venue with over 150 events a year.",
         narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
         technical: "Identity · Content system · Editorial continuity",
+        proof: ["150+ events/year", "1M+ monthly views", "continuous content system"],
         tags: ["Cultural venue", "Content system", "Weekly execution"]
       },
       {
@@ -233,6 +382,7 @@ const LANG = {
         mobileNarrative: "Twelve years of creative direction and content systems for one of Italy's strongest live brands.",
         narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
         technical: "Creative direction · Content system · Audience growth",
+        proof: ["12 years of continuity", "audience beyond 400K", "system at national scale"],
         tags: ["Live entertainment", "Project narrative", "Digital experience"]
       },
       {
@@ -243,18 +393,19 @@ const LANG = {
         mobileNarrative: "Premium positioning, website, and digital architecture for an event brand built on credibility and leads.",
         narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
         technical: "Positioning · Website · Digital architecture",
+        proof: ["premium positioning", "lead-oriented architecture", "brand + landing + tracking"],
         tags: ["Positioning", "Digital experience", "Qualified leads"]
       }
     ],
     howLabel: "Method",
     method: [
-      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered? The rest comes later.", mobileDesc: "Start from what needs to remain." },
-      { title: "Tools are not enough", desc: "Tools matter less than the system they live in. I use AI to increase quality, speed, and possibilities, not to fill space.", mobileDesc: "Tools matter inside a structure." },
-      { title: "Creativity that holds up in reality", desc: "A creative system has to hold up in reality: timing, adaptations, context, audience, and pressure.", mobileDesc: "Creativity has to survive timing, context, and pressure." },
+      { title: "Clarity before noise", desc: "Start from what needs to be understood, perceived, or remembered. The rest comes later.", mobileDesc: "Start from what needs to remain." },
+      { title: "Tools are not enough", desc: "Tools matter for what they make possible, but only inside a structure that governs them.", mobileDesc: "Tools matter inside a structure." },
+      { title: "Creativity that holds up in reality", desc: "A creative system has to hold up across timing, adaptations, context, and pressure.", mobileDesc: "Creativity has to survive timing, context, and pressure." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    availableFor: "Available for selected collaborations on creative systems, narrative direction, and AI workflows.",
+    availableFor: "Open to a small number of collaborations, when something is truly worth building together.",
     trashPlay: "Play",
     ctaHint: "",
     trashBtn: "Trash this", trashHover: "Do it.",
@@ -339,7 +490,7 @@ const LANG = {
       gameMobilePrompt: "Choose the 3 objects I carry with me.",
       gameDuplicate: "That's already in. No need to convince yourself twice.",
       gameOrderWrong: "Fair. But it's not the next piece.",
-      gameCompleteKicker: "Correct choice.",
+      gameCompleteKicker: "Not everything. This one stays.",
       gameFinalLine: "I didn't have a role yet. I already had a direction.",
       backToSurface: "← Back to surface",
       introTitle: "Conflict",
@@ -588,6 +739,52 @@ function HomeSocialRail({ mobile = false }) {
 }
 
 
+function getWorkSlug(title) {
+  if (title === "Largo Venue") return "largo";
+  if (title === "Notre Dame de Paris") return "ndp";
+  if (title === "THEIA Events") return "theia";
+  return "";
+}
+
+function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
+  if (!work || !data) return null;
+  return (
+    <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 0 24px", animation: "fadeIn .28s ease-out" }}>
+      <button className="top-btn" onClick={onBack} style={{ marginBottom: 28 }}>{data.backLabel}</button>
+      <div style={{ marginBottom: 26 }}>
+        <div style={{ fontSize: 10, letterSpacing: 3, color: "#777", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 12 }}>{data.kicker}</div>
+        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(34px,5vw,56px)", fontStyle: "italic", lineHeight: 1.02, color: "#F0ECE6", margin: "0 0 10px" }}>{work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span></h2>
+        <div style={{ fontSize: 11, color: "#8a8a8a", letterSpacing: 1.4, textTransform: "uppercase", marginBottom: 18 }}>{work.period} · {data.meta}</div>
+        <div className="home-pretty" style={{ fontSize: 16, color: "#d3cbc2", lineHeight: 1.9, maxWidth: 720 }}>{data.lead}</div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginBottom: 34 }}>
+        {data.proof.map((item, idx) => (
+          <div key={idx} style={{ padding: "12px 14px", border: "1px solid rgba(255,77,0,.14)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.04), rgba(255,255,255,.01))", color: "#dccfc2", fontSize: 10, lineHeight: 1.6, letterSpacing: .45, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
+        ))}
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 28, marginBottom: 36 }}>
+        {data.sections.map((section, idx) => (
+          <div key={idx} style={{ paddingLeft: 18, borderLeft: "2px solid #1a1a1a" }}>
+            <div style={{ fontSize: 18, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#e7dfd6", marginBottom: 8 }}>{section.title}</div>
+            <div className="home-pretty" style={{ fontSize: 13, color: "#a6a6a6", lineHeight: 1.95, maxWidth: 720 }}>{section.body}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ borderTop: "1px solid #141414", paddingTop: 18, marginBottom: 28 }}>
+        <div className="home-pretty" style={{ fontSize: 14, color: "#cfc2b5", lineHeight: 1.9, maxWidth: 720 }}>{data.closing}</div>
+      </div>
+
+      <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+        <button className="btn-talk" onClick={onContact}>{lang === "it" ? "Parliamone" : "Let's talk"}</button>
+        <button className="top-btn" onClick={onBack}>{data.backLabel}</button>
+      </div>
+    </div>
+  );
+}
+
 function HomeSignalBreak({ mobile = false }) {
   return (
     <div
@@ -799,6 +996,7 @@ const TIMING_DIFFICULTY = [
   { cycleDuration: 1800, targetWidth: 0.30 },
   { cycleDuration: 1600, targetWidth: 0.35 },
 ];
+const TOUCH_TARGET_WIDTH_MULTIPLIER = 1.14;
 
 // Intensità effetti per salto (5 nodi attivi)
 const LANDING_INTENSITY = [
@@ -1222,6 +1420,60 @@ function useLandingSound() {
 }
 
 
+function useObjectPlaceSound() {
+  const audioCtxRef = useRef(null);
+
+  return useCallback(() => {
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const gain2 = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(392, now);
+      osc.frequency.exponentialRampToValueAtTime(523, now + 0.12);
+
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(784, now);
+      osc2.frequency.exponentialRampToValueAtTime(1046, now + 0.12);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2400, now);
+      filter.Q.setValueAtTime(0.8, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.08, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+
+      gain2.gain.setValueAtTime(0.0001, now);
+      gain2.gain.linearRampToValueAtTime(0.035, now + 0.02);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+      osc.connect(gain);
+      osc2.connect(gain2);
+      gain.connect(filter);
+      gain2.connect(filter);
+      filter.connect(ctx.destination);
+
+      osc.start(now);
+      osc2.start(now);
+      osc.stop(now + 0.28);
+      osc2.stop(now + 0.24);
+    } catch (e) {
+      // Audio non supportato, ignora silenziosamente
+    }
+  }, []);
+}
+
 function useLibrarySwosh() {
   const audioCtxRef = useRef(null);
 
@@ -1642,6 +1894,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const [timingMiss, setTimingMiss] = useState(false);
   const [finalTimingBurst, setFinalTimingBurst] = useState(false);
   const [finalTimingFill, setFinalTimingFill] = useState(0);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [unlockCue, setUnlockCue] = useState("");
 
   const playLandingNote = useLandingSound();
@@ -1659,14 +1912,27 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const hasInteracted = useRef(false);
   const pulseStartTime = useRef(0);
 
+  useEffect(() => {
+    const checkTouch = () => {
+      if (typeof window === 'undefined') return;
+      const coarse = window.matchMedia?.('(pointer: coarse)')?.matches;
+      const touchCapable = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      setIsTouchDevice(Boolean(coarse || touchCapable));
+    };
+    checkTouch();
+    window.addEventListener('resize', checkTouch);
+    return () => window.removeEventListener('resize', checkTouch);
+  }, []);
+
   const toPercentX = (x) => `${(x / CROSSING_BASE_W) * 100}%`;
   const toPercentY = (y) => `${(y / CROSSING_BASE_H) * 100}%`;
 
   const nextJumpIndex = currentNodeIndex + 1;
   const difficulty = TIMING_DIFFICULTY[Math.min(nextJumpIndex, TIMING_DIFFICULTY.length - 1)];
+  const effectiveTargetWidth = clamp(difficulty.targetWidth * (isTouchDevice ? TOUCH_TARGET_WIDTH_MULTIPLIER : 1), 0.28, 0.52);
   const targetCenter = 0.5;
-  const targetStart = targetCenter - difficulty.targetWidth / 2;
-  const targetEnd = targetCenter + difficulty.targetWidth / 2;
+  const targetStart = targetCenter - effectiveTargetWidth / 2;
+  const targetEnd = targetCenter + effectiveTargetWidth / 2;
 
 
 
@@ -1734,6 +2000,8 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     }, 1800);
     return () => {
       if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+      if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
+      if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
     };
   }, []);
 
@@ -2532,17 +2800,24 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const [shakeId, setShakeId] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [showNextHint, setShowNextHint] = useState(false);
+  const [lastPlacedId, setLastPlacedId] = useState(null);
+  const [slotPulse, setSlotPulse] = useState(false);
   const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
   const [imageState, setImageState] = useState("loading");
   const completeTimeoutRef = useRef(null);
   const shakeTimeoutRef = useRef(null);
   const hintTimeoutRef = useRef(null);
+  const placedGlowTimeoutRef = useRef(null);
+  const slotPulseTimeoutRef = useRef(null);
+  const playObjectPlaceSound = useObjectPlaceSound();
 
   useEffect(() => {
     return () => {
       if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
       if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
       if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+      if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
+      if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
     };
   }, []);
 
@@ -2564,6 +2839,8 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
 
     return () => {
       if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+      if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
+      if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
     };
   }, [expectedId, isComplete]);
 
@@ -2595,7 +2872,15 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
 
     const nextPlaced = [...placedIds, item.id];
     setPlacedIds(nextPlaced);
+    setLastPlacedId(item.id);
+    setSlotPulse(true);
     setFeedback(item.placedLine);
+    playObjectPlaceSound();
+
+    if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
+    placedGlowTimeoutRef.current = setTimeout(() => setLastPlacedId(null), 520);
+    if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
+    slotPulseTimeoutRef.current = setTimeout(() => setSlotPulse(false), 420);
 
     if (nextPlaced.length === CH2_OBJECT_ORDER.length) {
       setIsComplete(true);
@@ -2638,7 +2923,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
               const placedId = placedIds[index];
               const placedItem = items.find((item) => item.id === placedId);
               return (
-                <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''}`}>
+                <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''} ${slotPulse && placedItem ? 'is-pulsing' : ''}`}>
                   {placedItem ? placedItem.label : <span>Slot {index + 1}</span>}
                 </div>
               );
@@ -2665,7 +2950,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
             const placedId = placedIds[index];
             const placedItem = items.find((item) => item.id === placedId);
             return (
-              <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''}`}>
+              <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''} ${slotPulse && placedItem ? 'is-pulsing' : ''}`}>
                 {placedItem ? placedItem.label : <span>Slot {index + 1}</span>}
               </div>
             );
@@ -2686,7 +2971,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
                 type="button"
                 onClick={() => handlePick(item)}
                 disabled={isComplete}
-                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && showNextHint && item.id === expectedId ? 'is-next' : ''}`}
+                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && showNextHint && item.id === expectedId ? 'is-next' : ''} ${lastPlacedId === item.id ? 'is-placed-feedback' : ''}`}
               >
                 <span className="ch2-game-object-icon" aria-hidden="true">{CH2_OBJECT_ICONS[item.id] || "◻"}</span>
                 <span className="ch2-game-object-title">{item.label}</span>
@@ -3027,6 +3312,7 @@ export default function Roberto() {
   const selectedWorkSubText = isMobileViewport ? (T.selectedWorkMobileSub || T.selectedWorkSub) : T.selectedWorkSub;
   const [gameFlow, setGameFlow] = useState("chapter1");
   const [unlockedProfileIds, setUnlockedProfileIds] = useState([]);
+  const [activeCaseStudy, setActiveCaseStudy] = useState(null);
   const scanAudioCtxRef = useRef(null);
   const scrollScanPlayedRef = useRef(false);
 
@@ -3204,6 +3490,7 @@ export default function Roberto() {
     scrollScanPlayedRef.current = false;
     setUnlockedProfileIds([]);
     setGameFlow("chapter1Intro");
+    setActiveCaseStudy(null);
     setFallingWords(genFallingWords(T));
     setFalling(true);
     setContentFading(true);
@@ -3215,6 +3502,7 @@ export default function Roberto() {
     scrollScanPlayedRef.current = false;
     setUnlockedProfileIds([]);
     setGameFlow("chapter1");
+    setActiveCaseStudy(null);
     setFalling(false);
     setFallingWords([]);
     setContentFading(false);
@@ -3231,6 +3519,8 @@ export default function Roberto() {
   };
 
   const openContact = () => window.open("mailto:info@robertomarchesini.com", "_blank");
+  const openCaseStudy = useCallback((slug) => setActiveCaseStudy(slug), []);
+  const closeCaseStudy = useCallback(() => setActiveCaseStudy(null), []);
 
   return (
     <div style={{ background: "#050505", minHeight: "100vh", color: "#E8E4DE", fontFamily: "'IBM Plex Mono','Courier New',monospace", position: "relative", overflow: "hidden" }}>
@@ -3501,6 +3791,8 @@ export default function Roberto() {
         @keyframes ch2RainBackShift{0%{background-position:0 -6px, 12px 18px}100%{background-position:-18px 56px, -8px 82px}}
         @keyframes ch2RainFrontShift{0%{background-position:8px -10px, 20px 10px}100%{background-position:-22px 72px, -10px 96px}}
 @keyframes ch2NextObjectGlow{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.14)}}
+        @keyframes ch2PlacedPulse{0%{transform:scale(1);box-shadow:0 0 0 rgba(255,196,132,0)}35%{transform:scale(1.03);box-shadow:0 0 18px rgba(255,196,132,.22)}100%{transform:scale(1);box-shadow:0 0 0 rgba(255,196,132,0)}}
+        @keyframes ch2SlotPulse{0%{transform:scale(1)}40%{transform:scale(1.02)}100%{transform:scale(1)}}
         @keyframes ch2HeadlightSweepBack{0%,18%{transform:translateX(0) skewX(-16deg);opacity:0}30%,56%{opacity:.34}78%{transform:translateX(-195%) skewX(-16deg);opacity:.18}100%{transform:translateX(-195%) skewX(-16deg);opacity:0}}
         @keyframes ch2HeadlightSweepFront{0%,22%{transform:translateX(0) skewX(-16deg);opacity:0}34%,58%{opacity:.48}82%{transform:translateX(-214%) skewX(-16deg);opacity:.22}100%{transform:translateX(-214%) skewX(-16deg);opacity:0}}
         @keyframes ch2GameShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
@@ -3514,7 +3806,7 @@ export default function Roberto() {
         .ch2-game-slot-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(223,232,238,.56);margin-bottom:10px}
         .ch2-game-slot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
         .ch2-game-slot{min-height:54px;border-radius:8px;border:1px dashed rgba(162,186,198,.2);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px;color:#6b7880;font-size:10px;line-height:1.35;text-transform:uppercase;letter-spacing:1px}
-        .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}
+        .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}.ch2-game-slot.is-pulsing{animation:ch2SlotPulse .42s ease-out;box-shadow:0 0 18px rgba(255,196,132,.14)}
         .ch2-object-controls-slot{min-height:auto;display:block}
         .ch2-game-feedback{width:100%;margin-top:2px;margin-bottom:14px;min-height:52px;padding:13px 16px;border-radius:8px;border:1px solid rgba(148,174,188,.18);background:rgba(3,8,10,.72);color:#d8e0e6;font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease,opacity .2s ease}
         .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
@@ -3528,7 +3820,7 @@ export default function Roberto() {
         .ch2-game-object-icon{display:none;font-size:18px;line-height:1;color:#ddd2c4;margin-bottom:8px}
         .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
         .ch2-game-object.is-decoy:hover{border-color:rgba(138,138,138,.28);background:rgba(255,255,255,.015)}
-        .ch2-game-object.is-placed{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.08)}
+        .ch2-game-object.is-placed{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.08)}.ch2-game-object.is-placed-feedback{animation:ch2PlacedPulse .52s ease-out;border-color:rgba(255,196,132,.44);background:rgba(255,196,132,.10)}
 .ch2-game-object.is-next{border-color:rgba(255,77,0,.22);box-shadow:0 0 0 rgba(255,77,0,0);animation:ch2NextObjectGlow 3.2s ease-in-out infinite}
         .ch2-game-object.is-shaking{animation:ch2GameShake .28s ease-out}
         .ch2-game-object-title{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:1.05;color:#f0ece6;margin-bottom:8px}
@@ -3695,7 +3987,7 @@ export default function Roberto() {
               </h1>
               <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 20, lineHeight: isMobileViewport ? 1.78 : 1.92, maxWidth: isMobileViewport ? 420 : 470 }}>{T.hero}</div>
-              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 12 : 14, lineHeight: isMobileViewport ? 1.78 : 1.9, maxWidth: isMobileViewport ? 400 : 470 }}>{heroSubText}</div>
+              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 12 : 12, lineHeight: isMobileViewport ? 1.74 : 1.78, maxWidth: isMobileViewport ? 400 : 420 }}>{heroSubText}</div>
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
@@ -3703,7 +3995,7 @@ export default function Roberto() {
           {/* 2. PROOF STRIP */}
           <Section delay={0.08}>
             <div style={{ marginBottom: 32, textAlign: "center" }}>
-              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : 3, color: "#777", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.3, maxWidth: isMobileViewport ? 320 : "none", marginInline: "auto" }}>{proofStripText}</div>
+              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : 1.4, color: "#777", textTransform: isMobileViewport ? "uppercase" : "none", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.45, maxWidth: isMobileViewport ? 320 : 520, marginInline: "auto" }}>{proofStripText}</div>
             </div>
           </Section>
 
@@ -3724,9 +4016,9 @@ export default function Roberto() {
                     paddingBottom: isMobileViewport ? 24 : 32,
                     paddingRight: 0,
                     borderBottom: i < T.selectedWork.length - 1 ? "1px solid #141414" : "none",
-                    cursor: "default",
+                    cursor: "pointer",
                     position: "relative",
-                  }}>
+                  }} onClick={() => openCaseStudy(getWorkSlug(work.title))}>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 10, flexWrap: "wrap" }}>
                       <div style={{ fontSize: 26, fontWeight: 600, color: "#E8E4DE", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.1 }}>
                         {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
@@ -3744,8 +4036,31 @@ export default function Roberto() {
                     </div>
                     <div className="home-work-narrative">{isMobileViewport ? (work.mobileNarrative || work.narrative) : work.narrative}</div>
                     {(!isMobileViewport && work.narrative2) && <div className="home-work-secondary">{work.narrative2}</div>}
-                    <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6, marginBottom: 14, letterSpacing: .3 }}>{work.technical}</div>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6, marginBottom: 12, letterSpacing: .3 }}>{work.technical}</div>
+                    {work.proof?.length ? (
+                      <div style={{
+                        display: "grid",
+                        gridTemplateColumns: isMobileViewport ? "1fr" : "repeat(3, minmax(0, 1fr))",
+                        gap: 8,
+                        marginBottom: 14,
+                      }}>
+                        {work.proof.map((item, proofIdx) => (
+                          <div key={proofIdx} style={{
+                            padding: isMobileViewport ? "9px 10px" : "10px 12px",
+                            border: "1px solid rgba(255,77,0,.12)",
+                            borderRadius: 4,
+                            background: "linear-gradient(180deg, rgba(255,77,0,.035), rgba(255,255,255,.01))",
+                            color: "#d2c4b8",
+                            fontSize: 10,
+                            lineHeight: 1.55,
+                            letterSpacing: .35,
+                            textTransform: "uppercase",
+                            fontFamily: "'IBM Plex Mono', monospace",
+                          }}>{item}</div>
+                        ))}
+                      </div>
+                    ) : null}
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
                       {work.tags.map((tag, j) => (
                         <span key={j} style={{ 
                           fontSize: 9, letterSpacing: 1.2, color: "#777", textTransform: "uppercase", 
@@ -3754,6 +4069,7 @@ export default function Roberto() {
                         }}>{tag}</span>
                       ))}
                     </div>
+                    <button className="top-btn" onClick={(e) => { e.stopPropagation(); openCaseStudy(getWorkSlug(work.title)); }}>{CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}</button>
                   </div>
                 ))}
               </div>
@@ -3799,11 +4115,6 @@ export default function Roberto() {
             </div>
           </Section>
 
-          {/* VISUAL BREATH */}
-          <Section delay={0.195}>
-            <HomeSignalBreak mobile={isMobileViewport} />
-          </Section>
-
           {/* DIVIDER */}
           <Section delay={0.2}>
             <div style={{ height: 1, background: "linear-gradient(to right,transparent,#1A1A1A,transparent)", marginBottom: 40 }} />
@@ -3846,6 +4157,7 @@ export default function Roberto() {
             <span style={{ color: "#1A1A1A" }}>·</span>
             <span className="foot-l" onClick={openContact}>info@robertomarchesini.com</span>
           </div>
+          )}
         </div>
       )}
 
