@@ -2083,7 +2083,7 @@ export default function Roberto() {
         .ghost-phrase{line-height:1.5}
         .home-pretty{text-wrap:pretty}
         .home-balance{text-wrap:balance}
-        .home-section-kicker{display:inline-block;font-size:clamp(22px,2.8vw,28px);letter-spacing:0;color:#E8E4DE;text-transform:none;opacity:1;font-family:'Playfair Display',serif;font-style:italic;line-height:1.08;text-wrap:balance}
+        .home-section-kicker{display:inline-block;font-size:clamp(22px,2.8vw,28px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.92;font-family:'Playfair Display',serif;font-style:italic;line-height:1.08;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
         .home-section-sub{font-size:14px;color:#9a9a9a;margin-bottom:32px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.68;max-width:560px;text-wrap:pretty}
         .home-work-narrative{font-size:13px;color:#BBB;line-height:1.82;margin-bottom:8px;max-width:540px;text-wrap:pretty}
         .home-work-secondary{font-size:12px;color:#999;line-height:1.78;margin-bottom:12px;max-width:540px;text-wrap:pretty}
