@@ -18,6 +18,7 @@ const ASSETS = {
   libraryFull: `${ASSET_BASE}/fullbiblioteca.mp4`,
   chapter2DeskFrame: `${ASSET_BASE_CH2}/chapter2_desk_frame.png?v=1`,
   chapter2DeskLoop: `${ASSET_BASE_CH2}/chapter2_daynight_loop.mp4?v=1`,
+  chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
 };
 
 // ============================================================================
@@ -130,7 +131,16 @@ const LANG = {
         "Un problema solo era chiaramente troppo semplice.",
         "Ovviamente ho deciso di aggiungerne un altro.",
       ],
-      stepOutFeedback: "Fuori, almeno, il rumore cambiava forma.",
+      streetCopy: "Fuori, almeno, il rumore cambiava forma.",
+      streetStayBtn: "Resta lì un altro minuto",
+      streetFocusBtn: "Capisci cosa tenere",
+      streetWaitFeedback: [
+        "Non era una fuga. Era una pausa per sentire meglio.",
+        "Per un attimo bastavano pioggia, fari e un panino caldo.",
+        "Il punto non era sparire. Era togliere rumore.",
+      ],
+      streetResolveFeedback: "Non dovevo tenere tutto. Solo quello che avrebbe retto.",
+      streetBridgeHint: "Poi sarebbe arrivato il momento di scegliere cosa portarmi dietro.",
       backToSurface: "← Torna in superficie",
       introTitle: "Il conflitto",
     }
@@ -240,7 +250,16 @@ const LANG = {
         "One problem was obviously far too simple.",
         "Naturally, I decided to add another one.",
       ],
-      stepOutFeedback: "Outside, at least, the noise changed shape.",
+      streetCopy: "Outside, at least, the noise changed shape.",
+      streetStayBtn: "Stay there a little longer",
+      streetFocusBtn: "Decide what stays",
+      streetWaitFeedback: [
+        "It wasn't an escape. It was a pause to hear things better.",
+        "For a moment, rain, headlights, and a warm sandwich were enough.",
+        "The point wasn't to disappear. It was to remove noise.",
+      ],
+      streetResolveFeedback: "I didn't need to keep everything. Only what would hold.",
+      streetBridgeHint: "Then the moment would come to decide what I would carry forward.",
       backToSurface: "← Back to surface",
       introTitle: "Conflict",
     }
@@ -1897,17 +1916,27 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
   );
 }
 
-function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfileIds, currentProfileId }) {
+function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const deskLoopRef = useRef(null);
+  const [scene, setScene] = useState("desk");
   const [windowGlow, setWindowGlow] = useState(0.08);
   const [roomDayLift, setRoomDayLift] = useState(0.08);
   const [roomNightShade, setRoomNightShade] = useState(0.16);
-  const [feedbackText, setFeedbackText] = useState("");
+  const [deskFeedbackText, setDeskFeedbackText] = useState("");
+  const [streetFeedbackText, setStreetFeedbackText] = useState("");
+  const [streetResolved, setStreetResolved] = useState(false);
   const continueIdxRef = useRef(0);
+  const streetWaitIdxRef = useRef(0);
 
   useEffect(() => {
     const video = deskLoopRef.current;
     if (!video) return;
+
+    if (scene !== "desk") {
+      video.pause();
+      return;
+    }
+
     video.loop = true;
     video.muted = true;
     video.playsInline = true;
@@ -1931,19 +1960,42 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
       if (raf) cancelAnimationFrame(raf);
       video.pause();
     };
-  }, []);
+  }, [scene]);
 
   const handleContinueBuild = useCallback(() => {
     const lines = T.continueFeedback || [];
     if (!lines.length) return;
     const idx = continueIdxRef.current % lines.length;
-    setFeedbackText(lines[idx]);
+    setDeskFeedbackText(lines[idx]);
     continueIdxRef.current = idx + 1;
   }, [T]);
 
   const handleStepOut = useCallback(() => {
-    setFeedbackText(T.stepOutFeedback || "");
+    setDeskFeedbackText("");
+    setStreetFeedbackText("");
+    setStreetResolved(false);
+    setScene("street");
+  }, []);
+
+  const handleStayInRain = useCallback(() => {
+    const lines = T.streetWaitFeedback || [];
+    if (!lines.length) return;
+    const idx = streetWaitIdxRef.current % lines.length;
+    setStreetFeedbackText(lines[idx]);
+    streetWaitIdxRef.current = idx + 1;
   }, [T]);
+
+  const handleResolveStreet = useCallback(() => {
+    setStreetResolved(true);
+    setStreetFeedbackText(T.streetResolveFeedback || "");
+    onUnlockProfile?.("conflict");
+  }, [T, onUnlockProfile]);
+
+  const handleBackToDesk = useCallback(() => {
+    setStreetFeedbackText("");
+    setStreetResolved(false);
+    setScene("desk");
+  }, []);
 
   return (
     <div className="ch1-root">
@@ -1955,39 +2007,67 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
           </div>
         </div>
 
-        <div className="ch2-stage">
-          <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
+        {scene === "desk" ? (
+          <div className="ch2-stage">
+            <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
 
-          <div className="ch2-window-mask">
-            <video
-              ref={deskLoopRef}
-              className="ch2-window-video"
-              src={ASSETS.chapter2DeskLoop}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-            />
-          </div>
+            <div className="ch2-window-mask">
+              <video
+                ref={deskLoopRef}
+                className="ch2-window-video"
+                src={ASSETS.chapter2DeskLoop}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+              />
+            </div>
 
-          <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
-          <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
-          <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
-          <div className="ch2-monitor-breath" />
-          <div className="ch2-room-grade" />
-          <div className="ch2-line-block">
-            <div className="ch2-line">{T.introCopy}</div>
+            <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
+            <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
+            <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
+            <div className="ch2-monitor-breath" />
+            <div className="ch2-room-grade" />
+            <div className="ch2-line-block">
+              <div className="ch2-line">{T.introCopy}</div>
+            </div>
+            <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""}`}>{deskFeedbackText}</div>
+            <div className="ch1-scan" />
           </div>
-          <div className={`ch2-feedback-overlay ${feedbackText ? "show" : ""}`}>{feedbackText}</div>
-          <div className="ch1-scan" />
-        </div>
+        ) : (
+          <div className="ch2-stage ch2-street-stage">
+            <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
+            <div className="ch2-street-grade" />
+            <div className="ch2-street-cool-wash" />
+            <div className="ch2-street-door-bloom" />
+            <div className="ch2-street-reflection-boost" />
+            <div className="ch2-street-rain" />
+            <div className="ch2-street-headlights ch2-street-headlights-back" />
+            <div className="ch2-street-headlights ch2-street-headlights-front" />
+            <div className="ch2-street-vignette" />
+
+            <div className="ch2-line-block ch2-street-line-block">
+              <div className="ch2-line">{T.streetCopy}</div>
+            </div>
+            <div className={`ch2-feedback-overlay ch2-street-feedback ${streetFeedbackText ? "show" : ""}`}>{streetFeedbackText}</div>
+            <div className={`ch2-street-bridge ${streetResolved ? "show" : ""}`}>{T.streetBridgeHint}</div>
+            <div className="ch1-scan" />
+          </div>
+        )}
 
         <div className="ch1-controls-slot">
-          <div className="ch1-controls ch2-controls">
-            <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
-            <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
-          </div>
+          {scene === "desk" ? (
+            <div className="ch1-controls ch2-controls">
+              <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
+              <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+            </div>
+          ) : (
+            <div className="ch1-controls ch2-controls">
+              <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
+              <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
+            </div>
+          )}
         </div>
         <div className="ch1-profile-slot ch2-profile-slot">
           <EmergingProfilePanel
@@ -1998,6 +2078,11 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
             currentId={currentProfileId}
             currentLabel={profileUi.currentLabel}
           />
+          {scene === "street" ? (
+            <button className="ch2-street-back-link" onClick={handleBackToDesk}>
+              {T.stepOutBtn} · {T.continueBuildBtn.toLowerCase()}
+            </button>
+          ) : null}
         </div>
       </div>
     </div>
@@ -2341,7 +2426,53 @@ export default function Roberto() {
         .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
         .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
         .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}
+        .ch2-street-stage{background:#081012}
+        .ch2-street-frame{filter:saturate(1.03) contrast(1.03) brightness(.95);transform:scale(1.006);animation:ch2StreetFrameDrift 10s ease-in-out infinite}
+        .ch2-street-grade,.ch2-street-cool-wash,.ch2-street-door-bloom,.ch2-street-reflection-boost,.ch2-street-rain,.ch2-street-headlights,.ch2-street-vignette{position:absolute;pointer-events:none}
+        .ch2-street-grade{inset:0;background:
+          linear-gradient(180deg,rgba(3,12,14,.22) 0%,rgba(2,8,10,.08) 34%,rgba(0,0,0,.12) 100%),
+          radial-gradient(circle at 53% 33%, rgba(227,195,132,.08) 0%, rgba(0,0,0,0) 28%),
+          linear-gradient(90deg,rgba(9,62,66,.12) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 70%,rgba(6,38,42,.1) 100%)}
+        .ch2-street-cool-wash{inset:0;background:
+          linear-gradient(180deg,rgba(32,132,139,.04) 0%,rgba(0,0,0,0) 28%),
+          radial-gradient(circle at 15% 52%, rgba(17,120,120,.10) 0%, rgba(0,0,0,0) 38%),
+          radial-gradient(circle at 85% 48%, rgba(8,94,104,.07) 0%, rgba(0,0,0,0) 34%);
+          mix-blend-mode:screen;opacity:.85}
+        .ch2-street-door-bloom{left:37%;top:17%;width:30%;height:45%;background:
+          radial-gradient(circle, rgba(255,208,132,.18) 0%, rgba(255,183,96,.09) 28%, rgba(0,0,0,0) 72%);
+          filter:blur(20px);opacity:.82;animation:ch2DoorBloomPulse 4.8s ease-in-out infinite}
+        .ch2-street-reflection-boost{left:0;right:0;bottom:0;height:39%;background:
+          linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(13,24,28,.12) 16%, rgba(3,7,9,.46) 100%),
+          radial-gradient(ellipse at 52% 18%, rgba(248,202,132,.14) 0%, rgba(0,0,0,0) 36%),
+          linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(70,189,192,.05) 22%, rgba(0,0,0,0) 55%, rgba(82,201,202,.04) 100%);
+          mix-blend-mode:screen;opacity:.88;animation:ch2StreetReflectionPulse 6.6s ease-in-out infinite}
+        .ch2-street-rain{inset:-10% -4% 0 -4%;background:
+          repeating-linear-gradient(96deg, rgba(208,232,240,.12) 0 1px, rgba(0,0,0,0) 1px 19px),
+          repeating-linear-gradient(94deg, rgba(148,193,208,.05) 0 1px, rgba(0,0,0,0) 1px 29px);
+          opacity:.34;animation:ch2RainShift 1.15s linear infinite}
+        .ch2-street-headlights{left:-46%;width:48%;height:30%;background:
+          linear-gradient(90deg,rgba(255,247,226,0) 0%,rgba(255,245,219,.12) 40%,rgba(255,240,193,.24) 100%);
+          filter:blur(18px);mix-blend-mode:screen;transform:skewX(-18deg)}
+        .ch2-street-headlights-back{top:43%;animation:ch2StreetSweepBack 8.4s ease-in-out infinite;opacity:.24}
+        .ch2-street-headlights-front{top:53%;height:34%;animation:ch2StreetSweepFront 6.8s ease-in-out infinite 1.2s;opacity:.34}
+        .ch2-street-vignette{inset:0;background:
+          radial-gradient(ellipse at center, transparent 34%, rgba(0,0,0,.16) 66%, rgba(0,0,0,.52) 100%),
+          linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.16) 100%)}
+        .ch2-street-line-block{border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.26) 70%,transparent 100%)}
+        .ch2-street-feedback{color:#f4eee7;text-shadow:0 2px 14px rgba(0,0,0,.92),0 0 36px rgba(0,0,0,.55)}
+        .ch2-street-bridge{position:absolute;left:22px;right:22px;top:auto;bottom:84px;z-index:9;max-width:430px;font-size:11px;line-height:1.8;color:rgba(234,223,210,.82);opacity:0;transform:translateY(8px);transition:opacity .32s ease,transform .32s ease;letter-spacing:.01em}
+        .ch2-street-bridge.show{opacity:1;transform:translateY(0)}
+        .ch2-street-back-link{margin-top:12px;background:transparent;border:0;padding:0;color:#6e6e70;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:color .22s ease;align-self:flex-start}.ch2-street-back-link:hover{color:#FF4D00}
+        @keyframes ch2StreetFrameDrift{0%,100%{transform:scale(1.006) translateY(0)}50%{transform:scale(1.01) translateY(-0.35%)}}
+        @keyframes ch2DoorBloomPulse{0%,100%{opacity:.72;filter:blur(18px)}50%{opacity:.92;filter:blur(24px)}}
+        @keyframes ch2StreetReflectionPulse{0%,100%{opacity:.82}50%{opacity:.96}}
+        @keyframes ch2StreetSweepBack{0%,100%{transform:translateX(0) skewX(-18deg);opacity:0}18%{opacity:.08}46%{transform:translateX(235%) skewX(-18deg);opacity:.28}62%{opacity:.08}100%{transform:translateX(235%) skewX(-18deg);opacity:0}}
+        @keyframes ch2StreetSweepFront{0%,100%{transform:translateX(0) skewX(-18deg);opacity:0}20%{opacity:.12}50%{transform:translateX(245%) skewX(-18deg);opacity:.38}66%{opacity:.1}100%{transform:translateX(245%) skewX(-18deg);opacity:0}}
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
+        @keyframes ch2LampPulse{0%,100%{opacity:.74;transform:scale(1)}50%{opacity:.96;transform:scale(1.04)}}
+        @keyframes ch2RainShift{0%{transform:translateY(0)}100%{transform:translateY(18px)}}
+        @keyframes ch2HeadlightSweepBack{0%,18%{transform:translateX(0) skewX(-16deg);opacity:0}30%,56%{opacity:.34}78%{transform:translateX(-195%) skewX(-16deg);opacity:.18}100%{transform:translateX(-195%) skewX(-16deg);opacity:0}}
+        @keyframes ch2HeadlightSweepFront{0%,22%{transform:translateX(0) skewX(-16deg);opacity:0}34%,58%{opacity:.48}82%{transform:translateX(-214%) skewX(-16deg);opacity:.22}100%{transform:translateX(-214%) skewX(-16deg);opacity:0}}
 
         @media(max-width:600px){
           .svc-in{flex-direction:column!important;gap:10px!important}
@@ -2366,6 +2497,10 @@ export default function Roberto() {
           .ch1-controls-slot{min-height:114px;margin-top:12px}
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
+          .ch2-street-bridge{left:16px;right:16px;bottom:76px;max-width:none;font-size:10px;line-height:1.7}
+          .ch2-street-feedback{left:16px;right:16px;top:20px;font-size:clamp(17px,5vw,22px)}
+          .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
+          .ch2-street-reflection-boost{height:42%}
           .chapter-intro-inner{transform:translateY(0)}
         }
       `}</style>
@@ -2698,6 +2833,7 @@ export default function Roberto() {
           profileEntries={profileMeta.entries}
           unlockedProfileIds={unlockedProfileIds}
           currentProfileId={unlockedProfileIds.includes("conflict") ? null : "conflict"}
+          onUnlockProfile={unlockProfile}
         />
       )}
     </div>
