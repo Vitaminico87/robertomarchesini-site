@@ -2042,7 +2042,8 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
             <div className="ch2-street-cool-wash" />
             <div className="ch2-street-door-bloom" />
             <div className="ch2-street-reflection-boost" />
-            <div className="ch2-street-rain" />
+            <div className="ch2-street-rain ch2-street-rain-back" />
+            <div className="ch2-street-rain ch2-street-rain-front" />
             <div className="ch2-street-headlights ch2-street-headlights-back" />
             <div className="ch2-street-headlights ch2-street-headlights-front" />
             <div className="ch2-street-vignette" />
@@ -2430,47 +2431,52 @@ export default function Roberto() {
         .ch2-street-frame{filter:saturate(1.03) contrast(1.03) brightness(.95);transform:scale(1.006);animation:ch2StreetFrameDrift 10s ease-in-out infinite}
         .ch2-street-grade,.ch2-street-cool-wash,.ch2-street-door-bloom,.ch2-street-reflection-boost,.ch2-street-rain,.ch2-street-headlights,.ch2-street-vignette{position:absolute;pointer-events:none}
         .ch2-street-grade{inset:0;background:
-          linear-gradient(180deg,rgba(3,12,14,.22) 0%,rgba(2,8,10,.08) 34%,rgba(0,0,0,.12) 100%),
-          radial-gradient(circle at 53% 33%, rgba(227,195,132,.08) 0%, rgba(0,0,0,0) 28%),
-          linear-gradient(90deg,rgba(9,62,66,.12) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 70%,rgba(6,38,42,.1) 100%)}
+          linear-gradient(180deg,rgba(3,12,14,.24) 0%,rgba(2,8,10,.10) 36%,rgba(0,0,0,.14) 100%),
+          radial-gradient(circle at 53% 33%, rgba(227,195,132,.06) 0%, rgba(0,0,0,0) 24%),
+          linear-gradient(90deg,rgba(9,62,66,.10) 0%,rgba(0,0,0,0) 26%,rgba(0,0,0,0) 72%,rgba(6,38,42,.09) 100%)}
         .ch2-street-cool-wash{inset:0;background:
-          linear-gradient(180deg,rgba(32,132,139,.04) 0%,rgba(0,0,0,0) 28%),
-          radial-gradient(circle at 15% 52%, rgba(17,120,120,.10) 0%, rgba(0,0,0,0) 38%),
-          radial-gradient(circle at 85% 48%, rgba(8,94,104,.07) 0%, rgba(0,0,0,0) 34%);
-          mix-blend-mode:screen;opacity:.85}
-        .ch2-street-door-bloom{left:37%;top:17%;width:30%;height:45%;background:
-          radial-gradient(circle, rgba(255,208,132,.18) 0%, rgba(255,183,96,.09) 28%, rgba(0,0,0,0) 72%);
-          filter:blur(20px);opacity:.82;animation:ch2DoorBloomPulse 4.8s ease-in-out infinite}
-        .ch2-street-reflection-boost{left:0;right:0;bottom:0;height:39%;background:
-          linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(13,24,28,.12) 16%, rgba(3,7,9,.46) 100%),
-          radial-gradient(ellipse at 52% 18%, rgba(248,202,132,.14) 0%, rgba(0,0,0,0) 36%),
-          linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(70,189,192,.05) 22%, rgba(0,0,0,0) 55%, rgba(82,201,202,.04) 100%);
-          mix-blend-mode:screen;opacity:.88;animation:ch2StreetReflectionPulse 6.6s ease-in-out infinite}
-        .ch2-street-rain{inset:-10% -4% 0 -4%;background:
-          repeating-linear-gradient(96deg, rgba(208,232,240,.12) 0 1px, rgba(0,0,0,0) 1px 19px),
-          repeating-linear-gradient(94deg, rgba(148,193,208,.05) 0 1px, rgba(0,0,0,0) 1px 29px);
-          opacity:.34;animation:ch2RainShift 1.15s linear infinite}
-        .ch2-street-headlights{left:-46%;width:48%;height:30%;background:
-          linear-gradient(90deg,rgba(255,247,226,0) 0%,rgba(255,245,219,.12) 40%,rgba(255,240,193,.24) 100%);
-          filter:blur(18px);mix-blend-mode:screen;transform:skewX(-18deg)}
-        .ch2-street-headlights-back{top:43%;animation:ch2StreetSweepBack 8.4s ease-in-out infinite;opacity:.24}
-        .ch2-street-headlights-front{top:53%;height:34%;animation:ch2StreetSweepFront 6.8s ease-in-out infinite 1.2s;opacity:.34}
+          linear-gradient(180deg,rgba(10,54,58,.10) 0%,rgba(0,0,0,0) 34%,rgba(4,20,24,.05) 100%),
+          radial-gradient(circle at 84% 24%, rgba(23,122,128,.06) 0%, rgba(0,0,0,0) 26%);
+          mix-blend-mode:multiply;opacity:.58}
+        .ch2-street-door-bloom{left:40%;top:19%;width:24%;height:36%;background:
+          radial-gradient(circle, rgba(255,208,132,.14) 0%, rgba(255,183,96,.06) 30%, rgba(0,0,0,0) 74%);
+          filter:blur(18px);opacity:.6;animation:ch2DoorBloomPulse 5.2s ease-in-out infinite}
+        .ch2-street-reflection-boost{left:0;right:0;bottom:0;height:34%;background:
+          linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(13,24,28,.10) 18%, rgba(3,7,9,.40) 100%),
+          radial-gradient(ellipse at 52% 16%, rgba(248,202,132,.10) 0%, rgba(0,0,0,0) 34%),
+          linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(70,189,192,.04) 22%, rgba(0,0,0,0) 55%, rgba(82,201,202,.03) 100%);
+          mix-blend-mode:screen;opacity:.72;animation:ch2StreetReflectionPulse 7.4s ease-in-out infinite}
+        .ch2-street-rain{inset:-8% -3% 0 -3%;opacity:0}
+        .ch2-street-rain-back{background-image:
+          linear-gradient(104deg, rgba(196,225,232,.06) 47%, rgba(196,225,232,.18) 49%, rgba(196,225,232,.06) 51%, transparent 53%),
+          linear-gradient(101deg, rgba(148,193,208,.04) 46%, rgba(148,193,208,.12) 48%, rgba(148,193,208,.04) 50%, transparent 52%);
+          background-size:30px 74px, 44px 92px;background-position:0 0, 12px 24px;filter:blur(.2px);opacity:.18;animation:ch2RainBackShift 1.9s linear infinite}
+        .ch2-street-rain-front{background-image:
+          linear-gradient(106deg, rgba(223,239,244,.10) 46%, rgba(223,239,244,.28) 49%, rgba(223,239,244,.10) 52%, transparent 55%),
+          linear-gradient(103deg, rgba(178,214,224,.06) 45%, rgba(178,214,224,.16) 48%, rgba(178,214,224,.06) 51%, transparent 54%);
+          background-size:24px 58px, 36px 72px;background-position:8px 0, 20px 18px;filter:blur(.45px);opacity:.12;animation:ch2RainFrontShift 1.15s linear infinite}
+        .ch2-street-headlights{left:-42%;width:44%;background:
+          linear-gradient(90deg,rgba(255,247,226,0) 0%,rgba(255,243,215,.04) 38%,rgba(255,235,194,.14) 72%,rgba(255,231,184,.22) 100%);
+          filter:blur(14px);mix-blend-mode:screen;transform:skewX(-14deg)}
+        .ch2-street-headlights-back{top:50%;height:18%;animation:ch2StreetSweepBack 9.2s ease-in-out infinite;opacity:.12}
+        .ch2-street-headlights-front{top:60%;height:14%;animation:ch2StreetSweepFront 7.4s ease-in-out infinite 1.8s;opacity:.2}
         .ch2-street-vignette{inset:0;background:
-          radial-gradient(ellipse at center, transparent 34%, rgba(0,0,0,.16) 66%, rgba(0,0,0,.52) 100%),
-          linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.16) 100%)}
+          radial-gradient(ellipse at center, transparent 36%, rgba(0,0,0,.14) 68%, rgba(0,0,0,.5) 100%),
+          linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.14) 100%)}
         .ch2-street-line-block{border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.26) 70%,transparent 100%)}
         .ch2-street-feedback{color:#f4eee7;text-shadow:0 2px 14px rgba(0,0,0,.92),0 0 36px rgba(0,0,0,.55)}
         .ch2-street-bridge{position:absolute;left:22px;right:22px;top:auto;bottom:84px;z-index:9;max-width:430px;font-size:11px;line-height:1.8;color:rgba(234,223,210,.82);opacity:0;transform:translateY(8px);transition:opacity .32s ease,transform .32s ease;letter-spacing:.01em}
         .ch2-street-bridge.show{opacity:1;transform:translateY(0)}
         .ch2-street-back-link{margin-top:12px;background:transparent;border:0;padding:0;color:#6e6e70;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:color .22s ease;align-self:flex-start}.ch2-street-back-link:hover{color:#FF4D00}
         @keyframes ch2StreetFrameDrift{0%,100%{transform:scale(1.006) translateY(0)}50%{transform:scale(1.01) translateY(-0.35%)}}
-        @keyframes ch2DoorBloomPulse{0%,100%{opacity:.72;filter:blur(18px)}50%{opacity:.92;filter:blur(24px)}}
-        @keyframes ch2StreetReflectionPulse{0%,100%{opacity:.82}50%{opacity:.96}}
-        @keyframes ch2StreetSweepBack{0%,100%{transform:translateX(0) skewX(-18deg);opacity:0}18%{opacity:.08}46%{transform:translateX(235%) skewX(-18deg);opacity:.28}62%{opacity:.08}100%{transform:translateX(235%) skewX(-18deg);opacity:0}}
-        @keyframes ch2StreetSweepFront{0%,100%{transform:translateX(0) skewX(-18deg);opacity:0}20%{opacity:.12}50%{transform:translateX(245%) skewX(-18deg);opacity:.38}66%{opacity:.1}100%{transform:translateX(245%) skewX(-18deg);opacity:0}}
+        @keyframes ch2DoorBloomPulse{0%,100%{opacity:.52;filter:blur(16px)}50%{opacity:.68;filter:blur(21px)}}
+        @keyframes ch2StreetReflectionPulse{0%,100%{opacity:.68}50%{opacity:.8}}
+        @keyframes ch2StreetSweepBack{0%,100%{transform:translateX(0) skewX(-14deg);opacity:0}18%{opacity:.03}46%{transform:translateX(236%) skewX(-14deg);opacity:.15}64%{opacity:.04}100%{transform:translateX(236%) skewX(-14deg);opacity:0}}
+        @keyframes ch2StreetSweepFront{0%,100%{transform:translateX(0) skewX(-14deg);opacity:0}22%{opacity:.05}52%{transform:translateX(248%) skewX(-14deg);opacity:.24}70%{opacity:.06}100%{transform:translateX(248%) skewX(-14deg);opacity:0}}
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
         @keyframes ch2LampPulse{0%,100%{opacity:.74;transform:scale(1)}50%{opacity:.96;transform:scale(1.04)}}
-        @keyframes ch2RainShift{0%{transform:translateY(0)}100%{transform:translateY(18px)}}
+        @keyframes ch2RainBackShift{0%{background-position:0 -6px, 12px 18px}100%{background-position:-18px 56px, -8px 82px}}
+        @keyframes ch2RainFrontShift{0%{background-position:8px -10px, 20px 10px}100%{background-position:-22px 72px, -10px 96px}}
         @keyframes ch2HeadlightSweepBack{0%,18%{transform:translateX(0) skewX(-16deg);opacity:0}30%,56%{opacity:.34}78%{transform:translateX(-195%) skewX(-16deg);opacity:.18}100%{transform:translateX(-195%) skewX(-16deg);opacity:0}}
         @keyframes ch2HeadlightSweepFront{0%,22%{transform:translateX(0) skewX(-16deg);opacity:0}34%,58%{opacity:.48}82%{transform:translateX(-214%) skewX(-16deg);opacity:.22}100%{transform:translateX(-214%) skewX(-16deg);opacity:0}}
 
