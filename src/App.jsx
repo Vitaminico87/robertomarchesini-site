@@ -1217,65 +1217,61 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
               position: "absolute",
               inset: 0,
               background: isFinalBar
-                ? "linear-gradient(90deg, rgba(199,212,160,0.08) 0%, rgba(199,212,160,0.14) 100%)"
+                ? "linear-gradient(90deg, rgba(199,212,160,0.10) 0%, rgba(199,212,160,0.18) 100%)"
                 : "linear-gradient(90deg, transparent 5%, rgba(199,212,160,0.08) 30%, rgba(199,212,160,0.12) 50%, rgba(199,212,160,0.08) 70%, transparent 95%)",
               borderRadius: 10,
             }} />
-            <div style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: isFinalBar ? `${finalTimingFill * 100}%` : "0%",
-              borderRadius: 10,
-              background: isFinalBar
-                ? "linear-gradient(90deg, rgba(210,226,175,0.18) 0%, rgba(235,242,225,0.72) 55%, rgba(210,226,175,0.28) 100%)"
-                : "transparent",
-              boxShadow: isFinalBar
-                ? `0 0 ${10 + finalTimingFill * 20}px rgba(199,212,160,${0.38 + finalTimingFill * 0.52})`
-                : "none",
-              transition: isFinalBar ? "none" : "width 0.1s linear",
-            }} />
-            <div style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "40%",
-              height: 20,
-              background: `radial-gradient(ellipse, rgba(199,212,160,${0.12 + centerIntensity * 0.45}) 0%, transparent 70%)`,
-              filter: `blur(${4 + centerIntensity * 5}px)`,
-              transition: "all 0.08s ease-out",
-            }} />
-            <div style={{
-              position: "absolute",
-              left: isFinalBar ? `${finalTimingFill * 100}%` : `${pulsePosition * 100}%`,
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              width: isFinalBar ? 18 + finalTimingFill * 4 : (isInTarget ? 16 : 10),
-              height: isFinalBar ? 18 + finalTimingFill * 4 : (isInTarget ? 16 : 10),
-              borderRadius: "50%",
-              background: isFinalBar
-                ? `radial-gradient(circle, rgba(255,255,245,${0.88 + finalTimingFill * 0.12}) 0%, rgba(235,242,225,${0.78 + finalTimingFill * 0.14}) 35%, rgba(199,212,160,0.72) 55%, transparent 75%)`
-                : isInTarget
-                ? `radial-gradient(circle, rgba(235,242,225,${0.88 + centerIntensity * 0.1}) 0%, rgba(199,212,160,0.68) 40%, transparent 70%)`
-                : "radial-gradient(circle, rgba(199,212,160,0.58) 0%, rgba(126,143,99,0.28) 50%, transparent 70%)",
-              boxShadow: isFinalBar
-                ? `0 0 ${18 + finalTimingFill * 24}px rgba(235,242,225,${0.58 + finalTimingFill * 0.38}), 0 0 ${28 + finalTimingFill * 32}px rgba(199,212,160,${0.22 + finalTimingFill * 0.22})`
-                : isInTarget
-                ? `0 0 ${10 + centerIntensity * 14}px rgba(199,212,160,${0.55 + centerIntensity * 0.3})`
-                : "0 0 6px rgba(126,143,99,0.22)",
-              transition: "width 0.12s, height 0.12s, box-shadow 0.08s",
-            }} />
-            {isFinalBar && (
-              <div style={{
-                position: "absolute",
-                inset: -10,
-                borderRadius: 20,
-                background: `radial-gradient(ellipse at center, rgba(235,242,225,${0.08 + finalTimingFill * 0.16}) 0%, rgba(199,212,160,${0.05 + finalTimingFill * 0.08}) 45%, transparent 75%)`,
-                filter: `blur(${8 + finalTimingFill * 8}px)`,
-                pointerEvents: "none",
-              }} />
+            {isFinalBar ? (
+              <>
+                <div style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: 10,
+                  background: `linear-gradient(90deg, rgba(220,232,188,${0.10 + finalTimingFill * 0.20}) 0%, rgba(255,255,245,${0.16 + finalTimingFill * 0.48}) 50%, rgba(220,232,188,${0.10 + finalTimingFill * 0.20}) 100%)`,
+                  boxShadow: `0 0 ${14 + finalTimingFill * 26}px rgba(235,242,225,${0.16 + finalTimingFill * 0.42}), 0 0 ${28 + finalTimingFill * 34}px rgba(199,212,160,${0.10 + finalTimingFill * 0.24})`,
+                }} />
+                <div style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: `${42 + finalTimingFill * 26}%`,
+                  height: 26,
+                  background: `radial-gradient(ellipse, rgba(255,255,245,${0.10 + finalTimingFill * 0.26}) 0%, rgba(199,212,160,${0.08 + finalTimingFill * 0.12}) 45%, transparent 78%)`,
+                  filter: `blur(${8 + finalTimingFill * 12}px)`,
+                  pointerEvents: "none",
+                }} />
+              </>
+            ) : (
+              <>
+                <div style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "40%",
+                  height: 20,
+                  background: `radial-gradient(ellipse, rgba(199,212,160,${0.12 + centerIntensity * 0.45}) 0%, transparent 70%)`,
+                  filter: `blur(${4 + centerIntensity * 5}px)`,
+                  transition: "all 0.08s ease-out",
+                }} />
+                <div style={{
+                  position: "absolute",
+                  left: `${pulsePosition * 100}%`,
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: isInTarget ? 16 : 10,
+                  height: isInTarget ? 16 : 10,
+                  borderRadius: "50%",
+                  background: isInTarget
+                    ? `radial-gradient(circle, rgba(235,242,225,${0.88 + centerIntensity * 0.1}) 0%, rgba(199,212,160,0.68) 40%, transparent 70%)`
+                    : "radial-gradient(circle, rgba(199,212,160,0.58) 0%, rgba(126,143,99,0.28) 50%, transparent 70%)",
+                  boxShadow: isInTarget
+                    ? `0 0 ${10 + centerIntensity * 14}px rgba(199,212,160,${0.55 + centerIntensity * 0.3})`
+                    : "0 0 6px rgba(126,143,99,0.22)",
+                  transition: "width 0.12s, height 0.12s, box-shadow 0.08s",
+                }} />
+              </>
             )}
             {timingMiss && !isFinalBar && (
               <div style={{
@@ -1736,7 +1732,7 @@ function ChapterIntroCard({ number, title, onDone }) {
   useEffect(() => {
     const t = setTimeout(() => {
       if (typeof onDone === "function") onDone();
-    }, 3600);
+    }, 4600);
     return () => clearTimeout(t);
   }, []);
 
@@ -1835,6 +1831,7 @@ function ChapterTwoScene({ T, onBack }) {
           <div className="ch2-line-block">
             <div className="ch2-line">{T.introCopy}</div>
           </div>
+          <div className={`ch2-feedback-overlay ${feedbackText ? "show" : ""}`}>{feedbackText}</div>
           <div className="ch1-scan" />
         </div>
 
@@ -1842,8 +1839,6 @@ function ChapterTwoScene({ T, onBack }) {
           <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
           <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
         </div>
-
-        <div className={`ch2-feedback ${feedbackText ? "show" : ""}`}>{feedbackText}</div>
       </div>
     </div>
   );
@@ -2015,8 +2010,8 @@ export default function Roberto() {
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-        @keyframes chapterCardHoldFade{0%{opacity:0}8%{opacity:1}82%{opacity:1}100%{opacity:0}}
-        @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}12%{opacity:1;transform:translateY(0)}82%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
+        @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
+        @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         .work-card{transition:all .3s}
         .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
         .svc{padding:22px 24px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
@@ -2041,8 +2036,8 @@ export default function Roberto() {
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         
         /* Chapter 1 styles */
-        .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:20px 16px;padding-bottom:env(safe-area-inset-bottom,20px)}
-        .ch1-wrap{width:min(94vw,880px);display:flex;flex-direction:column;align-items:center;padding-top:12px;padding-bottom:30px}
+        .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:center;justify-content:center;padding:20px 16px;padding-bottom:env(safe-area-inset-bottom,20px)}
+        .ch1-wrap{width:min(94vw,880px);display:flex;flex-direction:column;align-items:center;padding-top:0;padding-bottom:18px}
         .ch1-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
         .ch1-kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,77,0,.72)}
         .ch1-back-btn{background:transparent;border:1px solid #222;border-radius:3px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#444;transition:all .25s}
@@ -2127,19 +2122,19 @@ export default function Roberto() {
         @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
         
-                .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 3.6s cubic-bezier(.22,.61,.36,1) both;display:flex;justify-content:center;align-items:flex-start;padding-top:14%}
-        .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 3.6s cubic-bezier(.22,.61,.36,1) both;padding:0 24px}
+                .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 4.6s cubic-bezier(.22,.61,.36,1) both;display:flex;justify-content:center;align-items:center}
+        .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 4.6s cubic-bezier(.22,.61,.36,1) both;padding:0 24px;transform:translateY(-4%)}
         .chapter-intro-kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7d756c;margin-bottom:14px}
         .chapter-intro-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(38px,7vw,72px);line-height:1.02;color:#101010;letter-spacing:-0.5px;text-rendering:geometricPrecision}
 
 .ch2-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid #161616;background:#0b0f12;box-shadow:0 0 0 1px rgba(255,255,255,.02),0 30px 70px rgba(0,0,0,.35)}
         .ch2-fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-        .ch2-window-mask{position:absolute;inset:0;overflow:hidden;clip-path:polygon(19.2% 15.2%, 62.7% 15.2%, 62.7% 43.8%, 19.2% 43.8%);z-index:2}
+        .ch2-window-mask{position:absolute;inset:0;overflow:hidden;clip-path:polygon(19.2% 15.2%, 62.7% 15.2%, 62.7% 40.9%, 19.2% 40.9%);z-index:2}
         .ch2-window-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.02) brightness(1.06) contrast(1.02)}
-        .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:34.8%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
+        .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:31.9%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
         .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
         .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
-        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback{width:100%;margin-top:14px;color:#7f8b99;font-size:12px;line-height:1.6;text-align:left;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease;min-height:24px}.ch2-feedback.show{opacity:1;transform:translateY(0)}
+        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
 
         @media(max-width:600px){
@@ -2151,7 +2146,7 @@ export default function Roberto() {
           .brow .orsep{display:none}
           .crt-vignette{box-shadow:inset 0 0 50px 25px rgba(0,0,0,.5),inset 0 0 20px 8px rgba(0,0,0,.25)!important}
           .ghost-phrase{font-size:11px!important}
-          .ch1-root{padding:18px}
+          .ch1-root{padding:18px;align-items:center}
           .ch1-line-block,.ch1-feedback{left:16px;right:16px;bottom:18px}
           .ch1-top{flex-direction:column;align-items:flex-start;gap:8px}
         }
