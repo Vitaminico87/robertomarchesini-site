@@ -749,40 +749,40 @@ function getWorkSlug(title) {
 function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
   if (!work || !data) return null;
   return (
-    <div className="case-study-page" style={{ maxWidth: 960, margin: "0 auto", padding: "56px 0 28px", animation: "fadeIn .28s ease-out" }}>
-      <button className="top-btn case-study-back-btn" onClick={onBack} style={{ marginBottom: 34 }}>{data.backLabel}</button>
+    <div className="case-study-page" style={{ maxWidth: 980, margin: "0 auto", padding: "64px 0 34px", animation: "fadeIn .28s ease-out" }}>
+      <button className="top-btn case-study-back-btn" onClick={onBack} style={{ marginBottom: 42, color: "#FF4D00", borderColor: "rgba(255,77,0,.24)" }}>{data.backLabel}</button>
 
-      <div className="case-study-hero" style={{ marginBottom: 34 }}>
-        <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 14 }}>{data.kicker}</div>
-        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(38px,5.8vw,62px)", fontStyle: "italic", fontWeight: 600, lineHeight: 1.01, color: "#F0ECE6", margin: "0 0 12px" }}>
+      <div className="case-study-hero" style={{ marginBottom: 42 }}>
+        <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 16 }}>{data.kicker}</div>
+        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(42px,6vw,68px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 14px", letterSpacing: "-.02em" }}>
           {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
         </h2>
-        <div style={{ fontSize: 11, color: "#8d8d8d", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 22, fontFamily: "'IBM Plex Mono', monospace" }}>
+        <div style={{ fontSize: 11, color: "#9d948a", letterSpacing: 1.55, textTransform: "uppercase", marginBottom: 28, fontFamily: "'IBM Plex Mono', monospace" }}>
           {work.period} · {data.meta}
         </div>
-        <div className="case-study-lead home-pretty" style={{ fontSize: 18, color: "#F0ECE6", lineHeight: 1.78, maxWidth: 760 }}>{data.lead}</div>
+        <div className="case-study-leadhome-pretty"style={{fontSize:19,color:"#F4EFE8"}}>{data.lead}</div>
       </div>
 
-      <div className="case-study-proof-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginBottom: 42 }}>
+      <div className="case-study-proof-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 12, marginBottom: 50 }}>
         {data.proof.map((item, idx) => (
-          <div key={idx} className="case-study-proof-card" style={{ padding: "14px 15px", border: "1px solid rgba(255,77,0,.16)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.045), rgba(255,255,255,.012))", color: "#F0ECE6", fontSize: 10, lineHeight: 1.65, letterSpacing: .45, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
+          <div key={idx} className="case-study-proof-card" style={{ padding: "16px 16px", border: "1px solid rgba(255,77,0,.14)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.035), rgba(255,255,255,.01))", color: "#F4F0EA", fontSize: 10, lineHeight: 1.75, letterSpacing: .42, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
         ))}
       </div>
 
-      <div className="case-study-sections" style={{ display: "flex", flexDirection: "column", gap: 34, marginBottom: 42 }}>
+      <div className="case-study-sections" style={{ display: "flex", flexDirection: "column", gap: 40, marginBottom: 48 }}>
         {data.sections.map((section, idx) => (
-          <section key={idx} className="case-study-section" style={{ paddingLeft: 22, borderLeft: "2px solid rgba(255,77,0,.12)" }}>
-            <div style={{ fontSize: 21, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#F0ECE6", marginBottom: 10, lineHeight: 1.2 }}>{section.title}</div>
-            <div className="home-pretty" style={{ fontSize: 14, color: "#C6C0B8", lineHeight: 2.0, maxWidth: 760 }}>{section.body}</div>
+          <section key={idx} className="case-study-section" style={{ paddingLeft: 24, borderLeft: "2px solid rgba(255,77,0,.12)" }}>
+            <div style={{ fontSize: 23, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#F4F0EA", marginBottom: 12, lineHeight: 1.16 }}>{section.title}</div>
+            <div className="home-pretty" style={{ fontSize: 15, color: "#D6CFC6", lineHeight: 2.02, maxWidth: 760 }}>{section.body}</div>
           </section>
         ))}
       </div>
 
-      <div className="case-study-closing" style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 22, marginBottom: 30 }}>
-        <div className="home-pretty" style={{ fontSize: 15, color: "#F0ECE6", lineHeight: 1.86, maxWidth: 740 }}>{data.closing}</div>
+      <div className="case-study-closing" style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 26, marginBottom: 34 }}>
+        <div className="home-pretty" style={{ fontSize: 16, color: "#F4F0EA", lineHeight: 1.92, maxWidth: 720 }}>{data.closing}</div>
       </div>
 
-      <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
         <button className="btn-talk" onClick={onContact}>{lang === "it" ? "Parliamone" : "Let's talk"}</button>
         <button className="top-btn case-study-back-btn" onClick={onBack}>{data.backLabel}</button>
       </div>
@@ -3574,13 +3574,13 @@ export default function Roberto() {
         .home-signal-port-led{position:absolute;right:31%;top:35%;width:6px;height:6px;border-radius:50%;background:rgba(255,77,0,.62);box-shadow:0 0 10px rgba(255,77,0,.24);animation:homeSignalBlink 4.8s linear infinite}
         .work-card{transition:all .3s}
         .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
-        .svc{padding:28px 30px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
+        .svc{padding:30px 32px;border:1px solid #151515;border-radius:4px;transition:all .3s;cursor:default}
         .svc:hover{border-color:rgba(255,77,0,.35);background:rgba(255,77,0,.02)}
         .svc:hover .svc-t{color:#FF4D00!important;text-shadow:0 0 15px rgba(255,77,0,.12)}
         .work-card{transition:all .3s;padding-left:0;border-left:3px solid transparent}
-        .work-card:hover{border-left-color:#FF4D00;padding-left:20px;background:linear-gradient(90deg,rgba(255,77,0,.025) 0%,transparent 40%)}
-        .mth{padding:2px 0 2px 18px;border-left:2px solid #161616;transition:all .25s;cursor:default}
-        .mth:hover{border-left-color:#FF4D00;padding-left:22px}
+        .work-card:hover{border-left-color:#FF4D00;padding-left:22px;background:linear-gradient(90deg,rgba(255,77,0,.03) 0%,transparent 46%)}
+        .mth{padding:4px 0 4px 20px;border-left:2px solid #161616;transition:all .25s;cursor:default}
+        .mth:hover{border-left-color:#FF4D00;padding-left:24px}
         .mth:hover .mth-t{color:#FF4D00!important}
         .btn-trash{min-width:140px;padding:16px 38px;background:transparent;border:1px solid #FF4D00;color:#FF4D00;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:background .2s,color .2s}
         .btn-talk{padding:16px 38px;background:transparent;border:1px solid #444;color:#AAA;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:all .25s}
@@ -3594,15 +3594,15 @@ export default function Roberto() {
         .ghost-phrase{line-height:1.5}
         .home-pretty{text-wrap:pretty}
         .home-balance{text-wrap:balance}
-        .home-section-kicker{display:inline-block;font-size:clamp(22px,2.8vw,28px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.92;font-family:'Playfair Display',serif;font-style:italic;line-height:1.08;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
-        .home-section-sub{font-size:15px;color:#a9a39b;margin-bottom:42px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.82;max-width:560px;text-wrap:pretty}
-        .home-work-narrative{font-size:15px;color:#F0ECE6;line-height:1.82;margin-bottom:12px;max-width:560px;text-wrap:pretty}
-        .home-work-secondary{font-size:13px;color:#9f9890;line-height:1.92;margin-bottom:18px;max-width:560px;text-wrap:pretty}
-        .home-service-title{font-size:33px;font-weight:600;color:#E8E4DE;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.04;text-wrap:balance}
-        .home-service-sub{font-size:13px;color:#b1aaa1;margin-bottom:12px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.6;text-wrap:pretty}
-        .home-service-desc{font-size:14px;color:#d6d0c7;line-height:1.92;text-wrap:pretty;max-width:470px}
-        .home-method-title{font-size:15px;font-weight:500;color:#e2ddd5;margin-bottom:8px;transition:all .2s;letter-spacing:.15px;line-height:1.48;text-wrap:balance}
-        .home-method-desc{font-size:14px;color:#b8b2aa;line-height:1.94;max-width:540px;text-wrap:pretty}
+        .home-section-kicker{display:inline-block;font-size:clamp(24px,3vw,31px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.94;font-family:'Playfair Display',serif;font-style:italic;line-height:1.04;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
+        .home-section-sub{font-size:15px;color:#b7afa5;margin-bottom:48px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.9;max-width:520px;text-wrap:pretty}
+        .home-work-narrative{font-size:16px;color:#F4F0EA;line-height:1.9;margin-bottom:14px;max-width:600px;text-wrap:pretty}
+        .home-work-secondary{font-size:13px;color:#aca39a;line-height:2.0;margin-bottom:22px;max-width:560px;text-wrap:pretty}
+        .home-service-title{font-size:35px;font-weight:600;color:#EEE8E0;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.02;text-wrap:balance}
+        .home-service-sub{font-size:13px;color:#bcaea1;margin-bottom:14px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.66;text-wrap:pretty}
+        .home-service-desc{font-size:14px;color:#ddd7cf;line-height:1.96;text-wrap:pretty;max-width:500px}
+        .home-method-title{font-size:16px;font-weight:500;color:#ece5dc;margin-bottom:10px;transition:all .2s;letter-spacing:.1px;line-height:1.42;text-wrap:balance}
+        .home-method-desc{font-size:14px;color:#c1b8ae;line-height:2.0;max-width:540px;text-wrap:pretty}
         .ghost-mobile{text-align:center}
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         .home-memory-scan{position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,77,0,.06) 18%,rgba(255,255,255,.04) 48%,rgba(255,77,0,.06) 82%,transparent 100%);animation:homeMemorySweep 7.5s ease-in-out infinite;opacity:.8}
@@ -3882,14 +3882,14 @@ export default function Roberto() {
           .home-social-rail-mobile{display:flex!important}
           .pixel-social-link-mobile{min-width:0}
           .pixel-social-link-mobile .pixel-social-label{font-size:8px;letter-spacing:1.2px}
-          .home-section-kicker{font-size:24px!important;line-height:1.08!important;margin-bottom:12px!important}
+          .home-section-kicker{font-size:24px!important;line-height:1.05!important;margin-bottom:14px!important}
           .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
-          .home-work-narrative{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important;max-width:100%!important}
+          .home-work-narrative{font-size:12px!important;line-height:1.84!important;color:#d8d2ca!important;max-width:100%!important}
           .home-work-secondary{display:none!important}
-          .home-service-title{font-size:30px!important;line-height:1.02!important;display:block!important}
+          .home-service-title{font-size:31px!important;line-height:1.0!important;display:block!important}
           .home-service-sub{font-size:13px!important;line-height:1.5!important;margin-bottom:8px!important;color:#9a9a9a!important}
           .home-service-desc{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important}
-          .home-method-title{font-size:14px!important;line-height:1.48!important;margin-bottom:7px!important}
+          .home-method-title{font-size:14px!important;line-height:1.42!important;margin-bottom:8px!important}
           .home-method-desc{font-size:12px!important;line-height:1.82!important;max-width:100%!important;color:#9e9e9e!important}
           .svc-tw{min-width:auto!important}
           .wrap{padding:58px 20px 44px!important}
@@ -4016,7 +4016,7 @@ export default function Roberto() {
           {/* 2. PROOF STRIP */}
           <Section delay={0.08}>
             <div style={{ marginBottom: 32, textAlign: "center" }}>
-              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : 1.15, color: isMobileViewport ? "#777" : "#8c857d", textTransform: isMobileViewport ? "uppercase" : "none", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.5, maxWidth: isMobileViewport ? 320 : 540, marginInline: "auto" }}>{proofStripText}</div>
+              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : .9, color: isMobileViewport ? "#777" : "#968a7f", textTransform: isMobileViewport ? "uppercase" : "none", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.6, maxWidth: isMobileViewport ? 320 : 500, marginInline: "auto" }}>{proofStripText}</div>
             </div>
           </Section>
 
@@ -4027,14 +4027,14 @@ export default function Roberto() {
 
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
-            <div style={{ marginBottom: isMobileViewport ? 56 : 64 }}>
-              <div className="home-section-kicker" style={{ marginBottom: 8 }}>{T.selectedWorkLabel}</div>
+            <div style={{ marginBottom: isMobileViewport ? 58 : 72 }}>
+              <div className="home-section-kicker" style={{ marginBottom: 10 }}>{T.selectedWorkLabel}</div>
               <div className="home-section-sub">{selectedWorkSubText}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
                   <div key={i} className="work-card" style={{
-                    paddingTop: isMobileViewport ? 24 : 32,
-                    paddingBottom: isMobileViewport ? 24 : 32,
+                    paddingTop: isMobileViewport ? 26 : 38,
+                    paddingBottom: isMobileViewport ? 26 : 38,
                     paddingRight: 0,
                     borderBottom: i < T.selectedWork.length - 1 ? "1px solid #141414" : "none",
                     cursor: "pointer",
@@ -4051,8 +4051,8 @@ export default function Roberto() {
                     tabIndex={0}
                     aria-label={`${CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}: ${work.title}`}
                   >
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 10, flexWrap: "wrap" }}>
-                      <div style={{ fontSize: 28, fontWeight: 600, color: "#F0ECE6", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.08 }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 12, flexWrap: "wrap" }}>
+                      <div style={{ fontSize: 30, fontWeight: 600, color: "#F5F0E8", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.04 }}>
                         {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -4110,12 +4110,12 @@ export default function Roberto() {
 
           {/* 5. WHAT I DO */}
           <Section delay={0.15}>
-            <div style={{ marginBottom: isMobileViewport ? 50 : 60 }}>
+            <div style={{ marginBottom: isMobileViewport ? 52 : 66 }}>
               <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.whatido}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 16 : 22 }}>
                 {T.services.map((svc, i) => (
                   <div key={i} className="svc">
-                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "196px minmax(0,1fr)", gap: isMobileViewport ? 0 : 36, alignItems: "start" }}>
+                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "208px minmax(0,1fr)", gap: isMobileViewport ? 0 : 42, alignItems: "start" }}>
                       <div className="svc-tw" style={{ marginBottom: isMobileViewport ? 10 : 0, paddingRight: isMobileViewport ? 0 : 8 }}>
                         <span className="svc-t home-service-title">
                           {svc.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
@@ -4155,7 +4155,7 @@ export default function Roberto() {
           {/* CTA + CESTINA - SEMPLIFICATO */}
           <Section delay={0.22}>
             <div style={{ marginBottom: 8 }}>
-              <div className="home-pretty" style={{ textAlign: "center", marginBottom: 20, fontSize: 11, color: "#888", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.8, maxWidth: 420, marginInline: "auto" }}>
+              <div className="home-pretty" style={{ textAlign: "center", marginBottom: 22, fontSize: 11, color: "#9c9186", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.9, maxWidth: 380, marginInline: "auto" }}>
                 {T.availableFor}
               </div>
               <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center" }}>
