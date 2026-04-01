@@ -1665,9 +1665,11 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
   return (
     <div className="ch1-root">
       <div className="ch1-wrap">
-        <div className="ch1-top">
-          <div className="ch1-kicker">{T.kicker}</div>
-          <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+        <div className="ch1-top-slot">
+          <div className="ch1-top">
+            <div className="ch1-kicker">{T.kicker}</div>
+            <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+          </div>
         </div>
 
         {!showCrossing ? (
@@ -1719,27 +1721,31 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
               </section>
             </div>
 
-            {showMeadowControls && (
-              <div className="ch1-controls">
-                <Ch1ChoiceButton onClick={handleStay}>{T.stayBtn}</Ch1ChoiceButton>
-                <Ch1ChoiceButton onClick={handleToDiscover}>{T.toLibraryBtn}</Ch1ChoiceButton>
-              </div>
-            )}
+            <div className="ch1-controls-slot">
+              {showMeadowControls && (
+                <div className="ch1-controls">
+                  <Ch1ChoiceButton onClick={handleStay}>{T.stayBtn}</Ch1ChoiceButton>
+                  <Ch1ChoiceButton onClick={handleToDiscover}>{T.toLibraryBtn}</Ch1ChoiceButton>
+                </div>
+              )}
 
-            {showDiscoverControls && (
-              <div className="ch1-controls">
-                {showApproach && <Ch1ChoiceButton onClick={handleApproach}>{T.approachBtn}</Ch1ChoiceButton>}
-              </div>
-            )}
+              {showDiscoverControls && (
+                <div className="ch1-controls">
+                  {showApproach && <Ch1ChoiceButton onClick={handleApproach}>{T.approachBtn}</Ch1ChoiceButton>}
+                </div>
+              )}
 
-            {showLibraryControls && (
-              <div className="ch1-controls">
-                <Ch1ChoiceButton subtle onClick={handleBackOff}>{T.backOffBtn}</Ch1ChoiceButton>
-                <Ch1ChoiceButton onClick={handleContinue}>{T.continueBtn}</Ch1ChoiceButton>
-              </div>
-            )}
+              {showLibraryControls && (
+                <div className="ch1-controls">
+                  <Ch1ChoiceButton subtle onClick={handleBackOff}>{T.backOffBtn}</Ch1ChoiceButton>
+                  <Ch1ChoiceButton onClick={handleContinue}>{T.continueBtn}</Ch1ChoiceButton>
+                </div>
+              )}
+            </div>
 
-            <Ch1ProfilePanel unlocked={profileUnlocked} T={T} />
+            <div className="ch1-profile-slot">
+              <Ch1ProfilePanel unlocked={profileUnlocked} T={T} />
+            </div>
           </>
         ) : (
           <>
@@ -1750,7 +1756,10 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
                 ariaLabel={T.crossingAria}
               />
             </div>
-            <Ch1ProfilePanel unlocked={true} T={T} />
+            <div className="ch1-controls-slot" aria-hidden="true" />
+            <div className="ch1-profile-slot">
+              <Ch1ProfilePanel unlocked={true} T={T} />
+            </div>
           </>
         )}
       </div>
@@ -1772,7 +1781,7 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
   return (
     <div className="ch1-root">
       <div className="ch1-wrap">
-        <div className="chapter-intro-spacer" aria-hidden="true" />
+        <div className="ch1-top-slot chapter-intro-top-slot" aria-hidden="true" />
         <div className="chapter-intro-stage" onClick={onDone} role="button" tabIndex={0}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
           <div className="chapter-intro-inner">
@@ -1780,6 +1789,8 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
             <div className="chapter-intro-title">{title}</div>
           </div>
         </div>
+        <div className="ch1-controls-slot chapter-intro-controls-slot" aria-hidden="true" />
+        <div className="ch1-profile-slot chapter-intro-profile-slot" aria-hidden="true" />
       </div>
     </div>
   );
@@ -1836,9 +1847,11 @@ function ChapterTwoScene({ T, onBack }) {
   return (
     <div className="ch1-root">
       <div className="ch1-wrap">
-        <div className="ch1-top">
-          <div className="ch1-kicker">{T.kicker}</div>
-          <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+        <div className="ch1-top-slot">
+          <div className="ch1-top">
+            <div className="ch1-kicker">{T.kicker}</div>
+            <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+          </div>
         </div>
 
         <div className="ch2-stage">
@@ -1869,10 +1882,13 @@ function ChapterTwoScene({ T, onBack }) {
           <div className="ch1-scan" />
         </div>
 
-        <div className="ch1-controls ch2-controls">
-          <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
-          <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+        <div className="ch1-controls-slot">
+          <div className="ch1-controls ch2-controls">
+            <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
+            <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+          </div>
         </div>
+        <div className="ch1-profile-slot ch2-profile-slot" aria-hidden="true" />
       </div>
     </div>
   );
@@ -2096,9 +2112,10 @@ export default function Roberto() {
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         
         /* Chapter 1 styles */
-        .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:center;justify-content:center;padding:20px 16px;padding-bottom:env(safe-area-inset-bottom,20px)}
-        .ch1-wrap{width:min(94vw,880px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0;padding-bottom:18px}
-        .ch1-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:nowrap;margin-bottom:14px;min-height:34px}
+        .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,5vh,44px) 16px 20px;padding-bottom:env(safe-area-inset-bottom,20px)}
+        .ch1-wrap{width:min(94vw,880px);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:0;padding-bottom:18px}
+        .ch1-top-slot{width:100%;min-height:48px;display:flex;align-items:flex-end;margin-bottom:14px}
+        .ch1-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:nowrap;min-height:34px}
         .ch1-kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,77,0,.72)}
         .ch1-back-btn{background:transparent;border:1px solid #222;border-radius:3px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#444;transition:all .25s}
         .ch1-back-btn:hover{border-color:rgba(255,77,0,.4);color:#FF4D00}
@@ -2140,12 +2157,14 @@ export default function Roberto() {
 
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
         .ch1-feedback.show{opacity:1;transform:translateY(0)}
-        .ch1-controls{width:100%;display:grid;gap:10px;margin-top:14px}
+        .ch1-controls-slot{width:100%;min-height:122px;display:flex;align-items:flex-start;margin-top:14px}
+        .ch1-controls{width:100%;display:grid;gap:10px}
         .ch1-choice{width:100%;text-align:left;padding:12px 14px;border-radius:8px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.32);color:#f2eee6;font-family:inherit;font-size:12px;letter-spacing:.02em;backdrop-filter:blur(4px);cursor:pointer;transition:background .2s ease,border-color .2s ease}
         .ch1-choice-subtle{background:rgba(0,0,0,.2);color:#d0d0d0;border-color:rgba(90,90,90,.8)}
         .ch1-choice:hover{background:rgba(0,0,0,.48);border-color:rgba(255,77,0,.45)}
         .ch1-choice:disabled{opacity:.48;cursor:default}
-        .ch1-profile{width:100%;margin-top:18px;border-top:1px solid #161616;padding-top:18px}
+        .ch1-profile-slot{width:100%;margin-top:18px}
+        .ch1-profile{width:100%;border-top:1px solid #161616;padding-top:18px}
         .ch1-profile-title{font-size:10px;letter-spacing:2.4px;text-transform:uppercase;color:#5c5c5c;margin-bottom:12px}
         .ch1-profile-idle{color:#666;font-size:12px;font-style:italic;font-family:Georgia,serif}
         .ch1-profile-card{display:grid;gap:7px;border:1px solid #1b1b1b;border-radius:8px;background:rgba(167,203,216,.035);padding:14px 16px}
@@ -2183,7 +2202,8 @@ export default function Roberto() {
         
         
                 .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 4.6s cubic-bezier(.22,.61,.36,1) both;display:flex;justify-content:center;align-items:center}
-        .chapter-intro-spacer{width:100%;height:48px;flex:0 0 48px}
+        .chapter-intro-top-slot{border:0}
+        .chapter-intro-controls-slot,.chapter-intro-profile-slot{pointer-events:none}
         .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 4.6s cubic-bezier(.22,.61,.36,1) both;padding:0 24px;transform:translateY(-1.5%)}
         .chapter-intro-kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7d756c;margin-bottom:14px}
         .chapter-intro-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(38px,7vw,72px);line-height:1.02;color:#101010;letter-spacing:-0.5px;text-rendering:geometricPrecision}
@@ -2213,13 +2233,14 @@ export default function Roberto() {
           .brow .orsep{display:none}
           .crt-vignette{box-shadow:inset 0 0 50px 25px rgba(0,0,0,.5),inset 0 0 20px 8px rgba(0,0,0,.25)!important}
           .ghost-phrase{font-size:11px!important}
-          .ch1-root{padding:16px;align-items:center}
+          .ch1-root{padding:18px 16px 16px;align-items:flex-start}
           .ch1-wrap{width:min(94vw,760px)}
           .ch1-line-block,.ch1-feedback{left:16px;right:16px;bottom:18px}
-          .ch1-top{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;margin-bottom:12px;min-height:32px}
+          .ch1-top-slot{min-height:44px;margin-bottom:12px}
+          .ch1-top{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;min-height:32px}
+          .ch1-controls-slot{min-height:114px;margin-top:12px}
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
-          .chapter-intro-spacer{height:44px;flex-basis:44px}
           .chapter-intro-inner{transform:translateY(0)}
         }
       `}</style>
