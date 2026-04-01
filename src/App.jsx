@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from "react"
 // GAME TOGGLE - Set to true when the game is ready for launch
 // ============================================================================
 const GAME_ENABLED = true;
+const CH2_DEBUG = true;
 
 // ============================================================================
 // ASSET CONFIGURATION
@@ -2276,6 +2277,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const [shakeId, setShakeId] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
+  const [imageState, setImageState] = useState("loading");
   const completeTimeoutRef = useRef(null);
   const shakeTimeoutRef = useRef(null);
 
@@ -2335,13 +2337,24 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
           className="ch2-fill"
           src={gameBaseSrc}
           alt=""
+          onLoad={() => setImageState("loaded")}
           onError={() => {
             if (gameBaseSrc !== ASSETS.chapter2DeskFrame) {
+              setImageState("fallback");
               setGameBaseSrc(ASSETS.chapter2DeskFrame);
+            } else {
+              setImageState("error");
             }
           }}
         />
         <div className="ch2-game-vignette" />
+        {CH2_DEBUG ? (
+          <div className="ch2-debug-panel ch2-debug-panel-game">
+            <div>scene: selection</div>
+            <div>image: {imageState}</div>
+            <div className="ch2-debug-src">{gameBaseSrc}</div>
+          </div>
+        ) : null}
         <div className={`ch2-game-feedback ch2-game-feedback-overlay ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         <div className="ch2-game-slot-shell">
           <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
@@ -2494,6 +2507,21 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     setScene("desk");
   }, [streetAmbience]);
 
+  const handleForceSelection = useCallback(() => {
+    if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
+    setStreetAmbientPulse(false);
+    setStreetResolved(true);
+    setStreetTransitioning(false);
+    streetAmbience.stop();
+    setScene("selection");
+  }, [streetAmbience]);
+
+  useEffect(() => {
+    if (CH2_DEBUG) {
+      console.log("[CH2 DEBUG]", { scene, streetResolved, streetTransitioning });
+    }
+  }, [scene, streetResolved, streetTransitioning]);
+
   return (
     <div className="ch1-root">
       <div className="ch1-wrap">
@@ -2503,6 +2531,15 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
             <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
           </div>
         </div>
+
+        {CH2_DEBUG ? (
+          <div className="ch2-debug-panel ch2-debug-panel-global">
+            <div>scene: {scene}</div>
+            <div>resolved: {streetResolved ? "yes" : "no"}</div>
+            <div>transitioning: {streetTransitioning ? "yes" : "no"}</div>
+            <button type="button" className="ch2-debug-btn" onClick={handleForceSelection}>debug: forza quadro 3</button>
+          </div>
+        ) : null}
 
         {scene === "desk" ? (
           <>
@@ -2569,6 +2606,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
                 <div className="ch1-controls ch2-controls">
                   <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
                   <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
+                  {CH2_DEBUG ? <button type="button" className="ch2-debug-btn" onClick={handleForceSelection}>debug: forza quadro 3</button> : null}
                 </div>
               ) : (
                 <div className="ch2-street-transition-copy">{T.streetBridgeHint}</div>
@@ -3015,6 +3053,13 @@ export default function Roberto() {
         .ch2-game-object-title{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:1.05;color:#f0ece6;margin-bottom:8px}
         .ch2-game-object-desc{display:block;font-size:11px;line-height:1.7;color:#9ea4a8}
         .ch2-game-object:disabled{cursor:default}
+
+        
+        .ch2-debug-panel{width:100%;margin:0 0 12px 0;padding:10px 12px;border:1px dashed rgba(255,77,0,.35);border-radius:8px;background:rgba(255,77,0,.06);color:#d8c7bb;font-size:10px;letter-spacing:.4px;display:grid;gap:6px}
+        .ch2-debug-panel-game{position:absolute;left:12px;top:12px;z-index:11;width:auto;max-width:78%;margin:0;background:rgba(5,5,5,.8);backdrop-filter:blur(4px)}
+        .ch2-debug-panel-global{align-self:stretch}
+        .ch2-debug-btn{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,77,0,.45);background:transparent;color:#FF4D00;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.8px;cursor:pointer;justify-self:start}
+        .ch2-debug-src{word-break:break-all;color:#b68f79}
 
         @media(max-width:600px){
           .svc-in{flex-direction:column!important;gap:10px!important}
