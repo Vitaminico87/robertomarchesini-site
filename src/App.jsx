@@ -30,52 +30,52 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Costruisco sistemi creativi per brand, lanci ed esperienze che devono reggere davvero.",
-    heroSub: "Unisco direzione creativa, narrativa e AI per trasformare idee sparse in strutture leggibili, con una logica dietro.",
-    proofStrip: "Direzione narrativa · Sistemi creativi · Processi con AI",
-    whatido: "Cosa costruisco",
+    hero: "Creatività, strategia e AI per costruire brand, lanci ed esperienze che funzionano.",
+    heroSub: "Aiuto brand e progetti a diventare chiari, desiderabili e difficili da ignorare.",
+    proofStrip: "Brand · Lanci · Sistemi AI",
+    whatido: "Cosa faccio",
     services: [
-      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura del linguaggio, così un brand smette di disperdersi e inizia a farsi riconoscere." },
-      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e materiali sparsi in una struttura visiva e narrativa coerente e leggibile." },
-      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Costruisco contenuti, ritmo, gerarchia e punti di contatto perché un progetto non venga solo pubblicato, ma capito e desiderato." },
-      { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per rendere il processo creativo più solido: ricerca, sviluppo, varianti, adattamenti e controllo qualità." },
+      { title: "Position", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e tono, così un brand o un progetto smette di sembrare generico e inizia a risultare riconoscibile." },
+      { title: "Shape", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e identità in contenuti, linguaggi e direzione creativa coerenti, leggibili e vivi." },
+      { title: "Launch", subtitle: "Far arrivare un progetto nel modo giusto", desc: "Costruisco lanci, campagne ed esperienze perché un'idea non venga solo pubblicata, ma percepita, capita e desiderata." },
+      { title: "Build", subtitle: "Usare l'AI per costruire meglio", desc: "Progetto sistemi, workflow e nuovi formati che aumentano qualità, velocità e possibilità creative, senza abbassare il livello." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali, responsabilità concrete, strutture creative che hanno dovuto reggere ritmo, pressione e tempo.",
+    selectedWorkSub: "Progetti reali, responsabilità concrete, lavoro che ha dovuto reggere ritmo, pressione e tempo.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Direzione creativa e sistema di contenuti per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
-        narrative2: "Un impianto editoriale e promozionale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
-        technical: "Identità · Sistema contenuti · Continuità editoriale",
-        tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
+        narrative: "Creative direction e sistema di comunicazione per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        narrative2: "Identità, promozione e continuità editoriale costruite per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
+        technical: "Identità · Promozione · Continuità editoriale",
+        tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Dodici anni di direzione creativa e sistema contenuti per la comunicazione digitale di uno dei live brand più riconoscibili in Italia.",
-        narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
-        technical: "Direzione creativa · Sistema contenuti · Crescita audience",
-        tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
+        narrative: "Dodici anni di direzione creativa per comunicazione e contenuti digitali di uno dei live brand più riconoscibili in Italia.",
+        narrative2: "Un sistema di contenuti costruito nel tempo, con un'audience cresciuta oltre 400K persone.",
+        technical: "Direzione creativa · Contenuti · Crescita audience",
+        tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
-        narrative: "Posizionamento premium, direzione del sito e architettura digitale per un brand eventi orientato a credibilità e contatti qualificati.",
-        narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
-        technical: "Posizionamento · Sito · Architettura digitale",
-        tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
+        narrative: "Posizionamento premium, website direction e architettura digitale per un brand eventi orientato a credibilità e lead qualificati.",
+        narrative2: "Un'identità più chiara, un tono più forte e una presenza digitale pensata per essere ricordata e contattata.",
+        technical: "Posizionamento · Website · Architettura digitale",
+        tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
     ],
-    howLabel: "Metodo",
+    howLabel: "Come lavoro",
     method: [
-      { title: "Chiarezza prima del rumore", desc: "Ogni progetto parte da una domanda semplice: cosa deve essere capito, percepito o ricordato davvero? Il resto viene dopo." },
-      { title: "Gli strumenti non bastano", desc: "Gli strumenti contano meno della struttura in cui lavorano. Uso l’AI per aumentare qualità e possibilità, non per riempire spazio." },
-      { title: "Creatività che regge nella realtà", desc: "Un progetto creativo deve reggere nella realtà: tempi, adattamenti, contesto e pressione." },
+      { title: "Chiarezza prima del rumore", desc: "Ogni progetto parte da una domanda semplice: cosa deve essere capito, percepito o ricordato davvero?" },
+      { title: "Standard alto, processi intelligenti", desc: "Uso l'AI per aumentare qualità, velocità e possibilità, non per abbassare il livello o riempire spazio." },
+      { title: "Creatività che regge nella realtà", desc: "Le idee devono essere forti, ma anche leggibili per il pubblico, coerenti con il contesto e utili per chi le commissiona." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
@@ -153,7 +153,8 @@ const LANG = {
       gameDuplicate: "Quello è già dentro. Non serve convincersi due volte.",
       gameOrderWrong: "Ci sta. Ma non è il prossimo tassello.",
       gameCompleteKicker: "Scelta corretta.",
-      gameFinalLine: "Non avevo ancora un ruolo. Avevo già una direzione.",
+      gameFinalLine: "Non avevo ancora un ruolo.
+Avevo già una direzione.",
       backToSurface: "← Torna in superficie",
       introTitle: "Il conflitto",
     },
@@ -164,56 +165,56 @@ const LANG = {
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "I design creative systems for brands, launches, and experiences that need to hold up in the real world.",
-    heroSub: "I combine creative direction, narrative, and AI to give ideas a form that is more coherent, more controlled, and more alive.",
-    proofStrip: "Narrative direction · Creative systems · AI workflows",
-    whatido: "What I build",
+    hero: "Creativity, strategy, and AI to build brands, launches, and experiences that work.",
+    heroSub: "I help brands and projects become clearer, more desirable, and harder to ignore.",
+    proofStrip: "Brand · Launches · AI Systems",
+    whatido: "What I do",
     services: [
-      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and rules of language, so a brand stops dispersing and starts becoming recognizable." },
-      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and scattered materials into a visual and narrative system that feels coherent, readable, and alive." },
-      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build the creative release of a project: content, rhythm, hierarchy, touchpoints, so an idea is not just published, but perceived, understood, and desired." },
-      { title: "Build", subtitle: "Use AI to build better", desc: "I design AI-assisted creative workflows: research, development, variations, adaptations, and quality control, without lowering the standard." },
+      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and tone, so a brand or project stops feeling generic and starts becoming recognizable." },
+      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas, services, and identities into content, language, and creative direction that feel coherent, readable, and alive." },
+      { title: "Launch", subtitle: "Make a project land the right way", desc: "I build launches, campaigns, and experiences so an idea is not just published, but perceived, understood, and desired." },
+      { title: "Build", subtitle: "Use AI to build better", desc: "I design systems, workflows, and new formats that increase quality, speed, and creative possibility without lowering the standard." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Real projects, real responsibility, creative systems that had to hold up under pressure and over time.",
+    selectedWorkSub: "Real projects, real responsibility, work that had to hold up under pressure and over time.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
-        narrative: "Creative direction and content system for a venue with weekly programming and over 150 events a year.",
-        narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
-        technical: "Identity · Content system · Editorial continuity",
-        tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
+        narrative: "Creative direction and communication system for a venue with weekly programming and over 150 events a year.",
+        narrative2: "Identity, promotion, and editorial continuity built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
+        technical: "Identity · Promotion · Editorial continuity",
+        tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Twelve years of creative direction and content system design for the digital communication of one of Italy's most recognizable live brands.",
-        narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
-        technical: "Creative direction · Content system · Audience growth",
-        tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
+        narrative: "Twelve years of creative direction for the communications and digital content of one of Italy's most recognizable live brands.",
+        narrative2: "A content system built over time, with an audience grown to over 400K people.",
+        technical: "Creative direction · Content · Audience growth",
+        tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
         narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
-        narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
+        narrative2: "A clearer identity, a stronger tone, and a digital presence designed to be remembered and contacted.",
         technical: "Positioning · Website · Digital architecture",
-        tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
+        tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
     ],
-    howLabel: "Method",
+    howLabel: "How I work",
     method: [
-      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered? The rest comes later." },
-      { title: "Tools are not enough", desc: "Tools matter less than the system they live in. I use AI to increase quality, speed, and possibilities, not to fill space." },
-      { title: "Creativity that holds up in reality", desc: "A creative system has to hold up in reality: timing, adaptations, context, audience, and pressure." },
+      { title: "Clarity before noise", desc: "Every project starts from a simple question: what needs to be understood, perceived, or remembered?" },
+      { title: "High standards, smart processes", desc: "I use AI to increase quality, speed, and possibilities — not to lower the bar or fill space." },
+      { title: "Creativity that holds up in reality", desc: "Ideas need to be strong, but also readable for the audience, consistent with context, and useful for whoever commissions them." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    availableFor: "Available for selected collaborations on creative systems, narrative direction, and AI workflows.",
+    availableFor: "Available for selected collaborations.",
     ctaHint: "",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
@@ -286,7 +287,8 @@ const LANG = {
       gameDuplicate: "That's already in. No need to convince yourself twice.",
       gameOrderWrong: "Fair. But it's not the next piece.",
       gameCompleteKicker: "Correct choice.",
-      gameFinalLine: "I didn't have a role yet. I already had a direction.",
+      gameFinalLine: "I didn't have a role yet.
+I already had a direction.",
       backToSurface: "← Back to surface",
       introTitle: "Conflict",
     },
@@ -389,6 +391,15 @@ const CH2_OBJECTS = {
 };
 
 const CH2_OBJECT_ORDER = ["notebook", "camera", "floppy", "cdr"];
+
+function shuffleArray(input) {
+  const arr = [...input];
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 // ============================================================================
 // UTILITY COMPONENTS
@@ -2279,12 +2290,14 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
 
 function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const items = CH2_OBJECTS[lang] || CH2_OBJECTS.it;
+  const displayItems = useMemo(() => shuffleArray(items), [items]);
   const [placedIds, setPlacedIds] = useState([]);
   const [feedback, setFeedback] = useState(T.gameIntroLine);
   const [shakeId, setShakeId] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
   const [imageState, setImageState] = useState("loading");
+  const [hintLevel, setHintLevel] = useState(0);
   const completeTimeoutRef = useRef(null);
   const shakeTimeoutRef = useRef(null);
 
@@ -2296,6 +2309,28 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   }, []);
 
   const placedSet = useMemo(() => new Set(placedIds), [placedIds]);
+  const expectedId = CH2_OBJECT_ORDER[placedIds.length];
+
+  useEffect(() => {
+    if (isComplete || !expectedId) {
+      setHintLevel(0);
+      return;
+    }
+
+    setHintLevel(0);
+    let pulseTimer = null;
+    const startTimer = window.setTimeout(() => {
+      setHintLevel(1);
+      pulseTimer = window.setInterval(() => {
+        setHintLevel((prev) => Math.min(prev + 1, 4));
+      }, 1200);
+    }, 2200);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      if (pulseTimer) window.clearInterval(pulseTimer);
+    };
+  }, [expectedId, isComplete]);
 
   const triggerShake = useCallback((id) => {
     setShakeId(id);
@@ -2305,6 +2340,8 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
 
   const handlePick = useCallback((item) => {
     if (isComplete) return;
+
+    setHintLevel(0);
 
     if (placedSet.has(item.id)) {
       setFeedback(T.gameDuplicate);
@@ -2317,7 +2354,6 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       return;
     }
 
-    const expectedId = CH2_OBJECT_ORDER[placedIds.length];
     if (item.id !== expectedId) {
       triggerShake(item.id);
       setFeedback(T.gameOrderWrong);
@@ -2335,7 +2371,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
         onComplete?.();
       }, 2400);
     }
-  }, [T.gameDuplicate, T.gameFinalLine, T.gameOrderWrong, isComplete, onComplete, placedIds, placedSet, triggerShake]);
+  }, [T.gameDuplicate, T.gameFinalLine, T.gameOrderWrong, expectedId, isComplete, onComplete, placedIds, placedSet, triggerShake]);
 
   return (
     <>
@@ -2379,7 +2415,14 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
         {isComplete ? (
           <div className="ch2-game-complete-card">
             <div className="ch2-game-complete-kicker">{T.gameCompleteKicker}</div>
-            <div className="ch2-game-complete-line">{T.gameFinalLine}</div>
+            <div className="ch2-game-complete-line">
+              {T.gameFinalLine.split("\n").map((line, index, arr) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {index < arr.length - 1 ? <br /> : null}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         ) : null}
         <div className="ch1-scan" />
@@ -2388,16 +2431,18 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       <div className="ch1-controls-slot ch2-object-controls-slot">
         <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         <div className="ch2-game-grid">
-          {items.map((item) => {
+          {displayItems.map((item) => {
             const isPlaced = placedSet.has(item.id);
             const isWrong = item.type === 'decoy';
+            const isNextHint = !isComplete && item.id === expectedId && !isPlaced;
             return (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => handlePick(item)}
                 disabled={isComplete}
-                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''}`}
+                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${isNextHint && hintLevel > 0 ? 'is-next-hint' : ''}`}
+                style={isNextHint && hintLevel > 0 ? { ['--hint-strength']: String(hintLevel) } : undefined}
               >
                 <span className="ch2-game-object-title">{item.label}</span>
                 <span className="ch2-game-object-desc">{item.description}</span>
@@ -3056,12 +3101,13 @@ export default function Roberto() {
         .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
         .ch2-game-complete-card{position:absolute;left:50%;top:22px;z-index:9;width:min(calc(100% - 40px),540px);transform:translateX(-50%);padding:14px 18px 15px;border-radius:10px;border:1px solid rgba(255,77,0,.18);background:linear-gradient(180deg, rgba(18,9,6,.82), rgba(8,6,6,.58));backdrop-filter:blur(6px);text-align:center;animation:fadeIn .24s ease-out}
         .ch2-game-complete-kicker{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:rgba(255,192,152,.78);margin-bottom:8px}
-        .ch2-game-complete-line{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(22px,2.4vw,30px);line-height:1.18;color:#f1e8df}
+        .ch2-game-complete-line{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(22px,2.4vw,30px);line-height:1.14;color:#f1e8df;white-space:normal;text-wrap:initial}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-        .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease}
+        .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
         .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
         .ch2-game-object.is-decoy:hover{border-color:rgba(138,138,138,.28);background:rgba(255,255,255,.015)}
         .ch2-game-object.is-placed{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.08)}
+        .ch2-game-object.is-next-hint{border-color:rgba(255,77,0,calc(0.12 + var(--hint-strength, 1) * 0.06));box-shadow:0 0 calc(4px + var(--hint-strength, 1) * 5px) rgba(255,77,0,calc(0.05 + var(--hint-strength, 1) * 0.035));background:rgba(255,77,0,calc(0.01 + var(--hint-strength, 1) * 0.01));}
         .ch2-game-object.is-shaking{animation:ch2GameShake .28s ease-out}
         .ch2-game-object-title{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:1.05;color:#f0ece6;margin-bottom:8px}
         .ch2-game-object-desc{display:block;font-size:11px;line-height:1.7;color:#9ea4a8}
@@ -3181,7 +3227,7 @@ export default function Roberto() {
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
-              <div style={{ fontSize: 14, color: "#888", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
+              <div style={{ fontSize: 14, color: "#888", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>Creative Director · AI Systems</div>
               <div className="home-pretty" style={{ fontSize: 14, color: "#BBB", marginTop: 18, lineHeight: 1.88, maxWidth: 510 }}>{T.hero}</div>
               <div className="home-pretty" style={{ fontSize: 13, color: "#999", marginTop: 12, lineHeight: 1.86, maxWidth: 510 }}>{T.heroSub}</div>
             </div>
