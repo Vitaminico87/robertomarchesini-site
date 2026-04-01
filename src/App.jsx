@@ -247,6 +247,75 @@ const LANG = {
   },
 };
 
+const EMERGED_PROFILE = {
+  it: {
+    currentLabel: "in emersione",
+    entries: [
+      {
+        id: "origin",
+        cap: "Origine",
+        headline: "Vede prima di riempire",
+        subcap: "traduzione operativa",
+        body: "osservazione, immaginazione strutturata",
+      },
+      {
+        id: "conflict",
+        cap: "Conflitto",
+        headline: "Tiene insieme direzioni diverse",
+        subcap: "traduzione operativa",
+        body: "filtro, priorità, costruzione sotto pressione",
+      },
+      {
+        id: "synthesis",
+        cap: "Sintesi",
+        headline: "Trasforma attrito in metodo",
+        subcap: "traduzione operativa",
+        body: "narrativa, sistemi, chiarezza operativa",
+      },
+      {
+        id: "future",
+        cap: "Futuro",
+        headline: "Costruisce con gli altri",
+        subcap: "traduzione operativa",
+        body: "collaborazione, product thinking, nuove possibilità",
+      },
+    ],
+  },
+  en: {
+    currentLabel: "emerging",
+    entries: [
+      {
+        id: "origin",
+        cap: "Origin",
+        headline: "Sees before filling",
+        subcap: "operational translation",
+        body: "observation, structured imagination",
+      },
+      {
+        id: "conflict",
+        cap: "Conflict",
+        headline: "Holds different directions together",
+        subcap: "operational translation",
+        body: "filtering, prioritization, building under pressure",
+      },
+      {
+        id: "synthesis",
+        cap: "Synthesis",
+        headline: "Turns friction into method",
+        subcap: "operational translation",
+        body: "narrative, systems, operational clarity",
+      },
+      {
+        id: "future",
+        cap: "Future",
+        headline: "Builds with others",
+        subcap: "operational translation",
+        body: "collaboration, product thinking, new possibilities",
+      },
+    ],
+  },
+};
+
 // ============================================================================
 // UTILITY COMPONENTS
 // ============================================================================
@@ -409,18 +478,37 @@ function Ch1ChoiceButton({ children, subtle = false, disabled = false, onClick }
   );
 }
 
-function Ch1ProfilePanel({ unlocked, T }) {
+function EmergingProfilePanel({ title, idle, profiles, unlockedIds = [], currentId = null, currentLabel = "" }) {
+  const unlockedSet = useMemo(() => new Set(unlockedIds), [unlockedIds]);
+  const visibleProfiles = profiles.filter((profile) => unlockedSet.has(profile.id) || profile.id === currentId);
+
   return (
     <div className="ch1-profile">
-      <div className="ch1-profile-title">{T.profileTitle}</div>
-      {!unlocked ? (
-        <div className="ch1-profile-idle">{T.profileIdle}</div>
+      <div className="ch1-profile-title">{title}</div>
+      {visibleProfiles.length === 0 ? (
+        <div className="ch1-profile-idle">{idle}</div>
       ) : (
-        <div className="ch1-profile-card">
-          <div className="ch1-profile-cap">{T.profileCap}</div>
-          <div className="ch1-profile-headline">{T.profileHeadline}</div>
-          <div className="ch1-profile-subcap">{T.profileSubcap}</div>
-          <div className="ch1-profile-body">{T.profileBody}</div>
+        <div className="ch1-profile-stack">
+          {visibleProfiles.map((profile) => {
+            const isUnlocked = unlockedSet.has(profile.id);
+            const isCurrent = !isUnlocked && profile.id === currentId;
+            return (
+              <div
+                key={profile.id}
+                className={`ch1-profile-card ${isCurrent ? 'is-current' : 'is-unlocked'}`}
+              >
+                <div className="ch1-profile-meta-row">
+                  <div className="ch1-profile-cap">{profile.cap}</div>
+                  {isCurrent && currentLabel ? (
+                    <div className="ch1-profile-status">{currentLabel}</div>
+                  ) : null}
+                </div>
+                <div className="ch1-profile-headline">{profile.headline}</div>
+                <div className="ch1-profile-subcap">{profile.subcap}</div>
+                <div className="ch1-profile-body">{profile.body}</div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -1482,7 +1570,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
 
 
-function ChapterOne({ T, onBack, onRequestChapterTwo }) {
+function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries, unlockedProfileIds, onUnlockProfile }) {
   const meadowVideoRef = useRef(null);
   const libraryLoopRef = useRef(null);
   const libraryFullRef = useRef(null);
@@ -1643,6 +1731,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     revealTimeoutRef.current = setTimeout(() => {
       setLibraryRoomGreen(true);
       setProfileUnlocked(true);
+      onUnlockProfile?.('origin');
     }, 860);
 
     dissolveTimeoutRef.current = setTimeout(() => {
@@ -1652,7 +1741,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
     mountCrossingTimeoutRef.current = setTimeout(() => {
       setShowCrossing(true);
     }, 1650);
-  }, [activated, unlockAudio, playLibrarySwosh]);
+  }, [activated, unlockAudio, playLibrarySwosh, onUnlockProfile]);
 
   const handleCrossingComplete = useCallback(() => {
     onRequestChapterTwo?.();
@@ -1744,7 +1833,13 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
             </div>
 
             <div className="ch1-profile-slot">
-              <Ch1ProfilePanel unlocked={profileUnlocked} T={T} />
+              <EmergingProfilePanel
+                title={profileUi.title}
+                idle={profileUi.idle}
+                profiles={profileEntries}
+                unlockedIds={unlockedProfileIds}
+                currentLabel={profileUi.currentLabel}
+              />
             </div>
           </>
         ) : (
@@ -1758,7 +1853,13 @@ function ChapterOne({ T, onBack, onRequestChapterTwo }) {
             </div>
             <div className="ch1-controls-slot" aria-hidden="true" />
             <div className="ch1-profile-slot">
-              <Ch1ProfilePanel unlocked={true} T={T} />
+              <EmergingProfilePanel
+                title={profileUi.title}
+                idle={profileUi.idle}
+                profiles={profileEntries}
+                unlockedIds={unlockedProfileIds}
+                currentLabel={profileUi.currentLabel}
+              />
             </div>
           </>
         )}
@@ -1796,7 +1897,7 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
   );
 }
 
-function ChapterTwoScene({ T, onBack }) {
+function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfileIds, currentProfileId }) {
   const deskLoopRef = useRef(null);
   const [windowGlow, setWindowGlow] = useState(0.08);
   const [roomDayLift, setRoomDayLift] = useState(0.08);
@@ -1888,7 +1989,16 @@ function ChapterTwoScene({ T, onBack }) {
             <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
           </div>
         </div>
-        <div className="ch1-profile-slot ch2-profile-slot" aria-hidden="true" />
+        <div className="ch1-profile-slot ch2-profile-slot">
+          <EmergingProfilePanel
+            title={profileUi.title}
+            idle={profileUi.idle}
+            profiles={profileEntries}
+            unlockedIds={unlockedProfileIds}
+            currentId={currentProfileId}
+            currentLabel={profileUi.currentLabel}
+          />
+        </div>
       </div>
     </div>
   );
@@ -1946,7 +2056,9 @@ export default function Roberto() {
   const hasScrolled = useRef(false);
 
   const T = LANG[lang];
+  const profileMeta = EMERGED_PROFILE[lang];
   const [gameFlow, setGameFlow] = useState("chapter1");
+  const [unlockedProfileIds, setUnlockedProfileIds] = useState([]);
 
   // Loading
   useEffect(() => {
@@ -2026,6 +2138,10 @@ export default function Roberto() {
     return () => clearInterval(interval);
   }, [phase, hoverTrash, T.trashBtn]);
 
+  const unlockProfile = useCallback((id) => {
+    setUnlockedProfileIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  }, []);
+
   const switchLang = useCallback(() => {
     setBlackout(true);
     setTimeout(() => { setLang(l => l === "it" ? "en" : "it"); }, 200);
@@ -2033,6 +2149,7 @@ export default function Roberto() {
   }, []);
 
   const handleTrash = () => {
+    setUnlockedProfileIds([]);
     setGameFlow("chapter1Intro");
     setFallingWords(genFallingWords(T));
     setFalling(true);
@@ -2042,6 +2159,7 @@ export default function Roberto() {
   };
 
   const handleBack = () => {
+    setUnlockedProfileIds([]);
     setGameFlow("chapter1");
     setFalling(false);
     setFallingWords([]);
@@ -2167,11 +2285,18 @@ export default function Roberto() {
         .ch1-profile{width:100%;border-top:1px solid #161616;padding-top:18px}
         .ch1-profile-title{font-size:10px;letter-spacing:2.4px;text-transform:uppercase;color:#5c5c5c;margin-bottom:12px}
         .ch1-profile-idle{color:#666;font-size:12px;font-style:italic;font-family:Georgia,serif}
-        .ch1-profile-card{display:grid;gap:7px;border:1px solid #1b1b1b;border-radius:8px;background:rgba(167,203,216,.035);padding:14px 16px}
+        .ch1-profile-stack{display:grid;gap:12px}
+        .ch1-profile-card{display:grid;gap:7px;border:1px solid #1b1b1b;border-radius:8px;background:rgba(167,203,216,.035);padding:14px 16px;transition:border-color .25s ease,background .25s ease,transform .25s ease}
+        .ch1-profile-card.is-unlocked{border-color:rgba(167,203,216,.12)}
+        .ch1-profile-card.is-current{border-color:rgba(255,77,0,.18);background:rgba(255,77,0,.03)}
+        .ch1-profile-meta-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
         .ch1-profile-cap{color:#FF4D00;font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
+        .ch1-profile-status{font-size:9px;letter-spacing:1.7px;text-transform:uppercase;color:#9b765f}
         .ch1-profile-headline{color:#ece7de;font-size:18px;font-family:Georgia,serif;font-style:italic;line-height:1.25}
+        .ch1-profile-card.is-current .ch1-profile-headline{color:#d7c7ba}
         .ch1-profile-subcap{color:#6a6a6a;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
         .ch1-profile-body{color:#9a9a9a;font-size:12px;line-height:1.65}
+        .ch1-profile-card.is-current .ch1-profile-body{color:#a99182}
         .ch1-crossing-wrap{width:100%;display:flex;flex-direction:column;gap:12px}
         .ch1-crossing-kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(232,228,222,.46)}
         .ch1-crossing-frame{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(15,22,16,.72);background:linear-gradient(180deg,#d7e1b7 0%,#c5d090 46%,#b7c07f 100%);touch-action:none;user-select:none}
@@ -2545,8 +2670,16 @@ export default function Roberto() {
 
       {phase === "game" && gameFlow === "chapter1" && (
         <ChapterOne 
-          T={T.ch1} 
+          T={T.ch1}
           onBack={handleBack}
+          profileUi={{
+            title: T.ch1.profileTitle,
+            idle: T.ch1.profileIdle,
+            currentLabel: profileMeta.currentLabel,
+          }}
+          profileEntries={profileMeta.entries}
+          unlockedProfileIds={unlockedProfileIds}
+          onUnlockProfile={unlockProfile}
           onRequestChapterTwo={() => {
             setGameFlow("chapter2Intro");
           }}
@@ -2557,6 +2690,14 @@ export default function Roberto() {
         <ChapterTwoScene
           T={T.ch2}
           onBack={handleBack}
+          profileUi={{
+            title: T.ch1.profileTitle,
+            idle: T.ch1.profileIdle,
+            currentLabel: profileMeta.currentLabel,
+          }}
+          profileEntries={profileMeta.entries}
+          unlockedProfileIds={unlockedProfileIds}
+          currentProfileId={unlockedProfileIds.includes("conflict") ? null : "conflict"}
         />
       )}
     </div>
