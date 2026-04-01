@@ -3971,8 +3971,24 @@ export default function Roberto() {
         </div>
       )}
 
+      {/* CASE STUDY */}
+      {phase === "main" && activeCaseStudy && (() => {
+        const activeWork = T.selectedWork.find((work) => getWorkSlug(work.title) === activeCaseStudy);
+        const activeData = CASE_STUDIES[lang]?.[activeCaseStudy];
+        if (!activeWork || !activeData) return null;
+        return (
+          <CaseStudyPage
+            lang={lang}
+            work={activeWork}
+            data={activeData}
+            onBack={closeCaseStudy}
+            onContact={openContact}
+          />
+        );
+      })()}
+
       {/* MAIN */}
-      {phase === "main" && (
+      {phase === "main" && !activeCaseStudy && (
         <div className="wrap" style={{
           maxWidth: 640, margin: "0 auto", padding: "80px 32px 48px",
           opacity: contentFading ? 0 : (flicker ? .85 : 1),
@@ -4018,7 +4034,18 @@ export default function Roberto() {
                     borderBottom: i < T.selectedWork.length - 1 ? "1px solid #141414" : "none",
                     cursor: "pointer",
                     position: "relative",
-                  }} onClick={() => openCaseStudy(getWorkSlug(work.title))}>
+                  }}
+                    onClick={() => openCaseStudy(getWorkSlug(work.title))}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openCaseStudy(getWorkSlug(work.title));
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}: ${work.title}`}
+                  >
                     <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 10, flexWrap: "wrap" }}>
                       <div style={{ fontSize: 26, fontWeight: 600, color: "#E8E4DE", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.1 }}>
                         {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
