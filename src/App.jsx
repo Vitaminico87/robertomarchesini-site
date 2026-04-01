@@ -390,6 +390,15 @@ const CH2_OBJECTS = {
 
 const CH2_OBJECT_ORDER = ["notebook", "camera", "floppy", "cdr"];
 
+function shuffleArray(list) {
+  const copy = [...list];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 // ============================================================================
 // UTILITY COMPONENTS
 // ============================================================================
@@ -2278,20 +2287,24 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
 }
 
 function ChapterTwoObjectGame({ lang, T, onComplete }) {
-  const items = CH2_OBJECTS[lang] || CH2_OBJECTS.it;
+  const baseItems = CH2_OBJECTS[lang] || CH2_OBJECTS.it;
+  const items = useMemo(() => shuffleArray(baseItems), [baseItems]);
   const [placedIds, setPlacedIds] = useState([]);
   const [feedback, setFeedback] = useState(T.gameIntroLine);
   const [shakeId, setShakeId] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [showNextHint, setShowNextHint] = useState(false);
   const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
   const [imageState, setImageState] = useState("loading");
   const completeTimeoutRef = useRef(null);
   const shakeTimeoutRef = useRef(null);
+  const hintTimeoutRef = useRef(null);
 
   useEffect(() => {
     return () => {
       if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
       if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
+      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
     };
   }, []);
 
@@ -2300,6 +2313,21 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const finalLineParts = lang === 'it'
     ? ["Non avevo ancora un ruolo.", "Avevo già una direzione."]
     : ["I didn't have a role yet.", "I already had a direction."];
+
+  useEffect(() => {
+    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    setShowNextHint(false);
+
+    if (!expectedId || isComplete) return;
+
+    hintTimeoutRef.current = setTimeout(() => {
+      setShowNextHint(true);
+    }, 2400);
+
+    return () => {
+      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    };
+  }, [expectedId, isComplete]);
 
   const triggerShake = useCallback((id) => {
     setShakeId(id);
@@ -2384,7 +2412,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
             <div className="ch2-game-complete-kicker">{T.gameCompleteKicker}</div>
             <div className="ch2-game-complete-line">
               {finalLineParts.map((line, index) => (
-                <span key={index}>{line}</span>
+                <span key={index} className={index === 0 ? 'is-top' : 'is-bottom'}>{line}</span>
               ))}
             </div>
           </div>
@@ -2404,7 +2432,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
                 type="button"
                 onClick={() => handlePick(item)}
                 disabled={isComplete}
-                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && item.id === expectedId ? 'is-next' : ''}`}
+                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && showNextHint && item.id === expectedId ? 'is-next' : ''}`}
               >
                 <span className="ch2-game-object-title">{item.label}</span>
                 <span className="ch2-game-object-desc">{item.description}</span>
@@ -3064,8 +3092,8 @@ export default function Roberto() {
         .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
         .ch2-game-complete-card{position:absolute;left:50%;top:22px;z-index:9;width:min(calc(100% - 40px),540px);transform:translateX(-50%);padding:14px 18px 15px;border-radius:10px;border:1px solid rgba(255,77,0,.18);background:linear-gradient(180deg, rgba(18,9,6,.82), rgba(8,6,6,.58));backdrop-filter:blur(6px);text-align:center;animation:fadeIn .24s ease-out}
         .ch2-game-complete-kicker{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:rgba(255,192,152,.78);margin-bottom:8px}
-        .ch2-game-complete-line{display:flex;flex-direction:column;align-items:center;gap:1px;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(22px,2.4vw,30px);line-height:1.08;color:#f1e8df;text-align:center}
-        .ch2-game-complete-line span{display:block;text-wrap:balance}
+        .ch2-game-complete-line{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(21px,2.25vw,28px);line-height:1.02;color:#f1e8df;text-align:center}
+        .ch2-game-complete-line span{display:block;text-wrap:initial;white-space:nowrap}.ch2-game-complete-line .is-top{letter-spacing:-.01em}.ch2-game-complete-line .is-bottom{letter-spacing:-.015em}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
         .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
         .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
