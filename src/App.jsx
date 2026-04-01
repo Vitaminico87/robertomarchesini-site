@@ -19,6 +19,7 @@ const ASSETS = {
   chapter2DeskFrame: `${ASSET_BASE_CH2}/chapter2_desk_frame.png?v=1`,
   chapter2DeskLoop: `${ASSET_BASE_CH2}/chapter2_daynight_loop.mp4?v=1`,
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
+  chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
 };
 
 // ============================================================================
@@ -141,9 +142,17 @@ const LANG = {
         "Il punto non era sparire. Era togliere rumore.",
       ],
       streetResolveFeedback: "Non dovevo tenere tutto. Solo quello che avrebbe retto.",
-      streetBridgeHint: "Poi sarebbe arrivato il momento di scegliere cosa portarmi dietro.",
+      streetBridgeHint: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
+      gameSlotsLabel: "Zaino · 4 slot",
+      gameIntroLine: "Non tutto meritava spazio.",
+      gameDuplicate: "Quello è già dentro. Non serve convincersi due volte.",
+      gameOrderWrong: "Ci sta. Ma non è il prossimo tassello.",
+      gameFinalLine: "Non avevo ancora un ruolo. Avevo già una direzione.",
       backToSurface: "← Torna in superficie",
       introTitle: "Il conflitto",
+    },
+    ch3: {
+      introTitle: "Sintesi",
     }
   },
   en: {
@@ -261,9 +270,17 @@ const LANG = {
         "The point wasn't to disappear. It was to remove noise.",
       ],
       streetResolveFeedback: "I didn't need to keep everything. Only what would hold.",
-      streetBridgeHint: "Then the moment would come to decide what I would carry forward.",
+      streetBridgeHint: "I couldn't carry everything forward. I had to figure out what remained.",
+      gameSlotsLabel: "Backpack · 4 slots",
+      gameIntroLine: "Not everything deserved space.",
+      gameDuplicate: "That's already in. No need to convince yourself twice.",
+      gameOrderWrong: "Fair. But it's not the next piece.",
+      gameFinalLine: "I didn't have a role yet. I already had a direction.",
       backToSurface: "← Back to surface",
       introTitle: "Conflict",
+    },
+    ch3: {
+      introTitle: "Synthesis",
     }
   },
 };
@@ -336,6 +353,31 @@ const EMERGED_PROFILE = {
     ],
   },
 };
+
+const CH2_OBJECTS = {
+  it: [
+    { id: "notebook", label: "Taccuino", type: "correct", description: "Per idee, appunti, connessioni.", placedLine: "Prima di capire cosa fare, di solito scrivevo." },
+    { id: "camera", label: "Macchina fotografica", type: "correct", description: "Per imparare a guardare davvero.", placedLine: "Guardare bene veniva prima di spiegare bene." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "Per il lato sistema, memoria, macchina.", placedLine: "Una parte di tutto questo passava già da una macchina." },
+    { id: "cdr", label: "CD masterizzato", type: "correct", description: "Per ritmo, montaggio, memoria visiva e sonora.", placedLine: "Mi serviva qualcosa che tenesse insieme gusto, ritmo e memoria." },
+    { id: "vinyl", label: "Vinile", type: "decoy", description: "Bella presenza. Funzione discutibile.", wrongLine: "Molto atmosfera. Poco avanzamento." },
+    { id: "badge", label: "Badge corporate", type: "decoy", description: "Arriverà. Ma non da qui.", wrongLine: "Un po' presto per fingersi già risolto." },
+    { id: "diploma", label: "Diploma incorniciato", type: "decoy", description: "Rispettiamolo, ma non è il motore.", wrongLine: "Appeso al muro forse. Nello zaino no." },
+    { id: "ticket", label: "Biglietto aereo", type: "decoy", description: "Tentazione chiara. Tempismo sbagliato.", wrongLine: "Prima la traiettoria. Poi l'aeroporto." },
+  ],
+  en: [
+    { id: "notebook", label: "Notebook", type: "correct", description: "For ideas, notes, connections.", placedLine: "Before figuring out what to do, I usually wrote." },
+    { id: "camera", label: "Camera", type: "correct", description: "To learn how to really look.", placedLine: "Looking well came before explaining well." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "For the system side: memory, machine, structure.", placedLine: "Part of all this already passed through a machine." },
+    { id: "cdr", label: "Burned CD", type: "correct", description: "For rhythm, editing, visual and sonic memory.", placedLine: "I needed something that could hold taste, rhythm, and memory together." },
+    { id: "vinyl", label: "Vinyl", type: "decoy", description: "Great presence. Questionable function.", wrongLine: "A lot of atmosphere. Not much progress." },
+    { id: "badge", label: "Corporate badge", type: "decoy", description: "That comes later. Not from here.", wrongLine: "A little early to pretend it was already solved." },
+    { id: "diploma", label: "Framed diploma", type: "decoy", description: "Respect it, but it wasn't the engine.", wrongLine: "Maybe on the wall. Not in the backpack." },
+    { id: "ticket", label: "Plane ticket", type: "decoy", description: "Clear temptation. Wrong timing.", wrongLine: "First the trajectory. Then the airport." },
+  ],
+};
+
+const CH2_OBJECT_ORDER = ["notebook", "camera", "floppy", "cdr"];
 
 // ============================================================================
 // UTILITY COMPONENTS
@@ -2131,8 +2173,118 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
   );
 }
 
-function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
+function ChapterTwoObjectGame({ lang, T, onComplete }) {
+  const items = CH2_OBJECTS[lang] || CH2_OBJECTS.it;
+  const [placedIds, setPlacedIds] = useState([]);
+  const [feedback, setFeedback] = useState(T.gameIntroLine);
+  const [shakeId, setShakeId] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
+  const completeTimeoutRef = useRef(null);
+  const shakeTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+      if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
+    };
+  }, []);
+
+  const placedSet = useMemo(() => new Set(placedIds), [placedIds]);
+
+  const triggerShake = useCallback((id) => {
+    setShakeId(id);
+    if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
+    shakeTimeoutRef.current = setTimeout(() => setShakeId(null), 320);
+  }, []);
+
+  const handlePick = useCallback((item) => {
+    if (isComplete) return;
+
+    if (placedSet.has(item.id)) {
+      setFeedback(T.gameDuplicate);
+      return;
+    }
+
+    if (item.type === 'decoy') {
+      triggerShake(item.id);
+      setFeedback(item.wrongLine);
+      return;
+    }
+
+    const expectedId = CH2_OBJECT_ORDER[placedIds.length];
+    if (item.id !== expectedId) {
+      triggerShake(item.id);
+      setFeedback(T.gameOrderWrong);
+      return;
+    }
+
+    const nextPlaced = [...placedIds, item.id];
+    setPlacedIds(nextPlaced);
+    setFeedback(item.placedLine);
+
+    if (nextPlaced.length === CH2_OBJECT_ORDER.length) {
+      setIsComplete(true);
+      setFeedback(T.gameFinalLine);
+      completeTimeoutRef.current = setTimeout(() => {
+        onComplete?.();
+      }, 1700);
+    }
+  }, [T.gameDuplicate, T.gameFinalLine, T.gameOrderWrong, isComplete, onComplete, placedIds, placedSet, triggerShake]);
+
+  return (
+    <>
+      <div className="ch2-stage ch2-game-stage">
+        <img className="ch2-fill" src={ASSETS.chapter2DeskGameBase} alt="" />
+        <div className="ch2-game-vignette" />
+        <div className="ch2-game-slot-shell">
+          <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
+          <div className="ch2-game-slot-grid">
+            {Array.from({ length: 4 }).map((_, index) => {
+              const placedId = placedIds[index];
+              const placedItem = items.find((item) => item.id === placedId);
+              return (
+                <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''}`}>
+                  {placedItem ? placedItem.label : <span>Slot {index + 1}</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="ch1-scan" />
+      </div>
+
+      <div className="ch1-controls-slot ch2-object-controls-slot">
+        <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
+        <div className="ch2-game-grid">
+          {items.map((item) => {
+            const isPlaced = placedSet.has(item.id);
+            const isWrong = item.type === 'decoy';
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handlePick(item)}
+                disabled={isComplete}
+                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''}`}
+              >
+                <span className="ch2-game-object-title">{item.label}</span>
+                <span className="ch2-game-object-desc">{item.description}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const deskLoopRef = useRef(null);
+  const streetPulseTimeoutRef = useRef(null);
+  const streetTransitionTimeoutRef = useRef(null);
+  const continueIdxRef = useRef(0);
+  const streetAmbience = useStreetAmbience();
+
   const [scene, setScene] = useState("desk");
   const [windowGlow, setWindowGlow] = useState(0.08);
   const [roomDayLift, setRoomDayLift] = useState(0.08);
@@ -2140,9 +2292,6 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
   const [deskFeedbackText, setDeskFeedbackText] = useState("");
   const [streetAmbientPulse, setStreetAmbientPulse] = useState(false);
   const [streetResolved, setStreetResolved] = useState(false);
-  const continueIdxRef = useRef(0);
-  const streetPulseTimeoutRef = useRef(null);
-  const streetAmbience = useStreetAmbience();
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -2181,6 +2330,7 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
   useEffect(() => {
     return () => {
       if (streetPulseTimeoutRef.current) clearTimeout(streetPulseTimeoutRef.current);
+      if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
       streetAmbience.stop();
     };
   }, [streetAmbience]);
@@ -2218,11 +2368,16 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
   const handleResolveStreet = useCallback(() => {
     setStreetResolved(true);
     onUnlockProfile?.("conflict");
+    if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
+    streetTransitionTimeoutRef.current = setTimeout(() => {
+      setScene("selection");
+    }, 1500);
   }, [onUnlockProfile]);
 
   const handleBackToDesk = useCallback(() => {
     setStreetAmbientPulse(false);
     setStreetResolved(false);
+    if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
     streetAmbience.stop();
     setScene("desk");
   }, [streetAmbience]);
@@ -2238,68 +2393,77 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
         </div>
 
         {scene === "desk" ? (
-          <div className="ch2-stage">
-            <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
+          <>
+            <div className="ch2-stage">
+              <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
 
-            <div className="ch2-window-mask">
-              <video
-                ref={deskLoopRef}
-                className="ch2-window-video"
-                src={ASSETS.chapter2DeskLoop}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-              />
+              <div className="ch2-window-mask">
+                <video
+                  ref={deskLoopRef}
+                  className="ch2-window-video"
+                  src={ASSETS.chapter2DeskLoop}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+
+              <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
+              <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
+              <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
+              <div className="ch2-monitor-breath" />
+              <div className="ch2-room-grade" />
+              <div className="ch2-line-block">
+                <div className="ch2-line">{T.introCopy}</div>
+              </div>
+              <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""}`}>{deskFeedbackText}</div>
+              <div className="ch1-scan" />
             </div>
 
-            <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
-            <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
-            <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
-            <div className="ch2-monitor-breath" />
-            <div className="ch2-room-grade" />
-            <div className="ch2-line-block">
-              <div className="ch2-line">{T.introCopy}</div>
+            <div className="ch1-controls-slot">
+              <div className="ch1-controls ch2-controls">
+                <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
+                <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+              </div>
             </div>
-            <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""}`}>{deskFeedbackText}</div>
-            <div className="ch1-scan" />
-          </div>
+          </>
+        ) : scene === "street" ? (
+          <>
+            <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""}`}>
+              <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
+              <div className="ch2-street-grade" />
+              <div className="ch2-street-cool-wash" />
+              <div className="ch2-street-door-bloom" />
+              <div className="ch2-street-reflection-boost" />
+              <div className="ch2-street-rain ch2-street-rain-back" />
+              <div className="ch2-street-rain ch2-street-rain-front" />
+              <div className="ch2-street-headlights ch2-street-headlights-back" />
+              <div className="ch2-street-headlights ch2-street-headlights-front" />
+              <div className="ch2-street-vignette" />
+
+              <div className="ch2-street-narrative">{T.streetNarrative}</div>
+              <div className="ch2-line-block ch2-street-line-block">
+                <div className="ch2-line">{T.streetCopy}</div>
+              </div>
+              <div className={`ch2-street-bridge ${streetResolved ? "show" : ""}`}>{T.streetBridgeHint}</div>
+              <div className="ch1-scan" />
+            </div>
+
+            <div className="ch1-controls-slot">
+              {!streetResolved ? (
+                <div className="ch1-controls ch2-controls">
+                  <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
+                  <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
+                </div>
+              ) : null}
+            </div>
+          </>
         ) : (
-          <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""}`}>
-            <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
-            <div className="ch2-street-grade" />
-            <div className="ch2-street-cool-wash" />
-            <div className="ch2-street-door-bloom" />
-            <div className="ch2-street-reflection-boost" />
-            <div className="ch2-street-rain ch2-street-rain-back" />
-            <div className="ch2-street-rain ch2-street-rain-front" />
-            <div className="ch2-street-headlights ch2-street-headlights-back" />
-            <div className="ch2-street-headlights ch2-street-headlights-front" />
-            <div className="ch2-street-vignette" />
-
-            <div className="ch2-street-narrative">{T.streetNarrative}</div>
-            <div className="ch2-line-block ch2-street-line-block">
-              <div className="ch2-line">{T.streetCopy}</div>
-            </div>
-            <div className={`ch2-street-bridge ${streetResolved ? "show" : ""}`}>{T.streetBridgeHint}</div>
-            <div className="ch1-scan" />
-          </div>
+          <ChapterTwoObjectGame lang={lang} T={T} onComplete={onComplete} />
         )}
 
-        <div className="ch1-controls-slot">
-          {scene === "desk" ? (
-            <div className="ch1-controls ch2-controls">
-              <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
-              <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
-            </div>
-          ) : (
-            <div className="ch1-controls ch2-controls">
-              <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
-              <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
-            </div>
-          )}
-        </div>
         <div className="ch1-profile-slot ch2-profile-slot">
           <EmergingProfilePanel
             title={profileUi.title}
@@ -2712,6 +2876,26 @@ export default function Roberto() {
         @keyframes ch2RainFrontShift{0%{background-position:8px -10px, 20px 10px}100%{background-position:-22px 72px, -10px 96px}}
         @keyframes ch2HeadlightSweepBack{0%,18%{transform:translateX(0) skewX(-16deg);opacity:0}30%,56%{opacity:.34}78%{transform:translateX(-195%) skewX(-16deg);opacity:.18}100%{transform:translateX(-195%) skewX(-16deg);opacity:0}}
         @keyframes ch2HeadlightSweepFront{0%,22%{transform:translateX(0) skewX(-16deg);opacity:0}34%,58%{opacity:.48}82%{transform:translateX(-214%) skewX(-16deg);opacity:.22}100%{transform:translateX(-214%) skewX(-16deg);opacity:0}}
+        @keyframes ch2GameShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+        .ch2-game-stage{background:#0a0f12}
+        .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
+        .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
+        .ch2-game-slot-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(223,232,238,.56);margin-bottom:10px}
+        .ch2-game-slot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+        .ch2-game-slot{min-height:54px;border-radius:8px;border:1px dashed rgba(162,186,198,.2);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px;color:#6b7880;font-size:10px;line-height:1.35;text-transform:uppercase;letter-spacing:1px}
+        .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}
+        .ch2-object-controls-slot{min-height:auto;display:block}
+        .ch2-game-feedback{margin-top:2px;margin-bottom:14px;min-height:44px;padding:12px 14px;border-radius:8px;border:1px solid rgba(31,31,31,.9);background:rgba(0,0,0,.28);color:#b5bcc2;font-size:12px;line-height:1.75;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease}
+        .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
+        .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+        .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease}
+        .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
+        .ch2-game-object.is-decoy:hover{border-color:rgba(138,138,138,.28);background:rgba(255,255,255,.015)}
+        .ch2-game-object.is-placed{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.08)}
+        .ch2-game-object.is-shaking{animation:ch2GameShake .28s ease-out}
+        .ch2-game-object-title{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:1.05;color:#f0ece6;margin-bottom:8px}
+        .ch2-game-object-desc{display:block;font-size:11px;line-height:1.7;color:#9ea4a8}
+        .ch2-game-object:disabled{cursor:default}
 
         @media(max-width:600px){
           .svc-in{flex-direction:column!important;gap:10px!important}
@@ -2740,6 +2924,14 @@ export default function Roberto() {
           .ch2-street-narrative{left:16px;right:16px;top:18px;max-width:none;font-size:10px;line-height:1.7}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
           .ch2-street-reflection-boost{height:42%}
+          .ch2-game-slot-shell{left:14px;right:14px;bottom:14px;padding:10px 10px 11px}
+          .ch2-game-slot-grid{gap:6px}
+          .ch2-game-slot{min-height:48px;font-size:9px}
+          .ch2-game-slot.is-filled{font-size:10px}
+          .ch2-game-feedback{font-size:11px;line-height:1.7;min-height:42px}
+          .ch2-game-grid{grid-template-columns:1fr;gap:8px}
+          .ch2-game-object{padding:12px 12px 13px}
+          .ch2-game-object-title{font-size:18px}
           .chapter-intro-inner{transform:translateY(0)}
         }
       `}</style>
@@ -3042,6 +3234,15 @@ export default function Roberto() {
         />
       )}
 
+      {phase === "game" && gameFlow === "chapter3Intro" && (
+        <ChapterIntroCard
+          number="3"
+          title={T.ch3.introTitle}
+          label={lang === "it" ? "Capitolo" : "Chapter"}
+          onDone={() => setPhase("comingSoon")}
+        />
+      )}
+
       {phase === "game" && gameFlow === "chapter1" && (
         <ChapterOne 
           T={T.ch1}
@@ -3062,8 +3263,10 @@ export default function Roberto() {
 
       {phase === "game" && gameFlow === "chapter2" && (
         <ChapterTwoScene
+          lang={lang}
           T={T.ch2}
           onBack={handleBack}
+          onComplete={() => setGameFlow("chapter3Intro")}
           profileUi={{
             title: T.ch1.profileTitle,
             idle: T.ch1.profileIdle,
