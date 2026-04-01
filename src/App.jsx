@@ -2057,9 +2057,9 @@ export default function Roberto() {
         @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.12), 0 0 40px rgba(255,77,0,.06);transform:scale(1)}50%{box-shadow:0 0 40px rgba(255,77,0,.25), 0 0 80px rgba(255,77,0,.12);transform:scale(1.02)}}
         @keyframes trashArrow{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.6;transform:translateY(4px)}}
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
-        @keyframes portfolioFall{0%{transform:translateX(-50%) translateY(0) rotate(0deg) scale(1);opacity:1}72%{transform:translateX(-50%) translateY(74vh) rotate(-4deg) scale(1);opacity:1}82%{transform:translateX(-50%) translateY(79vh) rotate(-6deg) scale(1.02);opacity:1}100%{transform:translateX(-50%) translateY(82vh) rotate(-8deg) scale(.92);opacity:0}}
-        @keyframes portfolioCoreFade{0%,78%{opacity:1}100%{opacity:0}}
-        @keyframes portfolioShard{0%,76%{opacity:0;transform:translate3d(0,0,0) rotate(0deg) scale(1)}82%{opacity:1;transform:translate3d(0,0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate3d(var(--sx),var(--sy),0) rotate(var(--sr)) scale(.72)}}
+        @keyframes portfolioFall{0%{transform:translateX(-50%) translateY(0) rotate(0deg) scale(1);opacity:1}64%{transform:translateX(-50%) translateY(50vh) rotate(-1deg) scale(1);opacity:1}82%{transform:translateX(-50%) translateY(67vh) rotate(-3deg) scale(1.01);opacity:1}90%{transform:translateX(-50%) translateY(74vh) rotate(-4deg) scale(1.03);opacity:1}100%{transform:translateX(-50%) translateY(74vh) rotate(-4deg) scale(1.03);opacity:0}}
+        @keyframes portfolioCoreFade{0%,86%{opacity:1}100%{opacity:0}}
+        @keyframes portfolioShard{0%,84%{opacity:0;transform:translate3d(0,0,0) rotate(0deg) scale(1)}88%{opacity:1;transform:translate3d(0,0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate3d(var(--sx),var(--sy),0) rotate(var(--sr)) scale(.62)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
@@ -2227,9 +2227,9 @@ export default function Roberto() {
             if (w.shatter) {
               const letters = w.text.split("");
               const offsets = [
-                [-56, -26, '-18deg'], [-38, -52, '-11deg'], [-22, -34, '-7deg'],
-                [-6, -62, '-3deg'], [10, -28, '4deg'], [28, -54, '8deg'],
-                [44, -30, '12deg'], [58, -46, '16deg'], [72, -18, '20deg'],
+                [-92, 18, '-18deg'], [-70, -8, '-12deg'], [-46, 26, '-8deg'],
+                [-22, -26, '-4deg'], [8, 34, '4deg'], [34, -10, '8deg'],
+                [60, 24, '12deg'], [84, -4, '16deg'], [112, 18, '20deg'],
               ];
               return (
                 <div
@@ -2239,7 +2239,7 @@ export default function Roberto() {
                     left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
                     fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
                     fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
-                    letterSpacing: 1.6, textShadow: "0 8px 24px rgba(0,0,0,.32)", textAlign: "center",
+                    letterSpacing: 1.6, textShadow: "0 10px 28px rgba(0,0,0,.34), 0 2px 6px rgba(0,0,0,.24)", textAlign: "center",
                     "--dur": `${w.dur}s`, "--del": `${w.del}s`,
                   }}
                 >
