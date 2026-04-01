@@ -492,17 +492,23 @@ const VOID_VEINS = [
   { points: [{x: 1050, y: 880}, {x: 1150, y: 810}, {x: 1250, y: 800}], width: 1.5 },
 ];
 
+const VOID_ANTEPENULTIMATE_VEINS = [
+  { points: [{x: 875, y: 748}, {x: 930, y: 630}, {x: 990, y: 420}, {x: 1050, y: 110}], width: 0.9 },
+  { points: [{x: 880, y: 752}, {x: 950, y: 860}, {x: 1020, y: 1010}, {x: 1100, y: 1290}], width: 0.9 },
+  { points: [{x: 880, y: 748}, {x: 1010, y: 710}, {x: 1160, y: 670}, {x: 1410, y: 620}], width: 0.8 },
+];
+
 const VOID_PENULTIMATE_VEINS = [
-  { points: [{x: 1110, y: 785}, {x: 1160, y: 660}, {x: 1210, y: 430}, {x: 1260, y: 120}], width: 1.7 },
-  { points: [{x: 1120, y: 790}, {x: 1180, y: 915}, {x: 1240, y: 1090}, {x: 1300, y: 1310}], width: 1.7 },
-  { points: [{x: 1120, y: 782}, {x: 1260, y: 720}, {x: 1420, y: 660}, {x: 1710, y: 610}], width: 1.5 },
+  { points: [{x: 1110, y: 785}, {x: 1160, y: 660}, {x: 1210, y: 430}, {x: 1260, y: 120}], width: 0.95 },
+  { points: [{x: 1120, y: 790}, {x: 1180, y: 915}, {x: 1240, y: 1090}, {x: 1300, y: 1310}], width: 0.95 },
+  { points: [{x: 1120, y: 782}, {x: 1260, y: 720}, {x: 1420, y: 660}, {x: 1710, y: 610}], width: 0.85 },
 ];
 
 const VOID_FINAL_VEINS = [
-  { points: [{x: 1315, y: 832}, {x: 1380, y: 650}, {x: 1450, y: 370}, {x: 1520, y: 40}], width: 1.9 },
-  { points: [{x: 1320, y: 836}, {x: 1400, y: 970}, {x: 1480, y: 1140}, {x: 1580, y: 1380}], width: 1.9 },
-  { points: [{x: 1320, y: 830}, {x: 1470, y: 790}, {x: 1680, y: 745}, {x: 1930, y: 700}], width: 1.6 },
-  { points: [{x: 1300, y: 828}, {x: 1220, y: 700}, {x: 1120, y: 520}, {x: 980, y: 260}], width: 1.4 },
+  { points: [{x: 1315, y: 832}, {x: 1380, y: 650}, {x: 1450, y: 370}, {x: 1520, y: 40}], width: 1.0 },
+  { points: [{x: 1320, y: 836}, {x: 1400, y: 970}, {x: 1480, y: 1140}, {x: 1580, y: 1380}], width: 1.0 },
+  { points: [{x: 1320, y: 830}, {x: 1470, y: 790}, {x: 1680, y: 745}, {x: 1930, y: 700}], width: 0.85 },
+  { points: [{x: 1300, y: 828}, {x: 1220, y: 700}, {x: 1120, y: 520}, {x: 980, y: 260}], width: 0.8 },
 ];
 
 function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
@@ -558,6 +564,7 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
       const nodeCount = activatedNodes.length;
       const veinsToRender = [
         ...VOID_VEINS,
+        ...(nodeCount >= 4 ? VOID_ANTEPENULTIMATE_VEINS : []),
         ...(nodeCount >= 5 ? VOID_PENULTIMATE_VEINS : []),
         ...(nodeCount >= 6 ? VOID_FINAL_VEINS : []),
       ];
@@ -1890,16 +1897,17 @@ function genFallingWords(t) {
   falling.push({
     text: "PORTFOLIO",
     x: 50,
-    y: 16,
-    del: 1.02,
-    dur: 1.22,
-    rot: -8,
-    size: 54,
+    y: 12,
+    del: 1.08,
+    dur: 1.42,
+    rot: -6,
+    size: 78,
     color: "#F0ECE6",
     serif: true,
     bold: true,
     italic: false,
     central: true,
+    shatter: true,
   });
 
   return falling;
@@ -2049,6 +2057,9 @@ export default function Roberto() {
         @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.12), 0 0 40px rgba(255,77,0,.06);transform:scale(1)}50%{box-shadow:0 0 40px rgba(255,77,0,.25), 0 0 80px rgba(255,77,0,.12);transform:scale(1.02)}}
         @keyframes trashArrow{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.6;transform:translateY(4px)}}
         @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}15%{opacity:1}100%{transform:translateY(105vh) rotate(var(--rot,20deg));opacity:0}}
+        @keyframes portfolioFall{0%{transform:translateX(-50%) translateY(0) rotate(0deg) scale(1);opacity:1}72%{transform:translateX(-50%) translateY(74vh) rotate(-4deg) scale(1);opacity:1}82%{transform:translateX(-50%) translateY(79vh) rotate(-6deg) scale(1.02);opacity:1}100%{transform:translateX(-50%) translateY(82vh) rotate(-8deg) scale(.92);opacity:0}}
+        @keyframes portfolioCoreFade{0%,78%{opacity:1}100%{opacity:0}}
+        @keyframes portfolioShard{0%,76%{opacity:0;transform:translate3d(0,0,0) rotate(0deg) scale(1)}82%{opacity:1;transform:translate3d(0,0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate3d(var(--sx),var(--sy),0) rotate(var(--sr)) scale(.72)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
@@ -2068,6 +2079,10 @@ export default function Roberto() {
         .btn-talk:hover{background:#E8E4DE;color:#050505;border-color:#E8E4DE;box-shadow:0 0 20px rgba(232,228,222,.12)}
         .fl-word{position:absolute;white-space:nowrap;opacity:0}
         .fl-word.go{animation:fall var(--dur) var(--del) ease-in forwards}
+        .portfolio-shatter{position:absolute;white-space:nowrap;pointer-events:none;animation:portfolioFall var(--dur) var(--del) cubic-bezier(.22,.74,.18,1) forwards}
+        .portfolio-core{display:inline-block;animation:portfolioCoreFade var(--dur) var(--del) linear forwards}
+        .portfolio-fragments{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+        .portfolio-fragment{position:absolute;left:0;top:0;opacity:0;animation:portfolioShard var(--dur) var(--del) cubic-bezier(.2,.7,.2,1) forwards}
         .top-btn{background:transparent;border:1px solid #161616;border-radius:3px;padding:5px 12px;cursor:pointer;transition:all .25s;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#333}
         .top-btn:hover{border-color:rgba(255,77,0,.4);color:#FF4D00}
         .foot-l{transition:color .2s;cursor:pointer;color:#444}
@@ -2208,18 +2223,59 @@ export default function Roberto() {
       {/* Falling words */}
       {falling && (
         <div style={{ position: "fixed", inset: 0, zIndex: 70, pointerEvents: "none", overflow: "hidden" }}>
-          {fallingWords.map((w, i) => (
-            <div key={i} className="fl-word go" style={{
-              left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
-              fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
-              fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
-              letterSpacing: w.central ? 1.2 : 0,
-              textShadow: w.central ? "0 4px 16px rgba(0,0,0,.28)" : "none",
-              transform: w.central ? "translateX(-50%)" : undefined,
-              textAlign: w.central ? "center" : undefined,
-              "--dur": `${w.dur}s`, "--del": `${w.del}s`, "--rot": `${w.rot}deg`,
-            }}>{w.text}</div>
-          ))}
+          {fallingWords.map((w, i) => {
+            if (w.shatter) {
+              const letters = w.text.split("");
+              const offsets = [
+                [-56, -26, '-18deg'], [-38, -52, '-11deg'], [-22, -34, '-7deg'],
+                [-6, -62, '-3deg'], [10, -28, '4deg'], [28, -54, '8deg'],
+                [44, -30, '12deg'], [58, -46, '16deg'], [72, -18, '20deg'],
+              ];
+              return (
+                <div
+                  key={i}
+                  className="portfolio-shatter"
+                  style={{
+                    left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
+                    fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
+                    fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
+                    letterSpacing: 1.6, textShadow: "0 8px 24px rgba(0,0,0,.32)", textAlign: "center",
+                    "--dur": `${w.dur}s`, "--del": `${w.del}s`,
+                  }}
+                >
+                  <span className="portfolio-core">{w.text}</span>
+                  <span className="portfolio-fragments" aria-hidden="true">
+                    {letters.map((ch, li) => (
+                      <span
+                        key={li}
+                        className="portfolio-fragment"
+                        style={{
+                          transform: `translate(${(li - (letters.length - 1) / 2) * 0.62}em, -0.04em)`,
+                          "--sx": `${offsets[li][0]}px`,
+                          "--sy": `${offsets[li][1]}px`,
+                          "--sr": offsets[li][2],
+                        }}
+                      >
+                        {ch}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              );
+            }
+            return (
+              <div key={i} className="fl-word go" style={{
+                left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
+                fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
+                fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
+                letterSpacing: w.central ? 1.2 : 0,
+                textShadow: w.central ? "0 4px 16px rgba(0,0,0,.28)" : "none",
+                transform: w.central ? "translateX(-50%)" : undefined,
+                textAlign: w.central ? "center" : undefined,
+                "--dur": `${w.dur}s`, "--del": `${w.del}s`, "--rot": `${w.rot}deg`,
+              }}>{w.text}</div>
+            );
+          })}
         </div>
       )}
 
