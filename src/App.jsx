@@ -492,6 +492,19 @@ const VOID_VEINS = [
   { points: [{x: 1050, y: 880}, {x: 1150, y: 810}, {x: 1250, y: 800}], width: 1.5 },
 ];
 
+const VOID_PENULTIMATE_VEINS = [
+  { points: [{x: 1110, y: 785}, {x: 1160, y: 660}, {x: 1210, y: 430}, {x: 1260, y: 120}], width: 1.7 },
+  { points: [{x: 1120, y: 790}, {x: 1180, y: 915}, {x: 1240, y: 1090}, {x: 1300, y: 1310}], width: 1.7 },
+  { points: [{x: 1120, y: 782}, {x: 1260, y: 720}, {x: 1420, y: 660}, {x: 1710, y: 610}], width: 1.5 },
+];
+
+const VOID_FINAL_VEINS = [
+  { points: [{x: 1315, y: 832}, {x: 1380, y: 650}, {x: 1450, y: 370}, {x: 1520, y: 40}], width: 1.9 },
+  { points: [{x: 1320, y: 836}, {x: 1400, y: 970}, {x: 1480, y: 1140}, {x: 1580, y: 1380}], width: 1.9 },
+  { points: [{x: 1320, y: 830}, {x: 1470, y: 790}, {x: 1680, y: 745}, {x: 1930, y: 700}], width: 1.6 },
+  { points: [{x: 1300, y: 828}, {x: 1220, y: 700}, {x: 1120, y: 520}, {x: 980, y: 260}], width: 1.4 },
+];
+
 function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
@@ -543,6 +556,11 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
       
       const reveal = revealLevelRef.current;
       const nodeCount = activatedNodes.length;
+      const veinsToRender = [
+        ...VOID_VEINS,
+        ...(nodeCount >= 5 ? VOID_PENULTIMATE_VEINS : []),
+        ...(nodeCount >= 6 ? VOID_FINAL_VEINS : []),
+      ];
       
       // Fondo nero/verde
       ctx.fillStyle = '#080b09';
@@ -572,7 +590,7 @@ function VoidSynapseBackground({ activatedNodes, scenePulse, allNodesGlow }) {
       }
       
       // Venature - SEMPLIFICATE
-      VOID_VEINS.forEach((vein) => {
+      veinsToRender.forEach((vein) => {
         if (vein.points.length < 2) return;
         
         let veinActivation = 0.03 + reveal * 0.04;
@@ -1855,13 +1873,36 @@ function genFallingWords(t) {
     t.trashBtn, t.contactBtn];
   const u = [...new Set(all)].filter(w => w.length > 1).slice(0, 55);
   const special = ["Roberto", "Marchesini", "Create", "Grow", "Evolve", "Teach"];
-  return u.map((w, i) => ({
-    text: w, x: 5 + Math.random() * 85, y: 5 + (i / u.length) * 80,
-    del: Math.random() * .7, dur: .7 + Math.random() * .5, rot: (Math.random() - .5) * 50,
+  const falling = u.map((w, i) => ({
+    text: w,
+    x: 5 + Math.random() * 85,
+    y: 5 + (i / u.length) * 80,
+    del: Math.random() * .7,
+    dur: .7 + Math.random() * .5,
+    rot: (Math.random() - .5) * 50,
     size: special.includes(w) ? 22 : (w.length > 8 ? 11 : 13),
     color: ["Roberto", "Marchesini"].includes(w) ? "#F0ECE6" : ["Create", "Grow", "Evolve", "Teach"].includes(w) ? "#FF4D00" : "#666",
-    serif: special.includes(w), bold: special.includes(w), italic: ["Create", "Grow", "Evolve", "Teach"].includes(w),
+    serif: special.includes(w),
+    bold: special.includes(w),
+    italic: ["Create", "Grow", "Evolve", "Teach"].includes(w),
   }));
+
+  falling.push({
+    text: "PORTFOLIO",
+    x: 50,
+    y: 16,
+    del: 1.02,
+    dur: 1.22,
+    rot: -8,
+    size: 54,
+    color: "#F0ECE6",
+    serif: true,
+    bold: true,
+    italic: false,
+    central: true,
+  });
+
+  return falling;
 }
 
 // ============================================================================
@@ -2171,7 +2212,11 @@ export default function Roberto() {
             <div key={i} className="fl-word go" style={{
               left: `${w.x}%`, top: `${w.y}%`, fontSize: w.size, color: w.color,
               fontFamily: w.serif ? "'Playfair Display',serif" : "'IBM Plex Mono',monospace",
-              fontWeight: w.bold ? 600 : 400, fontStyle: w.italic ? "italic" : "normal",
+              fontWeight: w.bold ? 700 : 400, fontStyle: w.italic ? "italic" : "normal",
+              letterSpacing: w.central ? 1.2 : 0,
+              textShadow: w.central ? "0 4px 16px rgba(0,0,0,.28)" : "none",
+              transform: w.central ? "translateX(-50%)" : undefined,
+              textAlign: w.central ? "center" : undefined,
               "--dur": `${w.dur}s`, "--del": `${w.del}s`, "--rot": `${w.rot}deg`,
             }}>{w.text}</div>
           ))}
