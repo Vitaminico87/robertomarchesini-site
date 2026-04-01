@@ -139,6 +139,10 @@ const LANG = {
         "Per schiarirmi le idee, sono uscito a mangiare qualcosa sotto la pioggia.",
         "Avevo bisogno di svuotare la testa per capire cosa tenere davvero.",
       ],
+      streetNarrativeMobileLines: [
+        "Sono uscito sotto la pioggia per schiarirmi le idee.",
+        "Dovevo capire cosa tenere davvero.",
+      ],
       streetStayBtn: "Resta lì un altro minuto",
       streetFocusBtn: "Capisci cosa tenere",
       streetWaitFeedback: [
@@ -150,6 +154,7 @@ const LANG = {
       streetBridgeHint: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
       gameSlotsLabel: "Zaino · 4 slot",
       gameIntroLine: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
+      gameMobilePrompt: "Scegli i 4 oggetti che porto con me.",
       gameDuplicate: "Quello è già dentro. Non serve convincersi due volte.",
       gameOrderWrong: "Ci sta. Ma non è il prossimo tassello.",
       gameCompleteKicker: "Scelta corretta.",
@@ -272,6 +277,10 @@ const LANG = {
         "To clear my head, I stepped out to eat something in the rain.",
         "I needed to empty it out and understand what was actually worth keeping.",
       ],
+      streetNarrativeMobileLines: [
+        "I stepped out in the rain to clear my head.",
+        "I needed to understand what was worth keeping.",
+      ],
       streetStayBtn: "Stay there a little longer",
       streetFocusBtn: "Decide what stays",
       streetWaitFeedback: [
@@ -283,6 +292,7 @@ const LANG = {
       streetBridgeHint: "I couldn't carry everything forward. I had to figure out what remained.",
       gameSlotsLabel: "Backpack · 4 slots",
       gameIntroLine: "I couldn't carry everything forward. I had to figure out what remained.",
+      gameMobilePrompt: "Choose the 4 objects I carry with me.",
       gameDuplicate: "That's already in. No need to convince yourself twice.",
       gameOrderWrong: "Fair. But it's not the next piece.",
       gameCompleteKicker: "Correct choice.",
@@ -2436,6 +2446,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       </div>
 
       <div className="ch1-controls-slot ch2-object-controls-slot">
+        {!isComplete ? <div className="ch2-game-prompt">{T.gameMobilePrompt}</div> : null}
         <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         <div className="ch2-game-grid">
           {items.map((item) => {
@@ -2628,7 +2639,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 
             <div className="ch2-street-mobile-copy">
               <div className="ch2-street-narrative ch2-street-narrative-mobile">
-                {(T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
+                {(T.streetNarrativeMobileLines || T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
                   <span key={idx} className="ch2-street-narrative-line">{line}</span>
                 ))}
               </div>
@@ -3085,6 +3096,7 @@ export default function Roberto() {
         .ch2-street-narrative{color:rgba(239,233,224,.96);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.88);background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));padding:12px 20px;border-top:1px solid rgba(255,203,154,.20);border-radius:8px;backdrop-filter:blur(5px)}
         .ch2-street-narrative-line{display:block}
         .ch2-street-mobile-copy{display:none}
+        .ch2-game-prompt{width:100%;margin:0 0 10px 0;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,77,0,.18);background:rgba(255,77,0,.04);color:#e6d5c9;font-size:11px;line-height:1.7;letter-spacing:.01em;text-align:center}
         .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.82;filter:blur(24px)}
         .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.84}
         .ch2-street-stage.is-transitioning .ch2-street-frame{filter:saturate(.98) contrast(1.04) brightness(.92);transform:scale(1.01)}
@@ -3139,126 +3151,28 @@ export default function Roberto() {
         .ch2-debug-src{word-break:break-all;color:#b68f79}
 
         @media(max-width:600px){
-          .wrap{
-            padding:calc(84px + env(safe-area-inset-top,0px)) 18px 38px!important;
-            max-width:100%!important;
-          }
-          .top-btn{
-            padding:5px 10px!important;
-            font-size:10px!important;
-          }
+          .ch2-stage{aspect-ratio:4 / 4.6}
+          .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
+          .ch2-street-narrative-wrap{display:none}
+          .ch2-street-line-block{display:none}
+          .ch2-street-narrative-mobile{position:relative;left:auto;right:auto;top:auto;max-width:none;font-size:11px;line-height:1.7;padding:10px 12px;text-align:center}
+          .ch2-street-line-mobile{font-size:clamp(16px,4.9vw,22px);line-height:1.15;text-align:center}
+          .ch2-game-prompt{font-size:12px;padding:11px 14px}
+
+          .svc-in{flex-direction:column!important;gap:10px!important}
+          .home-section-kicker{font-size:24px!important;line-height:1.08!important}.home-section-sub{font-size:15px!important;line-height:1.72!important;max-width:100%!important}
+          .home-service-title{font-size:34px!important;line-height:1.02!important}
+          .home-service-sub{font-size:14px!important;line-height:1.52!important;margin-bottom:9px!important}
+          .home-service-desc{font-size:13px!important;line-height:1.92!important}
+          .home-method-title{font-size:15px!important;line-height:1.5!important;margin-bottom:8px!important}
+          .home-method-desc{font-size:13px!important;line-height:1.92!important;max-width:100%!important}
+          .svc-tw{min-width:auto!important}
+          .wrap{padding:60px 18px 40px!important}
           .nm{font-size:38px!important}
-          .ghost-phrase{font-size:11px!important}
+          .brow{flex-direction:column!important;gap:12px!important}
+          .brow .orsep{display:none}
           .crt-vignette{box-shadow:inset 0 0 50px 25px rgba(0,0,0,.5),inset 0 0 20px 8px rgba(0,0,0,.25)!important}
-
-          .home-section-kicker{
-            font-size:24px!important;
-            line-height:1.08!important;
-            margin-bottom:10px!important;
-          }
-          .home-section-sub{
-            font-size:15px!important;
-            line-height:1.72!important;
-            max-width:100%!important;
-            margin-bottom:22px!important;
-          }
-
-          .svc{
-            padding:22px 18px!important;
-          }
-          .svc-in{
-            display:block!important;
-          }
-          .svc-tw{
-            min-width:0!important;
-            width:100%!important;
-            margin-bottom:10px!important;
-          }
-          .home-service-title{
-            font-size:31px!important;
-            line-height:1.02!important;
-            display:block!important;
-            margin-bottom:6px!important;
-          }
-          .home-service-sub{
-            display:block!important;
-            font-size:14px!important;
-            line-height:1.46!important;
-            margin:0 0 12px 0!important;
-            max-width:100%!important;
-          }
-          .home-service-desc{
-            display:block!important;
-            max-width:100%!important;
-            font-size:14px!important;
-            line-height:1.88!important;
-          }
-
-          .work-card{
-            padding-top:22px!important;
-            padding-bottom:22px!important;
-            padding-left:0!important;
-          }
-          .work-card:hover{
-            padding-left:0!important;
-            background:none!important;
-            border-left-color:transparent!important;
-          }
-          .home-work-narrative{
-            font-size:13px!important;
-            line-height:1.82!important;
-            max-width:100%!important;
-          }
-          .home-work-secondary{
-            font-size:12px!important;
-            line-height:1.78!important;
-            max-width:100%!important;
-          }
-          .work-card > div:first-child{
-            gap:8px!important;
-            margin-bottom:12px!important;
-          }
-          .work-card > div:first-child > div:first-child{
-            font-size:22px!important;
-            line-height:1.08!important;
-          }
-          .work-card > div:last-child{
-            gap:5px!important;
-          }
-          .work-card span[style*="text-transform: uppercase"]{
-            font-size:8px!important;
-            letter-spacing:1px!important;
-            padding:3px 7px!important;
-          }
-
-          .home-method-title{
-            font-size:15px!important;
-            line-height:1.5!important;
-            margin-bottom:8px!important;
-          }
-          .home-method-desc{
-            font-size:13px!important;
-            line-height:1.9!important;
-            max-width:100%!important;
-          }
-          .mth{
-            padding:2px 0 2px 14px!important;
-          }
-
-          .brow{
-            flex-direction:column!important;
-            gap:12px!important;
-          }
-          .brow .orsep{
-            display:none!important;
-          }
-          .btn-trash,
-          .btn-talk{
-            width:100%!important;
-            max-width:320px!important;
-            min-width:0!important;
-          }
-
+          .ghost-phrase{font-size:11px!important}
           .ch1-root{padding:18px 16px 16px;align-items:flex-start}
           .ch1-wrap{width:min(94vw,760px)}
           .ch1-line-block,.ch1-feedback{left:16px;right:16px;bottom:18px}
@@ -3267,7 +3181,6 @@ export default function Roberto() {
           .ch1-controls-slot{min-height:114px;margin-top:12px}
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
-
           .ch2-street-transition-copy{max-width:none;font-size:11px;line-height:1.72}
           .ch2-street-line-block{width:min(calc(100% - 24px),620px);bottom:16px}
           .ch2-street-line-block .ch2-line{white-space:normal;font-size:clamp(17px,5.2vw,24px)}
@@ -3275,8 +3188,10 @@ export default function Roberto() {
           .ch2-street-narrative{font-size:10px;line-height:1.68;padding:10px 12px}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
           .ch2-street-reflection-boost{height:42%}
-          .ch2-game-slot-shell{display:none}
-          .ch2-game-slot-shell-mobile{display:block}
+          .ch2-game-slot-shell{left:14px;right:14px;bottom:14px;padding:10px 10px 11px}
+          .ch2-game-slot-grid{gap:6px}
+          .ch2-game-slot{min-height:48px;font-size:9px}
+          .ch2-game-slot.is-filled{font-size:10px}
           .ch2-game-feedback{font-size:11px;line-height:1.7;min-height:42px}
           .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
           .ch2-game-complete-card{left:14px;right:14px;top:14px;width:auto;transform:none;padding:12px 12px 13px}
