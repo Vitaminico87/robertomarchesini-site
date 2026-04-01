@@ -31,7 +31,7 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
     hero: "Costruisco sistemi creativi per brand, lanci ed esperienze che devono reggere davvero.",
-    heroSub: "Unisco direzione creativa, narrativa e AI per trasformare idee sparse in strutture leggibili, con una logica dietro.",
+    heroSub: "Unisco direzione creativa, narrativa e AI per dare alle idee una forma leggibile, con una logica dietro.",
     heroMobileSub: "Unisco direzione creativa, narrativa e AI per dare forma e struttura alle idee.",
     proofStrip: "Direzione narrativa · Sistemi creativi · Processi con AI",
     proofStripMobile: "Direzione narrativa · Sistemi creativi · AI",
@@ -43,7 +43,7 @@ const LANG = {
       { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per rendere il processo creativo più solido: ricerca, sviluppo, varianti, adattamenti e controllo qualità.", mobileDesc: "Uso l’AI per sviluppare meglio, più velocemente e con controllo." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali, responsabilità concrete, strutture creative che hanno dovuto reggere ritmo, pressione e tempo.",
+    selectedWorkSub: "Progetti reali, responsabilità concrete, sistemi creativi che hanno dovuto reggere davvero.",
     selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Sistemi che hanno dovuto reggere.",
     selectedWork: [
       {
@@ -54,7 +54,7 @@ const LANG = {
         mobileNarrative: "Direzione creativa e sistema contenuti per un venue con oltre 150 eventi l'anno.",
         narrative2: "Un impianto editoriale e promozionale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
         technical: "Identità · Sistema contenuti · Continuità editoriale",
-        tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
+        tags: ["Cultural venue", "Content system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
@@ -64,7 +64,7 @@ const LANG = {
         mobileNarrative: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia.",
         narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
         technical: "Direzione creativa · Sistema contenuti · Crescita audience",
-        tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
+        tags: ["Live entertainment", "Project narrative", "Digital experience"]
       },
       {
         title: "THEIA Events",
@@ -74,7 +74,7 @@ const LANG = {
         mobileNarrative: "Posizionamento premium, sito e architettura digitale per un brand eventi orientato a credibilità e contatti.",
         narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
         technical: "Posizionamento · Sito · Architettura digitale",
-        tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
+        tags: ["Positioning", "Digital experience", "Qualified leads"]
       }
     ],
     howLabel: "Metodo",
@@ -176,7 +176,7 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
     hero: "I design creative systems for brands, launches, and experiences that need to hold up in the real world.",
-    heroSub: "I combine creative direction, narrative, and AI to give ideas a form that is more coherent, more controlled, and more alive.",
+    heroSub: "I combine creative direction, narrative, and AI to give ideas a clearer form, with logic behind it.",
     heroMobileSub: "I combine creative direction, narrative, and AI to give ideas structure and form.",
     proofStrip: "Narrative direction · Creative systems · AI workflows",
     proofStripMobile: "Narrative direction · Creative systems · AI",
@@ -188,7 +188,7 @@ const LANG = {
       { title: "Build", subtitle: "Use AI to build better", desc: "I design AI-assisted creative workflows: research, development, variations, adaptations, and quality control, without lowering the standard.", mobileDesc: "I use AI to build faster, better, and with control." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Real projects, real responsibility, creative systems that had to hold up under pressure and over time.",
+    selectedWorkSub: "Real projects, real responsibility, creative systems built to hold up for real.",
     selectedWorkMobileSub: "Real projects. Real responsibility. Systems that had to hold up.",
     selectedWork: [
       {
@@ -2682,6 +2682,15 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
               <div className="ch1-scan" />
             </div>
 
+            <div className="ch2-street-mobile-copy">
+              <div className="ch2-street-narrative ch2-street-narrative-mobile">
+                {(T.streetNarrativeMobileLines || T.streetNarrativeLines || [T.streetNarrative]).map((line, idx) => (
+                  <span key={idx} className="ch2-street-narrative-line">{line}</span>
+                ))}
+              </div>
+              <div className="ch2-line ch2-street-line-mobile">{T.streetCopy}</div>
+            </div>
+
             <div className="ch1-controls-slot">
               {!streetResolved ? (
                 <div className="ch1-controls ch2-controls">
@@ -2925,7 +2934,7 @@ export default function Roberto() {
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         .work-card{transition:all .3s}
         .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
-        .svc{padding:24px 26px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
+        .svc{padding:28px 30px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
         .svc:hover{border-color:rgba(255,77,0,.35);background:rgba(255,77,0,.02)}
         .svc:hover .svc-t{color:#FF4D00!important;text-shadow:0 0 15px rgba(255,77,0,.12)}
         .work-card{transition:all .3s;padding-left:0;border-left:3px solid transparent}
@@ -2946,14 +2955,14 @@ export default function Roberto() {
         .home-pretty{text-wrap:pretty}
         .home-balance{text-wrap:balance}
         .home-section-kicker{display:inline-block;font-size:clamp(22px,2.8vw,28px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.92;font-family:'Playfair Display',serif;font-style:italic;line-height:1.08;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
-        .home-section-sub{font-size:14px;color:#9a9a9a;margin-bottom:32px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.68;max-width:560px;text-wrap:pretty}
-        .home-work-narrative{font-size:13px;color:#BBB;line-height:1.82;margin-bottom:8px;max-width:540px;text-wrap:pretty}
-        .home-work-secondary{font-size:12px;color:#999;line-height:1.78;margin-bottom:12px;max-width:540px;text-wrap:pretty}
+        .home-section-sub{font-size:14px;color:#9a9a9a;margin-bottom:36px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.72;max-width:520px;text-wrap:pretty}
+        .home-work-narrative{font-size:13px;color:#BBB;line-height:1.86;margin-bottom:10px;max-width:500px;text-wrap:pretty}
+        .home-work-secondary{font-size:12px;color:#999;line-height:1.82;margin-bottom:14px;max-width:500px;text-wrap:pretty}
         .home-service-title{font-size:33px;font-weight:600;color:#E8E4DE;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.04;text-wrap:balance}
-        .home-service-sub{font-size:13px;color:#a3a3a3;margin-bottom:8px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.5;text-wrap:pretty}
-        .home-service-desc{font-size:13px;color:#BBB;line-height:1.9;text-wrap:pretty}
+        .home-service-sub{font-size:13px;color:#a3a3a3;margin-bottom:10px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.56;text-wrap:pretty}
+        .home-service-desc{font-size:13px;color:#BBB;line-height:1.94;text-wrap:pretty;max-width:460px}
         .home-method-title{font-size:15px;font-weight:500;color:#e2ddd5;margin-bottom:8px;transition:all .2s;letter-spacing:.15px;line-height:1.48;text-wrap:balance}
-        .home-method-desc{font-size:13px;color:#a6a6a6;line-height:1.92;max-width:580px;text-wrap:pretty}
+        .home-method-desc{font-size:13px;color:#a6a6a6;line-height:1.96;max-width:520px;text-wrap:pretty}
         .ghost-mobile{text-align:center}
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         
@@ -3111,6 +3120,7 @@ export default function Roberto() {
         .ch2-street-narrative-wrap{position:absolute;left:50%;top:46px;z-index:9;width:min(calc(100% - 56px),760px);transform:translateX(-50%)}
         .ch2-street-narrative{color:rgba(239,233,224,.96);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.88);background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));padding:12px 20px;border-top:1px solid rgba(255,203,154,.20);border-radius:8px;backdrop-filter:blur(5px)}
         .ch2-street-narrative-line{display:block}
+        .ch2-street-mobile-copy{display:none}
                 .ch2-game-prompt{width:100%;margin:0 0 10px 0;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,77,0,.18);background:rgba(255,77,0,.04);color:#e6d5c9;font-size:11px;line-height:1.7;letter-spacing:.01em;text-align:center}
         .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.82;filter:blur(24px)}
         .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.84}
@@ -3169,20 +3179,28 @@ export default function Roberto() {
           .ch2-stage{aspect-ratio:4 / 3}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
+          .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
+          .ch2-street-narrative-mobile{position:relative;left:auto;right:auto;top:auto;max-width:none;font-size:11px;line-height:1.72;padding:10px 12px;text-align:center;background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));border-top:1px solid rgba(255,203,154,.18);border-radius:8px;backdrop-filter:blur(5px)}
+          .ch2-street-line-mobile{font-size:clamp(16px,4.9vw,22px);line-height:1.18;text-align:center;color:#e0e9f2}
+          .ch2-game-slot-shell{display:none}
+          .ch2-game-slot-shell-mobile{display:block}
           .ch2-game-prompt{font-size:12px;padding:11px 14px;margin-top:2px;margin-bottom:10px}
 
-          .svc-in{flex-direction:column!important;gap:8px!important}
-          .home-section-kicker{font-size:24px!important;line-height:1.08!important}
+          .svc{padding:18px 18px!important}
+          .svc-in{display:block!important;grid-template-columns:1fr!important;gap:0!important}
+          .svc-tw{margin-bottom:10px!important}
+          .svc-in > div:last-child{margin-top:0!important}
+          .home-section-kicker{font-size:24px!important;line-height:1.08!important;margin-bottom:0!important}
           .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
           .home-work-narrative{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important;max-width:100%!important}
           .home-work-secondary{display:none!important}
-          .home-service-title{font-size:30px!important;line-height:1.02!important}
+          .home-service-title{font-size:30px!important;line-height:1.02!important;display:block!important}
           .home-service-sub{font-size:13px!important;line-height:1.5!important;margin-bottom:8px!important;color:#9a9a9a!important}
           .home-service-desc{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important}
           .home-method-title{font-size:14px!important;line-height:1.48!important;margin-bottom:7px!important}
           .home-method-desc{font-size:12px!important;line-height:1.82!important;max-width:100%!important;color:#9e9e9e!important}
           .svc-tw{min-width:auto!important}
-          .wrap{padding:58px 20px 40px!important}
+          .wrap{padding:58px 20px 44px!important}
           .nm{font-size:38px!important;line-height:1.02!important}
           .brow{flex-direction:column!important;gap:12px!important}
           .brow .orsep{display:none}
@@ -3269,20 +3287,20 @@ export default function Roberto() {
       {/* MAIN */}
       {phase === "main" && (
         <div className="wrap" style={{
-          maxWidth: 660, margin: "0 auto", padding: "72px 32px 40px",
+          maxWidth: 640, margin: "0 auto", padding: "80px 32px 48px",
           opacity: contentFading ? 0 : (flicker ? .85 : 1),
           transition: contentFading ? "opacity .6s ease-out" : "opacity .04s",
         }}>
           {/* 1. HERO */}
           <Section delay={0.05}>
-            <div style={{ marginBottom: 32 }}>
+            <div style={{ marginBottom: isMobileViewport ? 34 : 40 }}>
               <h1 className="nm" style={{ fontFamily: "'Playfair Display',serif", fontSize: 52, fontWeight: 700, lineHeight: 1.02, margin: "0 0 10px", color: "#F0ECE6", animation: "nameGlow 6s ease-in-out infinite" }}>
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
               <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
-              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 18, lineHeight: isMobileViewport ? 1.78 : 1.88, maxWidth: isMobileViewport ? 420 : 510 }}>{T.hero}</div>
-              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 10 : 12, lineHeight: isMobileViewport ? 1.78 : 1.86, maxWidth: isMobileViewport ? 400 : 510 }}>{heroSubText}</div>
+              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 20, lineHeight: isMobileViewport ? 1.78 : 1.92, maxWidth: isMobileViewport ? 420 : 470 }}>{T.hero}</div>
+              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 12 : 14, lineHeight: isMobileViewport ? 1.78 : 1.9, maxWidth: isMobileViewport ? 400 : 470 }}>{heroSubText}</div>
             </div>
           </Section>
 
@@ -3300,14 +3318,14 @@ export default function Roberto() {
 
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
-            <div style={{ marginBottom: 56 }}>
+            <div style={{ marginBottom: isMobileViewport ? 56 : 64 }}>
               <div className="home-section-kicker" style={{ marginBottom: 8 }}>{T.selectedWorkLabel}</div>
               <div className="home-section-sub">{selectedWorkSubText}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
                   <div key={i} className="work-card" style={{
-                    paddingTop: 28,
-                    paddingBottom: 28,
+                    paddingTop: isMobileViewport ? 24 : 32,
+                    paddingBottom: isMobileViewport ? 24 : 32,
                     paddingRight: 0,
                     borderBottom: i < T.selectedWork.length - 1 ? "1px solid #141414" : "none",
                     cursor: "default",
@@ -3348,13 +3366,13 @@ export default function Roberto() {
 
           {/* 5. WHAT I DO */}
           <Section delay={0.15}>
-            <div style={{ marginBottom: 52 }}>
+            <div style={{ marginBottom: isMobileViewport ? 50 : 60 }}>
               <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.whatido}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 16 : 22 }}>
                 {T.services.map((svc, i) => (
                   <div key={i} className="svc">
-                    <div className="svc-in" style={{ display: "grid", gridTemplateColumns: "136px 1fr", gap: 22, alignItems: "start" }}>
-                      <div className="svc-tw">
+                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "136px 1fr", gap: isMobileViewport ? 0 : 24, alignItems: "start" }}>
+                      <div className="svc-tw" style={{ marginBottom: isMobileViewport ? 10 : 0 }}>
                         <span className="svc-t home-service-title">
                           {svc.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
                         </span>
@@ -3372,9 +3390,9 @@ export default function Roberto() {
 
           {/* 6. HOW I WORK */}
           <Section delay={0.18}>
-            <div style={{ marginBottom: 52 }}>
+            <div style={{ marginBottom: isMobileViewport ? 50 : 60 }}>
               <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.howLabel}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 18 : 22 }}>
                 {T.method.map((m, i) => (
                   <div key={i} className="mth">
                     <div className="mth-t home-method-title">{m.title}</div>
