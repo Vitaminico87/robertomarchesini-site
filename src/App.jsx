@@ -98,7 +98,7 @@ const LANG = {
     // Chapter 1 strings
     ch1: {
       kicker: "Capitolo 1 · Origine",
-      meadowIntro: "Ero un bambino isola. I libri erano oceani, e io ci annegavo volentieri.",
+      meadowIntro: "Da bambino ero un\'isola. I libri erano oceani, e io ci annegavo volentieri.",
       discoverCopy: "Quel giorno, in biblioteca, c'era qualcosa che non avevo mai visto.",
       revealCopy: "Prima li trovavo nei libri. Poi ho scoperto che potevo entrarci.",
       stayBtn: "Resta nell'erba",
@@ -1163,8 +1163,8 @@ function useStreetAmbience() {
     lowpass.frequency.exponentialRampToValueAtTime(920, now + duration);
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.0105, now + 1.05);
-    gain.gain.linearRampToValueAtTime(0.008, now + 2.25);
+    gain.gain.linearRampToValueAtTime(0.018, now + 0.95);
+    gain.gain.linearRampToValueAtTime(0.013, now + 2.15);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     const panner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
     if (panner) {
@@ -1187,7 +1187,7 @@ function useStreetAmbience() {
 
   const scheduleCars = useCallback(() => {
     clearCars();
-    const delay = 3200 + Math.random() * 3200;
+    const delay = 2400 + Math.random() * 2600;
     carTimeoutRef.current = setTimeout(() => {
       if (!activeRef.current || !audioCtxRef.current || !masterGainRef.current) return;
       playCarPass(audioCtxRef.current, masterGainRef.current);
@@ -1203,7 +1203,7 @@ function useStreetAmbience() {
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.0038, now + 0.004);
+    gain.gain.linearRampToValueAtTime(0.0072, now + 0.004);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
 
     const bandpass = ctx.createBiquadFilter();
@@ -1231,7 +1231,7 @@ function useStreetAmbience() {
 
   const scheduleClinks = useCallback(() => {
     clearClinks();
-    const delay = 4200 + Math.random() * 5400;
+    const delay = 2800 + Math.random() * 3600;
     clinkTimeoutRef.current = setTimeout(() => {
       if (!activeRef.current || !audioCtxRef.current || !masterGainRef.current) return;
       playDishClink(audioCtxRef.current, masterGainRef.current);
@@ -1283,7 +1283,7 @@ function useStreetAmbience() {
 
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.0001, now);
-      master.gain.linearRampToValueAtTime(0.19, now + 1.2);
+      master.gain.linearRampToValueAtTime(0.30, now + 0.9);
       master.connect(ctx.destination);
       masterGainRef.current = master;
 
@@ -1292,12 +1292,12 @@ function useStreetAmbience() {
       rainSource.loop = true;
       const rainHigh = ctx.createBiquadFilter();
       rainHigh.type = 'highpass';
-      rainHigh.frequency.setValueAtTime(2200, now);
+      rainHigh.frequency.setValueAtTime(1800, now);
       const rainLow = ctx.createBiquadFilter();
       rainLow.type = 'lowpass';
       rainLow.frequency.setValueAtTime(7600, now);
       const rainGain = ctx.createGain();
-      rainGain.gain.setValueAtTime(0.036, now);
+      rainGain.gain.setValueAtTime(0.065, now);
       rainSource.connect(rainHigh);
       rainHigh.connect(rainLow);
       rainLow.connect(rainGain);
@@ -1312,7 +1312,7 @@ function useStreetAmbience() {
       roomBand.frequency.setValueAtTime(540, now);
       roomBand.Q.setValueAtTime(0.35, now);
       const roomGain = ctx.createGain();
-      roomGain.gain.setValueAtTime(0.012, now);
+      roomGain.gain.setValueAtTime(0.024, now);
       roomSource.connect(roomBand);
       roomBand.connect(roomGain);
       roomGain.connect(master);
@@ -1323,8 +1323,8 @@ function useStreetAmbience() {
       roomBed.frequency.setValueAtTime(142, now);
       const roomBedGain = ctx.createGain();
       roomBedGain.gain.setValueAtTime(0.0001, now);
-      roomBedGain.gain.linearRampToValueAtTime(0.0042, now + 1.1);
-      roomBedGain.gain.linearRampToValueAtTime(0.0032, now + 4.2);
+      roomBedGain.gain.linearRampToValueAtTime(0.0068, now + 0.9);
+      roomBedGain.gain.linearRampToValueAtTime(0.0052, now + 4.2);
       roomBed.connect(roomBedGain);
       roomBedGain.connect(master);
       roomBed.start(now);
@@ -1343,13 +1343,13 @@ function useStreetAmbience() {
       restaurantLow.type = 'lowpass';
       restaurantLow.frequency.setValueAtTime(2200, now);
       const restaurantGain = ctx.createGain();
-      restaurantGain.gain.setValueAtTime(0.0115, now);
+      restaurantGain.gain.setValueAtTime(0.022, now);
 
       const restaurantLfo = ctx.createOscillator();
       restaurantLfo.type = 'sine';
       restaurantLfo.frequency.setValueAtTime(0.11, now);
       const restaurantLfoGain = ctx.createGain();
-      restaurantLfoGain.gain.setValueAtTime(0.0036, now);
+      restaurantLfoGain.gain.setValueAtTime(0.0062, now);
       restaurantLfo.connect(restaurantLfoGain);
       restaurantLfoGain.connect(restaurantGain.gain);
 
@@ -2479,9 +2479,11 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     onUnlockProfile?.("conflict");
     if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
     streetTransitionTimeoutRef.current = setTimeout(() => {
+      streetAmbience.stop();
+      setStreetTransitioning(false);
       setScene("selection");
-    }, 1050);
-  }, [onUnlockProfile]);
+    }, 420);
+  }, [onUnlockProfile, streetAmbience]);
 
   const handleBackToDesk = useCallback(() => {
     setStreetAmbientPulse(false);
@@ -2971,14 +2973,15 @@ export default function Roberto() {
         .ch2-street-vignette{inset:0;background:
           radial-gradient(ellipse at center, transparent 36%, rgba(0,0,0,.14) 68%, rgba(0,0,0,.5) 100%),
           linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.14) 100%)}
-        .ch2-street-line-block{border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.26) 70%,transparent 100%)}
-        .ch2-street-narrative-wrap{position:absolute;left:22px;right:22px;top:20px;z-index:9;max-width:520px}
-        .ch2-street-narrative{color:rgba(236,229,217,.9);font-size:11px;line-height:1.88;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-shadow:0 2px 10px rgba(0,0,0,.82)}
-        .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.76;filter:blur(24px)}
-        .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.78}
+        .ch2-street-line-block{left:50%;right:auto;bottom:22px;width:min(calc(100% - 44px),620px);transform:translateX(-50%);border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.68) 0%,rgba(0,0,0,.28) 70%,transparent 100%)}
+        .ch2-street-line-block .ch2-line{text-align:center;font-size:clamp(20px,2.5vw,31px)}
+        .ch2-street-narrative-wrap{position:absolute;left:50%;top:34px;z-index:9;width:min(calc(100% - 44px),640px);transform:translateX(-50%)}
+        .ch2-street-narrative{color:rgba(236,229,217,.94);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.86);background:linear-gradient(180deg, rgba(3,8,10,.56), rgba(3,8,10,.24));padding:12px 16px;border-top:1px solid rgba(255,203,154,.16);border-radius:6px;backdrop-filter:blur(4px)}
+        .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.82;filter:blur(24px)}
+        .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.84}
         .ch2-street-stage.is-transitioning .ch2-street-frame{filter:saturate(.98) contrast(1.04) brightness(.92);transform:scale(1.01)}
         .ch2-street-stage.is-transitioning .ch2-street-line-block{opacity:.82}
-        .ch2-street-transition-copy{width:100%;max-width:520px;border-top:1px solid rgba(255,203,154,.16);padding-top:12px;color:rgba(234,223,210,.9);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;animation:fadeIn .28s ease-out}
+        .ch2-street-transition-copy{width:100%;max-width:620px;margin:0 auto;border-top:1px solid rgba(255,203,154,.16);padding-top:12px;color:rgba(234,223,210,.94);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;animation:fadeIn .28s ease-out}
         .ch2-street-back-link{margin-top:12px;background:transparent;border:0;padding:0;color:#6e6e70;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:color .22s ease;align-self:flex-start}.ch2-street-back-link:hover{color:#FF4D00}
         @keyframes ch2StreetFrameDrift{0%,100%{transform:scale(1.006) translateY(0)}50%{transform:scale(1.01) translateY(-0.35%)}}
         @keyframes ch2DoorBloomPulse{0%,100%{opacity:.52;filter:blur(16px)}50%{opacity:.68;filter:blur(21px)}}
@@ -3037,7 +3040,8 @@ export default function Roberto() {
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
           .ch2-street-transition-copy{max-width:none;font-size:11px;line-height:1.72}
-          .ch2-street-narrative-wrap{left:16px;right:16px;top:18px;max-width:none}
+          .ch2-street-narrative-wrap{left:50%;right:auto;top:24px;width:min(calc(100% - 32px),560px);transform:translateX(-50%)}
+          .ch2-street-narrative{font-size:10px;line-height:1.72;padding:10px 12px}
           .ch2-street-narrative{font-size:10px;line-height:1.74}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
           .ch2-street-reflection-boost{height:42%}
