@@ -57,6 +57,7 @@ const CASE_STUDIES = {
       backLabel: "← Torna ai lavori",
       openLabel: "Apri case study",
       kicker: "Case study",
+      heroImage: "https://www.robertomarchesini.com/assets/clients/notre_dame_case_hero.jpg",
       meta: "Direzione creativa · Sistema contenuti · Crescita audience",
       lead: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia. Un lavoro lungo, costruito per dare continuità e scala a un racconto che non poteva disperdersi.",
       proof: ["12 anni di continuità", "400K+ audience", "narrazione a scala nazionale"],
@@ -128,6 +129,7 @@ const CASE_STUDIES = {
       backLabel: "← Back to work",
       openLabel: "Open case study",
       kicker: "Case study",
+      heroImage: "https://www.robertomarchesini.com/assets/clients/notre_dame_case_hero.jpg",
       meta: "Creative direction · Content system · Audience growth",
       lead: "Twelve years of creative direction and content system design for one of Italy’s most recognizable live brands. Long-term work built to give continuity and scale to a narrative that could not afford to disperse.",
       proof: ["12 years of continuity", "400K+ audience", "national-scale narrative"],
@@ -748,19 +750,39 @@ function getWorkSlug(title) {
 
 function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
   if (!work || !data) return null;
+  const hasHeroImage = Boolean(data.heroImage);
   return (
     <div className="case-study-page" style={{ maxWidth: 980, margin: "0 auto", padding: "64px 0 34px", animation: "fadeIn .28s ease-out" }}>
       <button className="top-btn case-study-back-btn" onClick={onBack} style={{ marginBottom: 42, color: "#FF4D00", borderColor: "rgba(255,77,0,.24)" }}>{data.backLabel}</button>
 
-      <div className="case-study-hero" style={{ marginBottom: 42 }}>
-        <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 16 }}>{data.kicker}</div>
-        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(42px,6vw,68px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 14px", letterSpacing: "-.02em" }}>
-          {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
-        </h2>
-        <div style={{ fontSize: 11, color: "#9d948a", letterSpacing: 1.55, textTransform: "uppercase", marginBottom: 28, fontFamily: "'IBM Plex Mono', monospace" }}>
-          {work.period} · {data.meta}
+      {hasHeroImage ? (
+        <div className="case-study-hero-image-shell" style={{ position: "relative", marginBottom: 34, borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,.06)", aspectRatio: "1.35 / 1", background: "#080808" }}>
+          <img src={data.heroImage} alt={work.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(1) contrast(1.02) brightness(.82)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(5,5,5,.74) 0%, rgba(5,5,5,.28) 38%, rgba(5,5,5,.10) 100%), linear-gradient(180deg, rgba(5,5,5,.12) 0%, rgba(5,5,5,.42) 100%)" }} />
+          <div style={{ position: "absolute", left: 24, right: 24, bottom: 20, maxWidth: 520 }}>
+            <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 12 }}>{data.kicker}</div>
+            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(38px,5.6vw,64px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 12px", letterSpacing: "-.02em" }}>
+              {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
+            </h2>
+            <div style={{ fontSize: 11, color: "#c1b6aa", letterSpacing: 1.45, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.7 }}>
+              {work.period} · {data.meta}
+            </div>
+          </div>
         </div>
-        <div className="case-study-leadhome-pretty"style={{fontSize:19,color:"#F4EFE8"}}>{data.lead}</div>
+      ) : (
+        <div className="case-study-hero" style={{ marginBottom: 42 }}>
+          <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 16 }}>{data.kicker}</div>
+          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(42px,6vw,68px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 14px", letterSpacing: "-.02em" }}>
+            {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
+          </h2>
+          <div style={{ fontSize: 11, color: "#9d948a", letterSpacing: 1.55, textTransform: "uppercase", marginBottom: 28, fontFamily: "'IBM Plex Mono', monospace" }}>
+            {work.period} · {data.meta}
+          </div>
+        </div>
+      )}
+
+      <div className="case-study-hero-copy" style={{ marginBottom: 42 }}>
+        <div className="home-pretty" style={{ fontSize: 20, color: "#F4EFE8", lineHeight: 1.72, maxWidth: 740 }}>{data.lead}</div>
       </div>
 
       <div className="case-study-proof-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 12, marginBottom: 50 }}>
