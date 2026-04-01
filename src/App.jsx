@@ -21,7 +21,7 @@ const ASSETS = {
   chapter2DeskLoop: `${ASSET_BASE_CH2}/chapter2_daynight_loop.mp4?v=1`,
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
   chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
-  chapter3Frame1,
+  chapter3Frame1: "https://www.robertomarchesini.com/assets/chapter3/chapter3_q1_backstage.png",
 };
 const CV_DOWNLOAD_URL = "/assets/roberto-marchesini-cv.pdf";
 
@@ -213,7 +213,7 @@ const LANG = {
         mobileNarrative: "Creative direction and content system for a venue with over 150 events a year.",
         narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
         technical: "Identity · Content system · Editorial continuity",
-        tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
+        tags: ["Cultural venue", "Content system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
@@ -223,7 +223,7 @@ const LANG = {
         mobileNarrative: "Twelve years of creative direction and content systems for one of Italy's strongest live brands.",
         narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
         technical: "Creative direction · Content system · Audience growth",
-        tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
+        tags: ["Live entertainment", "Project narrative", "Digital experience"]
       },
       {
         title: "THEIA Events",
@@ -233,7 +233,7 @@ const LANG = {
         mobileNarrative: "Premium positioning, website, and digital architecture for an event brand built on credibility and leads.",
         narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
         technical: "Positioning · Website · Digital architecture",
-        tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
+        tags: ["Positioning", "Digital experience", "Qualified leads"]
       }
     ],
     howLabel: "Method",
