@@ -47,8 +47,8 @@ const LANG = {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Creative direction e sistema di comunicazione per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
-        narrative2: "Identità, promozione e continuità editoriale costruite per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
+        narrative: "Creative direction e sistema di contenuti per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        narrative2: "Un impianto editoriale e promozionale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
         technical: "Identità · Sistema contenuti · Continuità editoriale",
         tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
@@ -56,8 +56,8 @@ const LANG = {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Dodici anni di direzione creativa per comunicazione e contenuti digitali di uno dei live brand più riconoscibili in Italia.",
-        narrative2: "Un sistema di contenuti costruito nel tempo, con un'audience cresciuta oltre 400K persone.",
+        narrative: "Dodici anni di direzione creativa e sistema contenuti per la comunicazione digitale di uno dei live brand più riconoscibili in Italia.",
+        narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
         technical: "Direzione creativa · Sistema contenuti · Crescita audience",
         tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
@@ -66,7 +66,7 @@ const LANG = {
         period: "2025",
         status: "active",
         narrative: "Posizionamento premium, website direction e architettura digitale per un brand eventi orientato a credibilità e lead qualificati.",
-        narrative2: "Un'identità più chiara, un tono più forte e una presenza digitale pensata per essere ricordata e contattata.",
+        narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
         technical: "Posizionamento · Website · Architettura digitale",
         tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
@@ -181,8 +181,8 @@ const LANG = {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
-        narrative: "Creative direction and communication system for a venue with weekly programming and over 150 events a year.",
-        narrative2: "Identity, promotion, and editorial continuity built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
+        narrative: "Creative direction and content system for a venue with weekly programming and over 150 events a year.",
+        narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
         technical: "Identity · Content system · Editorial continuity",
         tags: ["Cultural venue", "Brand system", "Weekly execution"]
       },
@@ -190,8 +190,8 @@ const LANG = {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Twelve years of creative direction for the communications and digital content of one of Italy's most recognizable live brands.",
-        narrative2: "A content system built over time, with an audience grown to over 400K people.",
+        narrative: "Twelve years of creative direction and content system design for the digital communication of one of Italy's most recognizable live brands.",
+        narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
         technical: "Creative direction · Content system · Audience growth",
         tags: ["Live entertainment", "Brand narrative", "Digital experience"]
       },
@@ -200,7 +200,7 @@ const LANG = {
         period: "2025",
         status: "active",
         narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
-        narrative2: "A clearer identity, a stronger tone, and a digital presence designed to be remembered and contacted.",
+        narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
         technical: "Positioning · Website · Digital architecture",
         tags: ["Positioning", "Digital experience", "Lead architecture"]
       }
