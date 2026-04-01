@@ -749,37 +749,42 @@ function getWorkSlug(title) {
 function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
   if (!work || !data) return null;
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 0 24px", animation: "fadeIn .28s ease-out" }}>
-      <button className="top-btn" onClick={onBack} style={{ marginBottom: 28 }}>{data.backLabel}</button>
-      <div style={{ marginBottom: 26 }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: "#777", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 12 }}>{data.kicker}</div>
-        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(34px,5vw,56px)", fontStyle: "italic", lineHeight: 1.02, color: "#F0ECE6", margin: "0 0 10px" }}>{work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span></h2>
-        <div style={{ fontSize: 11, color: "#8a8a8a", letterSpacing: 1.4, textTransform: "uppercase", marginBottom: 18 }}>{work.period} · {data.meta}</div>
-        <div className="home-pretty" style={{ fontSize: 16, color: "#d3cbc2", lineHeight: 1.9, maxWidth: 720 }}>{data.lead}</div>
+    <div className="case-study-page" style={{ maxWidth: 960, margin: "0 auto", padding: "56px 0 28px", animation: "fadeIn .28s ease-out" }}>
+      <button className="top-btn case-study-back-btn" onClick={onBack} style={{ marginBottom: 34 }}>{data.backLabel}</button>
+
+      <div className="case-study-hero" style={{ marginBottom: 34 }}>
+        <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 14 }}>{data.kicker}</div>
+        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(38px,5.8vw,62px)", fontStyle: "italic", fontWeight: 600, lineHeight: 1.01, color: "#F0ECE6", margin: "0 0 12px" }}>
+          {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
+        </h2>
+        <div style={{ fontSize: 11, color: "#8d8d8d", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 22, fontFamily: "'IBM Plex Mono', monospace" }}>
+          {work.period} · {data.meta}
+        </div>
+        <div className="case-study-lead home-pretty" style={{ fontSize: 18, color: "#F0ECE6", lineHeight: 1.78, maxWidth: 760 }}>{data.lead}</div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginBottom: 34 }}>
+      <div className="case-study-proof-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginBottom: 42 }}>
         {data.proof.map((item, idx) => (
-          <div key={idx} style={{ padding: "12px 14px", border: "1px solid rgba(255,77,0,.14)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.04), rgba(255,255,255,.01))", color: "#dccfc2", fontSize: 10, lineHeight: 1.6, letterSpacing: .45, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
+          <div key={idx} className="case-study-proof-card" style={{ padding: "14px 15px", border: "1px solid rgba(255,77,0,.16)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.045), rgba(255,255,255,.012))", color: "#F0ECE6", fontSize: 10, lineHeight: 1.65, letterSpacing: .45, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
         ))}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 28, marginBottom: 36 }}>
+      <div className="case-study-sections" style={{ display: "flex", flexDirection: "column", gap: 34, marginBottom: 42 }}>
         {data.sections.map((section, idx) => (
-          <div key={idx} style={{ paddingLeft: 18, borderLeft: "2px solid #1a1a1a" }}>
-            <div style={{ fontSize: 18, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#e7dfd6", marginBottom: 8 }}>{section.title}</div>
-            <div className="home-pretty" style={{ fontSize: 13, color: "#a6a6a6", lineHeight: 1.95, maxWidth: 720 }}>{section.body}</div>
-          </div>
+          <section key={idx} className="case-study-section" style={{ paddingLeft: 22, borderLeft: "2px solid rgba(255,77,0,.12)" }}>
+            <div style={{ fontSize: 21, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#F0ECE6", marginBottom: 10, lineHeight: 1.2 }}>{section.title}</div>
+            <div className="home-pretty" style={{ fontSize: 14, color: "#C6C0B8", lineHeight: 2.0, maxWidth: 760 }}>{section.body}</div>
+          </section>
         ))}
       </div>
 
-      <div style={{ borderTop: "1px solid #141414", paddingTop: 18, marginBottom: 28 }}>
-        <div className="home-pretty" style={{ fontSize: 14, color: "#cfc2b5", lineHeight: 1.9, maxWidth: 720 }}>{data.closing}</div>
+      <div className="case-study-closing" style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 22, marginBottom: 30 }}>
+        <div className="home-pretty" style={{ fontSize: 15, color: "#F0ECE6", lineHeight: 1.86, maxWidth: 740 }}>{data.closing}</div>
       </div>
 
       <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
         <button className="btn-talk" onClick={onContact}>{lang === "it" ? "Parliamone" : "Let's talk"}</button>
-        <button className="top-btn" onClick={onBack}>{data.backLabel}</button>
+        <button className="top-btn case-study-back-btn" onClick={onBack}>{data.backLabel}</button>
       </div>
     </div>
   );
@@ -3582,22 +3587,22 @@ export default function Roberto() {
         .btn-talk:hover{background:#E8E4DE;color:#050505;border-color:#E8E4DE;box-shadow:0 0 20px rgba(232,228,222,.12)}
         .fl-word{position:absolute;white-space:nowrap;opacity:0}
         .fl-word.go{animation:fall var(--dur) var(--del) ease-in forwards}
-        .top-btn{background:transparent;border:1px solid #161616;border-radius:3px;padding:5px 12px;cursor:pointer;transition:all .25s;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#333}
-        .top-btn:hover{border-color:rgba(255,77,0,.4);color:#FF4D00}
+        .top-btn{background:transparent;border:1px solid rgba(255,77,0,.22);border-radius:3px;padding:6px 12px;cursor:pointer;transition:all .25s;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1.1px;color:#FF4D00}
+        .top-btn:hover{border-color:rgba(255,77,0,.5);color:#FFD7C3;background:rgba(255,77,0,.05)}
         .foot-l{transition:color .2s;cursor:pointer;color:#444}
         .foot-l:hover{color:#888}
         .ghost-phrase{line-height:1.5}
         .home-pretty{text-wrap:pretty}
         .home-balance{text-wrap:balance}
         .home-section-kicker{display:inline-block;font-size:clamp(22px,2.8vw,28px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.92;font-family:'Playfair Display',serif;font-style:italic;line-height:1.08;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
-        .home-section-sub{font-size:14px;color:#9a9a9a;margin-bottom:36px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.72;max-width:520px;text-wrap:pretty}
-        .home-work-narrative{font-size:13px;color:#BBB;line-height:1.86;margin-bottom:10px;max-width:500px;text-wrap:pretty}
-        .home-work-secondary{font-size:12px;color:#999;line-height:1.82;margin-bottom:14px;max-width:500px;text-wrap:pretty}
+        .home-section-sub{font-size:15px;color:#a9a39b;margin-bottom:42px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.82;max-width:560px;text-wrap:pretty}
+        .home-work-narrative{font-size:15px;color:#F0ECE6;line-height:1.82;margin-bottom:12px;max-width:560px;text-wrap:pretty}
+        .home-work-secondary{font-size:13px;color:#9f9890;line-height:1.92;margin-bottom:18px;max-width:560px;text-wrap:pretty}
         .home-service-title{font-size:33px;font-weight:600;color:#E8E4DE;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.04;text-wrap:balance}
-        .home-service-sub{font-size:13px;color:#a3a3a3;margin-bottom:10px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.56;text-wrap:pretty}
-        .home-service-desc{font-size:13px;color:#BBB;line-height:1.94;text-wrap:pretty;max-width:460px}
+        .home-service-sub{font-size:13px;color:#b1aaa1;margin-bottom:12px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.6;text-wrap:pretty}
+        .home-service-desc{font-size:14px;color:#d6d0c7;line-height:1.92;text-wrap:pretty;max-width:470px}
         .home-method-title{font-size:15px;font-weight:500;color:#e2ddd5;margin-bottom:8px;transition:all .2s;letter-spacing:.15px;line-height:1.48;text-wrap:balance}
-        .home-method-desc{font-size:13px;color:#a6a6a6;line-height:1.96;max-width:520px;text-wrap:pretty}
+        .home-method-desc{font-size:14px;color:#b8b2aa;line-height:1.94;max-width:540px;text-wrap:pretty}
         .ghost-mobile{text-align:center}
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
         .home-memory-scan{position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,77,0,.06) 18%,rgba(255,255,255,.04) 48%,rgba(255,77,0,.06) 82%,transparent 100%);animation:homeMemorySweep 7.5s ease-in-out infinite;opacity:.8}
@@ -4003,7 +4008,7 @@ export default function Roberto() {
               </h1>
               <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 20, lineHeight: isMobileViewport ? 1.78 : 1.92, maxWidth: isMobileViewport ? 420 : 470 }}>{T.hero}</div>
-              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#8d8d8d" : "#999", marginTop: isMobileViewport ? 12 : 12, lineHeight: isMobileViewport ? 1.74 : 1.78, maxWidth: isMobileViewport ? 400 : 420 }}>{heroSubText}</div>
+              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#9a938b" : "#a39d95", marginTop: 14, lineHeight: isMobileViewport ? 1.74 : 1.82, maxWidth: isMobileViewport ? 400 : 390 }}>{heroSubText}</div>
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
@@ -4011,7 +4016,7 @@ export default function Roberto() {
           {/* 2. PROOF STRIP */}
           <Section delay={0.08}>
             <div style={{ marginBottom: 32, textAlign: "center" }}>
-              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : 1.4, color: "#777", textTransform: isMobileViewport ? "uppercase" : "none", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.45, maxWidth: isMobileViewport ? 320 : 520, marginInline: "auto" }}>{proofStripText}</div>
+              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : 1.15, color: isMobileViewport ? "#777" : "#8c857d", textTransform: isMobileViewport ? "uppercase" : "none", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.5, maxWidth: isMobileViewport ? 320 : 540, marginInline: "auto" }}>{proofStripText}</div>
             </div>
           </Section>
 
@@ -4047,11 +4052,11 @@ export default function Roberto() {
                     aria-label={`${CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}: ${work.title}`}
                   >
                     <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 10, flexWrap: "wrap" }}>
-                      <div style={{ fontSize: 26, fontWeight: 600, color: "#E8E4DE", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.1 }}>
+                      <div style={{ fontSize: 28, fontWeight: 600, color: "#F0ECE6", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.08 }}>
                         {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 10, letterSpacing: 1.5, color: "#444", fontFamily: "'IBM Plex Mono', monospace" }}>{work.period}</span>
+                        <span style={{ fontSize: 10, letterSpacing: 1.5, color: "#7d766d", fontFamily: "'IBM Plex Mono', monospace" }}>{work.period}</span>
                         {work.status === "active" && (
                           <span style={{ 
                             display: "inline-block", width: 6, height: 6, borderRadius: "50%", 
@@ -4063,7 +4068,7 @@ export default function Roberto() {
                     </div>
                     <div className="home-work-narrative">{isMobileViewport ? (work.mobileNarrative || work.narrative) : work.narrative}</div>
                     {(!isMobileViewport && work.narrative2) && <div className="home-work-secondary">{work.narrative2}</div>}
-                    <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6, marginBottom: 12, letterSpacing: .3 }}>{work.technical}</div>
+                    <div style={{ fontSize: 11, color: "#B1AAA1", lineHeight: 1.7, marginBottom: 16, letterSpacing: .35 }}>{work.technical}</div>
                     {work.proof?.length ? (
                       <div style={{
                         display: "grid",
@@ -4076,8 +4081,8 @@ export default function Roberto() {
                             padding: isMobileViewport ? "9px 10px" : "10px 12px",
                             border: "1px solid rgba(255,77,0,.12)",
                             borderRadius: 4,
-                            background: "linear-gradient(180deg, rgba(255,77,0,.035), rgba(255,255,255,.01))",
-                            color: "#d2c4b8",
+                            background: "linear-gradient(180deg, rgba(255,77,0,.05), rgba(255,255,255,.012))",
+                            color: "#F0ECE6",
                             fontSize: 10,
                             lineHeight: 1.55,
                             letterSpacing: .35,
@@ -4090,7 +4095,7 @@ export default function Roberto() {
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
                       {work.tags.map((tag, j) => (
                         <span key={j} style={{ 
-                          fontSize: 9, letterSpacing: 1.2, color: "#777", textTransform: "uppercase", 
+                          fontSize: 9, letterSpacing: 1.2, color: "#9d958d", textTransform: "uppercase", 
                           fontFamily: "'IBM Plex Mono', monospace",
                           padding: "3px 8px", border: "1px solid #2A2A2A", borderRadius: 2,
                         }}>{tag}</span>
