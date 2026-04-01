@@ -132,6 +132,7 @@ const LANG = {
         "Ovviamente ho deciso di aggiungerne un altro.",
       ],
       streetCopy: "Fuori, almeno, il rumore cambiava forma.",
+      streetNarrative: "Per schiarirmi le idee, sono uscito a mangiare qualcosa sotto la pioggia. Avevo bisogno di svuotare la testa per capire cosa tenere davvero.",
       streetStayBtn: "Resta lì un altro minuto",
       streetFocusBtn: "Capisci cosa tenere",
       streetWaitFeedback: [
@@ -251,6 +252,7 @@ const LANG = {
         "Naturally, I decided to add another one.",
       ],
       streetCopy: "Outside, at least, the noise changed shape.",
+      streetNarrative: "To clear my head, I stepped out to eat something in the rain. I needed to empty it out and understand what was actually worth keeping.",
       streetStayBtn: "Stay there a little longer",
       streetFocusBtn: "Decide what stays",
       streetWaitFeedback: [
@@ -995,40 +997,253 @@ function useLibrarySwosh() {
       if (ctx.state === 'suspended') ctx.resume();
 
       const now = ctx.currentTime;
-      const duration = 0.92;
+      const duration = 1.35;
 
       const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * duration));
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
         const t = i / bufferSize;
-        data[i] = (Math.random() * 2 - 1) * (1 - t) * 0.85;
+        const shaped = Math.pow(1 - t, 1.35);
+        data[i] = (Math.random() * 2 - 1) * shaped * 0.55;
       }
 
       const source = ctx.createBufferSource();
       source.buffer = buffer;
 
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(430, now);
-      filter.frequency.exponentialRampToValueAtTime(1280, now + duration);
-      filter.Q.setValueAtTime(0.9, now);
+      const highpass = ctx.createBiquadFilter();
+      highpass.type = 'highpass';
+      highpass.frequency.setValueAtTime(180, now);
+
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.setValueAtTime(280, now);
+      bandpass.frequency.exponentialRampToValueAtTime(1180, now + duration);
+      bandpass.Q.setValueAtTime(0.55, now);
+
+      const lowpass = ctx.createBiquadFilter();
+      lowpass.type = 'lowpass';
+      lowpass.frequency.setValueAtTime(2200, now);
+      lowpass.frequency.exponentialRampToValueAtTime(1400, now + duration);
+
+      const pad = ctx.createOscillator();
+      pad.type = 'sine';
+      pad.frequency.setValueAtTime(220, now);
+      pad.frequency.exponentialRampToValueAtTime(145, now + duration);
+
+      const padGain = ctx.createGain();
+      padGain.gain.setValueAtTime(0.0001, now);
+      padGain.gain.linearRampToValueAtTime(0.022, now + 0.26);
+      padGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.13, now + 0.085);
+      gain.gain.linearRampToValueAtTime(0.055, now + 0.22);
+      gain.gain.linearRampToValueAtTime(0.043, now + 0.62);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
-      source.connect(filter);
-      filter.connect(gain);
+      source.connect(highpass);
+      highpass.connect(bandpass);
+      bandpass.connect(lowpass);
+      lowpass.connect(gain);
       gain.connect(ctx.destination);
 
+      pad.connect(padGain);
+      padGain.connect(ctx.destination);
+
       source.start(now);
+      pad.start(now);
       source.stop(now + duration);
+      pad.stop(now + duration + 0.02);
     } catch (e) {
       // Audio non supportato, ignora silenziosamente
     }
   }, []);
+}
+
+
+function useStreetAmbience() {
+  const audioCtxRef = useRef(null);
+  const masterGainRef = useRef(null);
+  const activeRef = useRef(false);
+  const loopNodesRef = useRef([]);
+  const carTimeoutRef = useRef(null);
+
+  const ensureContext = useCallback(() => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioCtxRef.current;
+  }, []);
+
+  const createNoiseBuffer = useCallback((ctx, duration = 2.4) => {
+    const length = Math.max(1, Math.floor(ctx.sampleRate * duration));
+    const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < length; i++) {
+      const white = Math.random() * 2 - 1;
+      last = (last * 0.965) + (white * 0.035);
+      data[i] = last;
+    }
+    return buffer;
+  }, []);
+
+  const clearCars = useCallback(() => {
+    if (carTimeoutRef.current) {
+      clearTimeout(carTimeoutRef.current);
+      carTimeoutRef.current = null;
+    }
+  }, []);
+
+  const playCarPass = useCallback((ctx, master) => {
+    const now = ctx.currentTime;
+    const duration = 3.6;
+    const source = ctx.createBufferSource();
+    source.buffer = createNoiseBuffer(ctx, duration);
+    const bandpass = ctx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.setValueAtTime(420, now);
+    bandpass.frequency.exponentialRampToValueAtTime(1220, now + duration * 0.55);
+    bandpass.frequency.exponentialRampToValueAtTime(560, now + duration);
+    bandpass.Q.setValueAtTime(0.42, now);
+    const lowpass = ctx.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.setValueAtTime(1500, now);
+    lowpass.frequency.exponentialRampToValueAtTime(920, now + duration);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.0105, now + 1.05);
+    gain.gain.linearRampToValueAtTime(0.008, now + 2.25);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    const panner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
+    if (panner) {
+      const fromLeft = Math.random() > 0.5;
+      panner.pan.setValueAtTime(fromLeft ? -0.68 : 0.68, now);
+      panner.pan.linearRampToValueAtTime(fromLeft ? 0.58 : -0.58, now + duration);
+    }
+    source.connect(bandpass);
+    bandpass.connect(lowpass);
+    lowpass.connect(gain);
+    if (panner) {
+      gain.connect(panner);
+      panner.connect(master);
+    } else {
+      gain.connect(master);
+    }
+    source.start(now);
+    source.stop(now + duration + 0.05);
+  }, [createNoiseBuffer]);
+
+  const scheduleCars = useCallback(() => {
+    clearCars();
+    const delay = 7000 + Math.random() * 5000;
+    carTimeoutRef.current = setTimeout(() => {
+      if (!activeRef.current || !audioCtxRef.current || !masterGainRef.current) return;
+      playCarPass(audioCtxRef.current, masterGainRef.current);
+      scheduleCars();
+    }, delay);
+  }, [clearCars, playCarPass]);
+
+  const stop = useCallback(() => {
+    activeRef.current = false;
+    clearCars();
+
+    const ctx = audioCtxRef.current;
+    const master = masterGainRef.current;
+    if (ctx && master) {
+      const now = ctx.currentTime;
+      try {
+        master.gain.cancelScheduledValues(now);
+        master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), now);
+        master.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+      } catch (e) {}
+    }
+
+    const nodesToStop = [...loopNodesRef.current];
+    loopNodesRef.current = [];
+
+    nodesToStop.forEach((node) => {
+      try { node.stop?.((audioCtxRef.current?.currentTime || 0) + 0.9); } catch (e) {}
+    });
+
+    setTimeout(() => {
+      nodesToStop.forEach((node) => {
+        try { node.disconnect?.(); } catch (e) {}
+      });
+      if (!activeRef.current) {
+        masterGainRef.current = null;
+      }
+    }, 1000);
+  }, [clearCars]);
+
+  const start = useCallback(() => {
+    try {
+      const ctx = ensureContext();
+      if (ctx.state === 'suspended') ctx.resume();
+      if (activeRef.current) return;
+
+      activeRef.current = true;
+      const now = ctx.currentTime;
+
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0.0001, now);
+      master.gain.linearRampToValueAtTime(0.16, now + 1.4);
+      master.connect(ctx.destination);
+      masterGainRef.current = master;
+
+      const rainSource = ctx.createBufferSource();
+      rainSource.buffer = createNoiseBuffer(ctx, 2.8);
+      rainSource.loop = true;
+      const rainHigh = ctx.createBiquadFilter();
+      rainHigh.type = 'highpass';
+      rainHigh.frequency.setValueAtTime(2600, now);
+      const rainLow = ctx.createBiquadFilter();
+      rainLow.type = 'lowpass';
+      rainLow.frequency.setValueAtTime(7600, now);
+      const rainGain = ctx.createGain();
+      rainGain.gain.setValueAtTime(0.028, now);
+      rainSource.connect(rainHigh);
+      rainHigh.connect(rainLow);
+      rainLow.connect(rainGain);
+      rainGain.connect(master);
+      rainSource.start(now);
+
+      const roomSource = ctx.createBufferSource();
+      roomSource.buffer = createNoiseBuffer(ctx, 3.2);
+      roomSource.loop = true;
+      const roomBand = ctx.createBiquadFilter();
+      roomBand.type = 'bandpass';
+      roomBand.frequency.setValueAtTime(540, now);
+      roomBand.Q.setValueAtTime(0.35, now);
+      const roomGain = ctx.createGain();
+      roomGain.gain.setValueAtTime(0.0105, now);
+      roomSource.connect(roomBand);
+      roomBand.connect(roomGain);
+      roomGain.connect(master);
+      roomSource.start(now);
+
+      const roomBed = ctx.createOscillator();
+      roomBed.type = 'triangle';
+      roomBed.frequency.setValueAtTime(142, now);
+      const roomBedGain = ctx.createGain();
+      roomBedGain.gain.setValueAtTime(0.0001, now);
+      roomBedGain.gain.linearRampToValueAtTime(0.0035, now + 1.1);
+      roomBedGain.gain.linearRampToValueAtTime(0.0026, now + 4.2);
+      roomBed.connect(roomBedGain);
+      roomBedGain.connect(master);
+      roomBed.start(now);
+
+      loopNodesRef.current = [rainSource, roomSource, roomBed];
+      scheduleCars();
+    } catch (e) {
+      // Audio non supportato, ignora silenziosamente
+    }
+  }, [createNoiseBuffer, ensureContext, scheduleCars]);
+
+  useEffect(() => () => stop(), [stop]);
+
+  return { start, stop };
 }
 
 
@@ -1923,10 +2138,11 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
   const [roomDayLift, setRoomDayLift] = useState(0.08);
   const [roomNightShade, setRoomNightShade] = useState(0.16);
   const [deskFeedbackText, setDeskFeedbackText] = useState("");
-  const [streetFeedbackText, setStreetFeedbackText] = useState("");
+  const [streetAmbientPulse, setStreetAmbientPulse] = useState(false);
   const [streetResolved, setStreetResolved] = useState(false);
   const continueIdxRef = useRef(0);
-  const streetWaitIdxRef = useRef(0);
+  const streetPulseTimeoutRef = useRef(null);
+  const streetAmbience = useStreetAmbience();
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -1962,6 +2178,21 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
     };
   }, [scene]);
 
+  useEffect(() => {
+    return () => {
+      if (streetPulseTimeoutRef.current) clearTimeout(streetPulseTimeoutRef.current);
+      streetAmbience.stop();
+    };
+  }, [streetAmbience]);
+
+  useEffect(() => {
+    if (scene === "street") {
+      streetAmbience.start();
+    } else {
+      streetAmbience.stop();
+    }
+  }, [scene, streetAmbience]);
+
   const handleContinueBuild = useCallback(() => {
     const lines = T.continueFeedback || [];
     if (!lines.length) return;
@@ -1972,30 +2203,29 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
 
   const handleStepOut = useCallback(() => {
     setDeskFeedbackText("");
-    setStreetFeedbackText("");
+    setStreetAmbientPulse(false);
     setStreetResolved(false);
+    streetAmbience.start();
     setScene("street");
-  }, []);
+  }, [streetAmbience]);
 
   const handleStayInRain = useCallback(() => {
-    const lines = T.streetWaitFeedback || [];
-    if (!lines.length) return;
-    const idx = streetWaitIdxRef.current % lines.length;
-    setStreetFeedbackText(lines[idx]);
-    streetWaitIdxRef.current = idx + 1;
-  }, [T]);
+    setStreetAmbientPulse(true);
+    if (streetPulseTimeoutRef.current) clearTimeout(streetPulseTimeoutRef.current);
+    streetPulseTimeoutRef.current = setTimeout(() => setStreetAmbientPulse(false), 1600);
+  }, []);
 
   const handleResolveStreet = useCallback(() => {
     setStreetResolved(true);
-    setStreetFeedbackText(T.streetResolveFeedback || "");
     onUnlockProfile?.("conflict");
-  }, [T, onUnlockProfile]);
+  }, [onUnlockProfile]);
 
   const handleBackToDesk = useCallback(() => {
-    setStreetFeedbackText("");
+    setStreetAmbientPulse(false);
     setStreetResolved(false);
+    streetAmbience.stop();
     setScene("desk");
-  }, []);
+  }, [streetAmbience]);
 
   return (
     <div className="ch1-root">
@@ -2036,7 +2266,7 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
             <div className="ch1-scan" />
           </div>
         ) : (
-          <div className="ch2-stage ch2-street-stage">
+          <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""}`}>
             <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
             <div className="ch2-street-grade" />
             <div className="ch2-street-cool-wash" />
@@ -2048,10 +2278,10 @@ function ChapterTwoScene({ T, onBack, profileUi, profileEntries, unlockedProfile
             <div className="ch2-street-headlights ch2-street-headlights-front" />
             <div className="ch2-street-vignette" />
 
+            <div className="ch2-street-narrative">{T.streetNarrative}</div>
             <div className="ch2-line-block ch2-street-line-block">
               <div className="ch2-line">{T.streetCopy}</div>
             </div>
-            <div className={`ch2-feedback-overlay ch2-street-feedback ${streetFeedbackText ? "show" : ""}`}>{streetFeedbackText}</div>
             <div className={`ch2-street-bridge ${streetResolved ? "show" : ""}`}>{T.streetBridgeHint}</div>
             <div className="ch1-scan" />
           </div>
@@ -2434,18 +2664,19 @@ export default function Roberto() {
           linear-gradient(180deg,rgba(3,12,14,.24) 0%,rgba(2,8,10,.10) 36%,rgba(0,0,0,.14) 100%),
           radial-gradient(circle at 53% 33%, rgba(227,195,132,.06) 0%, rgba(0,0,0,0) 24%),
           linear-gradient(90deg,rgba(9,62,66,.10) 0%,rgba(0,0,0,0) 26%,rgba(0,0,0,0) 72%,rgba(6,38,42,.09) 100%)}
-        .ch2-street-cool-wash{inset:0;background:
-          linear-gradient(180deg,rgba(10,54,58,.10) 0%,rgba(0,0,0,0) 34%,rgba(4,20,24,.05) 100%),
-          radial-gradient(circle at 84% 24%, rgba(23,122,128,.06) 0%, rgba(0,0,0,0) 26%);
-          mix-blend-mode:multiply;opacity:.58}
+        .ch2-street-cool-wash{inset:-10%;background:
+          radial-gradient(circle at 86% 16%, rgba(18,96,102,.03) 0%, rgba(0,0,0,0) 34%),
+          radial-gradient(circle at 10% 82%, rgba(8,56,60,.035) 0%, rgba(0,0,0,0) 40%),
+          linear-gradient(180deg, rgba(7,28,30,.02) 0%, rgba(0,0,0,0) 48%, rgba(4,14,16,.02) 100%);
+          mix-blend-mode:multiply;opacity:.22;filter:blur(28px) saturate(1.04)}
         .ch2-street-door-bloom{left:40%;top:19%;width:24%;height:36%;background:
           radial-gradient(circle, rgba(255,208,132,.14) 0%, rgba(255,183,96,.06) 30%, rgba(0,0,0,0) 74%);
           filter:blur(18px);opacity:.6;animation:ch2DoorBloomPulse 5.2s ease-in-out infinite}
         .ch2-street-reflection-boost{left:0;right:0;bottom:0;height:34%;background:
-          linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(13,24,28,.10) 18%, rgba(3,7,9,.40) 100%),
-          radial-gradient(ellipse at 52% 16%, rgba(248,202,132,.10) 0%, rgba(0,0,0,0) 34%),
-          linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(70,189,192,.04) 22%, rgba(0,0,0,0) 55%, rgba(82,201,202,.03) 100%);
-          mix-blend-mode:screen;opacity:.72;animation:ch2StreetReflectionPulse 7.4s ease-in-out infinite}
+          linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(13,24,28,.08) 18%, rgba(3,7,9,.42) 100%),
+          radial-gradient(ellipse at 52% 16%, rgba(248,202,132,.08) 0%, rgba(0,0,0,0) 32%),
+          linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(70,189,192,.032) 22%, rgba(0,0,0,0) 55%, rgba(82,201,202,.024) 100%);
+          mix-blend-mode:screen;opacity:.68;animation:ch2StreetReflectionPulse 8.8s ease-in-out infinite}
         .ch2-street-rain{inset:-8% -3% 0 -3%;opacity:0}
         .ch2-street-rain-back{background-image:
           linear-gradient(104deg, rgba(196,225,232,.06) 47%, rgba(196,225,232,.18) 49%, rgba(196,225,232,.06) 51%, transparent 53%),
@@ -2455,24 +2686,26 @@ export default function Roberto() {
           linear-gradient(106deg, rgba(223,239,244,.10) 46%, rgba(223,239,244,.28) 49%, rgba(223,239,244,.10) 52%, transparent 55%),
           linear-gradient(103deg, rgba(178,214,224,.06) 45%, rgba(178,214,224,.16) 48%, rgba(178,214,224,.06) 51%, transparent 54%);
           background-size:24px 58px, 36px 72px;background-position:8px 0, 20px 18px;filter:blur(.45px);opacity:.12;animation:ch2RainFrontShift 1.15s linear infinite}
-        .ch2-street-headlights{left:-42%;width:44%;background:
-          linear-gradient(90deg,rgba(255,247,226,0) 0%,rgba(255,243,215,.04) 38%,rgba(255,235,194,.14) 72%,rgba(255,231,184,.22) 100%);
-          filter:blur(14px);mix-blend-mode:screen;transform:skewX(-14deg)}
-        .ch2-street-headlights-back{top:50%;height:18%;animation:ch2StreetSweepBack 9.2s ease-in-out infinite;opacity:.12}
-        .ch2-street-headlights-front{top:60%;height:14%;animation:ch2StreetSweepFront 7.4s ease-in-out infinite 1.8s;opacity:.2}
+        .ch2-street-headlights{left:-58%;width:56%;background:
+          linear-gradient(90deg,rgba(255,247,226,0) 0%,rgba(255,243,215,.02) 38%,rgba(255,235,194,.072) 72%,rgba(255,231,184,.12) 100%);
+          filter:blur(22px);mix-blend-mode:screen;transform:skewX(-13deg)}
+        .ch2-street-headlights-back{top:55%;height:15%;animation:ch2StreetSweepBack 16.2s ease-in-out infinite 1.2s;opacity:.10}
+        .ch2-street-headlights-front{top:63%;height:10%;animation:ch2StreetSweepFront 14.6s ease-in-out infinite 4.4s;opacity:.13}
         .ch2-street-vignette{inset:0;background:
           radial-gradient(ellipse at center, transparent 36%, rgba(0,0,0,.14) 68%, rgba(0,0,0,.5) 100%),
           linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.14) 100%)}
         .ch2-street-line-block{border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.26) 70%,transparent 100%)}
-        .ch2-street-feedback{color:#f4eee7;text-shadow:0 2px 14px rgba(0,0,0,.92),0 0 36px rgba(0,0,0,.55)}
+        .ch2-street-narrative{position:absolute;left:22px;right:22px;top:22px;z-index:9;max-width:560px;color:rgba(236,229,217,.86);font-size:12px;line-height:1.75;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-shadow:0 2px 10px rgba(0,0,0,.82)}
+        .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.76;filter:blur(24px)}
+        .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.78}
         .ch2-street-bridge{position:absolute;left:22px;right:22px;top:auto;bottom:84px;z-index:9;max-width:430px;font-size:11px;line-height:1.8;color:rgba(234,223,210,.82);opacity:0;transform:translateY(8px);transition:opacity .32s ease,transform .32s ease;letter-spacing:.01em}
         .ch2-street-bridge.show{opacity:1;transform:translateY(0)}
         .ch2-street-back-link{margin-top:12px;background:transparent;border:0;padding:0;color:#6e6e70;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:color .22s ease;align-self:flex-start}.ch2-street-back-link:hover{color:#FF4D00}
         @keyframes ch2StreetFrameDrift{0%,100%{transform:scale(1.006) translateY(0)}50%{transform:scale(1.01) translateY(-0.35%)}}
         @keyframes ch2DoorBloomPulse{0%,100%{opacity:.52;filter:blur(16px)}50%{opacity:.68;filter:blur(21px)}}
-        @keyframes ch2StreetReflectionPulse{0%,100%{opacity:.68}50%{opacity:.8}}
-        @keyframes ch2StreetSweepBack{0%,100%{transform:translateX(0) skewX(-14deg);opacity:0}18%{opacity:.03}46%{transform:translateX(236%) skewX(-14deg);opacity:.15}64%{opacity:.04}100%{transform:translateX(236%) skewX(-14deg);opacity:0}}
-        @keyframes ch2StreetSweepFront{0%,100%{transform:translateX(0) skewX(-14deg);opacity:0}22%{opacity:.05}52%{transform:translateX(248%) skewX(-14deg);opacity:.24}70%{opacity:.06}100%{transform:translateX(248%) skewX(-14deg);opacity:0}}
+        @keyframes ch2StreetReflectionPulse{0%,100%{opacity:.64}50%{opacity:.76}}
+        @keyframes ch2StreetSweepBack{0%,100%{transform:translateX(0) skewX(-13deg);opacity:0}16%{opacity:0}34%{opacity:.032}64%{transform:translateX(272%) skewX(-13deg);opacity:.105}82%{opacity:.024}100%{transform:translateX(272%) skewX(-13deg);opacity:0}}
+        @keyframes ch2StreetSweepFront{0%,100%{transform:translateX(0) skewX(-13deg);opacity:0}20%{opacity:0}40%{opacity:.04}70%{transform:translateX(282%) skewX(-13deg);opacity:.145}88%{opacity:.03}100%{transform:translateX(282%) skewX(-13deg);opacity:0}}
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
         @keyframes ch2LampPulse{0%,100%{opacity:.74;transform:scale(1)}50%{opacity:.96;transform:scale(1.04)}}
         @keyframes ch2RainBackShift{0%{background-position:0 -6px, 12px 18px}100%{background-position:-18px 56px, -8px 82px}}
@@ -2504,7 +2737,7 @@ export default function Roberto() {
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
           .ch2-street-bridge{left:16px;right:16px;bottom:76px;max-width:none;font-size:10px;line-height:1.7}
-          .ch2-street-feedback{left:16px;right:16px;top:20px;font-size:clamp(17px,5vw,22px)}
+          .ch2-street-narrative{left:16px;right:16px;top:18px;max-width:none;font-size:10px;line-height:1.7}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
           .ch2-street-reflection-boost{height:42%}
           .chapter-intro-inner{transform:translateY(0)}
