@@ -918,6 +918,9 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
   const rafRef = useRef(null);
   const pulseRafRef = useRef(null);
+  const finalTimingRafRef = useRef(null);
+  const finalTimingTimeoutRef = useRef(null);
+  const finalJumpTimeoutRef = useRef(null);
   const scenePulseTimeoutRef = useRef(null);
   const hintTimeoutRef = useRef(null);
   const squashTimeoutRef = useRef(null);
@@ -1007,9 +1010,12 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (pulseRafRef.current) cancelAnimationFrame(pulseRafRef.current);
+      if (finalTimingRafRef.current) cancelAnimationFrame(finalTimingRafRef.current);
       if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
       if (squashTimeoutRef.current) clearTimeout(squashTimeoutRef.current);
       if (missTimeoutRef.current) clearTimeout(missTimeoutRef.current);
+      if (finalTimingTimeoutRef.current) clearTimeout(finalTimingTimeoutRef.current);
+      if (finalJumpTimeoutRef.current) clearTimeout(finalJumpTimeoutRef.current);
     };
   }, []);
 
@@ -1021,7 +1027,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     if (finalTimingTimeoutRef.current) clearTimeout(finalTimingTimeoutRef.current);
 
     const startedAt = performance.now();
-    const duration = 520;
+    const duration = 760;
 
     const tick = (now) => {
       const progress = Math.min((now - startedAt) / duration, 1);
@@ -1032,10 +1038,6 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     };
 
     finalTimingRafRef.current = requestAnimationFrame(tick);
-    finalTimingTimeoutRef.current = setTimeout(() => {
-      setFinalTimingBurst(false);
-      setFinalTimingFill(0);
-    }, 1250);
   }, []);
 
   const triggerLandingFx = useCallback((nodeIndex) => {
@@ -1052,14 +1054,22 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     if (nodeIndex === CROSSING_NODES.length - 1) {
       setAllNodesGlow(true);
       triggerFinalTimingBurst();
-      setTimeout(() => setAllNodesGlow(false), 700);
       setIsComplete(true);
-      setTimeout(() => doFinalJump(), 1100);
+
+      if (finalJumpTimeoutRef.current) clearTimeout(finalJumpTimeoutRef.current);
+      if (finalTimingTimeoutRef.current) clearTimeout(finalTimingTimeoutRef.current);
+
+      setTimeout(() => setAllNodesGlow(false), 900);
+
+      finalJumpTimeoutRef.current = setTimeout(() => {
+        setFinalTimingBurst(false);
+        doFinalJump();
+      }, 980);
     }
 
     if (scenePulseTimeoutRef.current) clearTimeout(scenePulseTimeoutRef.current);
     scenePulseTimeoutRef.current = setTimeout(() => setScenePulse(null), 520);
-  }, [playLandingNote, triggerFinalTimingBurst]);
+  }, [doFinalJump, playLandingNote, triggerFinalTimingBurst]);
 
   const doFinalJump = useCallback(() => {
     const start = CROSSING_NODES[CROSSING_NODES.length - 1];
@@ -1221,7 +1231,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
                 ? "linear-gradient(90deg, rgba(210,226,175,0.18) 0%, rgba(235,242,225,0.72) 55%, rgba(210,226,175,0.28) 100%)"
                 : "transparent",
               boxShadow: isFinalBar
-                ? `0 0 ${10 + finalTimingFill * 20}px rgba(199,212,160,${0.25 + finalTimingFill * 0.45})`
+                ? `0 0 ${10 + finalTimingFill * 20}px rgba(199,212,160,${0.38 + finalTimingFill * 0.52})`
                 : "none",
               transition: isFinalBar ? "none" : "width 0.1s linear",
             }} />
@@ -1250,7 +1260,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
                 ? `radial-gradient(circle, rgba(235,242,225,${0.88 + centerIntensity * 0.1}) 0%, rgba(199,212,160,0.68) 40%, transparent 70%)`
                 : "radial-gradient(circle, rgba(199,212,160,0.58) 0%, rgba(126,143,99,0.28) 50%, transparent 70%)",
               boxShadow: isFinalBar
-                ? `0 0 ${18 + finalTimingFill * 24}px rgba(235,242,225,${0.45 + finalTimingFill * 0.35}), 0 0 ${28 + finalTimingFill * 32}px rgba(199,212,160,${0.22 + finalTimingFill * 0.22})`
+                ? `0 0 ${18 + finalTimingFill * 24}px rgba(235,242,225,${0.58 + finalTimingFill * 0.38}), 0 0 ${28 + finalTimingFill * 32}px rgba(199,212,160,${0.22 + finalTimingFill * 0.22})`
                 : isInTarget
                 ? `0 0 ${10 + centerIntensity * 14}px rgba(199,212,160,${0.55 + centerIntensity * 0.3})`
                 : "0 0 6px rgba(126,143,99,0.22)",
