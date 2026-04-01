@@ -1110,6 +1110,7 @@ function useStreetAmbience() {
   const activeRef = useRef(false);
   const loopNodesRef = useRef([]);
   const carTimeoutRef = useRef(null);
+  const clinkTimeoutRef = useRef(null);
 
   const ensureContext = useCallback(() => {
     if (!audioCtxRef.current) {
@@ -1135,6 +1136,13 @@ function useStreetAmbience() {
     if (carTimeoutRef.current) {
       clearTimeout(carTimeoutRef.current);
       carTimeoutRef.current = null;
+    }
+  }, []);
+
+  const clearClinks = useCallback(() => {
+    if (clinkTimeoutRef.current) {
+      clearTimeout(clinkTimeoutRef.current);
+      clinkTimeoutRef.current = null;
     }
   }, []);
 
@@ -1179,7 +1187,7 @@ function useStreetAmbience() {
 
   const scheduleCars = useCallback(() => {
     clearCars();
-    const delay = 7000 + Math.random() * 5000;
+    const delay = 3200 + Math.random() * 3200;
     carTimeoutRef.current = setTimeout(() => {
       if (!activeRef.current || !audioCtxRef.current || !masterGainRef.current) return;
       playCarPass(audioCtxRef.current, masterGainRef.current);
@@ -1187,9 +1195,54 @@ function useStreetAmbience() {
     }, delay);
   }, [clearCars, playCarPass]);
 
+  const playDishClink = useCallback((ctx, master) => {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1380 + Math.random() * 520, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.0038, now + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+    const bandpass = ctx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.setValueAtTime(1900, now);
+    bandpass.Q.setValueAtTime(3.4, now);
+
+    const panner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
+    if (panner) {
+      panner.pan.setValueAtTime(0.26 + Math.random() * 0.18, now);
+    }
+
+    osc.connect(gain);
+    gain.connect(bandpass);
+    if (panner) {
+      bandpass.connect(panner);
+      panner.connect(master);
+    } else {
+      bandpass.connect(master);
+    }
+
+    osc.start(now);
+    osc.stop(now + 0.26);
+  }, []);
+
+  const scheduleClinks = useCallback(() => {
+    clearClinks();
+    const delay = 4200 + Math.random() * 5400;
+    clinkTimeoutRef.current = setTimeout(() => {
+      if (!activeRef.current || !audioCtxRef.current || !masterGainRef.current) return;
+      playDishClink(audioCtxRef.current, masterGainRef.current);
+      scheduleClinks();
+    }, delay);
+  }, [clearClinks, playDishClink]);
+
   const stop = useCallback(() => {
     activeRef.current = false;
     clearCars();
+    clearClinks();
 
     const ctx = audioCtxRef.current;
     const master = masterGainRef.current;
@@ -1217,7 +1270,7 @@ function useStreetAmbience() {
         masterGainRef.current = null;
       }
     }, 1000);
-  }, [clearCars]);
+  }, [clearCars, clearClinks]);
 
   const start = useCallback(() => {
     try {
@@ -1230,7 +1283,7 @@ function useStreetAmbience() {
 
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.0001, now);
-      master.gain.linearRampToValueAtTime(0.16, now + 1.4);
+      master.gain.linearRampToValueAtTime(0.19, now + 1.2);
       master.connect(ctx.destination);
       masterGainRef.current = master;
 
@@ -1239,12 +1292,12 @@ function useStreetAmbience() {
       rainSource.loop = true;
       const rainHigh = ctx.createBiquadFilter();
       rainHigh.type = 'highpass';
-      rainHigh.frequency.setValueAtTime(2600, now);
+      rainHigh.frequency.setValueAtTime(2200, now);
       const rainLow = ctx.createBiquadFilter();
       rainLow.type = 'lowpass';
       rainLow.frequency.setValueAtTime(7600, now);
       const rainGain = ctx.createGain();
-      rainGain.gain.setValueAtTime(0.028, now);
+      rainGain.gain.setValueAtTime(0.036, now);
       rainSource.connect(rainHigh);
       rainHigh.connect(rainLow);
       rainLow.connect(rainGain);
@@ -1259,7 +1312,7 @@ function useStreetAmbience() {
       roomBand.frequency.setValueAtTime(540, now);
       roomBand.Q.setValueAtTime(0.35, now);
       const roomGain = ctx.createGain();
-      roomGain.gain.setValueAtTime(0.0105, now);
+      roomGain.gain.setValueAtTime(0.012, now);
       roomSource.connect(roomBand);
       roomBand.connect(roomGain);
       roomGain.connect(master);
@@ -1270,18 +1323,61 @@ function useStreetAmbience() {
       roomBed.frequency.setValueAtTime(142, now);
       const roomBedGain = ctx.createGain();
       roomBedGain.gain.setValueAtTime(0.0001, now);
-      roomBedGain.gain.linearRampToValueAtTime(0.0035, now + 1.1);
-      roomBedGain.gain.linearRampToValueAtTime(0.0026, now + 4.2);
+      roomBedGain.gain.linearRampToValueAtTime(0.0042, now + 1.1);
+      roomBedGain.gain.linearRampToValueAtTime(0.0032, now + 4.2);
       roomBed.connect(roomBedGain);
       roomBedGain.connect(master);
       roomBed.start(now);
 
-      loopNodesRef.current = [rainSource, roomSource, roomBed];
+      const restaurantSource = ctx.createBufferSource();
+      restaurantSource.buffer = createNoiseBuffer(ctx, 4.2);
+      restaurantSource.loop = true;
+      const restaurantHigh = ctx.createBiquadFilter();
+      restaurantHigh.type = 'highpass';
+      restaurantHigh.frequency.setValueAtTime(260, now);
+      const restaurantBand = ctx.createBiquadFilter();
+      restaurantBand.type = 'bandpass';
+      restaurantBand.frequency.setValueAtTime(880, now);
+      restaurantBand.Q.setValueAtTime(0.52, now);
+      const restaurantLow = ctx.createBiquadFilter();
+      restaurantLow.type = 'lowpass';
+      restaurantLow.frequency.setValueAtTime(2200, now);
+      const restaurantGain = ctx.createGain();
+      restaurantGain.gain.setValueAtTime(0.0115, now);
+
+      const restaurantLfo = ctx.createOscillator();
+      restaurantLfo.type = 'sine';
+      restaurantLfo.frequency.setValueAtTime(0.11, now);
+      const restaurantLfoGain = ctx.createGain();
+      restaurantLfoGain.gain.setValueAtTime(0.0036, now);
+      restaurantLfo.connect(restaurantLfoGain);
+      restaurantLfoGain.connect(restaurantGain.gain);
+
+      const restaurantPanner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
+      if (restaurantPanner) {
+        restaurantPanner.pan.setValueAtTime(0.18, now);
+      }
+
+      restaurantSource.connect(restaurantHigh);
+      restaurantHigh.connect(restaurantBand);
+      restaurantBand.connect(restaurantLow);
+      restaurantLow.connect(restaurantGain);
+      if (restaurantPanner) {
+        restaurantGain.connect(restaurantPanner);
+        restaurantPanner.connect(master);
+      } else {
+        restaurantGain.connect(master);
+      }
+      restaurantSource.start(now);
+      restaurantLfo.start(now);
+
+      loopNodesRef.current = [rainSource, roomSource, roomBed, restaurantSource, restaurantLfo];
       scheduleCars();
+      scheduleClinks();
     } catch (e) {
       // Audio non supportato, ignora silenziosamente
     }
-  }, [createNoiseBuffer, ensureContext, scheduleCars]);
+  }, [createNoiseBuffer, ensureContext, scheduleCars, scheduleClinks]);
 
   useEffect(() => () => stop(), [stop]);
 
@@ -2179,6 +2275,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const [feedback, setFeedback] = useState(T.gameIntroLine);
   const [shakeId, setShakeId] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
   const completeTimeoutRef = useRef(null);
   const shakeTimeoutRef = useRef(null);
 
@@ -2234,8 +2331,18 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   return (
     <>
       <div className="ch2-stage ch2-game-stage">
-        <img className="ch2-fill" src={ASSETS.chapter2DeskGameBase} alt="" />
+        <img
+          className="ch2-fill"
+          src={gameBaseSrc}
+          alt=""
+          onError={() => {
+            if (gameBaseSrc !== ASSETS.chapter2DeskFrame) {
+              setGameBaseSrc(ASSETS.chapter2DeskFrame);
+            }
+          }}
+        />
         <div className="ch2-game-vignette" />
+        <div className={`ch2-game-feedback ch2-game-feedback-overlay ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         <div className="ch2-game-slot-shell">
           <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
           <div className="ch2-game-slot-grid">
@@ -2254,7 +2361,6 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       </div>
 
       <div className="ch1-controls-slot ch2-object-controls-slot">
-        <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         <div className="ch2-game-grid">
           {items.map((item) => {
             const isPlaced = placedSet.has(item.id);
@@ -2292,6 +2398,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
   const [deskFeedbackText, setDeskFeedbackText] = useState("");
   const [streetAmbientPulse, setStreetAmbientPulse] = useState(false);
   const [streetResolved, setStreetResolved] = useState(false);
+  const [streetTransitioning, setStreetTransitioning] = useState(false);
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -2355,6 +2462,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     setDeskFeedbackText("");
     setStreetAmbientPulse(false);
     setStreetResolved(false);
+    setStreetTransitioning(false);
     streetAmbience.start();
     setScene("street");
   }, [streetAmbience]);
@@ -2367,16 +2475,18 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 
   const handleResolveStreet = useCallback(() => {
     setStreetResolved(true);
+    setStreetTransitioning(true);
     onUnlockProfile?.("conflict");
     if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
     streetTransitionTimeoutRef.current = setTimeout(() => {
       setScene("selection");
-    }, 1500);
+    }, 1050);
   }, [onUnlockProfile]);
 
   const handleBackToDesk = useCallback(() => {
     setStreetAmbientPulse(false);
     setStreetResolved(false);
+    setStreetTransitioning(false);
     if (streetTransitionTimeoutRef.current) clearTimeout(streetTransitionTimeoutRef.current);
     streetAmbience.stop();
     setScene("desk");
@@ -2431,7 +2541,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
           </>
         ) : scene === "street" ? (
           <>
-            <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""}`}>
+            <div className={`ch2-stage ch2-street-stage ${streetAmbientPulse ? "is-holding" : ""} ${streetTransitioning ? "is-transitioning" : ""}`}>
               <img className="ch2-fill ch2-street-frame" src={ASSETS.chapter2StreetFrame} alt="" />
               <div className="ch2-street-grade" />
               <div className="ch2-street-cool-wash" />
@@ -2443,11 +2553,12 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
               <div className="ch2-street-headlights ch2-street-headlights-front" />
               <div className="ch2-street-vignette" />
 
-              <div className="ch2-street-narrative">{T.streetNarrative}</div>
+              <div className="ch2-street-narrative-wrap">
+                <div className="ch2-street-narrative">{T.streetNarrative}</div>
+              </div>
               <div className="ch2-line-block ch2-street-line-block">
                 <div className="ch2-line">{T.streetCopy}</div>
               </div>
-              <div className={`ch2-street-bridge ${streetResolved ? "show" : ""}`}>{T.streetBridgeHint}</div>
               <div className="ch1-scan" />
             </div>
 
@@ -2457,7 +2568,9 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
                   <Ch1ChoiceButton subtle onClick={handleStayInRain}>{T.streetStayBtn}</Ch1ChoiceButton>
                   <Ch1ChoiceButton onClick={handleResolveStreet}>{T.streetFocusBtn}</Ch1ChoiceButton>
                 </div>
-              ) : null}
+              ) : (
+                <div className="ch2-street-transition-copy">{T.streetBridgeHint}</div>
+              )}
             </div>
           </>
         ) : (
@@ -2859,11 +2972,13 @@ export default function Roberto() {
           radial-gradient(ellipse at center, transparent 36%, rgba(0,0,0,.14) 68%, rgba(0,0,0,.5) 100%),
           linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.14) 100%)}
         .ch2-street-line-block{border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.26) 70%,transparent 100%)}
-        .ch2-street-narrative{position:absolute;left:22px;right:22px;top:22px;z-index:9;max-width:560px;color:rgba(236,229,217,.86);font-size:12px;line-height:1.75;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-shadow:0 2px 10px rgba(0,0,0,.82)}
+        .ch2-street-narrative-wrap{position:absolute;left:22px;right:22px;top:20px;z-index:9;max-width:520px}
+        .ch2-street-narrative{color:rgba(236,229,217,.9);font-size:11px;line-height:1.88;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-wrap:pretty;text-shadow:0 2px 10px rgba(0,0,0,.82)}
         .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.76;filter:blur(24px)}
         .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.78}
-        .ch2-street-bridge{position:absolute;left:22px;right:22px;top:auto;bottom:84px;z-index:9;max-width:430px;font-size:11px;line-height:1.8;color:rgba(234,223,210,.82);opacity:0;transform:translateY(8px);transition:opacity .32s ease,transform .32s ease;letter-spacing:.01em}
-        .ch2-street-bridge.show{opacity:1;transform:translateY(0)}
+        .ch2-street-stage.is-transitioning .ch2-street-frame{filter:saturate(.98) contrast(1.04) brightness(.92);transform:scale(1.01)}
+        .ch2-street-stage.is-transitioning .ch2-street-line-block{opacity:.82}
+        .ch2-street-transition-copy{width:100%;max-width:520px;border-top:1px solid rgba(255,203,154,.16);padding-top:12px;color:rgba(234,223,210,.9);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;animation:fadeIn .28s ease-out}
         .ch2-street-back-link{margin-top:12px;background:transparent;border:0;padding:0;color:#6e6e70;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:color .22s ease;align-self:flex-start}.ch2-street-back-link:hover{color:#FF4D00}
         @keyframes ch2StreetFrameDrift{0%,100%{transform:scale(1.006) translateY(0)}50%{transform:scale(1.01) translateY(-0.35%)}}
         @keyframes ch2DoorBloomPulse{0%,100%{opacity:.52;filter:blur(16px)}50%{opacity:.68;filter:blur(21px)}}
@@ -2886,6 +3001,7 @@ export default function Roberto() {
         .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}
         .ch2-object-controls-slot{min-height:auto;display:block}
         .ch2-game-feedback{margin-top:2px;margin-bottom:14px;min-height:44px;padding:12px 14px;border-radius:8px;border:1px solid rgba(31,31,31,.9);background:rgba(0,0,0,.28);color:#b5bcc2;font-size:12px;line-height:1.75;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease}
+        .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
         .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
         .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease}
@@ -2920,8 +3036,9 @@ export default function Roberto() {
           .ch1-controls-slot{min-height:114px;margin-top:12px}
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
-          .ch2-street-bridge{left:16px;right:16px;bottom:76px;max-width:none;font-size:10px;line-height:1.7}
-          .ch2-street-narrative{left:16px;right:16px;top:18px;max-width:none;font-size:10px;line-height:1.7}
+          .ch2-street-transition-copy{max-width:none;font-size:11px;line-height:1.72}
+          .ch2-street-narrative-wrap{left:16px;right:16px;top:18px;max-width:none}
+          .ch2-street-narrative{font-size:10px;line-height:1.74}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
           .ch2-street-reflection-boost{height:42%}
           .ch2-game-slot-shell{left:14px;right:14px;bottom:14px;padding:10px 10px 11px}
@@ -2929,6 +3046,7 @@ export default function Roberto() {
           .ch2-game-slot{min-height:48px;font-size:9px}
           .ch2-game-slot.is-filled{font-size:10px}
           .ch2-game-feedback{font-size:11px;line-height:1.7;min-height:42px}
+          .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
           .ch2-game-grid{grid-template-columns:1fr;gap:8px}
           .ch2-game-object{padding:12px 12px 13px}
           .ch2-game-object-title{font-size:18px}
