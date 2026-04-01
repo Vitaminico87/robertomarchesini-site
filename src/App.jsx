@@ -36,28 +36,28 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
     hero: "Costruisco sistemi creativi per brand, lanci ed esperienze che devono reggere davvero.",
-    heroSub: "Unisco direzione creativa, narrativa e AI per dare alle idee una forma leggibile, con una logica dietro.",
-    heroMobileSub: "Unisco direzione creativa, narrativa e AI per dare forma e struttura alle idee.",
+    heroSub: "Unisco direzione creativa, narrativa e AI per dare alle idee forma, struttura e direzione.",
+    heroMobileSub: "Direzione creativa, narrativa e AI per dare forma alle idee.",
     proofStrip: "Direzione narrativa · Sistemi creativi · Processi con AI",
     proofStripMobile: "Direzione narrativa · Sistemi creativi · AI",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura del linguaggio, così un brand smette di disperdersi e inizia a farsi riconoscere.", mobileDesc: "Rendo chiari posizionamento, messaggio e linguaggio." },
-      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e materiali sparsi in una struttura visiva e narrativa coerente e leggibile.", mobileDesc: "Trasformo materiali sparsi in una struttura visiva e narrativa coerente." },
-      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Costruisco contenuti, ritmo, gerarchia e punti di contatto perché un progetto non venga solo pubblicato, ma capito e desiderato.", mobileDesc: "Organizzo contenuti, ritmo e gerarchia perché un progetto venga capito." },
-      { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per rendere il processo creativo più solido: ricerca, sviluppo, varianti, adattamenti e controllo qualità.", mobileDesc: "Uso l’AI per sviluppare meglio, più velocemente e con controllo." },
+      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura del linguaggio.", mobileDesc: "Rendo chiari posizionamento, messaggio e linguaggio." },
+      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee e materiali sparsi in una struttura visiva e narrativa coerente.", mobileDesc: "Trasformo materiali sparsi in una struttura coerente." },
+      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Organizzo contenuti, ritmo e gerarchia perché un progetto venga capito.", mobileDesc: "Organizzo contenuti, ritmo e gerarchia." },
+      { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per ricerca, sviluppo, varianti e controllo qualità.", mobileDesc: "Uso l’AI per sviluppare meglio e con controllo." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali. Responsabilità concrete. Sistemi che hanno dovuto reggere davvero.",
+    selectedWorkSub: "Progetti reali. Responsabilità vere. Sistemi che hanno dovuto reggere.",
     selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Sistemi che hanno dovuto reggere.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Direzione creativa e sistema di contenuti per una venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        narrative: "Direzione creativa e sistema contenuti per una venue con oltre 150 eventi l'anno.",
         mobileNarrative: "Direzione creativa e sistema contenuti per una venue con oltre 150 eventi l'anno.",
-        narrative2: "Un impianto editoriale e promozionale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
+        narrative2: "Un impianto editoriale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
         technical: "Identità · Sistema contenuti · Continuità editoriale",
         tags: ["Cultural venue", "Content system", "Weekly execution"]
       },
@@ -65,7 +65,7 @@ const LANG = {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Dodici anni di direzione creativa e sistema contenuti per la comunicazione digitale di uno dei live brand più riconoscibili in Italia.",
+        narrative: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia.",
         mobileNarrative: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia.",
         narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
         technical: "Direzione creativa · Sistema contenuti · Crescita audience",
@@ -75,7 +75,7 @@ const LANG = {
         title: "THEIA Events",
         period: "2025",
         status: "active",
-        narrative: "Posizionamento premium, direzione del sito e architettura digitale per un brand eventi orientato a credibilità e contatti qualificati.",
+        narrative: "Posizionamento premium, sito e architettura digitale per un brand eventi orientato a credibilità e contatti.",
         mobileNarrative: "Posizionamento premium, sito e architettura digitale per un brand eventi orientato a credibilità e contatti.",
         narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
         technical: "Posizionamento · Sito · Architettura digitale",
@@ -84,9 +84,9 @@ const LANG = {
     ],
     howLabel: "Metodo",
     method: [
-      { title: "Chiarezza prima del rumore", desc: "Ogni progetto parte da una domanda semplice: cosa deve essere capito, percepito o ricordato davvero? Il resto viene dopo.", mobileDesc: "Si parte da ciò che deve restare." },
-      { title: "Gli strumenti non bastano", desc: "Gli strumenti contano meno della struttura in cui lavorano. Uso l’AI per aumentare qualità e possibilità, non per riempire spazio.", mobileDesc: "Gli strumenti valgono dentro una struttura." },
-      { title: "Creatività che regge nella realtà", desc: "Un progetto creativo deve reggere nella realtà: tempi, adattamenti, contesto e pressione.", mobileDesc: "La creatività deve reggere tempi, contesto e pressione." },
+      { title: "Chiarezza prima del rumore", desc: "Si parte da ciò che deve essere capito, percepito o ricordato.", mobileDesc: "Si parte da ciò che deve restare." },
+      { title: "Gli strumenti non bastano", desc: "Gli strumenti contano meno della struttura in cui lavorano. Uso l’AI per aumentare qualità, non rumore.", mobileDesc: "Gli strumenti valgono dentro una struttura." },
+      { title: "Creatività che regge nella realtà", desc: "Un progetto creativo deve reggere tempi, contesto e pressione.", mobileDesc: "La creatività deve reggere tempi, contesto e pressione." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
@@ -590,34 +590,31 @@ function HomeSocialRail({ mobile = false }) {
 
 function HomeSignalBreak({ mobile = false }) {
   return (
-    <div className={mobile ? "home-signal-break home-signal-break-mobile" : "home-signal-break"} aria-hidden="true">
-      <div className="home-signal-grid" style={{ gridTemplateColumns: mobile ? 'repeat(3, minmax(0,1fr))' : '1fr 1.1fr 1fr' }}>
-        <div className="home-signal-card">
-          <div className="home-signal-node-wrap">
-            <span className="home-signal-node home-signal-node-a" />
-            <span className="home-signal-node home-signal-node-b" />
-            <span className="home-signal-node home-signal-node-c" />
-            <span className="home-signal-link home-signal-link-ab" />
-            <span className="home-signal-link home-signal-link-bc" />
-          </div>
-        </div>
-
-        <div className="home-signal-card home-signal-card-center">
-          <div className="home-signal-window">
-            <span className="home-signal-window-glow" />
-            <span className="home-signal-window-line home-signal-window-line-1" />
-            <span className="home-signal-window-line home-signal-window-line-2" />
-            <span className="home-signal-window-line home-signal-window-line-3" />
-          </div>
-        </div>
-
-        <div className="home-signal-card">
-          <div className="home-signal-port-wrap">
-            <span className="home-signal-port-shell" />
-            <span className="home-signal-port-slot" />
-            <span className="home-signal-port-led" />
-          </div>
-        </div>
+    <div
+      aria-hidden="true"
+      style={{
+        marginBottom: mobile ? 34 : 40,
+        borderTop: "1px solid rgba(255,77,0,.12)",
+        borderBottom: "1px solid rgba(255,255,255,.04)",
+        padding: mobile ? "14px 0 12px" : "18px 0 16px",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          height: mobile ? 38 : 46,
+          borderRadius: 6,
+          overflow: "hidden",
+          background: "linear-gradient(90deg, rgba(255,77,0,.03) 0%, rgba(255,255,255,.015) 50%, rgba(255,77,0,.03) 100%)",
+          border: "1px solid rgba(255,255,255,.05)",
+        }}
+      >
+        <div className="home-memory-scan" />
+        <span className="home-memory-dot home-memory-dot-a" />
+        <span className="home-memory-dot home-memory-dot-b" />
+        <span className="home-memory-dot home-memory-dot-c" />
+        <span className="home-memory-thread home-memory-thread-a" />
+        <span className="home-memory-thread home-memory-thread-b" />
       </div>
     </div>
   );
@@ -1237,15 +1234,16 @@ function useLibrarySwosh() {
       if (ctx.state === 'suspended') ctx.resume();
 
       const now = ctx.currentTime;
-      const duration = 1.35;
+      const duration = 1.95;
 
       const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * duration));
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
         const t = i / bufferSize;
-        const shaped = Math.pow(1 - t, 1.35);
-        data[i] = (Math.random() * 2 - 1) * shaped * 0.55;
+        const shaped = Math.pow(1 - t, 1.12);
+        const softened = 0.72 + 0.28 * Math.sin(t * Math.PI * 0.5);
+        data[i] = (Math.random() * 2 - 1) * shaped * softened * 0.42;
       }
 
       const source = ctx.createBufferSource();
@@ -1253,33 +1251,35 @@ function useLibrarySwosh() {
 
       const highpass = ctx.createBiquadFilter();
       highpass.type = 'highpass';
-      highpass.frequency.setValueAtTime(180, now);
+      highpass.frequency.setValueAtTime(120, now);
 
       const bandpass = ctx.createBiquadFilter();
       bandpass.type = 'bandpass';
-      bandpass.frequency.setValueAtTime(280, now);
-      bandpass.frequency.exponentialRampToValueAtTime(1180, now + duration);
-      bandpass.Q.setValueAtTime(0.55, now);
+      bandpass.frequency.setValueAtTime(220, now);
+      bandpass.frequency.exponentialRampToValueAtTime(860, now + duration);
+      bandpass.Q.setValueAtTime(0.38, now);
 
       const lowpass = ctx.createBiquadFilter();
       lowpass.type = 'lowpass';
-      lowpass.frequency.setValueAtTime(2200, now);
-      lowpass.frequency.exponentialRampToValueAtTime(1400, now + duration);
+      lowpass.frequency.setValueAtTime(1800, now);
+      lowpass.frequency.exponentialRampToValueAtTime(980, now + duration);
 
       const pad = ctx.createOscillator();
       pad.type = 'sine';
-      pad.frequency.setValueAtTime(220, now);
-      pad.frequency.exponentialRampToValueAtTime(145, now + duration);
+      pad.frequency.setValueAtTime(180, now);
+      pad.frequency.exponentialRampToValueAtTime(118, now + duration);
 
       const padGain = ctx.createGain();
       padGain.gain.setValueAtTime(0.0001, now);
-      padGain.gain.linearRampToValueAtTime(0.022, now + 0.26);
+      padGain.gain.linearRampToValueAtTime(0.018, now + 0.36);
+      padGain.gain.linearRampToValueAtTime(0.011, now + 1.05);
       padGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.linearRampToValueAtTime(0.055, now + 0.22);
-      gain.gain.linearRampToValueAtTime(0.043, now + 0.62);
+      gain.gain.linearRampToValueAtTime(0.042, now + 0.34);
+      gain.gain.linearRampToValueAtTime(0.033, now + 0.95);
+      gain.gain.linearRampToValueAtTime(0.020, now + 1.45);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
       source.connect(highpass);
@@ -3310,6 +3310,14 @@ export default function Roberto() {
         .home-method-desc{font-size:13px;color:#a6a6a6;line-height:1.96;max-width:520px;text-wrap:pretty}
         .ghost-mobile{text-align:center}
         .crt-vignette{box-shadow:inset 0 0 130px 70px rgba(0,0,0,.7), inset 0 0 40px 15px rgba(0,0,0,.35)}
+        .home-memory-scan{position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,77,0,.06) 18%,rgba(255,255,255,.04) 48%,rgba(255,77,0,.06) 82%,transparent 100%);animation:homeMemorySweep 7.5s ease-in-out infinite;opacity:.8}
+        .home-memory-dot,.home-memory-thread{position:absolute;display:block;pointer-events:none}
+        .home-memory-dot{top:50%;width:6px;height:6px;border-radius:999px;background:rgba(255,210,190,.46);box-shadow:0 0 8px rgba(255,77,0,.18);transform:translate(-50%,-50%)}
+        .home-memory-dot-a{left:14%}.home-memory-dot-b{left:50%}.home-memory-dot-c{left:86%}
+        .home-memory-thread{top:50%;height:1px;background:linear-gradient(90deg,rgba(255,77,0,.14),rgba(255,255,255,.08));transform:translateY(-50%)}
+        .home-memory-thread-a{left:14%;width:36%}.home-memory-thread-b{left:50%;width:36%}
+        @keyframes homeMemorySweep{0%,100%{transform:translateX(-8%);opacity:.45}50%{transform:translateX(8%);opacity:.9}}
+
         .home-hero-shell{position:relative;overflow:visible}
         .home-social-rail{position:absolute;top:8px;right:-98px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;z-index:6}
         .home-social-rail-mobile{position:relative;top:auto;right:auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
