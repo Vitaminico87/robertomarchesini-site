@@ -30,27 +30,27 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Progetto sistemi creativi per brand, lanci ed esperienze che devono reggere davvero.",
-    heroSub: "Unisco direzione creativa, narrativa e AI per dare alle idee una forma più coerente, più controllata e più viva.",
-    proofStrip: "Direzione narrativa · Sistemi creativi · Workflow AI",
+    hero: "Costruisco sistemi creativi per brand, lanci ed esperienze che devono reggere davvero.",
+    heroSub: "Unisco direzione creativa, narrativa e AI per trasformare idee sparse in strutture leggibili, con una logica dietro.",
+    proofStrip: "Direzione narrativa · Sistemi creativi · Processi con AI",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Position", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e regole del linguaggio, così un brand smette di disperdersi e inizia a risultare riconoscibile." },
-      { title: "Shape", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e materiali sparsi in un sistema visivo e narrativo coerente, leggibile e vivo." },
-      { title: "Launch", subtitle: "Far arrivare un progetto nel modo giusto", desc: "Costruisco il rilascio creativo di un progetto: contenuti, ritmo, gerarchia, touchpoint, perché un'idea non venga solo pubblicata, ma percepita, capita e desiderata." },
-      { title: "Build", subtitle: "Usare l'AI per costruire meglio", desc: "Progetto workflow creativi assistiti da AI: ricerca, sviluppo, varianti, adattamenti e controllo qualità, senza abbassare il livello." },
+      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura del linguaggio, così un brand smette di disperdersi e inizia a farsi riconoscere." },
+      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee, servizi e materiali sparsi in una struttura visiva e narrativa coerente e leggibile." },
+      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Costruisco contenuti, ritmo, gerarchia e punti di contatto perché un progetto non venga solo pubblicato, ma capito e desiderato." },
+      { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per rendere il processo creativo più solido: ricerca, sviluppo, varianti, adattamenti e controllo qualità." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali, responsabilità concrete, sistemi creativi che hanno dovuto reggere ritmo, pressione e tempo.",
+    selectedWorkSub: "Progetti reali, responsabilità concrete, strutture creative che hanno dovuto reggere ritmo, pressione e tempo.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Creative direction e sistema di contenuti per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        narrative: "Direzione creativa e sistema di contenuti per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
         narrative2: "Un impianto editoriale e promozionale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
         technical: "Identità · Sistema contenuti · Continuità editoriale",
-        tags: ["Cultural venue", "Brand system", "Weekly execution"]
+        tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
       },
       {
         title: "Notre Dame de Paris",
@@ -59,27 +59,27 @@ const LANG = {
         narrative: "Dodici anni di direzione creativa e sistema contenuti per la comunicazione digitale di uno dei live brand più riconoscibili in Italia.",
         narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
         technical: "Direzione creativa · Sistema contenuti · Crescita audience",
-        tags: ["Live entertainment", "Brand narrative", "Digital experience"]
+        tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
-        narrative: "Posizionamento premium, website direction e architettura digitale per un brand eventi orientato a credibilità e lead qualificati.",
+        narrative: "Posizionamento premium, direzione del sito e architettura digitale per un brand eventi orientato a credibilità e contatti qualificati.",
         narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
-        technical: "Posizionamento · Website · Architettura digitale",
-        tags: ["Positioning", "Digital experience", "Lead architecture"]
+        technical: "Posizionamento · Sito · Architettura digitale",
+        tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
       }
     ],
     howLabel: "Metodo",
     method: [
       { title: "Chiarezza prima del rumore", desc: "Ogni progetto parte da una domanda semplice: cosa deve essere capito, percepito o ricordato davvero? Il resto viene dopo." },
-      { title: "I tool non bastano", desc: "I tool contano meno del sistema in cui vivono. Uso l’AI per aumentare qualità, velocità e possibilità, non per riempire spazio." },
-      { title: "Creatività che regge nella realtà", desc: "Un sistema creativo deve reggere nella realtà: tempi, adattamenti, contesto, pubblico e pressione." },
+      { title: "Gli strumenti non bastano", desc: "Gli strumenti contano meno della struttura in cui lavorano. Uso l’AI per aumentare qualità e possibilità, non per riempire spazio." },
+      { title: "Creatività che regge nella realtà", desc: "Un progetto creativo deve reggere nella realtà: tempi, adattamenti, contesto e pressione." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    availableFor: "Disponibile per collaborazioni selezionate su sistemi creativi, direzione narrativa e workflow AI.",
+    availableFor: "Disponibile per collaborazioni selezionate.",
     ctaHint: "",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
@@ -184,7 +184,7 @@ const LANG = {
         narrative: "Creative direction and content system for a venue with weekly programming and over 150 events a year.",
         narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
         technical: "Identity · Content system · Editorial continuity",
-        tags: ["Cultural venue", "Brand system", "Weekly execution"]
+        tags: ["Venue culturale", "Sistema contenuti", "Esecuzione settimanale"]
       },
       {
         title: "Notre Dame de Paris",
@@ -193,7 +193,7 @@ const LANG = {
         narrative: "Twelve years of creative direction and content system design for the digital communication of one of Italy's most recognizable live brands.",
         narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
         technical: "Creative direction · Content system · Audience growth",
-        tags: ["Live entertainment", "Brand narrative", "Digital experience"]
+        tags: ["Spettacolo dal vivo", "Narrazione di progetto", "Esperienza digitale"]
       },
       {
         title: "THEIA Events",
@@ -202,7 +202,7 @@ const LANG = {
         narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
         narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
         technical: "Positioning · Website · Digital architecture",
-        tags: ["Positioning", "Digital experience", "Lead architecture"]
+        tags: ["Posizionamento", "Esperienza digitale", "Contatti qualificati"]
       }
     ],
     howLabel: "Method",
@@ -3181,7 +3181,7 @@ export default function Roberto() {
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
-              <div style={{ fontSize: 14, color: "#888", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>Creative Director · Creative Systems</div>
+              <div style={{ fontSize: 14, color: "#888", fontWeight: 400, letterSpacing: 1.5, marginTop: 12 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
               <div className="home-pretty" style={{ fontSize: 14, color: "#BBB", marginTop: 18, lineHeight: 1.88, maxWidth: 510 }}>{T.hero}</div>
               <div className="home-pretty" style={{ fontSize: 13, color: "#999", marginTop: 12, lineHeight: 1.86, maxWidth: 510 }}>{T.heroSub}</div>
             </div>
