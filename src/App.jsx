@@ -22,8 +22,8 @@ const ASSETS = {
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
   chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
   chapter3Frame1: "https://www.robertomarchesini.com/assets/chapter3/chapter3_q1_backstage.png",
-  chapter3RoomTone: "https://www.robertomarchesini.com/assets/chapter3/ch3_roomtone.mp3",
-  chapter3OpenChatter: "https://www.robertomarchesini.com/assets/chapter3/ch3_open_chatter.mp3",
+  chapter3RoomTone: "https://www.robertomarchesini.com/assets/chapter3/ch3_roomtone.wav",
+  chapter3OpenChatter: "https://www.robertomarchesini.com/assets/chapter3/ch3_open_chatter.wav",
 };
 const CV_DOWNLOAD_URL = "/assets/roberto-marchesini-cv.pdf";
 
@@ -48,15 +48,15 @@ const LANG = {
       { title: "Processo", subtitle: "Usare l'AI senza abbassare il livello", desc: "Uso l’AI per rendere il processo creativo più solido: ricerca, sviluppo, varianti, adattamenti e controllo qualità.", mobileDesc: "Uso l’AI per sviluppare meglio, più velocemente e con controllo." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali, responsabilità concrete, sistemi creativi che hanno dovuto reggere davvero.",
+    selectedWorkSub: "Progetti reali. Responsabilità concrete. Sistemi che hanno dovuto reggere davvero.",
     selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Sistemi che hanno dovuto reggere.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Direzione creativa e sistema di contenuti per un venue con programmazione settimanale e oltre 150 eventi l'anno.",
-        mobileNarrative: "Direzione creativa e sistema contenuti per un venue con oltre 150 eventi l'anno.",
+        narrative: "Direzione creativa e sistema di contenuti per una venue con programmazione settimanale e oltre 150 eventi l'anno.",
+        mobileNarrative: "Direzione creativa e sistema contenuti per una venue con oltre 150 eventi l'anno.",
         narrative2: "Un impianto editoriale e promozionale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
         technical: "Identità · Sistema contenuti · Continuità editoriale",
         tags: ["Cultural venue", "Content system", "Weekly execution"]
@@ -91,6 +91,7 @@ const LANG = {
     nowBuildingLabel: "",
     nowBuilding: "",
     availableFor: "Disponibile per collaborazioni selezionate.",
+    trashPlay: "Gioca",
     ctaHint: "",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
@@ -254,6 +255,7 @@ const LANG = {
     nowBuildingLabel: "",
     nowBuilding: "",
     availableFor: "Available for selected collaborations on creative systems, narrative direction, and AI workflows.",
+    trashPlay: "Play",
     ctaHint: "",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
@@ -581,6 +583,42 @@ function HomeSocialRail({ mobile = false }) {
           <span className="pixel-social-label">{link.label}</span>
         </a>
       ))}
+    </div>
+  );
+}
+
+
+function HomeSignalBreak({ mobile = false }) {
+  return (
+    <div className={mobile ? "home-signal-break home-signal-break-mobile" : "home-signal-break"} aria-hidden="true">
+      <div className="home-signal-grid" style={{ gridTemplateColumns: mobile ? 'repeat(3, minmax(0,1fr))' : '1fr 1.1fr 1fr' }}>
+        <div className="home-signal-card">
+          <div className="home-signal-node-wrap">
+            <span className="home-signal-node home-signal-node-a" />
+            <span className="home-signal-node home-signal-node-b" />
+            <span className="home-signal-node home-signal-node-c" />
+            <span className="home-signal-link home-signal-link-ab" />
+            <span className="home-signal-link home-signal-link-bc" />
+          </div>
+        </div>
+
+        <div className="home-signal-card home-signal-card-center">
+          <div className="home-signal-window">
+            <span className="home-signal-window-glow" />
+            <span className="home-signal-window-line home-signal-window-line-1" />
+            <span className="home-signal-window-line home-signal-window-line-2" />
+            <span className="home-signal-window-line home-signal-window-line-3" />
+          </div>
+        </div>
+
+        <div className="home-signal-card">
+          <div className="home-signal-port-wrap">
+            <span className="home-signal-port-shell" />
+            <span className="home-signal-port-slot" />
+            <span className="home-signal-port-led" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -2967,6 +3005,7 @@ export default function Roberto() {
   const [progress, setProgress] = useState(0);
   const [hoverTrash, setHoverTrash] = useState(false);
   const [trashGlitchText, setTrashGlitchText] = useState(null);
+  const [showTrashPlay, setShowTrashPlay] = useState(false);
   const [hoverContact, setHoverContact] = useState(false);
   const [hoverBlog, setHoverBlog] = useState(false);
   const [flicker, setFlicker] = useState(false);
@@ -3142,6 +3181,15 @@ export default function Roberto() {
     return () => clearInterval(interval);
   }, [phase, hoverTrash, T.trashBtn]);
 
+  useEffect(() => {
+    if (phase !== "main" || hoverTrash) return;
+    const interval = setInterval(() => {
+      setShowTrashPlay(true);
+      setTimeout(() => setShowTrashPlay(false), 1700);
+    }, 7200);
+    return () => clearInterval(interval);
+  }, [phase, hoverTrash, lang]);
+
   const unlockProfile = useCallback((id) => {
     setUnlockedProfileIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
   }, []);
@@ -3201,6 +3249,34 @@ export default function Roberto() {
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
+
+        @keyframes homeSignalPulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.72;transform:scale(1.06)}}
+        @keyframes homeSignalBlink{0%,84%,100%{opacity:.22}88%{opacity:.7}92%{opacity:.3}}
+        @keyframes homeSignalSweep{0%{transform:translateX(-120%)}100%{transform:translateX(180%)}}
+        @keyframes homeSignalFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+        .home-signal-break{margin:4px 0 44px;padding:6px 0 2px}
+        .home-signal-grid{display:grid;gap:12px;align-items:stretch}
+        .home-signal-card{position:relative;min-height:88px;border:1px solid #141414;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,.012),rgba(255,255,255,.004));overflow:hidden}
+        .home-signal-card::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.035) 3px,rgba(0,0,0,.035) 6px);opacity:.32;pointer-events:none}
+        .home-signal-card-center{min-height:88px}
+        .home-signal-node-wrap,.home-signal-port-wrap,.home-signal-window{position:absolute;inset:0}
+        .home-signal-node{position:absolute;width:8px;height:8px;border-radius:50%;background:rgba(255,77,0,.72);box-shadow:0 0 10px rgba(255,77,0,.18);animation:homeSignalPulse 3.4s ease-in-out infinite}
+        .home-signal-node-a{left:24%;top:44%}
+        .home-signal-node-b{left:50%;top:30%;animation-delay:.4s}
+        .home-signal-node-c{left:72%;top:56%;animation-delay:.9s}
+        .home-signal-link{position:absolute;height:1px;background:linear-gradient(90deg,rgba(255,77,0,.14),rgba(255,77,0,.42),rgba(255,77,0,.14));transform-origin:left center}
+        .home-signal-link-ab{left:27%;top:47%;width:28%;transform:rotate(-18deg)}
+        .home-signal-link-bc{left:52%;top:39%;width:25%;transform:rotate(30deg)}
+        .home-signal-window{display:flex;align-items:center;justify-content:center}
+        .home-signal-window::before{content:"";position:absolute;left:18%;right:18%;top:18%;bottom:18%;border:1px solid rgba(255,255,255,.08);border-radius:6px;background:rgba(255,255,255,.01)}
+        .home-signal-window-glow{position:absolute;left:24%;right:24%;top:24%;bottom:24%;background:radial-gradient(circle,rgba(255,77,0,.12) 0%,rgba(255,77,0,.04) 48%,transparent 72%);filter:blur(8px);animation:homeSignalPulse 4.2s ease-in-out infinite}
+        .home-signal-window-line{position:absolute;left:28%;right:28%;height:1px;background:linear-gradient(90deg,transparent,rgba(232,228,222,.5),transparent)}
+        .home-signal-window-line-1{top:38%}
+        .home-signal-window-line-2{top:50%;animation:homeSignalBlink 5.4s linear infinite}
+        .home-signal-window-line-3{top:62%}
+        .home-signal-port-shell{position:absolute;left:26%;right:26%;top:28%;bottom:28%;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.012)}
+        .home-signal-port-slot{position:absolute;left:39%;right:39%;top:44%;height:10px;border-radius:2px;background:#0b0b0b;box-shadow:0 0 0 1px rgba(255,255,255,.04)}
+        .home-signal-port-led{position:absolute;right:31%;top:35%;width:6px;height:6px;border-radius:50%;background:rgba(255,77,0,.62);box-shadow:0 0 10px rgba(255,77,0,.24);animation:homeSignalBlink 4.8s linear infinite}
         .work-card{transition:all .3s}
         .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
         .svc{padding:28px 30px;border:1px solid #141414;border-radius:4px;transition:all .3s;cursor:default}
@@ -3715,6 +3791,11 @@ export default function Roberto() {
             </div>
           </Section>
 
+          {/* VISUAL BREATH */}
+          <Section delay={0.195}>
+            <HomeSignalBreak mobile={isMobileViewport} />
+          </Section>
+
           {/* DIVIDER */}
           <Section delay={0.2}>
             <div style={{ height: 1, background: "linear-gradient(to right,transparent,#1A1A1A,transparent)", marginBottom: 40 }} />
@@ -3735,7 +3816,7 @@ export default function Roberto() {
                   style={{
                     animation: "trashBreath 4s ease-in-out infinite",
                   }}>
-                  {hoverTrash ? T.trashHover : (trashGlitchText || T.trashBtn)}
+                  {hoverTrash ? T.trashHover : (trashGlitchText || (showTrashPlay ? T.trashPlay : T.trashBtn))}
                 </button>
                 <span className="orsep" style={{ fontSize: 11, color: "#333" }}>{T.or}</span>
                 <button className="btn-talk" onClick={openContact}
