@@ -132,7 +132,7 @@ const LANG = {
         "+1 immaginazione.",
         "Apertura di mondi.",
         "Connessioni in corso.",
-        "Sistema quasi aperto.",
+        "Sistema aperto.",
       ],
       crossingTapHint: "Tocca quando la luce è al centro",
       crossingAria: "Attraversa. Tocca quando la luce è al centro.",
@@ -182,6 +182,13 @@ const LANG = {
       kicker: "Capitolo 3 · Sintesi",
       introTitle: "Sintesi",
       line: "Quando tutto si muove, serve un centro fermo.",
+      stayBtn: "Resta nel flusso",
+      centerBtn: "Trova il centro",
+      stayFeedback: [
+        "Muoversi non bastava.",
+        "Il rumore da solo non decide niente.",
+        "Serviva un punto fermo, non altro movimento.",
+      ],
       continueBtn: "Continua",
       backToSurface: "← Torna in superficie",
     }
@@ -287,7 +294,7 @@ const LANG = {
         "+1 imagination.",
         "Worlds opening.",
         "Connections online.",
-        "System almost open.",
+        "System open.",
       ],
       crossingTapHint: "Tap when the light is centered",
       crossingAria: "Cross. Tap when the light is centered.",
@@ -337,6 +344,13 @@ const LANG = {
       kicker: "Chapter 3 · Synthesis",
       introTitle: "Synthesis",
       line: "When everything moves, you need a steady center.",
+      stayBtn: "Stay in the flow",
+      centerBtn: "Find the center",
+      stayFeedback: [
+        "Movement alone wasn't enough.",
+        "Noise doesn't decide anything by itself.",
+        "It needed a fixed point, not more motion.",
+      ],
       continueBtn: "Continue",
       backToSurface: "← Back to surface",
     }
@@ -1528,6 +1542,139 @@ function useStreetAmbience() {
   return { start, stop };
 }
 
+
+function useChapterThreeAmbience() {
+  const audioCtxRef = useRef(null);
+  const masterGainRef = useRef(null);
+  const nodesRef = useRef([]);
+  const activeRef = useRef(false);
+  const tickTimeoutRef = useRef(null);
+
+  const stop = useCallback(() => {
+    activeRef.current = false;
+    if (tickTimeoutRef.current) {
+      clearTimeout(tickTimeoutRef.current);
+      tickTimeoutRef.current = null;
+    }
+    const ctx = audioCtxRef.current;
+    const master = masterGainRef.current;
+    if (ctx && master) {
+      const now = ctx.currentTime;
+      try {
+        master.gain.cancelScheduledValues(now);
+        master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), now);
+        master.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+      } catch (e) {}
+    }
+    const nodes = [...nodesRef.current];
+    nodesRef.current = [];
+    nodes.forEach((n) => { try { n.stop?.((audioCtxRef.current?.currentTime || 0) + 0.8); } catch (e) {} });
+    setTimeout(() => {
+      nodes.forEach((n) => { try { n.disconnect?.(); } catch (e) {} });
+      if (!activeRef.current) masterGainRef.current = null;
+    }, 900);
+  }, []);
+
+  const start = useCallback(() => {
+    try {
+      if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+      if (activeRef.current) return;
+      activeRef.current = true;
+      const now = ctx.currentTime;
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0.0001, now);
+      master.gain.linearRampToValueAtTime(0.24, now + 0.8);
+      master.connect(ctx.destination);
+      masterGainRef.current = master;
+
+      const makeNoise = (duration = 3.4) => {
+        const length = Math.max(1, Math.floor(ctx.sampleRate * duration));
+        const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let last = 0;
+        for (let i = 0; i < length; i++) {
+          const white = Math.random() * 2 - 1;
+          last = (last * 0.968) + (white * 0.032);
+          data[i] = last;
+        }
+        return buffer;
+      };
+
+      const room = ctx.createBufferSource();
+      room.buffer = makeNoise(4.2);
+      room.loop = true;
+      const roomBand = ctx.createBiquadFilter();
+      roomBand.type = 'bandpass';
+      roomBand.frequency.setValueAtTime(420, now);
+      roomBand.Q.setValueAtTime(0.35, now);
+      const roomGain = ctx.createGain();
+      roomGain.gain.setValueAtTime(0.026, now);
+      room.connect(roomBand);
+      roomBand.connect(roomGain);
+      roomGain.connect(master);
+      room.start(now);
+
+      const air = ctx.createBufferSource();
+      air.buffer = makeNoise(3.8);
+      air.loop = true;
+      const airHigh = ctx.createBiquadFilter();
+      airHigh.type = 'highpass';
+      airHigh.frequency.setValueAtTime(2400, now);
+      const airGain = ctx.createGain();
+      airGain.gain.setValueAtTime(0.018, now);
+      air.connect(airHigh);
+      airHigh.connect(airGain);
+      airGain.connect(master);
+      air.start(now);
+
+      const hum = ctx.createOscillator();
+      hum.type = 'triangle';
+      hum.frequency.setValueAtTime(86, now);
+      const humGain = ctx.createGain();
+      humGain.gain.setValueAtTime(0.0001, now);
+      humGain.gain.linearRampToValueAtTime(0.005, now + 0.8);
+      hum.connect(humGain);
+      humGain.connect(master);
+      hum.start(now);
+
+      nodesRef.current = [room, air, hum];
+
+      const scheduleTicks = () => {
+        if (tickTimeoutRef.current) clearTimeout(tickTimeoutRef.current);
+        tickTimeoutRef.current = setTimeout(() => {
+          if (!activeRef.current) return;
+          try {
+            const t = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(680 + Math.random() * 260, t);
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.0001, t);
+            gain.gain.linearRampToValueAtTime(0.0042, t + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+            const band = ctx.createBiquadFilter();
+            band.type = 'bandpass';
+            band.frequency.setValueAtTime(1200, t);
+            band.Q.setValueAtTime(2.1, t);
+            osc.connect(gain);
+            gain.connect(band);
+            band.connect(master);
+            osc.start(t);
+            osc.stop(t + 0.24);
+          } catch (e) {}
+          scheduleTicks();
+        }, 4200 + Math.random() * 3800);
+      };
+      scheduleTicks();
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => () => stop(), [stop]);
+
+  return { start, stop };
+}
 
 function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3200, hintText = "Tap when the light is centered", ariaLabel = "Cross. Tap when the light is centered.", unlockLines = [] }) {
   const [currentNodeIndex, setCurrentNodeIndex] = useState(-1);
@@ -2760,9 +2907,51 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 }
 
 function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
+  const ambience = useChapterThreeAmbience();
+  const feedbackTimeoutRef = useRef(null);
+  const transitionTimeoutRef = useRef(null);
+  const feedbackIdxRef = useRef(0);
+
+  const [feedbackText, setFeedbackText] = useState("");
+  const [sceneBreath, setSceneBreath] = useState(false);
+  const [passingCrew, setPassingCrew] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
+
   useEffect(() => {
     onUnlockProfile?.("synthesis");
-  }, [onUnlockProfile]);
+    ambience.start();
+    const breathT = setInterval(() => setSceneBreath((v) => !v), 3800);
+    const crewT = setInterval(() => {
+      setPassingCrew(true);
+      setTimeout(() => setPassingCrew(false), 2400);
+    }, 8200);
+    return () => {
+      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+      if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+      clearInterval(breathT);
+      clearInterval(crewT);
+      ambience.stop();
+    };
+  }, [onUnlockProfile, ambience]);
+
+  const handleStay = useCallback(() => {
+    const lines = T.stayFeedback || [];
+    if (!lines.length) return;
+    const idx = feedbackIdxRef.current % lines.length;
+    feedbackIdxRef.current = idx + 1;
+    setFeedbackText(lines[idx]);
+    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+    feedbackTimeoutRef.current = setTimeout(() => setFeedbackText(""), 2200);
+  }, [T.stayFeedback]);
+
+  const handleCenter = useCallback(() => {
+    setFeedbackText("");
+    setTransitioning(true);
+    if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+    transitionTimeoutRef.current = setTimeout(() => {
+      onComplete?.();
+    }, 850);
+  }, [onComplete]);
 
   return (
     <div className="ch1-root">
@@ -2774,19 +2963,25 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
           </div>
         </div>
 
-        <div className="ch2-stage ch3-stage">
+        <div className={`ch2-stage ch3-stage ${sceneBreath ? 'is-breathing' : ''} ${transitioning ? 'is-transitioning' : ''}`}>
           <img className="ch2-fill" src={ASSETS.chapter3Frame1} alt="" />
+          <div className="ch3-light-bloom" />
           <div className="ch3-grade" />
+          <div className="ch3-floor-sweep" />
+          <div className={`ch3-crew-pass ${passingCrew ? 'is-visible' : ''}`} />
+          <div className="ch3-tech-flicker" />
           <div className="ch3-vignette" />
           <div className="ch2-line-block ch3-line-block">
             <div className="ch2-line ch3-line">{T.line}</div>
           </div>
+          <div className={`ch2-feedback-overlay ch3-feedback-overlay ${feedbackText ? 'show' : ''}`}>{feedbackText}</div>
           <div className="ch1-scan" />
         </div>
 
         <div className="ch1-controls-slot">
           <div className="ch1-controls ch2-controls">
-            <Ch1ChoiceButton onClick={onComplete}>{T.continueBtn}</Ch1ChoiceButton>
+            <Ch1ChoiceButton subtle onClick={handleStay}>{T.stayBtn}</Ch1ChoiceButton>
+            <Ch1ChoiceButton onClick={handleCenter}>{T.centerBtn}</Ch1ChoiceButton>
           </div>
         </div>
 
@@ -3296,6 +3491,9 @@ export default function Roberto() {
         @keyframes ch2HeadlightSweepBack{0%,18%{transform:translateX(0) skewX(-16deg);opacity:0}30%,56%{opacity:.34}78%{transform:translateX(-195%) skewX(-16deg);opacity:.18}100%{transform:translateX(-195%) skewX(-16deg);opacity:0}}
         @keyframes ch2HeadlightSweepFront{0%,22%{transform:translateX(0) skewX(-16deg);opacity:0}34%,58%{opacity:.48}82%{transform:translateX(-214%) skewX(-16deg);opacity:.22}100%{transform:translateX(-214%) skewX(-16deg);opacity:0}}
         @keyframes ch2GameShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+        @keyframes ch3FloorSweep{0%,100%{opacity:.24;transform:translateX(-2%)}50%{opacity:.46;transform:translateX(2%)}}
+        @keyframes ch3CrewPass{0%{opacity:0;transform:translateX(-12px)}18%{opacity:.22}70%{opacity:.16;transform:translateX(20px)}100%{opacity:0;transform:translateX(34px)}}
+        @keyframes ch3TechFlicker{0%,78%,100%{opacity:.08}79%{opacity:.26}80%{opacity:.1}88%{opacity:.18}89%{opacity:.08}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
@@ -3331,10 +3529,19 @@ export default function Roberto() {
         .ch2-debug-btn{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,77,0,.45);background:transparent;color:#FF4D00;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.8px;cursor:pointer;justify-self:start}
         .ch2-debug-src{word-break:break-all;color:#b68f79}
         .ch3-stage{background:#0a0908}
-        .ch3-grade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(13,8,6,.08), rgba(7,5,5,.18)), radial-gradient(circle at 50% 34%, rgba(255,204,132,.08), rgba(0,0,0,0) 42%);mix-blend-mode:screen}
-        .ch3-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,.20) 100%)}
-        .ch3-line-block{border-top-color:rgba(255,194,146,.16);background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.22) 72%,transparent 100%)}
+        .ch3-light-bloom{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 53% 34%, rgba(255,214,146,.16) 0%, rgba(255,190,118,.08) 22%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.72;transition:opacity 1.8s ease,transform 1.8s ease}
+        .ch3-stage.is-breathing .ch3-light-bloom{opacity:.88;transform:scale(1.018)}
+        .ch3-grade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(22,14,10,.04), rgba(10,7,7,.12)), radial-gradient(circle at 52% 34%, rgba(255,204,132,.10), rgba(0,0,0,0) 40%);mix-blend-mode:screen}
+        .ch3-floor-sweep{position:absolute;left:0;right:0;bottom:0;height:34%;pointer-events:none;background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(20,10,7,.04) 22%, rgba(255,178,110,.08) 52%, rgba(0,0,0,0) 100%);opacity:.42;animation:ch3FloorSweep 7.5s ease-in-out infinite}
+        .ch3-crew-pass{position:absolute;left:60%;top:26%;width:9%;height:46%;pointer-events:none;background:linear-gradient(180deg, rgba(18,12,10,.0) 0%, rgba(28,16,12,.18) 24%, rgba(28,16,12,.28) 62%, rgba(18,12,10,0) 100%);filter:blur(4px);opacity:0;transform:translateX(-10px)}
+        .ch3-crew-pass.is-visible{animation:ch3CrewPass 2.35s ease-out forwards}
+        .ch3-tech-flicker{position:absolute;left:22%;top:42%;width:7%;height:4%;pointer-events:none;background:linear-gradient(90deg, rgba(255,219,168,.0), rgba(255,219,168,.24), rgba(255,219,168,0));opacity:.12;animation:ch3TechFlicker 5.2s steps(1,end) infinite}
+        .ch3-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,.22) 100%)}
+        .ch3-line-block{border-top-color:rgba(255,194,146,.16);background:linear-gradient(to top,rgba(0,0,0,.58) 0%,rgba(0,0,0,.18) 72%,transparent 100%)}
         .ch3-line{white-space:nowrap}
+        .ch3-feedback-overlay{top:24px}
+        .ch3-stage.is-transitioning{filter:saturate(1.02) brightness(1.02)}
+        .ch3-stage.is-transitioning .ch3-vignette{opacity:.78}
 
         @media(max-width:1024px){
           .home-social-rail:not(.home-social-rail-mobile){display:none!important}
@@ -3631,7 +3838,17 @@ export default function Roberto() {
             {T.finally}
           </div>
           <div style={{ fontSize: 13, color: "#666", letterSpacing: .5, textAlign: "center", lineHeight: 1.9, maxWidth: 380 }}>
-            {T.realStory}
+            {lang === "it" ? (
+              <>
+                <div>I servizi spiegano cosa faccio.</div>
+                <div>Il resto spiega come ci sono arrivato.</div>
+              </>
+            ) : (
+              <>
+                <div>The services explain what I do.</div>
+                <div>The rest explains how I got here.</div>
+              </>
+            )}
           </div>
           <div style={{ marginTop: 40, width: 50, height: 1.5, background: "#FF4D00", animation: "glowPulse 2s infinite", borderRadius: 1 }} />
         </div>
