@@ -3679,7 +3679,7 @@ export default function Roberto() {
         .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
         .ch1-birds{position:absolute;left:-14%;right:-8%;top:9%;height:20%;z-index:7;pointer-events:none;opacity:0;transition:opacity .24s ease}
         .ch1-birds.show{opacity:1}
-        .ch1-bird{position:absolute;width:18px;height:8px;color:#0a0a0a;opacity:.92;animation:ch1BirdPass 2.4s linear forwards}
+        .ch1-bird{position:absolute;width:22px;height:10px;color:rgba(12,12,12,.88);opacity:1;filter:drop-shadow(0 1px 0 rgba(220,231,222,.08));animation:ch1BirdPass 2.8s linear forwards}
         .ch1-bird::before,.ch1-bird::after{content:"";position:absolute;top:0;width:8px;height:3px;background:currentColor}
         .ch1-bird::before{left:0;transform:skewX(-28deg)}
         .ch1-bird::after{right:0;transform:skewX(28deg)}
@@ -4058,14 +4058,7 @@ export default function Roberto() {
             </div>
           </Section>
 
-          {/* 2. PROOF STRIP */}
-          <Section delay={0.08}>
-            <div style={{ marginBottom: 32, textAlign: "center" }}>
-              <div className="home-proof-strip" style={{ fontSize: isMobileViewport ? 9 : 10, letterSpacing: isMobileViewport ? 2.15 : .9, color: isMobileViewport ? "#777" : "#968a7f", textTransform: isMobileViewport ? "uppercase" : "none", fontFamily: "'IBM Plex Mono', monospace", lineHeight: isMobileViewport ? 1.75 : 1.6, maxWidth: isMobileViewport ? 320 : 500, marginInline: "auto" }}>{proofStripText}</div>
-            </div>
-          </Section>
-
-          {/* 3. DIVIDER */}
+          {/* 2. DIVIDER */}
           <Section delay={0.1}>
             <div style={{ height: 1, background: "linear-gradient(to right,#FF4D00 0%,rgba(255,77,0,.12) 45%,transparent 100%)", marginBottom: 48 }} />
           </Section>
@@ -4234,7 +4227,6 @@ export default function Roberto() {
             <span style={{ color: "#1A1A1A" }}>·</span>
             <span className="foot-l" onClick={openContact}>info@robertomarchesini.com</span>
           </div>
-          )}
         </div>
       )}
 
