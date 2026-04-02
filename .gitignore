@@ -1,0 +1,21 @@
+# Dipendenze
+node_modules/
+
+# Build locale (Vercel la genera da solo)
+dist/
+
+# Cache Vite
+.vite/
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Log
+*.log
+npm-debug.log*
