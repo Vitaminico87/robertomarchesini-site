@@ -3286,7 +3286,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     finalLineTimeoutRef.current = setTimeout(() => {
       setShowFinalLine(true);
       setShowFutureBtn(true);
-    }, 220);
+    }, 140);
     return () => {
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
@@ -4235,34 +4235,34 @@ export default function Roberto() {
         .ch3-stage.is-transitioning .ch3-vignette{opacity:.78}
         .ch3-transition-wash{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 52%, rgba(255,197,118,.14), rgba(0,0,0,.08) 46%, rgba(0,0,0,.42) 100%);opacity:0;transition:opacity .48s ease}
         .ch3-transition-wash.active{opacity:1}
-        .ch3-synthesis-core-glow{position:absolute;right:8%;top:10%;width:44%;height:62%;z-index:3;pointer-events:none;background:radial-gradient(circle at 58% 46%, rgba(255,226,172,.54) 0%, rgba(255,196,118,.34) 24%, rgba(255,176,92,.16) 42%, rgba(0,0,0,0) 74%);mix-blend-mode:screen;filter:blur(10px);opacity:.96;animation:ch3TreePulse 4.2s ease-in-out infinite}
-        .ch3-synthesis-branch-glow{position:absolute;right:-2%;top:3%;width:70%;height:84%;z-index:3;pointer-events:none;background:linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,184,102,.10) 34%, rgba(255,208,144,.32) 62%, rgba(255,188,110,.12) 100%);mix-blend-mode:screen;filter:blur(5px);opacity:.84;animation:ch3BranchGlow 3.9s ease-in-out infinite}
-        .ch3-synthesis-flow{position:absolute;right:8%;top:7%;width:50%;height:78%;z-index:3;pointer-events:none;clip-path:polygon(16% 6%, 90% 6%, 98% 40%, 94% 86%, 48% 90%, 12% 74%, 0% 34%);background:repeating-linear-gradient(180deg, rgba(255,182,102,.0) 0 8px, rgba(255,200,126,.34) 8px 11px, rgba(255,182,102,.0) 11px 20px);mix-blend-mode:screen;opacity:.46;animation:ch3FlowDrift 6.6s linear infinite}
-        .ch3-synthesis-ground-haze{position:absolute;right:0;bottom:0;width:56%;height:32%;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 58% 74%, rgba(255,188,118,.34) 0%, rgba(255,182,108,.18) 20%, rgba(0,0,0,0) 72%);mix-blend-mode:screen;opacity:.8;animation:ch3GroundBreath 4.4s ease-in-out infinite}
-        .ch3-synthesis-amber-shimmer{position:absolute;right:10%;top:14%;width:40%;height:54%;z-index:3;pointer-events:none;background:linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,222,178,.16) 46%, rgba(255,241,214,.40) 52%, rgba(255,206,142,.14) 58%, rgba(255,255,255,0) 100%);mix-blend-mode:screen;opacity:.42;transform:translateX(-18%);animation:ch3ShimmerSweep 7.2s ease-in-out infinite}
-        .ch3-synthesis-circuit-pulse{position:absolute;right:8%;top:8%;width:50%;height:76%;z-index:3;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.22) 0%, rgba(255,199,124,.10) 20%, rgba(0,0,0,0) 52%);mix-blend-mode:screen;opacity:.5;animation:ch3CircuitPulse 3.2s ease-in-out infinite}
-        .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.14) 72%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(12,8,7,.08) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.26) 100%)}
-        .ch3-distant-kite{position:absolute;left:34%;top:19%;width:18%;height:16%;z-index:4;pointer-events:none;opacity:.92;animation:ch3KiteDrift 12s ease-in-out infinite}
-        .ch3-kite{position:absolute;left:28%;top:22%;width:18px;height:18px;filter:drop-shadow(0 0 6px rgba(255,214,188,.18))}
-        .ch3-kite-diamond{position:absolute;left:4px;top:2px;width:8px;height:8px;background:rgba(238,86,24,.96);border:1px solid rgba(255,220,198,.28);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
-        .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.68)}
-        .ch3-kite-diamond::before{left:3px;top:-1px;width:1px;height:10px;transform:rotate(-45deg);transform-origin:center}
-        .ch3-kite-diamond::after{left:-1px;top:3px;width:10px;height:1px;transform:rotate(-45deg);transform-origin:center}
-        .ch3-kite-tail{position:absolute;left:11px;width:1px;background:rgba(255,222,204,.54);transform-origin:top center}
-        .ch3-kite-tail-a{top:10px;height:5px;transform:rotate(18deg)}
-        .ch3-kite-tail-b{top:14px;height:4px;left:12px;transform:rotate(-10deg)}
-        .ch3-kite-tail-c{top:18px;height:4px;left:10px;transform:rotate(14deg)}
-        .ch3-line-block-final{z-index:9;border-top-color:rgba(255,214,168,.28);background:linear-gradient(180deg, rgba(12,8,7,.30) 0%, rgba(8,6,5,.62) 22%, rgba(5,5,5,.92) 100%);box-shadow:0 -14px 30px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,222,184,.08);backdrop-filter:blur(7px);opacity:0;transform:translateY(12px);transition:opacity .7s ease, transform .7s ease}
+        .ch3-synthesis-core-glow{position:absolute;right:11%;top:14%;width:38%;height:48%;z-index:3;pointer-events:none;background:radial-gradient(circle at 60% 44%, rgba(255,214,156,.26) 0%, rgba(255,190,118,.14) 30%, rgba(255,176,92,.05) 52%, rgba(0,0,0,0) 78%);mix-blend-mode:soft-light;filter:blur(18px);opacity:.52;animation:ch3TreePulse 5.6s ease-in-out infinite}
+        .ch3-synthesis-branch-glow{position:absolute;right:2%;top:8%;width:58%;height:72%;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 62% 38%, rgba(255,196,122,.18) 0%, rgba(255,186,110,.08) 28%, rgba(0,0,0,0) 70%);mix-blend-mode:soft-light;filter:blur(16px);opacity:.34;animation:ch3BranchGlow 6.8s ease-in-out infinite}
+        .ch3-synthesis-flow{position:absolute;right:14%;top:10%;width:32%;height:64%;z-index:3;pointer-events:none;clip-path:polygon(20% 4%, 88% 8%, 100% 36%, 88% 94%, 36% 92%, 0% 54%, 10% 16%);background:repeating-linear-gradient(180deg, rgba(255,196,122,.0) 0 12px, rgba(255,205,136,.12) 12px 13px, rgba(255,196,122,.0) 13px 26px);mix-blend-mode:screen;filter:blur(7px);opacity:.16;animation:ch3FlowDrift 8.4s linear infinite}
+        .ch3-synthesis-ground-haze{position:absolute;right:4%;bottom:2%;width:44%;height:22%;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 58% 74%, rgba(255,186,112,.18) 0%, rgba(255,176,102,.08) 24%, rgba(0,0,0,0) 74%);mix-blend-mode:screen;opacity:.34;animation:ch3GroundBreath 5.2s ease-in-out infinite}
+        .ch3-synthesis-amber-shimmer{position:absolute;right:16%;top:16%;width:28%;height:44%;z-index:3;pointer-events:none;background:linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,228,186,.06) 42%, rgba(255,239,208,.16) 52%, rgba(255,206,142,.06) 60%, rgba(255,255,255,0) 100%);mix-blend-mode:screen;opacity:.18;transform:translateX(-12%);animation:ch3ShimmerSweep 9.8s ease-in-out infinite}
+        .ch3-synthesis-circuit-pulse{position:absolute;right:15%;top:15%;width:30%;height:52%;z-index:3;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.14) 0%, rgba(255,199,124,.06) 24%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.16;animation:ch3CircuitPulse 4.8s ease-in-out infinite}
+        .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.12) 74%, rgba(0,0,0,.38) 100%), linear-gradient(180deg, rgba(12,8,7,.06) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.22) 100%)}
+        .ch3-distant-kite{position:absolute;left:42%;top:30%;width:14%;height:14%;z-index:7;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
+        .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
+        .ch3-kite-diamond{position:absolute;left:6px;top:2px;width:11px;height:11px;background:rgba(238,86,24,.98);border:1px solid rgba(255,220,198,.38);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.18) inset}
+        .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.76)}
+        .ch3-kite-diamond::before{left:4px;top:-1px;width:1px;height:13px;transform:rotate(-45deg);transform-origin:center}
+        .ch3-kite-diamond::after{left:-1px;top:4px;width:13px;height:1px;transform:rotate(-45deg);transform-origin:center}
+        .ch3-kite-tail{position:absolute;left:14px;width:1px;background:rgba(255,222,204,.62);transform-origin:top center}
+        .ch3-kite-tail-a{top:13px;height:7px;transform:rotate(18deg)}
+        .ch3-kite-tail-b{top:18px;height:6px;left:15px;transform:rotate(-10deg)}
+        .ch3-kite-tail-c{top:24px;height:5px;left:13px;transform:rotate(14deg)}
+        .ch3-line-block-final{left:14px;right:14px;bottom:14px;max-width:none;z-index:12;border-top-color:rgba(255,218,178,.18);background:linear-gradient(180deg, rgba(10,7,6,.08) 0%, rgba(8,6,5,.58) 16%, rgba(5,5,5,.94) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,228,198,.06);backdrop-filter:blur(8px);padding:14px 16px 12px;opacity:0;transform:translateY(10px);transition:opacity .55s ease, transform .55s ease;display:flex;justify-content:center}
         .ch3-line-block-final.show{opacity:1;transform:translateY(0)}
-        .ch3-line-final{white-space:normal;text-align:center;max-width:760px;margin:0 auto;line-height:1.14;color:rgba(246,236,221,.98);text-shadow:0 1px 0 rgba(0,0,0,.28), 0 8px 24px rgba(0,0,0,.42)}
+        .ch3-line-final{white-space:normal;text-align:center;max-width:880px;margin:0 auto;line-height:1.14;color:rgba(247,238,224,.99);text-shadow:0 1px 0 rgba(0,0,0,.34), 0 10px 24px rgba(0,0,0,.48)}
         .ch3-controls-final{justify-content:center}
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
         .ch3-stage.is-final-fade .ch3-line-block-final{opacity:0;transform:translateY(18px)}
 
-        @keyframes ch3ShimmerSweep{0%,100%{opacity:.18;transform:translateX(-18%)}42%{opacity:.38;transform:translateX(0%)}68%{opacity:.24;transform:translateX(6%)}}
-        @keyframes ch3CircuitPulse{0%,100%{opacity:.24;transform:scale(.98)}46%{opacity:.46;transform:scale(1.02)}}
-        @keyframes ch3KiteDrift{0%,100%{transform:translate3d(0,0,0)}25%{transform:translate3d(8px,-5px,0)}55%{transform:translate3d(18px,2px,0)}78%{transform:translate3d(10px,-3px,0)}}
+        @keyframes ch3ShimmerSweep{0%,100%{opacity:.08;transform:translateX(-10%)}42%{opacity:.18;transform:translateX(0%)}68%{opacity:.12;transform:translateX(4%)}}
+        @keyframes ch3CircuitPulse{0%,100%{opacity:.10;transform:scale(.995)}46%{opacity:.18;transform:scale(1.01)}}
+        @keyframes ch3KiteDrift{0%,100%{transform:translate3d(0,0,0) rotate(-8deg)}22%{transform:translate3d(6px,-4px,0) rotate(-2deg)}52%{transform:translate3d(15px,1px,0) rotate(6deg)}76%{transform:translate3d(9px,-3px,0) rotate(1deg)}}
 
         @media(max-width:1024px){
           .home-social-rail:not(.home-social-rail-mobile){display:none!important}
@@ -4272,13 +4272,14 @@ export default function Roberto() {
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
           .ch3-line-final{font-size:clamp(18px,5.2vw,26px);line-height:1.16}
-          .ch3-synthesis-core-glow{right:3%;top:12%;width:60%;height:56%;opacity:.98}
-          .ch3-synthesis-branch-glow{right:-4%;width:78%;height:78%;opacity:.82}
-          .ch3-synthesis-flow{right:2%;width:72%;height:76%;opacity:.44}
-          .ch3-synthesis-amber-shimmer{right:2%;width:60%;height:58%;opacity:.34}
-          .ch3-synthesis-circuit-pulse{right:2%;width:70%;height:78%;opacity:.54}
-          .ch3-distant-kite{left:28%;top:16%;width:24%;height:18%}
-          .ch3-kite{transform:scale(.9)}
+          .ch3-line-block-final{left:10px;right:10px;bottom:10px;padding:12px 12px 11px}
+          .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
+          .ch3-synthesis-branch-glow{right:2%;top:10%;width:60%;height:66%;opacity:.30}
+          .ch3-synthesis-flow{right:10%;top:12%;width:40%;height:66%;opacity:.14}
+          .ch3-synthesis-amber-shimmer{right:12%;top:18%;width:34%;height:42%;opacity:.14}
+          .ch3-synthesis-circuit-pulse{right:12%;top:16%;width:38%;height:54%;opacity:.14}
+          .ch3-distant-kite{left:39%;top:28%;width:18%;height:16%}
+          .ch3-kite{transform:scale(.95)}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
           .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
