@@ -183,10 +183,10 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
     hero: "Costruisco sistemi creativi per trasformare idee complesse in contenuti, prodotti ed esperienze che reggano davvero.",
-    heroSub: "Direzione creativa, narrativa e AI per dare ai progetti più forma e peso.",
+    heroSub: "",
     heroMobileSub: "Direzione creativa, narrativa e AI dove servono davvero.",
-    proofStrip: "Sistemi creativi — Workflow narrativi — Strutture che reggono",
-    proofStripMobile: "Sistemi creativi · Workflow narrativi · AI",
+    proofStrip: "Direzione narrativa — sistemi — AI",
+    proofStripMobile: "Narrativa · sistemi · AI",
     whatido: "Cosa costruisco",
     services: [
       { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura, così un progetto smette di disperdersi e inizia a farsi leggere meglio.", mobileDesc: "Definisco posizionamento, messaggio e struttura." },
@@ -350,10 +350,10 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
     hero: "I build creative systems to turn complex ideas into content, products, and experiences that truly hold up.",
-    heroSub: "Creative direction, narrative, and AI to give projects more form and weight.",
+    heroSub: "",
     heroMobileSub: "Creative direction, narrative, and AI where they actually help.",
-    proofStrip: "Creative systems — Narrative workflows — Structures that hold",
-    proofStripMobile: "Creative systems · Narrative workflows · AI",
+    proofStrip: "Narrative direction — systems — AI",
+    proofStripMobile: "Narrative · systems · AI",
     whatido: "What I build",
     services: [
       { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and structure so a project stops dispersing and starts reading more clearly.", mobileDesc: "I define positioning, message, and structure." },
@@ -4030,7 +4030,9 @@ export default function Roberto() {
               </h1>
               <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 20, lineHeight: isMobileViewport ? 1.78 : 1.92, maxWidth: isMobileViewport ? 420 : 470 }}>{T.hero}</div>
-              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#9a938b" : "#a39d95", marginTop: 14, lineHeight: isMobileViewport ? 1.74 : 1.82, maxWidth: isMobileViewport ? 400 : 390 }}>{heroSubText}</div>
+              {heroSubText ? (
+                <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#9a938b" : "#a39d95", marginTop: 14, lineHeight: isMobileViewport ? 1.74 : 1.82, maxWidth: isMobileViewport ? 400 : 390 }}>{heroSubText}</div>
+              ) : null}
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
