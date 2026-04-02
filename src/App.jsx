@@ -817,28 +817,10 @@ function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
 }
 
 function HomeCestinaTeaser({ active = false }) {
-  const [frame, setFrame] = useState("idle");
-
-  useEffect(() => {
-    if (active) {
-      setFrame("jump");
-      const t = setTimeout(() => setFrame("idle"), 820);
-      return () => clearTimeout(t);
-    }
-
-    const interval = setInterval(() => {
-      setFrame("jump");
-      const t = setTimeout(() => setFrame("idle"), 520);
-      return () => clearTimeout(t);
-    }, 6200);
-
-    return () => clearInterval(interval);
-  }, [active]);
-
   return (
     <div className={`home-cestina-teaser ${active ? 'is-active' : ''}`} aria-hidden="true">
       <img
-        src={frame === "jump" ? HOME_TEASER_ASSETS.jump : HOME_TEASER_ASSETS.idle}
+        src={HOME_TEASER_ASSETS.idle}
         alt=""
         className="home-cestina-teaser-sprite"
         draggable={false}
@@ -3710,12 +3692,12 @@ export default function Roberto() {
         .pixel-social-link-mobile{padding:8px 10px;background:rgba(7,7,7,.9)}
         .pixel-social-icon{display:flex;align-items:center;justify-content:center;flex:0 0 auto}
         .pixel-social-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;line-height:1}
-        .home-trash-wrap{display:flex;align-items:flex-end;gap:10px;position:relative}
-        .home-cestina-teaser{position:relative;width:98px;height:134px;display:flex;align-items:flex-end;justify-content:center;opacity:.68;transform:translateX(0);transition:opacity .28s ease,transform .28s ease,filter .28s ease;filter:drop-shadow(0 0 16px rgba(240,236,230,.16))}
-        .home-cestina-teaser.is-active,.home-cestina-teaser:hover{opacity:.96;transform:translateY(-2px);filter:drop-shadow(0 0 22px rgba(240,236,230,.22))}
-        .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:4px;width:46px;height:10px;border-radius:50%;background:rgba(0,0,0,.34);filter:blur(4px);transform:translateX(-50%)}
-        .home-cestina-teaser-sprite{position:relative;z-index:1;width:100%;height:auto;display:block;image-rendering:pixelated;animation:homeTeaserFloat 4.6s ease-in-out infinite;pointer-events:none;user-select:none}
-        @keyframes homeTeaserFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+        .home-trash-wrap{display:flex;align-items:flex-end;gap:12px;position:relative}
+        .home-cestina-teaser{position:relative;flex:0 0 auto;width:34px;height:56px;display:flex;align-items:flex-end;justify-content:center;opacity:.64;transform:translateY(0);transition:opacity .24s ease,transform .24s ease,filter .24s ease;margin-right:2px;filter:drop-shadow(0 0 8px rgba(240,236,230,.08))}
+        .home-cestina-teaser.is-active,.home-trash-wrap:hover .home-cestina-teaser{opacity:.88;transform:translateY(-1px);filter:drop-shadow(0 0 12px rgba(240,236,230,.12))}
+        .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:1px;width:18px;height:5px;border-radius:50%;background:rgba(0,0,0,.22);filter:blur(3px);transform:translateX(-50%)}
+        .home-cestina-teaser-sprite{position:relative;z-index:1;width:100%;height:auto;display:block;image-rendering:pixelated;animation:homeTeaserSway 5.2s ease-in-out infinite;pointer-events:none;user-select:none;transform-origin:center bottom;opacity:.92}
+        @keyframes homeTeaserSway{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-1px) rotate(1.2deg)}}
         
         /* Chapter 1 styles */
         .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,5vh,44px) 16px 20px;padding-bottom:env(safe-area-inset-bottom,20px)}
@@ -4260,6 +4242,7 @@ export default function Roberto() {
               </div>
               <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
                 <div className="home-trash-wrap">
+                  <HomeCestinaTeaser active={hoverTrash} />
                   <button className="btn-trash" onClick={handleTrash}
                     onMouseEnter={() => setHoverTrash(true)}
                     onMouseLeave={() => setHoverTrash(false)}
@@ -4270,7 +4253,6 @@ export default function Roberto() {
                     }}>
                     {hoverTrash ? T.trashHover : (trashGlitchText || (showTrashPlay ? T.trashPlay : T.trashBtn))}
                   </button>
-                  <HomeCestinaTeaser active={hoverTrash} />
                 </div>
                 <span className="orsep" style={{ fontSize: 11, color: "#333" }}>{T.or}</span>
                 <button className="btn-talk" onClick={openContact}
