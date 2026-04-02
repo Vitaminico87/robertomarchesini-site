@@ -218,6 +218,7 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
     hero: "Costruisco sistemi creativi per comunicazione, contenuti ed esperienze digitali che devono reggere nel tempo.",
+    heroBackground: "Vengo da fotografia e design. Oggi porto quello stesso rigore dentro sistemi creativi, contenuti e direzione.",
     heroSub: "",
     heroMobileSub: "Comunicazione, contenuti, workflow e automazioni—con criterio.",
     proofStrip: "Digitale · contenuti · automazioni",
@@ -406,6 +407,7 @@ const LANG = {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
     hero: "I build creative systems for communication, content, and digital experiences that are meant to hold up over time.",
+    heroBackground: "I come from photography and design. Today I bring that same rigour into creative systems, content, and direction.",
     heroSub: "",
     heroMobileSub: "Communication, content, workflows and automation—with judgment.",
     proofStrip: "Digital · content · automation",
@@ -4653,6 +4655,9 @@ export default function Roberto() {
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 16 : 15, color: "#F0ECE6", marginTop: 18, lineHeight: isMobileViewport ? 1.8 : 1.95, maxWidth: isMobileViewport ? 430 : 500, textWrap: "pretty" }}>{T.hero}</div>
+              {T.heroBackground && (
+                <div className="home-pretty" style={{ fontSize: isMobileViewport ? 13 : 12, color: "#857d74", marginTop: isMobileViewport ? 14 : 16, lineHeight: 1.88, maxWidth: isMobileViewport ? 390 : 440, textWrap: "pretty", fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{T.heroBackground}</div>
+              )}
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
@@ -4779,8 +4784,7 @@ export default function Roberto() {
               <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 18 : 22 }}>
                 {T.method.map((m, i) => (
                   <div key={i} className="mth">
-                    <div style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "78px minmax(0,1fr)", gap: isMobileViewport ? 8 : 24, alignItems: "start" }}>
-                      <div className="home-method-index">{String(i + 1).padStart(2, "0")}</div>
+                    <div style={{ display: "block" }}>
                       <div>
                         <div className="mth-t home-method-title">{m.title}</div>
                         <div className="home-method-desc">{isMobileViewport ? (m.mobileDesc || m.desc) : m.desc}</div>
