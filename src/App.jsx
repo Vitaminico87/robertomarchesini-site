@@ -358,11 +358,11 @@ const LANG = {
       prompt: "Inserisci il controller.",
       promptSub: "Qui non si chiude niente. Si apre in due.",
       syncTitle: "Stabilizza il segnale.",
-      syncSub: "Allinea tre canali. Basta il centro.",
+      syncSub: "Allinea tre canali. Sfiora il centro, non serve la perfezione.",
       syncIdleLine: "Tre canali. Un solo ritmo.",
       channelLabel: "Canale",
       channelLocked: "Canale stabile.",
-      channelRetry: "Fuori soglia. Riprova.",
+      channelRetry: "Quasi. Riprova.",
       connectBtn: "Inserisci il controller",
       syncBtn: "Stabilizza",
       connectedLine: "Secondo controller connesso.",
@@ -545,7 +545,7 @@ const LANG = {
       prompt: "Insert the controller.",
       promptSub: "Nothing closes here. It opens with someone else.",
       syncTitle: "Stabilize the signal.",
-      syncSub: "Align three channels. The center is enough.",
+      syncSub: "Align three channels. Brush the center — perfection is not the point.",
       syncIdleLine: "Three channels. One shared rhythm.",
       channelLabel: "Channel",
       channelLocked: "Channel stable.",
@@ -3444,8 +3444,8 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   const feedbackTimeoutRef = useRef(null);
   const ctaTimeoutRef = useRef(null);
   const phaseStartRef = useRef(0);
-  const channelDurations = useMemo(() => [1820, 1560, 1280], []);
-  const targetWindows = useMemo(() => [0.12, 0.105, 0.095], []);
+  const channelDurations = useMemo(() => [1880, 1760, 1460], []);
+  const targetWindows = useMemo(() => [0.145, 0.175, 0.145], []);
   const channelAccents = useMemo(() => ["#7A5CFF", "#9274FF", "#B3A1FF"], []);
   const channelMarks = useMemo(() => ["I", "II", "III"], []);
 
@@ -3685,22 +3685,7 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
                 const isLocked = lockedChannels[index];
                 const isActive = stageStep === "sync" && activeChannel === index;
                 const accent = channelAccents[index];
-                return (
-                  <div key={mark} style={{ display: "grid", gridTemplateColumns: "48px minmax(0, 1fr)", alignItems: "center", gap: 12, opacity: stageStep === "insert" ? .28 : 1, transition: "opacity .3s ease" }}>
-                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 2.2, textTransform: "uppercase", color: isLocked ? "#d9d1fe" : (isActive ? accent : "rgba(190,181,236,.46)"), transition: "color .28s ease" }}>{mark}</div>
-                    <div style={{ position: "relative", height: 16, borderRadius: 999, background: "rgba(18,18,30,.78)", border: `1px solid ${isLocked ? "rgba(214,205,253,.18)" : "rgba(214,205,253,.1)"}`, overflow: "hidden" }}>
-                      <div style={{ position: "absolute", left: "50%", top: 1, bottom: 1, width: 54, transform: "translateX(-50%)", borderRadius: 999, background: isLocked ? "rgba(214,205,253,.2)" : "rgba(122,92,255,.12)", boxShadow: isLocked ? `0 0 24px ${accent}44` : "none", transition: "background .28s ease, box-shadow .28s ease" }} />
-                      <div style={{ position: "absolute", inset: 1, width: isLocked ? "100%" : `${index < lockedCount ? 100 : 0}%`, borderRadius: 999, background: `linear-gradient(90deg, ${accent}33 0%, ${accent}88 50%, ${accent}44 100%)`, boxShadow: isLocked ? `0 0 18px ${accent}55` : "none", transition: "width .42s ease, box-shadow .28s ease" }} />
-                      {isActive ? (
-                        <div
-                          key={`${index}-${signalRunKey}`}
-                          style={{ position: "absolute", left: 1, top: "50%", width: 14, height: 14, borderRadius: "50%", transform: "translateY(-50%)", background: accent, boxShadow: `0 0 0 6px ${accent}22, 0 0 20px ${accent}55`, animation: `ch4SignalTravel ${channelDurations[index]}ms linear infinite alternate` }}
-                        />
-                      ) : null}
-                      {isLocked ? <div style={{ position: "absolute", left: "50%", top: "50%", width: 12, height: 12, borderRadius: "50%", transform: "translate(-50%, -50%)", background: "#f4efff", boxShadow: `0 0 0 6px ${accent}22, 0 0 20px ${accent}44`, animation: "ch4TargetLock 1.8s ease-in-out infinite" }} /> : null}
-                    </div>
-                  </div>
-                );
+                return <SignalLane key={mark} mark={mark} index={index} isLocked={isLocked} isActive={isActive} accent={accent} />;
               })}
             </div>
           </div>
@@ -4354,8 +4339,8 @@ export default function Roberto() {
         @keyframes ch4GhostRise{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-5px)}}
         @keyframes ch4PortPulse{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
         @keyframes ch4AuraPulse{0%,100%{opacity:.42;transform:scale(.985)}50%{opacity:.72;transform:scale(1.02)}}
-        @keyframes ch4SignalTravel{0%{transform:translateY(-50%) translateX(0)}100%{transform:translateY(-50%) translateX(calc(100% - 16px))}}
-        @keyframes ch4TargetLock{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.08)}}
+        @keyframes ch4SignalTravel{0%{transform:translateY(-50%) translateX(0)}100%{transform:translateY(-50%) translateX(calc(100% - 26px))}}
+        @keyframes ch4TargetLock{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.12)}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
