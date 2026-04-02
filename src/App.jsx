@@ -3354,9 +3354,12 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (scene !== "synthesis") return;
     if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
     setFinalFade(true);
-    continueTimeoutRef.current = setTimeout(() => {
-      onComplete?.();
-    }, 180);
+    const run = () => onComplete?.();
+    if (typeof requestAnimationFrame === "function") {
+      requestAnimationFrame(run);
+    } else {
+      continueTimeoutRef.current = setTimeout(run, 0);
+    }
   }, [scene, onComplete]);
 
   return (
