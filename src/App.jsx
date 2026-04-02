@@ -4670,10 +4670,25 @@ export default function Roberto() {
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
             <div style={{ marginBottom: isMobileViewport ? 64 : 88 }}>
-              <div className="home-selected-heading-wrap">
-                <div className="home-selected-heading has-accent-dot">{T.selectedWorkLabel}</div>
+              {/* Header sezione: kicker + titolo + sottotitolo a due colonne */}
+              <div style={{ borderTop: "1px solid rgba(255,255,255,.09)", paddingTop: 22, marginBottom: isMobileViewport ? 40 : 52 }}>
+                <div style={{ fontSize: 9, letterSpacing: 3, color: "#4a4540", fontFamily: "'IBM Plex Mono',monospace", textTransform: "uppercase", marginBottom: 14 }}>
+                  {T.selectedWorkLabel}
+                </div>
+                <div style={{
+                  display: isMobileViewport ? "block" : "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 48,
+                  alignItems: "flex-end",
+                }}>
+                  <div className="home-selected-heading has-accent-dot" style={{ marginBottom: isMobileViewport ? 14 : 0 }}>
+                    {T.selectedWorkLabel}
+                  </div>
+                  <div style={{ fontSize: 14, color: "#9d968d", fontStyle: "italic", fontFamily: "'Playfair Display',serif", lineHeight: 1.86, textWrap: "pretty", paddingBottom: isMobileViewport ? 0 : 4 }}>
+                    {selectedWorkSubText}
+                  </div>
+                </div>
               </div>
-              <div className="home-section-sub">{selectedWorkSubText}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
                   <div key={i} className="work-card" style={{
