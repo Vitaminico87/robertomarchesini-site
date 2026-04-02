@@ -3667,13 +3667,13 @@ export default function Roberto() {
         .home-balance{text-wrap:balance}
         .home-section-kicker{display:inline-block;font-size:clamp(24px,3vw,31px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.94;font-family:'Playfair Display',serif;font-style:italic;line-height:1.04;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
         .home-section-sub{font-size:15px;color:#b7afa5;margin-bottom:48px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.9;max-width:520px;text-wrap:pretty}
-        .home-selected-heading-wrap{margin-bottom:10px}
-        .home-selected-heading{display:inline-block;font-size:clamp(32px,4.4vw,46px);line-height:1.02;color:#F5F0E8;font-family:'Playfair Display',serif;font-style:italic;letter-spacing:-.35px;text-wrap:balance}
-        .home-selected-underline{position:relative;margin-top:10px;height:1px;width:min(560px,100%);background:linear-gradient(90deg,rgba(255,77,0,.18),rgba(255,255,255,.06),rgba(255,77,0,.12));opacity:.9}
-        .home-selected-underline-sweep{position:absolute;inset:0;width:34%;background:linear-gradient(90deg,transparent,rgba(255,77,0,.72),transparent);animation:homeSignalSweep 5.8s ease-in-out infinite;opacity:.8}
+        .home-selected-heading-wrap{margin-bottom:14px}
+                .home-selected-heading{display:inline-block;font-size:clamp(34px,4.6vw,48px);line-height:1.01;color:#F5F0E8;font-family:'Playfair Display',serif;font-style:italic;letter-spacing:-.4px;text-wrap:balance}
+        .has-accent-dot::after{content:'.';color:#FF4D00;font-style:normal}
+        .svc-tw{min-width:0}
         .home-work-narrative{font-size:16px;color:#F4F0EA;line-height:1.9;margin-bottom:14px;max-width:600px;text-wrap:pretty}
         .home-work-secondary{font-size:13px;color:#aca39a;line-height:2.0;margin-bottom:22px;max-width:560px;text-wrap:pretty}
-        .home-service-title{font-size:35px;font-weight:600;color:#EEE8E0;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.02;text-wrap:balance;overflow-wrap:anywhere}
+        .home-service-title{font-size:33px;font-weight:600;color:#EEE8E0;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.04;letter-spacing:-.02em;text-wrap:balance;word-break:normal;overflow-wrap:normal;max-width:100%}
         .home-service-sub{font-size:13px;color:#bcaea1;margin-bottom:14px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.66;text-wrap:pretty}
         .home-service-desc{font-size:14px;color:#ddd7cf;line-height:1.96;text-wrap:pretty;max-width:500px}
         .home-method-index{font-size:10px;letter-spacing:1.8px;color:#7d756d;font-family:'IBM Plex Mono',monospace;line-height:1.6;text-transform:uppercase;padding-top:2px}
@@ -3700,7 +3700,7 @@ export default function Roberto() {
         .home-cta-shell{position:relative;width:100%}
         .home-cta-actions{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap;width:100%}
         .home-trash-wrap{position:relative;display:flex;align-items:center;justify-content:center}
-        .home-trash-sidekick{position:absolute;top:50%;left:50%;transform:translate(calc(-50% - 220px), -50%);pointer-events:none;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center}
+        .home-trash-sidekick{position:absolute;top:50%;left:50%;transform:translate(calc(-50% - 252px), -50%);pointer-events:none;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center}
         .home-cestina-teaser{position:relative;flex:0 0 auto;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center;opacity:.72;transform:translateY(0);transition:opacity .24s ease,transform .24s ease,filter .24s ease;filter:drop-shadow(0 0 6px rgba(240,236,230,.08))}
         .home-cestina-teaser.is-active,.home-cta-shell:hover .home-cestina-teaser{opacity:.92;transform:translateY(-1px);filter:drop-shadow(0 0 10px rgba(240,236,230,.12))}
         .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:1px;width:14px;height:4px;border-radius:50%;background:rgba(0,0,0,.2);filter:blur(2px);transform:translateX(-50%)}
@@ -3984,11 +3984,10 @@ export default function Roberto() {
           .home-section-kicker{font-size:24px!important;line-height:1.05!important;margin-bottom:14px!important}
           .home-selected-heading-wrap{margin-bottom:12px!important}
           .home-selected-heading{font-size:28px!important;line-height:1.02!important}
-          .home-selected-underline{margin-top:8px!important;width:100%!important}
           .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
           .home-work-narrative{font-size:12px!important;line-height:1.84!important;color:#d8d2ca!important;max-width:100%!important}
           .home-work-secondary{display:none!important}
-          .home-service-title{font-size:31px!important;line-height:1.0!important;display:block!important}
+          .home-service-title{font-size:30px!important;line-height:1.03!important;display:block!important}
           .home-service-sub{font-size:13px!important;line-height:1.5!important;margin-bottom:8px!important;color:#9a9a9a!important}
           .home-service-desc{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important}
           .home-method-title{font-size:14px!important;line-height:1.42!important;margin-bottom:8px!important}
@@ -4129,8 +4128,7 @@ export default function Roberto() {
           <Section delay={0.12}>
             <div style={{ marginBottom: isMobileViewport ? 58 : 72 }}>
               <div className="home-selected-heading-wrap">
-                <div className="home-selected-heading">{T.selectedWorkLabel}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span></div>
-                <div className="home-selected-underline" aria-hidden="true"><span className="home-selected-underline-sweep" /></div>
+                <div className="home-selected-heading has-accent-dot">{T.selectedWorkLabel}</div>
               </div>
               <div className="home-section-sub">{selectedWorkSubText}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -4218,11 +4216,9 @@ export default function Roberto() {
               <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 16 : 22 }}>
                 {T.services.map((svc, i) => (
                   <div key={i} className="svc">
-                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "260px minmax(0,1fr)", gap: isMobileViewport ? 0 : 54, alignItems: "start" }}>
-                      <div className="svc-tw" style={{ marginBottom: isMobileViewport ? 10 : 0, paddingRight: isMobileViewport ? 0 : 8 }}>
-                        <span className="svc-t home-service-title">
-                          {svc.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
-                        </span>
+                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "minmax(0,286px) minmax(0,1fr)", gap: isMobileViewport ? 0 : 40, alignItems: "start" }}>
+                      <div className="svc-tw" style={{ marginBottom: isMobileViewport ? 10 : 0, paddingRight: 0 }}>
+                        <span className="svc-t home-service-title has-accent-dot">{svc.title}</span>
                       </div>
                       <div>
                         {svc.subtitle && <div className="home-service-sub">{svc.subtitle}</div>}
