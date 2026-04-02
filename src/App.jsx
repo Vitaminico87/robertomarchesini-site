@@ -3143,7 +3143,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 
   const handleStepOut = useCallback(() => {
     if (deskTransitioning) return;
-    setDeskFeedbackText(T.streetBridgeHint);
+    setDeskFeedbackText("");
     setDeskTransitioning(true);
     onUnlockProfile?.("conflict");
     if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
@@ -3827,7 +3827,7 @@ export default function Roberto() {
     setFalling(true);
     setContentFading(true);
     setTimeout(() => { setFalling(false); setPhase("trashed"); }, 2000);
-    setTimeout(() => setPhase(GAME_ENABLED ? "game" : "comingSoon"), 4000);
+    setTimeout(() => setPhase(GAME_ENABLED ? "game" : "comingSoon"), 5000);
   };
 
   const handleBack = () => {
@@ -3881,8 +3881,8 @@ export default function Roberto() {
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
-        @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(2px) rotate(-16deg)}12%{transform:translateX(6vw) translateY(-7px) rotate(-9deg)}26%{transform:translateX(15vw) translateY(-3px) rotate(-2deg)}42%{transform:translateX(25vw) translateY(-10px) rotate(6deg)}58%{transform:translateX(36vw) translateY(-5px) rotate(1deg)}76%{transform:translateX(49vw) translateY(-13px) rotate(10deg)}100%{transform:translateX(64vw) translateY(-7px) rotate(4deg)}}
-        @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(2px) rotate(16deg)}12%{transform:translateX(-6vw) translateY(-7px) rotate(9deg)}26%{transform:translateX(-15vw) translateY(-3px) rotate(2deg)}42%{transform:translateX(-25vw) translateY(-10px) rotate(-6deg)}58%{transform:translateX(-36vw) translateY(-5px) rotate(-1deg)}76%{transform:translateX(-49vw) translateY(-13px) rotate(-10deg)}100%{transform:translateX(-64vw) translateY(-7px) rotate(-4deg)}}
+        @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(8px) rotate(-18deg)}10%{transform:translateX(4vw) translateY(-2px) rotate(-8deg)}20%{transform:translateX(9vw) translateY(-15px) rotate(3deg)}30%{transform:translateX(14vw) translateY(-7px) rotate(10deg)}40%{transform:translateX(19vw) translateY(-17px) rotate(1deg)}50%{transform:translateX(17vw) translateY(-1px) rotate(-9deg)}62%{transform:translateX(28vw) translateY(-13px) rotate(4deg)}74%{transform:translateX(39vw) translateY(-4px) rotate(11deg)}86%{transform:translateX(52vw) translateY(-16px) rotate(2deg)}100%{transform:translateX(66vw) translateY(-9px) rotate(6deg)}}
+        @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(8px) rotate(18deg)}10%{transform:translateX(-4vw) translateY(-2px) rotate(8deg)}20%{transform:translateX(-9vw) translateY(-15px) rotate(-3deg)}30%{transform:translateX(-14vw) translateY(-7px) rotate(-10deg)}40%{transform:translateX(-19vw) translateY(-17px) rotate(-1deg)}50%{transform:translateX(-17vw) translateY(-1px) rotate(9deg)}62%{transform:translateX(-28vw) translateY(-13px) rotate(-4deg)}74%{transform:translateX(-39vw) translateY(-4px) rotate(-11deg)}86%{transform:translateX(-52vw) translateY(-16px) rotate(-2deg)}100%{transform:translateX(-66vw) translateY(-9px) rotate(-6deg)}}
         @keyframes ch1KiteBodyFlutter{0%,100%{transform:rotate(45deg) skewX(0deg)}50%{transform:rotate(45deg) skewX(3deg)}}
         @keyframes ch1KiteTailFlutter{0%,100%{opacity:.88}50%{opacity:.56}}
 
@@ -4104,7 +4104,7 @@ export default function Roberto() {
         .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:31.9%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
         .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
         .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
-        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:50%;transform:translateY(-50%);left:36px;right:36px;font-size:clamp(20px,2.3vw,28px);line-height:1.18}.ch2-feedback-overlay.show.is-bridge{transform:translateY(-50%)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-desk-transition-copy{width:100%;max-width:620px;margin:0 auto;border-top:1px solid rgba(192,218,244,.14);padding-top:12px;color:rgba(226,232,239,.9);font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;animation:fadeIn .24s ease-out}
+        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:50%;transform:translateY(-50%);left:36px;right:36px;font-size:clamp(20px,2.3vw,28px);line-height:1.18}.ch2-feedback-overlay.show.is-bridge{transform:translateY(-50%)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-desk-transition-copy{width:100%;max-width:560px;margin:0;border-top:1px solid rgba(192,218,244,.14);padding-top:12px;color:rgba(226,232,239,.9);font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:left;animation:fadeIn .24s ease-out}
         .ch2-street-stage{background:#081012}
         .ch2-street-frame{filter:saturate(1.03) contrast(1.03) brightness(.95);transform:scale(1.006);animation:ch2StreetFrameDrift 10s ease-in-out infinite}
         .ch2-street-grade,.ch2-street-cool-wash,.ch2-street-door-bloom,.ch2-street-reflection-boost,.ch2-street-rain,.ch2-street-headlights,.ch2-street-vignette{position:absolute;pointer-events:none}
@@ -4243,8 +4243,8 @@ export default function Roberto() {
         .ch3-synthesis-amber-shimmer{position:absolute;right:16%;top:16%;width:28%;height:44%;z-index:3;pointer-events:none;background:linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,228,186,.06) 42%, rgba(255,239,208,.16) 52%, rgba(255,206,142,.06) 60%, rgba(255,255,255,0) 100%);mix-blend-mode:screen;opacity:.18;transform:translateX(-12%);animation:ch3ShimmerSweep 9.8s ease-in-out infinite}
         .ch3-synthesis-circuit-pulse{position:absolute;right:15%;top:15%;width:30%;height:52%;z-index:3;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.14) 0%, rgba(255,199,124,.06) 24%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.16;animation:ch3CircuitPulse 4.8s ease-in-out infinite}
         .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.12) 74%, rgba(0,0,0,.38) 100%), linear-gradient(180deg, rgba(12,8,7,.06) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.22) 100%)}
-        .ch3-distant-kite{position:absolute;left:35.5%;top:39.5%;width:12%;height:12%;z-index:8;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
-        .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;transform:scale(1.18);filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
+        .ch3-distant-kite{position:absolute;left:41.8%;top:47.2%;width:13%;height:13%;z-index:8;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
+        .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;transform:scale(1.22);filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
         .ch3-kite-diamond{position:absolute;left:6px;top:2px;width:11px;height:11px;background:rgba(238,86,24,.98);border:1px solid rgba(255,220,198,.38);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.18) inset}
         .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.76)}
         .ch3-kite-diamond::before{left:4px;top:-1px;width:1px;height:13px;transform:rotate(-45deg);transform-origin:center}
@@ -4253,9 +4253,9 @@ export default function Roberto() {
         .ch3-kite-tail-a{top:13px;height:7px;transform:rotate(18deg)}
         .ch3-kite-tail-b{top:18px;height:6px;left:15px;transform:rotate(-10deg)}
         .ch3-kite-tail-c{top:24px;height:5px;left:13px;transform:rotate(14deg)}
-        .ch3-synthesis-caption{position:absolute;left:16px;right:16px;bottom:14px;z-index:14;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;display:flex;justify-content:center}
+        .ch3-synthesis-caption{position:absolute;left:22px;right:22px;bottom:26px;z-index:14;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:560px}
         .ch3-synthesis-caption.show{opacity:1;transform:translateY(0)}
-        .ch3-synthesis-caption-inner{max-width:880px;width:auto;padding:12px 16px 11px;border-top:1px solid rgba(255,218,178,.18);background:linear-gradient(180deg, rgba(10,7,6,.06) 0%, rgba(8,6,5,.48) 16%, rgba(5,5,5,.88) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,228,198,.06);backdrop-filter:blur(6px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.14;text-align:center;text-shadow:0 1px 0 rgba(0,0,0,.34), 0 10px 24px rgba(0,0,0,.48);white-space:normal}
+        .ch3-synthesis-caption-inner{display:block;max-width:560px;width:100%;padding:12px 14px 11px;border-top:1px solid rgba(255,218,178,.20);background:linear-gradient(180deg, rgba(10,7,6,.10) 0%, rgba(8,6,5,.58) 18%, rgba(5,5,5,.92) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,228,198,.08);backdrop-filter:blur(6px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.28;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34), 0 10px 24px rgba(0,0,0,.48);white-space:normal}
         .ch3-controls-final{justify-content:center}
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
@@ -4272,15 +4272,15 @@ export default function Roberto() {
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
-          .ch3-synthesis-caption{left:10px;right:10px;bottom:10px}
-          .ch3-synthesis-caption-inner{padding:12px 12px 11px;font-size:clamp(18px,5.2vw,26px);line-height:1.16}
+          .ch3-synthesis-caption{left:16px;right:16px;bottom:18px;max-width:none}
+          .ch3-synthesis-caption-inner{padding:12px 12px 11px;font-size:clamp(18px,5.2vw,26px);line-height:1.18;max-width:none}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
           .ch3-synthesis-branch-glow{right:2%;top:10%;width:60%;height:66%;opacity:.30}
           .ch3-synthesis-flow{right:10%;top:12%;width:40%;height:66%;opacity:.14}
           .ch3-synthesis-amber-shimmer{right:12%;top:18%;width:34%;height:42%;opacity:.14}
           .ch3-synthesis-circuit-pulse{right:12%;top:16%;width:38%;height:54%;opacity:.14}
-          .ch3-distant-kite{left:34%;top:37%;width:18%;height:16%}
-          .ch3-kite{transform:scale(1.08)}
+          .ch3-distant-kite{left:40.8%;top:45.6%;width:18%;height:16%}
+          .ch3-kite{transform:scale(1.12)}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
           .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
@@ -4329,7 +4329,7 @@ export default function Roberto() {
           .ch1-controls-slot{min-height:114px;margin-top:12px}
           .ch1-kicker{font-size:9px;letter-spacing:2.4px}
           .ch1-back-btn{padding:4px 10px;font-size:9px}
-          .ch2-street-transition-copy{max-width:none;font-size:11px;line-height:1.72}
+          .ch2-street-transition-copy,.ch2-desk-transition-copy{max-width:none;font-size:11px;line-height:1.72}
           .ch2-street-line-block{width:min(calc(100% - 24px),620px);bottom:16px}
           .ch2-street-line-block .ch2-line{white-space:normal;font-size:clamp(17px,5.2vw,24px)}
           .ch2-street-narrative-wrap{left:50%;right:auto;top:26px;width:min(calc(100% - 20px),560px);transform:translateX(-50%)}
