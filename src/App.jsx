@@ -3692,12 +3692,15 @@ export default function Roberto() {
         .pixel-social-link-mobile{padding:8px 10px;background:rgba(7,7,7,.9)}
         .pixel-social-icon{display:flex;align-items:center;justify-content:center;flex:0 0 auto}
         .pixel-social-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;line-height:1}
-        .home-trash-wrap{display:flex;align-items:flex-end;gap:12px;position:relative}
-        .home-cestina-teaser{position:relative;flex:0 0 auto;width:34px;height:56px;display:flex;align-items:flex-end;justify-content:center;opacity:.64;transform:translateY(0);transition:opacity .24s ease,transform .24s ease,filter .24s ease;margin-right:2px;filter:drop-shadow(0 0 8px rgba(240,236,230,.08))}
-        .home-cestina-teaser.is-active,.home-trash-wrap:hover .home-cestina-teaser{opacity:.88;transform:translateY(-1px);filter:drop-shadow(0 0 12px rgba(240,236,230,.12))}
-        .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:1px;width:18px;height:5px;border-radius:50%;background:rgba(0,0,0,.22);filter:blur(3px);transform:translateX(-50%)}
-        .home-cestina-teaser-sprite{position:relative;z-index:1;width:100%;height:auto;display:block;image-rendering:pixelated;animation:homeTeaserSway 5.2s ease-in-out infinite;pointer-events:none;user-select:none;transform-origin:center bottom;opacity:.92}
-        @keyframes homeTeaserSway{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-1px) rotate(1.2deg)}}
+        .home-cta-shell{position:relative;display:flex;justify-content:center;align-items:flex-end;width:100%}
+        .home-cta-actions{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap}
+        .home-trash-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+        .home-trash-sidekick{position:absolute;left:50%;bottom:2px;transform:translateX(calc(-50% - 126px));pointer-events:none}
+        .home-cestina-teaser{position:relative;flex:0 0 auto;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center;opacity:.72;transform:translateY(0);transition:opacity .24s ease,transform .24s ease,filter .24s ease;filter:drop-shadow(0 0 6px rgba(240,236,230,.08))}
+        .home-cestina-teaser.is-active,.home-trash-wrap:hover ~ .home-trash-sidekick .home-cestina-teaser,.home-trash-sidekick:hover .home-cestina-teaser{opacity:.92;transform:translateY(-1px);filter:drop-shadow(0 0 10px rgba(240,236,230,.12))}
+        .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:1px;width:14px;height:4px;border-radius:50%;background:rgba(0,0,0,.2);filter:blur(2px);transform:translateX(-50%)}
+        .home-cestina-teaser-sprite{position:relative;z-index:1;width:100%;height:auto;display:block;image-rendering:pixelated;animation:homeTeaserSway 5.8s ease-in-out infinite;pointer-events:none;user-select:none;transform-origin:center bottom;opacity:.94}
+        @keyframes homeTeaserSway{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-1px) rotate(1deg)}}
         
         /* Chapter 1 styles */
         .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,5vh,44px) 16px 20px;padding-bottom:env(safe-area-inset-bottom,20px)}
@@ -4017,6 +4020,13 @@ export default function Roberto() {
           .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
           .chapter-intro-inner{transform:translateY(0)}
         }
+
+        @media (max-width:600px){
+          .home-cta-shell{display:flex;justify-content:center}
+          .home-cta-actions{gap:14px}
+          .home-trash-sidekick{position:absolute;left:50%;transform:translateX(calc(-50% - 104px));bottom:4px}
+          .home-cestina-teaser{width:18px;height:32px;opacity:.82}
+        }
       `}</style>
 
       {/* CRT overlay - always visible */}
@@ -4240,25 +4250,29 @@ export default function Roberto() {
               <div className="home-pretty" style={{ textAlign: "center", marginBottom: 22, fontSize: 11, color: "#9c9186", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.9, maxWidth: 380, marginInline: "auto" }}>
                 {T.availableFor}
               </div>
-              <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
-                <div className="home-trash-wrap">
-                  <HomeCestinaTeaser active={hoverTrash} />
-                  <button className="btn-trash" onClick={handleTrash}
-                    onMouseEnter={() => setHoverTrash(true)}
-                    onMouseLeave={() => setHoverTrash(false)}
-                    onTouchStart={() => setHoverTrash(true)}
-                    onTouchEnd={() => { setTimeout(() => setHoverTrash(false), 150); }}
-                    style={{
-                      animation: "trashBreath 4s ease-in-out infinite",
-                    }}>
-                    {hoverTrash ? T.trashHover : (trashGlitchText || (showTrashPlay ? T.trashPlay : T.trashBtn))}
+              <div className="home-cta-shell">
+                <div className="home-cta-actions">
+                  <div className="home-trash-wrap">
+                    <button className="btn-trash" onClick={handleTrash}
+                      onMouseEnter={() => setHoverTrash(true)}
+                      onMouseLeave={() => setHoverTrash(false)}
+                      onTouchStart={() => setHoverTrash(true)}
+                      onTouchEnd={() => { setTimeout(() => setHoverTrash(false), 150); }}
+                      style={{
+                        animation: "trashBreath 4s ease-in-out infinite",
+                      }}>
+                      {hoverTrash ? T.trashHover : (trashGlitchText || (showTrashPlay ? T.trashPlay : T.trashBtn))}
+                    </button>
+                  </div>
+                  <span className="orsep" style={{ fontSize: 11, color: "#333" }}>{T.or}</span>
+                  <button className="btn-talk" onClick={openContact}
+                    onMouseEnter={() => setHoverContact(true)} onMouseLeave={() => setHoverContact(false)}>
+                    {hoverContact ? T.contactHover : T.contactBtn}
                   </button>
                 </div>
-                <span className="orsep" style={{ fontSize: 11, color: "#333" }}>{T.or}</span>
-                <button className="btn-talk" onClick={openContact}
-                  onMouseEnter={() => setHoverContact(true)} onMouseLeave={() => setHoverContact(false)}>
-                  {hoverContact ? T.contactHover : T.contactBtn}
-                </button>
+                <div className="home-trash-sidekick" aria-hidden="true">
+                  <HomeCestinaTeaser active={hoverTrash} />
+                </div>
               </div>
             </div>
           </Section>
