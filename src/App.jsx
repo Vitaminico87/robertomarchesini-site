@@ -22,6 +22,7 @@ const ASSETS = {
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
   chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
   chapter3Frame1: "https://www.robertomarchesini.com/assets/chapter3/chapter3_q1_backstage.png",
+  chapter3Frame2: "/assets/chapter3/chapter3_q2_synthesis_tree.webp?v=1",
   chapter3RoomTone: "https://www.robertomarchesini.com/assets/chapter3/ch3_roomtone.wav",
   chapter3OpenChatter: "https://www.robertomarchesini.com/assets/chapter3/ch3_open_chatter.wav",
 };
@@ -339,6 +340,7 @@ const LANG = {
       kicker: "Capitolo 3 · Sintesi",
       introTitle: "Sintesi",
       line: "Quando tutto si muove, serve un centro fermo.",
+      finalLine: "Il conflitto non era sparito. Aveva trovato una forma.",
       stayBtn: "Resta nel flusso",
       centerBtn: "Trova il centro",
       stayFeedback: [
@@ -505,6 +507,7 @@ const LANG = {
       kicker: "Chapter 3 · Synthesis",
       introTitle: "Synthesis",
       line: "When everything moves, you need a steady center.",
+      finalLine: "The conflict had not disappeared. It had found a form.",
       stayBtn: "Stay in the flow",
       centerBtn: "Find the center",
       stayFeedback: [
@@ -3208,17 +3211,24 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const ambience = useChapterThreeAmbience();
   const feedbackTimeoutRef = useRef(null);
-  const transitionTimeoutRef = useRef(null);
+  const sceneSwitchTimeoutRef = useRef(null);
+  const sceneTransitionTimeoutRef = useRef(null);
+  const finalLineTimeoutRef = useRef(null);
+  const finalFadeTimeoutRef = useRef(null);
+  const completeTimeoutRef = useRef(null);
   const feedbackIdxRef = useRef(0);
 
   const [feedbackText, setFeedbackText] = useState("");
   const [sceneBreath, setSceneBreath] = useState(false);
   const [passingCrew, setPassingCrew] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
+  const [sceneTransitioning, setSceneTransitioning] = useState(false);
+  const [finalFade, setFinalFade] = useState(false);
   const [audioUnlocked, setAudioUnlocked] = useState(false);
+  const [scene, setScene] = useState("backstage");
+  const [synthesisRevealed, setSynthesisRevealed] = useState(false);
+  const [showFinalLine, setShowFinalLine] = useState(false);
 
   useEffect(() => {
-    onUnlockProfile?.("synthesis");
     const breathT = setInterval(() => setSceneBreath((v) => !v), 2800);
     const crewT = setInterval(() => {
       setPassingCrew(true);
@@ -3226,17 +3236,38 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     }, 8200);
     return () => {
       if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
-      if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+      if (sceneSwitchTimeoutRef.current) clearTimeout(sceneSwitchTimeoutRef.current);
+      if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
+      if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
+      if (finalFadeTimeoutRef.current) clearTimeout(finalFadeTimeoutRef.current);
+      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
       clearInterval(breathT);
       clearInterval(crewT);
       ambience.stop();
     };
-  }, [onUnlockProfile, ambience]);
+  }, [ambience]);
 
   useEffect(() => {
-    if (audioUnlocked) ambience.start();
+    if (audioUnlocked && scene === "backstage") ambience.start();
+    if (scene !== "backstage") ambience.stop();
     return undefined;
-  }, [audioUnlocked, ambience]);
+  }, [audioUnlocked, scene, ambience]);
+
+  useEffect(() => {
+    if (scene !== "synthesis") return undefined;
+    onUnlockProfile?.("synthesis");
+    setFinalFade(false);
+    finalLineTimeoutRef.current = setTimeout(() => setShowFinalLine(true), 420);
+    finalFadeTimeoutRef.current = setTimeout(() => setFinalFade(true), 2980);
+    completeTimeoutRef.current = setTimeout(() => {
+      onComplete?.();
+    }, 3800);
+    return () => {
+      if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
+      if (finalFadeTimeoutRef.current) clearTimeout(finalFadeTimeoutRef.current);
+      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+    };
+  }, [scene, onComplete, onUnlockProfile, ambience]);
 
   const unlockAmbience = useCallback(() => {
     if (audioUnlocked) return;
@@ -3245,6 +3276,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   }, [audioUnlocked, ambience]);
 
   const handleStay = useCallback(() => {
+    if (scene !== "backstage") return;
     unlockAmbience();
     const lines = T.stayFeedback || [];
     if (!lines.length) return;
@@ -3253,17 +3285,26 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     setFeedbackText(lines[idx]);
     if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
     feedbackTimeoutRef.current = setTimeout(() => setFeedbackText(""), 2200);
-  }, [T.stayFeedback, unlockAmbience]);
+  }, [T.stayFeedback, unlockAmbience, scene]);
 
   const handleCenter = useCallback(() => {
+    if (scene !== "backstage" || sceneTransitioning) return;
     unlockAmbience();
     setFeedbackText("");
-    setTransitioning(true);
-    if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-    transitionTimeoutRef.current = setTimeout(() => {
-      onComplete?.();
-    }, 850);
-  }, [onComplete, unlockAmbience]);
+    setSceneTransitioning(true);
+    setShowFinalLine(false);
+    setSynthesisRevealed(false);
+    if (sceneSwitchTimeoutRef.current) clearTimeout(sceneSwitchTimeoutRef.current);
+    if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
+    sceneSwitchTimeoutRef.current = setTimeout(() => {
+      ambience.stop();
+      setScene("synthesis");
+      requestAnimationFrame(() => setSynthesisRevealed(true));
+    }, 620);
+    sceneTransitionTimeoutRef.current = setTimeout(() => {
+      setSceneTransitioning(false);
+    }, 1220);
+  }, [scene, sceneTransitioning, unlockAmbience, ambience]);
 
   return (
     <div className="ch1-root">
@@ -3276,30 +3317,51 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
         </div>
 
         <div
-          className={`ch2-stage ch3-stage ${sceneBreath ? 'is-breathing' : ''} ${transitioning ? 'is-transitioning' : ''}`}
-          onPointerDown={unlockAmbience}
+          className={`ch2-stage ch3-stage ${sceneBreath ? 'is-breathing' : ''} ${sceneTransitioning ? 'is-transitioning' : ''} ${finalFade ? 'is-final-fade' : ''}`}
+          onPointerDown={scene === "backstage" ? unlockAmbience : undefined}
         >
           <audio ref={ambience.roomRef} src={ASSETS.chapter3RoomTone} preload="auto" />
           <audio ref={ambience.chatterRef} src={ASSETS.chapter3OpenChatter} preload="auto" />
-          <img className="ch2-fill" src={ASSETS.chapter3Frame1} alt="" />
-          <div className="ch3-light-bloom" />
-          <div className="ch3-grade" />
-          <div className="ch3-floor-sweep" />
-          <div className={`ch3-crew-pass ${passingCrew ? 'is-visible' : ''}`} />
-          <div className="ch3-tech-flicker" />
-          <div className="ch3-vignette" />
-          <div className="ch2-line-block ch3-line-block">
-            <div className="ch2-line ch3-line">{T.line}</div>
-          </div>
-          <div className={`ch2-feedback-overlay ch3-feedback-overlay ${feedbackText ? 'show' : ''}`}>{feedbackText}</div>
+
+          <section className={`ch3-scene-panel ch3-backstage-panel ${scene === 'backstage' ? 'is-active' : ''}`}>
+            <img className="ch2-fill" src={ASSETS.chapter3Frame1} alt="" />
+            <div className="ch3-light-bloom" />
+            <div className="ch3-grade" />
+            <div className="ch3-floor-sweep" />
+            <div className={`ch3-crew-pass ${passingCrew ? 'is-visible' : ''}`} />
+            <div className="ch3-tech-flicker" />
+            <div className="ch3-vignette" />
+            <div className="ch2-line-block ch3-line-block">
+              <div className="ch2-line ch3-line">{T.line}</div>
+            </div>
+            <div className={`ch2-feedback-overlay ch3-feedback-overlay ${feedbackText ? 'show' : ''}`}>{feedbackText}</div>
+          </section>
+
+          <section className={`ch3-scene-panel ch3-synthesis-panel ${scene === 'synthesis' ? 'is-active' : ''} ${synthesisRevealed ? 'is-revealed' : ''}`}>
+            <img className="ch2-fill" src={ASSETS.chapter3Frame2} alt="" />
+            <div className="ch3-synthesis-core-glow" />
+            <div className="ch3-synthesis-branch-glow" />
+            <div className="ch3-synthesis-flow" />
+            <div className="ch3-synthesis-ground-haze" />
+            <div className="ch3-synthesis-vignette" />
+            <div className={`ch2-line-block ch3-line-block ch3-line-block-final ${showFinalLine ? 'show' : ''}`}>
+              <div className="ch2-line ch3-line ch3-line-final">{T.finalLine || T.line}</div>
+            </div>
+          </section>
+
+          <div className={`ch3-transition-wash ${sceneTransitioning ? 'active' : ''}`} />
           <div className="ch1-scan" />
         </div>
 
         <div className="ch1-controls-slot">
-          <div className="ch1-controls ch2-controls">
-            <Ch1ChoiceButton subtle onClick={handleStay}>{T.stayBtn}</Ch1ChoiceButton>
-            <Ch1ChoiceButton onClick={handleCenter}>{T.centerBtn}</Ch1ChoiceButton>
-          </div>
+          {scene === "backstage" ? (
+            <div className="ch1-controls ch2-controls">
+              <Ch1ChoiceButton subtle onClick={handleStay}>{T.stayBtn}</Ch1ChoiceButton>
+              <Ch1ChoiceButton onClick={handleCenter}>{T.centerBtn}</Ch1ChoiceButton>
+            </div>
+          ) : (
+            <div className="ch3-hold-space" aria-hidden="true" />
+          )}
         </div>
 
         <div className="ch1-profile-slot ch2-profile-slot">
@@ -3903,6 +3965,10 @@ export default function Roberto() {
         @keyframes ch3FloorSweep{0%,100%{opacity:.24;transform:translateX(-2%)}50%{opacity:.46;transform:translateX(2%)}}
         @keyframes ch3CrewPass{0%{opacity:0;transform:translateX(-12px)}18%{opacity:.22}70%{opacity:.16;transform:translateX(20px)}100%{opacity:0;transform:translateX(34px)}}
         @keyframes ch3TechFlicker{0%,78%,100%{opacity:.08}79%{opacity:.26}80%{opacity:.1}88%{opacity:.18}89%{opacity:.08}}
+        @keyframes ch3TreePulse{0%,100%{opacity:.42;transform:scale(.992)}50%{opacity:.72;transform:scale(1.018)}}
+        @keyframes ch3BranchGlow{0%,100%{opacity:.24}50%{opacity:.46}}
+        @keyframes ch3FlowDrift{0%{transform:translateY(-14px)}100%{transform:translateY(14px)}}
+        @keyframes ch3GroundBreath{0%,100%{opacity:.36;transform:translateY(0)}50%{opacity:.56;transform:translateY(-2px)}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
@@ -3938,6 +4004,11 @@ export default function Roberto() {
         .ch2-debug-btn{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,77,0,.45);background:transparent;color:#FF4D00;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.8px;cursor:pointer;justify-self:start}
         .ch2-debug-src{word-break:break-all;color:#b68f79}
         .ch3-stage{background:#0a0908}
+        .ch3-scene-panel{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .72s ease,transform 1s ease,filter .72s ease}
+        .ch3-scene-panel.is-active{opacity:1}
+        .ch3-backstage-panel{transform:scale(1.004)}
+        .ch3-synthesis-panel{transform:scale(1.03);filter:saturate(.96) brightness(.92)}
+        .ch3-synthesis-panel.is-revealed{transform:scale(1.012);filter:saturate(1.03) brightness(.985)}
         .ch3-light-bloom{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 53% 34%, rgba(255,214,146,.22) 0%, rgba(255,190,118,.12) 24%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.82;transition:opacity 1.6s ease,transform 1.6s ease}
         .ch3-stage.is-breathing .ch3-light-bloom{opacity:.96;transform:scale(1.024)}
         .ch3-grade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(22,14,10,.04), rgba(10,7,7,.12)), radial-gradient(circle at 52% 34%, rgba(255,204,132,.10), rgba(0,0,0,0) 40%);mix-blend-mode:screen}
@@ -3951,6 +4022,19 @@ export default function Roberto() {
         .ch3-feedback-overlay{top:24px}
         .ch3-stage.is-transitioning{filter:saturate(1.02) brightness(1.02)}
         .ch3-stage.is-transitioning .ch3-vignette{opacity:.78}
+        .ch3-transition-wash{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 52%, rgba(255,197,118,.14), rgba(0,0,0,.08) 46%, rgba(0,0,0,.42) 100%);opacity:0;transition:opacity .48s ease}
+        .ch3-transition-wash.active{opacity:1}
+        .ch3-synthesis-core-glow{position:absolute;right:8%;top:14%;width:42%;height:58%;pointer-events:none;background:radial-gradient(circle at 58% 46%, rgba(255,210,138,.28) 0%, rgba(255,183,98,.18) 26%, rgba(0,0,0,0) 68%);mix-blend-mode:screen;filter:blur(10px);opacity:.52;animation:ch3TreePulse 5.6s ease-in-out infinite}
+        .ch3-synthesis-branch-glow{position:absolute;right:1%;top:6%;width:64%;height:80%;pointer-events:none;background:linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,186,106,.04) 42%, rgba(255,204,132,.16) 68%, rgba(255,190,110,.06) 100%);mix-blend-mode:screen;filter:blur(7px);opacity:.44;animation:ch3BranchGlow 4.8s ease-in-out infinite}
+        .ch3-synthesis-flow{position:absolute;right:8%;top:8%;width:50%;height:76%;pointer-events:none;clip-path:polygon(16% 6%, 90% 6%, 98% 40%, 94% 86%, 48% 90%, 12% 74%, 0% 34%);background:repeating-linear-gradient(180deg, rgba(255,182,102,.0) 0 10px, rgba(255,196,122,.14) 10px 12px, rgba(255,182,102,.0) 12px 26px);mix-blend-mode:screen;opacity:.18;animation:ch3FlowDrift 9s linear infinite}
+        .ch3-synthesis-ground-haze{position:absolute;right:2%;bottom:0;width:52%;height:30%;pointer-events:none;background:radial-gradient(ellipse at 58% 74%, rgba(255,182,108,.20) 0%, rgba(255,182,108,.10) 22%, rgba(0,0,0,0) 70%);mix-blend-mode:screen;opacity:.46;animation:ch3GroundBreath 5.2s ease-in-out infinite}
+        .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 38%, rgba(0,0,0,.14) 72%, rgba(0,0,0,.40) 100%), linear-gradient(180deg, rgba(12,8,7,.10) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.28) 100%)}
+        .ch3-line-block-final{border-top-color:rgba(255,204,152,.18);background:linear-gradient(to top, rgba(4,4,4,.72) 0%, rgba(4,4,4,.24) 68%, transparent 100%);opacity:0;transform:translateY(12px);transition:opacity .7s ease, transform .7s ease}
+        .ch3-line-block-final.show{opacity:1;transform:translateY(0)}
+        .ch3-line-final{white-space:normal;text-align:center;max-width:760px;margin:0 auto;line-height:1.14}
+        .ch3-hold-space{min-height:48px}
+        .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
+        .ch3-stage.is-final-fade .ch3-line-block-final{opacity:0;transform:translateY(18px)}
 
         @media(max-width:1024px){
           .home-social-rail:not(.home-social-rail-mobile){display:none!important}
@@ -3959,6 +4043,10 @@ export default function Roberto() {
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
+          .ch3-line-final{font-size:clamp(18px,5.2vw,26px);line-height:1.16}
+          .ch3-synthesis-core-glow{right:4%;width:54%;height:54%}
+          .ch3-synthesis-branch-glow{right:-2%;width:74%;height:76%}
+          .ch3-synthesis-flow{right:2%;width:68%;height:74%}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
           .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
