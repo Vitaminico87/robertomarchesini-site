@@ -182,20 +182,20 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Costruisco sistemi creativi per trasformare idee complesse in contenuti, prodotti ed esperienze che reggano davvero.",
+    hero: "Costruisco sistemi creativi per trasformare idee complesse in contenuti, prodotti ed esperienze che reggano nel tempo.",
     heroSub: "",
-    heroMobileSub: "Direzione creativa, narrativa e AI dove servono davvero.",
-    proofStrip: "Direzione narrativa — sistemi — AI",
+    heroMobileSub: "Direzione creativa, narrativa e AI con criterio.",
+    proofStrip: "Narrativa · sistemi · AI",
     proofStripMobile: "Narrativa · sistemi · AI",
     whatido: "Cosa costruisco",
     services: [
       { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura, così un progetto smette di disperdersi e inizia a farsi leggere meglio.", mobileDesc: "Definisco posizionamento, messaggio e struttura." },
-      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee e materiali sparsi in una struttura visiva e narrativa più coerente, leggibile e replicabile.", mobileDesc: "Trasformo materiali sparsi in una struttura più coerente." },
-      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Organizzo contenuti, gerarchie e touchpoint perché un progetto non venga solo pubblicato, ma capito e usato nel modo giusto.", mobileDesc: "Organizzo contenuti, gerarchie e touchpoint." },
+      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee e materiali sparsi in una struttura visiva e narrativa più coerente, leggibile e durevole.", mobileDesc: "Trasformo materiali sparsi in una struttura più coerente." },
+      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Organizzo contenuti, gerarchie e touchpoint perché un progetto emerga nel modo giusto e venga capito meglio.", mobileDesc: "Organizzo contenuti, gerarchie e touchpoint." },
       { title: "Sistema", subtitle: "Costruire meglio, con controllo", desc: "Progetto workflow creativi con AI per aumentare velocità, varianti e controllo qualitativo senza abbassare il livello.", mobileDesc: "Progetto workflow creativi con AI per aumentare velocità e controllo." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Progetti reali. Responsabilità vere. Strutture che hanno dovuto reggere nel tempo.",
+    selectedWorkSub: "Tre progetti reali. Responsabilità vere. Strutture che hanno dovuto reggere.",
     selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Strutture che hanno dovuto reggere.",
     selectedWork: [
       {
@@ -240,14 +240,14 @@ const LANG = {
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    availableFor: "Aperto a poche collaborazioni, quando vale davvero la pena costruire insieme.",
+    availableFor: "Aperto a poche collaborazioni selezionate.",
     trashPlay: "Gioca",
     ctaHint: "",
     trashBtn: "Cestina", trashHover: "Fallo.",
     contactBtn: "Parliamo", contactHover: "Vediamo se ha senso.",
     hintDefault: "Questa pagina spiega il lavoro. Il resto è il motivo per cui lo faccio.",
     hintTrash: "Questa è la superficie. Sotto c'è una storia.",
-    finally: "Finalmente.", realStory: "I servizi spiegano cosa faccio. Il resto spiega come ci sono arrivato.",
+    finally: "Finalmente.", realStory: "I servizi spiegano cosa faccio. Il resto mostra come ci sono arrivato.",
     backBtn: "← Torna alla pagina noiosa", or: "o",
     footerPiva: "P.IVA 10893121003", footerPrivacy: "Privacy Policy", init: "Inizializzazione",
     comingSoonTitle: "In costruzione.",
@@ -349,20 +349,20 @@ const LANG = {
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "I build creative systems to turn complex ideas into content, products, and experiences that truly hold up.",
+    hero: "I build creative systems to turn complex ideas into content, products, and experiences that hold up over time.",
     heroSub: "",
     heroMobileSub: "Creative direction, narrative, and AI where they actually help.",
-    proofStrip: "Narrative direction — systems — AI",
+    proofStrip: "Narrative · systems · AI",
     proofStripMobile: "Narrative · systems · AI",
     whatido: "What I build",
     services: [
       { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and structure so a project stops dispersing and starts reading more clearly.", mobileDesc: "I define positioning, message, and structure." },
-      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas and scattered materials into a visual and narrative structure that is more coherent, readable, and repeatable.", mobileDesc: "I turn scattered materials into a more coherent structure." },
-      { title: "Launch", subtitle: "Make a project land the right way", desc: "I organize content, hierarchy, and touchpoints so a project is not just published, but understood and used in the right way.", mobileDesc: "I organize content, hierarchy, and touchpoints." },
+      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas and scattered materials into a visual and narrative structure that is more coherent, readable, and durable.", mobileDesc: "I turn scattered materials into a more coherent structure." },
+      { title: "Launch", subtitle: "Make a project land the right way", desc: "I organize content, hierarchy, and touchpoints so a project lands in the right way and is understood more clearly.", mobileDesc: "I organize content, hierarchy, and touchpoints." },
       { title: "System", subtitle: "Build better, with control", desc: "I design AI-assisted creative workflows to increase speed, variation, and quality control without lowering the standard.", mobileDesc: "I design AI-assisted workflows to increase speed and control." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Real projects. Real responsibility. Structures that had to hold up over time.",
+    selectedWorkSub: "Three real projects. Real responsibility. Structures that had to hold up.",
     selectedWorkMobileSub: "Real projects. Real responsibility. Structures that had to hold up.",
     selectedWork: [
       {
@@ -407,14 +407,14 @@ const LANG = {
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    availableFor: "Open to a small number of collaborations, when something is truly worth building together.",
+    availableFor: "Open to a small number of selected collaborations.",
     trashPlay: "Play",
     ctaHint: "",
     trashBtn: "Trash this", trashHover: "Do it.",
     contactBtn: "Let's talk", contactHover: "Let's see if it makes sense.",
     hintDefault: "This page explains the work. The rest is why I do it.",
     hintTrash: "This is the surface. There's a story underneath.",
-    finally: "Finally.", realStory: "The services explain what I do. The rest explains how I got here.",
+    finally: "Finally.", realStory: "The services explain what I do. The rest shows how I got here.",
     backBtn: "← Back to the boring page", or: "or",
     footerPiva: "VAT IT10893121003", footerPrivacy: "Privacy Policy", init: "Initializing",
     comingSoonTitle: "Under construction.",
@@ -752,14 +752,14 @@ function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
   if (!work || !data) return null;
   const hasHeroImage = Boolean(data.heroImage);
   return (
-    <div className="case-study-page" style={{ maxWidth: 980, margin: "0 auto", padding: "64px 0 34px", animation: "fadeIn .28s ease-out" }}>
-      <button className="top-btn case-study-back-btn" onClick={onBack} style={{ marginBottom: 42, color: "#FF4D00", borderColor: "rgba(255,77,0,.24)" }}>{data.backLabel}</button>
+    <div className="case-study-page" style={{ maxWidth: 1040, margin: "0 auto", padding: "72px 0 42px", animation: "fadeIn .28s ease-out" }}>
+      <button className="top-btn case-study-back-btn" onClick={onBack} style={{ marginBottom: 48, color: "#FF4D00", borderColor: "rgba(255,77,0,.32)", background: "rgba(255,77,0,.03)" }}>{data.backLabel}</button>
 
       {hasHeroImage ? (
-        <div className="case-study-hero-image-shell" style={{ position: "relative", marginBottom: 34, borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,.06)", aspectRatio: "1.35 / 1", background: "#080808" }}>
+        <div className="case-study-hero-image-shell" style={{ position: "relative", marginBottom: 40, borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,.06)", aspectRatio: "1.68 / 1", background: "#080808" }}>
           <img src={data.heroImage} alt={work.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(1) contrast(1.02) brightness(.82)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(5,5,5,.74) 0%, rgba(5,5,5,.28) 38%, rgba(5,5,5,.10) 100%), linear-gradient(180deg, rgba(5,5,5,.12) 0%, rgba(5,5,5,.42) 100%)" }} />
-          <div style={{ position: "absolute", left: 24, right: 24, bottom: 20, maxWidth: 520 }}>
+          <div style={{ position: "absolute", left: 24, right: 24, bottom: 20, maxWidth: 560 }}>
             <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 12 }}>{data.kicker}</div>
             <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(38px,5.6vw,64px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 12px", letterSpacing: "-.02em" }}>
               {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
@@ -770,7 +770,7 @@ function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
           </div>
         </div>
       ) : (
-        <div className="case-study-hero" style={{ marginBottom: 42 }}>
+        <div className="case-study-hero" style={{ marginBottom: 48 }}>
           <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 16 }}>{data.kicker}</div>
           <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(42px,6vw,68px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 14px", letterSpacing: "-.02em" }}>
             {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
@@ -782,26 +782,26 @@ function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
       )}
 
       <div className="case-study-hero-copy" style={{ marginBottom: 42 }}>
-        <div className="home-pretty" style={{ fontSize: 20, color: "#F4EFE8", lineHeight: 1.72, maxWidth: 740 }}>{data.lead}</div>
+        <div className="home-pretty" style={{ fontSize: 22, color: "#F6F1EA", lineHeight: 1.68, maxWidth: 700 }}>{data.lead}</div>
       </div>
 
-      <div className="case-study-proof-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 12, marginBottom: 50 }}>
+      <div className="case-study-proof-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 18, marginBottom: 56 }}>
         {data.proof.map((item, idx) => (
-          <div key={idx} className="case-study-proof-card" style={{ padding: "16px 16px", border: "1px solid rgba(255,77,0,.14)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.035), rgba(255,255,255,.01))", color: "#F4F0EA", fontSize: 10, lineHeight: 1.75, letterSpacing: .42, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
+          <div key={idx} className="case-study-proof-card" style={{ padding: "18px 18px", border: "1px solid rgba(255,77,0,.12)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.03), rgba(255,255,255,.008))", color: "#F6F1EA", fontSize: 10, lineHeight: 1.82, letterSpacing: .36, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
         ))}
       </div>
 
-      <div className="case-study-sections" style={{ display: "flex", flexDirection: "column", gap: 40, marginBottom: 48 }}>
+      <div className="case-study-sections" style={{ display: "flex", flexDirection: "column", gap: 46, marginBottom: 56 }}>
         {data.sections.map((section, idx) => (
-          <section key={idx} className="case-study-section" style={{ paddingLeft: 24, borderLeft: "2px solid rgba(255,77,0,.12)" }}>
-            <div style={{ fontSize: 23, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#F4F0EA", marginBottom: 12, lineHeight: 1.16 }}>{section.title}</div>
-            <div className="home-pretty" style={{ fontSize: 15, color: "#D6CFC6", lineHeight: 2.02, maxWidth: 760 }}>{section.body}</div>
+          <section key={idx} className="case-study-section" style={{ paddingTop: 18, borderTop: "1px solid rgba(255,255,255,.07)" }}>
+            <div style={{ fontSize: 25, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#F6F1EA", marginBottom: 14, lineHeight: 1.14 }}>{section.title}</div>
+            <div className="home-pretty" style={{ fontSize: 16, color: "#E0D8CE", lineHeight: 1.96, maxWidth: 720 }}>{section.body}</div>
           </section>
         ))}
       </div>
 
-      <div className="case-study-closing" style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 26, marginBottom: 34 }}>
-        <div className="home-pretty" style={{ fontSize: 16, color: "#F4F0EA", lineHeight: 1.92, maxWidth: 720 }}>{data.closing}</div>
+      <div className="case-study-closing" style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 30, marginBottom: 38 }}>
+        <div className="home-pretty" style={{ fontSize: 17, color: "#F6F1EA", lineHeight: 1.88, maxWidth: 690 }}>{data.closing}</div>
       </div>
 
       <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
@@ -2501,9 +2501,12 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
   const dissolveTimeoutRef = useRef(null);
   const mountCrossingTimeoutRef = useRef(null);
   const swoshTimeoutRef = useRef(null);
+  const meadowFeedbackTimeoutRef = useRef(null);
+  const meadowBirdsTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState('meadow');
   const [showMeadowFeedback, setShowMeadowFeedback] = useState(false);
+  const [showMeadowBirds, setShowMeadowBirds] = useState(false);
   const [showApproach, setShowApproach] = useState(false);
   const [activated, setActivated] = useState(false);
   const [profileUnlocked, setProfileUnlocked] = useState(false);
@@ -2590,13 +2593,19 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
       if (dissolveTimeoutRef.current) clearTimeout(dissolveTimeoutRef.current);
       if (mountCrossingTimeoutRef.current) clearTimeout(mountCrossingTimeoutRef.current);
       if (swoshTimeoutRef.current) clearTimeout(swoshTimeoutRef.current);
+      if (meadowFeedbackTimeoutRef.current) clearTimeout(meadowFeedbackTimeoutRef.current);
+      if (meadowBirdsTimeoutRef.current) clearTimeout(meadowBirdsTimeoutRef.current);
     };
   }, []);
 
   const handleStay = useCallback(() => {
     unlockAudio();
     setShowMeadowFeedback(true);
-    setTimeout(() => setShowMeadowFeedback(false), 2000);
+    setShowMeadowBirds(true);
+    if (meadowFeedbackTimeoutRef.current) clearTimeout(meadowFeedbackTimeoutRef.current);
+    if (meadowBirdsTimeoutRef.current) clearTimeout(meadowBirdsTimeoutRef.current);
+    meadowFeedbackTimeoutRef.current = setTimeout(() => setShowMeadowFeedback(false), 2200);
+    meadowBirdsTimeoutRef.current = setTimeout(() => setShowMeadowBirds(false), 2600);
   }, [unlockAudio]);
 
   const handleToDiscover = useCallback(() => {
@@ -2696,6 +2705,12 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
                 </div>
                 <div className={`ch1-stay-feedback ${showMeadowFeedback ? 'show' : ''}`}>
                   {T.stayFeedback}
+                </div>
+                <div className={`ch1-birds ${showMeadowBirds ? 'show' : ''}`} aria-hidden="true">
+                  <span className="ch1-bird ch1-bird-a" />
+                  <span className="ch1-bird ch1-bird-b" />
+                  <span className="ch1-bird ch1-bird-c" />
+                  <span className="ch1-bird ch1-bird-d" />
                 </div>
               </section>
 
@@ -3334,7 +3349,6 @@ export default function Roberto() {
 
   const T = LANG[lang];
   const profileMeta = EMERGED_PROFILE[lang];
-  const heroSubText = isMobileViewport ? (T.heroMobileSub || T.heroSub) : T.heroSub;
   const proofStripText = isMobileViewport ? (T.proofStripMobile || T.proofStrip) : T.proofStrip;
   const selectedWorkSubText = isMobileViewport ? (T.selectedWorkMobileSub || T.selectedWorkSub) : T.selectedWorkSub;
   const [gameFlow, setGameFlow] = useState("chapter1");
@@ -3663,6 +3677,16 @@ export default function Roberto() {
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
         .ch1-stay-feedback{position:absolute;right:22px;top:22px;z-index:9;font-size:15px;color:rgba(220,231,222,.85);font-family:Georgia,serif;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.5);opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease}
         .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
+        .ch1-birds{position:absolute;left:-14%;right:-8%;top:9%;height:20%;z-index:7;pointer-events:none;opacity:0;transition:opacity .24s ease}
+        .ch1-birds.show{opacity:1}
+        .ch1-bird{position:absolute;width:18px;height:8px;color:#0a0a0a;opacity:.92;animation:ch1BirdPass 2.4s linear forwards}
+        .ch1-bird::before,.ch1-bird::after{content:"";position:absolute;top:0;width:8px;height:3px;background:currentColor}
+        .ch1-bird::before{left:0;transform:skewX(-28deg)}
+        .ch1-bird::after{right:0;transform:skewX(28deg)}
+        .ch1-bird-a{top:16%;animation-delay:.0s}
+        .ch1-bird-b{top:28%;animation-delay:.14s;transform:scale(.85)}
+        .ch1-bird-c{top:11%;animation-delay:.28s;transform:scale(1.1)}
+        .ch1-bird-d{top:24%;animation-delay:.42s;transform:scale(.72)}
         .ch1-discover-frame{filter:saturate(.96) contrast(1.02) brightness(.97)}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(4,7,10,.10),rgba(5,8,10,.24)),radial-gradient(circle at 20% 68%,rgba(102,156,124,.12),transparent 20%)}
         .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,rgba(0,0,0,.25) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}
@@ -3743,7 +3767,7 @@ export default function Roberto() {
         @keyframes crossingTimingShake{0%,100%{transform:translateX(-50%)}15%{transform:translateX(calc(-50% + 6px))}30%{transform:translateX(calc(-50% - 5px))}45%{transform:translateX(calc(-50% + 4px))}60%{transform:translateX(calc(-50% - 3px))}75%{transform:translateX(calc(-50% + 2px))}90%{transform:translateX(calc(-50% - 1px))}}
         
         
-                .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 4.6s cubic-bezier(.22,.61,.36,1) both;display:flex;justify-content:center;align-items:center}
+                .chapter-intro-stage{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(20,20,20,.12);background:#f5f2eb;box-shadow:0 0 0 1px rgba(0,0,0,.03),0 30px 70px rgba(0,0,0,.14);animation:chapterCardHoldFade 4.6s cubic-bezier(.22,.61,.36,1) both;display:flex;justify-content:center;align-items:center;cursor:pointer}
         .chapter-intro-top-slot{border:0}
         .chapter-intro-controls-slot,.chapter-intro-profile-slot{pointer-events:none}
         .chapter-intro-inner{text-align:center;animation:chapterCardTextFloat 4.6s cubic-bezier(.22,.61,.36,1) both;padding:0 24px;transform:translateY(-1.5%)}
@@ -3814,6 +3838,7 @@ export default function Roberto() {
         @keyframes ch2StreetSweepBack{0%,100%{transform:translateX(0) skewX(-13deg);opacity:0}16%{opacity:0}34%{opacity:.032}64%{transform:translateX(272%) skewX(-13deg);opacity:.105}82%{opacity:.024}100%{transform:translateX(272%) skewX(-13deg);opacity:0}}
         @keyframes ch2StreetSweepFront{0%,100%{transform:translateX(0) skewX(-13deg);opacity:0}20%{opacity:0}40%{opacity:.04}70%{transform:translateX(282%) skewX(-13deg);opacity:.145}88%{opacity:.03}100%{transform:translateX(282%) skewX(-13deg);opacity:0}}
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
+        @keyframes ch1BirdPass{0%{transform:translateX(0) translateY(0)}45%{transform:translateX(58vw) translateY(-10px)}100%{transform:translateX(112vw) translateY(2px);opacity:0}}
         @keyframes ch2LampPulse{0%,100%{opacity:.74;transform:scale(1)}50%{opacity:.96;transform:scale(1.04)}}
         @keyframes ch2RainBackShift{0%{background-position:0 -6px, 12px 18px}100%{background-position:-18px 56px, -8px 82px}}
         @keyframes ch2RainFrontShift{0%{background-position:8px -10px, 20px 10px}100%{background-position:-22px 72px, -10px 96px}}
@@ -4028,11 +4053,7 @@ export default function Roberto() {
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
-              <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#888", fontWeight: 400, letterSpacing: isMobileViewport ? 1.15 : 1.5, marginTop: 12, lineHeight: isMobileViewport ? 1.45 : 1.3 }}>{lang === "it" ? "Direzione creativa · sistemi creativi" : "Creative direction · creative systems"}</div>
-              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 15 : 14, color: "#BBB", marginTop: 20, lineHeight: isMobileViewport ? 1.78 : 1.92, maxWidth: isMobileViewport ? 420 : 470 }}>{T.hero}</div>
-              {heroSubText ? (
-                <div className="home-pretty" style={{ fontSize: isMobileViewport ? 12 : 13, color: isMobileViewport ? "#9a938b" : "#a39d95", marginTop: 14, lineHeight: isMobileViewport ? 1.74 : 1.82, maxWidth: isMobileViewport ? 400 : 390 }}>{heroSubText}</div>
-              ) : null}
+              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 16 : 15, color: "#F0ECE6", marginTop: 18, lineHeight: isMobileViewport ? 1.8 : 1.95, maxWidth: isMobileViewport ? 430 : 500, textWrap: "pretty" }}>{T.hero}</div>
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
