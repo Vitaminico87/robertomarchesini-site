@@ -349,6 +349,7 @@ const LANG = {
         "Serviva un punto fermo, non altro movimento.",
       ],
       continueBtn: "Continua",
+      nextBtn: "E ora?",
       backToSurface: "← Torna in superficie",
     },
     ch4: {
@@ -528,6 +529,7 @@ const LANG = {
         "It needed a fixed point, not more motion.",
       ],
       continueBtn: "Continue",
+      nextBtn: "And now?",
       backToSurface: "← Back to surface",
     },
     ch4: {
@@ -3238,8 +3240,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   const sceneSwitchTimeoutRef = useRef(null);
   const sceneTransitionTimeoutRef = useRef(null);
   const finalLineTimeoutRef = useRef(null);
-  const finalFadeTimeoutRef = useRef(null);
-  const completeTimeoutRef = useRef(null);
+  const continueTimeoutRef = useRef(null);
   const feedbackIdxRef = useRef(0);
 
   const [feedbackText, setFeedbackText] = useState("");
@@ -3251,6 +3252,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   const [scene, setScene] = useState("backstage");
   const [synthesisRevealed, setSynthesisRevealed] = useState(false);
   const [showFinalLine, setShowFinalLine] = useState(false);
+  const [showFutureBtn, setShowFutureBtn] = useState(false);
 
   useEffect(() => {
     const breathT = setInterval(() => setSceneBreath((v) => !v), 2800);
@@ -3263,8 +3265,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
       if (sceneSwitchTimeoutRef.current) clearTimeout(sceneSwitchTimeoutRef.current);
       if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
-      if (finalFadeTimeoutRef.current) clearTimeout(finalFadeTimeoutRef.current);
-      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+      if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
       clearInterval(breathT);
       clearInterval(crewT);
       ambience.stop();
@@ -3281,17 +3282,16 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (scene !== "synthesis") return undefined;
     onUnlockProfile?.("synthesis");
     setFinalFade(false);
-    finalLineTimeoutRef.current = setTimeout(() => setShowFinalLine(true), 420);
-    finalFadeTimeoutRef.current = setTimeout(() => setFinalFade(true), 2980);
-    completeTimeoutRef.current = setTimeout(() => {
-      onComplete?.();
-    }, 3800);
+    setShowFutureBtn(false);
+    finalLineTimeoutRef.current = setTimeout(() => {
+      setShowFinalLine(true);
+      setShowFutureBtn(true);
+    }, 420);
     return () => {
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
-      if (finalFadeTimeoutRef.current) clearTimeout(finalFadeTimeoutRef.current);
-      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+      if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
     };
-  }, [scene, onComplete, onUnlockProfile, ambience]);
+  }, [scene, onUnlockProfile]);
 
   const unlockAmbience = useCallback(() => {
     if (audioUnlocked) return;
@@ -3324,9 +3324,9 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (sceneSwitchTimeoutRef.current) clearTimeout(sceneSwitchTimeoutRef.current);
     if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
     if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
-    if (finalFadeTimeoutRef.current) clearTimeout(finalFadeTimeoutRef.current);
-    if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+    if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
 
+    setShowFutureBtn(false);
     setScene("synthesis");
     sceneSwitchTimeoutRef.current = setTimeout(() => {
       setSynthesisRevealed(true);
@@ -3335,6 +3335,15 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
       setSceneTransitioning(false);
     }, 520);
   }, [scene, sceneTransitioning, unlockAmbience, ambience]);
+
+  const handleToFuture = useCallback(() => {
+    if (scene !== "synthesis") return;
+    if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
+    setFinalFade(true);
+    continueTimeoutRef.current = setTimeout(() => {
+      onComplete?.();
+    }, 420);
+  }, [scene, onComplete]);
 
   return (
     <div className="ch1-root">
@@ -3373,7 +3382,17 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             <div className="ch3-synthesis-branch-glow" />
             <div className="ch3-synthesis-flow" />
             <div className="ch3-synthesis-ground-haze" />
+            <div className="ch3-synthesis-amber-shimmer" />
+            <div className="ch3-synthesis-circuit-pulse" />
             <div className="ch3-synthesis-vignette" />
+            <div className="ch3-distant-kite" aria-hidden="true">
+              <span className="ch3-kite">
+                <span className="ch3-kite-diamond" />
+                <span className="ch3-kite-tail ch3-kite-tail-a" />
+                <span className="ch3-kite-tail ch3-kite-tail-b" />
+                <span className="ch3-kite-tail ch3-kite-tail-c" />
+              </span>
+            </div>
             <div className={`ch2-line-block ch3-line-block ch3-line-block-final ${showFinalLine ? 'show' : ''}`}>
               <div className="ch2-line ch3-line ch3-line-final">{T.finalLine || T.line}</div>
             </div>
@@ -3390,7 +3409,9 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
               <Ch1ChoiceButton onClick={handleCenter}>{T.centerBtn}</Ch1ChoiceButton>
             </div>
           ) : (
-            <div className="ch3-hold-space" aria-hidden="true" />
+            <div className="ch1-controls ch2-controls ch3-controls-final">
+              <Ch1ChoiceButton onClick={handleToFuture} disabled={!showFutureBtn}>{T.nextBtn || T.continueBtn}</Ch1ChoiceButton>
+            </div>
           )}
         </div>
 
@@ -4194,8 +4215,8 @@ export default function Roberto() {
         .ch3-scene-panel{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .72s ease,transform 1s ease,filter .72s ease}
         .ch3-scene-panel.is-active{opacity:1}
         .ch3-backstage-panel{transform:scale(1.004)}
-        .ch3-synthesis-panel{transform:scale(1.03);filter:saturate(.96) brightness(.92)}
-        .ch3-synthesis-panel.is-revealed{transform:scale(1.012);filter:saturate(1.03) brightness(.985)}
+        .ch3-synthesis-panel{transform:scale(1.03);filter:saturate(.98) brightness(.93)}
+        .ch3-synthesis-panel.is-revealed{transform:scale(1.012);filter:saturate(1.06) brightness(1.01)}
         .ch3-light-bloom{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 53% 34%, rgba(255,214,146,.22) 0%, rgba(255,190,118,.12) 24%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.82;transition:opacity 1.6s ease,transform 1.6s ease}
         .ch3-stage.is-breathing .ch3-light-bloom{opacity:.96;transform:scale(1.024)}
         .ch3-grade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(22,14,10,.04), rgba(10,7,7,.12)), radial-gradient(circle at 52% 34%, rgba(255,204,132,.10), rgba(0,0,0,0) 40%);mix-blend-mode:screen}
@@ -4211,17 +4232,34 @@ export default function Roberto() {
         .ch3-stage.is-transitioning .ch3-vignette{opacity:.78}
         .ch3-transition-wash{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 52%, rgba(255,197,118,.14), rgba(0,0,0,.08) 46%, rgba(0,0,0,.42) 100%);opacity:0;transition:opacity .48s ease}
         .ch3-transition-wash.active{opacity:1}
-        .ch3-synthesis-core-glow{position:absolute;right:8%;top:14%;width:42%;height:58%;pointer-events:none;background:radial-gradient(circle at 58% 46%, rgba(255,210,138,.28) 0%, rgba(255,183,98,.18) 26%, rgba(0,0,0,0) 68%);mix-blend-mode:screen;filter:blur(10px);opacity:.52;animation:ch3TreePulse 5.6s ease-in-out infinite}
-        .ch3-synthesis-branch-glow{position:absolute;right:1%;top:6%;width:64%;height:80%;pointer-events:none;background:linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,186,106,.04) 42%, rgba(255,204,132,.16) 68%, rgba(255,190,110,.06) 100%);mix-blend-mode:screen;filter:blur(7px);opacity:.44;animation:ch3BranchGlow 4.8s ease-in-out infinite}
-        .ch3-synthesis-flow{position:absolute;right:8%;top:8%;width:50%;height:76%;pointer-events:none;clip-path:polygon(16% 6%, 90% 6%, 98% 40%, 94% 86%, 48% 90%, 12% 74%, 0% 34%);background:repeating-linear-gradient(180deg, rgba(255,182,102,.0) 0 10px, rgba(255,196,122,.14) 10px 12px, rgba(255,182,102,.0) 12px 26px);mix-blend-mode:screen;opacity:.18;animation:ch3FlowDrift 9s linear infinite}
-        .ch3-synthesis-ground-haze{position:absolute;right:2%;bottom:0;width:52%;height:30%;pointer-events:none;background:radial-gradient(ellipse at 58% 74%, rgba(255,182,108,.20) 0%, rgba(255,182,108,.10) 22%, rgba(0,0,0,0) 70%);mix-blend-mode:screen;opacity:.46;animation:ch3GroundBreath 5.2s ease-in-out infinite}
-        .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 38%, rgba(0,0,0,.14) 72%, rgba(0,0,0,.40) 100%), linear-gradient(180deg, rgba(12,8,7,.10) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.28) 100%)}
-        .ch3-line-block-final{border-top-color:rgba(255,204,152,.18);background:linear-gradient(to top, rgba(4,4,4,.72) 0%, rgba(4,4,4,.24) 68%, transparent 100%);opacity:0;transform:translateY(12px);transition:opacity .7s ease, transform .7s ease}
+        .ch3-synthesis-core-glow{position:absolute;right:6%;top:11%;width:48%;height:64%;pointer-events:none;background:radial-gradient(circle at 58% 46%, rgba(255,219,162,.38) 0%, rgba(255,190,110,.24) 24%, rgba(255,176,92,.12) 42%, rgba(0,0,0,0) 72%);mix-blend-mode:screen;filter:blur(12px);opacity:.76;animation:ch3TreePulse 4.8s ease-in-out infinite}
+        .ch3-synthesis-branch-glow{position:absolute;right:-1%;top:4%;width:68%;height:84%;pointer-events:none;background:linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,184,102,.06) 34%, rgba(255,208,144,.22) 62%, rgba(255,188,110,.08) 100%);mix-blend-mode:screen;filter:blur(6px);opacity:.62;animation:ch3BranchGlow 4.2s ease-in-out infinite}
+        .ch3-synthesis-flow{position:absolute;right:6%;top:7%;width:54%;height:78%;pointer-events:none;clip-path:polygon(16% 6%, 90% 6%, 98% 40%, 94% 86%, 48% 90%, 12% 74%, 0% 34%);background:repeating-linear-gradient(180deg, rgba(255,182,102,.0) 0 9px, rgba(255,196,122,.20) 9px 11px, rgba(255,182,102,.0) 11px 22px);mix-blend-mode:screen;opacity:.28;animation:ch3FlowDrift 7.5s linear infinite}
+        .ch3-synthesis-ground-haze{position:absolute;right:0;bottom:0;width:56%;height:32%;pointer-events:none;background:radial-gradient(ellipse at 58% 74%, rgba(255,182,108,.26) 0%, rgba(255,182,108,.14) 20%, rgba(0,0,0,0) 72%);mix-blend-mode:screen;opacity:.62;animation:ch3GroundBreath 4.6s ease-in-out infinite}
+        .ch3-synthesis-amber-shimmer{position:absolute;right:10%;top:14%;width:40%;height:54%;pointer-events:none;background:linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,222,178,.12) 46%, rgba(255,241,214,.30) 52%, rgba(255,206,142,.10) 58%, rgba(255,255,255,0) 100%);mix-blend-mode:screen;opacity:.32;transform:translateX(-18%);animation:ch3ShimmerSweep 8.2s ease-in-out infinite}
+        .ch3-synthesis-circuit-pulse{position:absolute;right:7%;top:9%;width:52%;height:76%;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.14) 0%, rgba(255,199,124,.06) 20%, rgba(0,0,0,0) 52%);mix-blend-mode:screen;opacity:.34;animation:ch3CircuitPulse 3.8s ease-in-out infinite}
+        .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.14) 72%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(12,8,7,.08) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.26) 100%)}
+        .ch3-distant-kite{position:absolute;left:18%;top:15%;width:18%;height:16%;pointer-events:none;opacity:.9;animation:ch3KiteDrift 12s ease-in-out infinite}
+        .ch3-kite{position:absolute;left:28%;top:22%;width:18px;height:18px;filter:drop-shadow(0 0 6px rgba(255,214,188,.18))}
+        .ch3-kite-diamond{position:absolute;left:4px;top:2px;width:8px;height:8px;background:rgba(238,86,24,.96);border:1px solid rgba(255,220,198,.28);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
+        .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.68)}
+        .ch3-kite-diamond::before{left:3px;top:-1px;width:1px;height:10px;transform:rotate(-45deg);transform-origin:center}
+        .ch3-kite-diamond::after{left:-1px;top:3px;width:10px;height:1px;transform:rotate(-45deg);transform-origin:center}
+        .ch3-kite-tail{position:absolute;left:11px;width:1px;background:rgba(255,222,204,.54);transform-origin:top center}
+        .ch3-kite-tail-a{top:10px;height:5px;transform:rotate(18deg)}
+        .ch3-kite-tail-b{top:14px;height:4px;left:12px;transform:rotate(-10deg)}
+        .ch3-kite-tail-c{top:18px;height:4px;left:10px;transform:rotate(14deg)}
+        .ch3-line-block-final{border-top-color:rgba(255,214,168,.24);background:linear-gradient(180deg, rgba(10,7,6,.22) 0%, rgba(7,6,5,.46) 18%, rgba(5,5,5,.84) 100%);box-shadow:0 -12px 28px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,222,184,.06);backdrop-filter:blur(6px);opacity:0;transform:translateY(12px);transition:opacity .7s ease, transform .7s ease}
         .ch3-line-block-final.show{opacity:1;transform:translateY(0)}
-        .ch3-line-final{white-space:normal;text-align:center;max-width:760px;margin:0 auto;line-height:1.14}
+        .ch3-line-final{white-space:normal;text-align:center;max-width:760px;margin:0 auto;line-height:1.14;text-shadow:0 1px 0 rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.22)}
+        .ch3-controls-final{justify-content:center}
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
         .ch3-stage.is-final-fade .ch3-line-block-final{opacity:0;transform:translateY(18px)}
+
+        @keyframes ch3ShimmerSweep{0%,100%{opacity:.18;transform:translateX(-18%)}42%{opacity:.38;transform:translateX(0%)}68%{opacity:.24;transform:translateX(6%)}}
+        @keyframes ch3CircuitPulse{0%,100%{opacity:.24;transform:scale(.98)}46%{opacity:.46;transform:scale(1.02)}}
+        @keyframes ch3KiteDrift{0%,100%{transform:translate3d(0,0,0)}25%{transform:translate3d(8px,-5px,0)}55%{transform:translate3d(18px,2px,0)}78%{transform:translate3d(10px,-3px,0)}}
 
         @media(max-width:1024px){
           .home-social-rail:not(.home-social-rail-mobile){display:none!important}
@@ -4231,9 +4269,13 @@ export default function Roberto() {
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
           .ch3-line-final{font-size:clamp(18px,5.2vw,26px);line-height:1.16}
-          .ch3-synthesis-core-glow{right:4%;width:54%;height:54%}
-          .ch3-synthesis-branch-glow{right:-2%;width:74%;height:76%}
-          .ch3-synthesis-flow{right:2%;width:68%;height:74%}
+          .ch3-synthesis-core-glow{right:2%;top:12%;width:60%;height:56%;opacity:.86}
+          .ch3-synthesis-branch-glow{right:-4%;width:78%;height:78%;opacity:.68}
+          .ch3-synthesis-flow{right:0;width:72%;height:76%;opacity:.34}
+          .ch3-synthesis-amber-shimmer{right:0;width:60%;height:58%;opacity:.26}
+          .ch3-synthesis-circuit-pulse{right:0;width:70%;height:78%}
+          .ch3-distant-kite{left:12%;top:13%;width:24%;height:18%}
+          .ch3-kite{transform:scale(.9)}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
           .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
