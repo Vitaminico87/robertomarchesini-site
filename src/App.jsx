@@ -38,17 +38,17 @@ const CASE_STUDIES = {
       backLabel: "← Torna ai lavori",
       openLabel: "Apri case study",
       kicker: "Case study",
-      meta: "Direzione creativa · Sistema contenuti · Continuità editoriale",
-      lead: "Un sistema contenuti costruito per reggere una venue con programmazione continua, oltre 150 eventi l’anno e una presenza editoriale che non poteva diventare generica.",
-      proof: ["150+ eventi l’anno", "1M+ visualizzazioni mensili", "palinsesto settimanale continuo"],
+      meta: "Comunicazione · Contenuti · Sistema promozionale",
+      lead: "Un sistema di contenuti, comunicazione e promozione costruito per reggere una venue con programmazione continua, oltre 150 eventi l’anno e una pressione settimanale che non poteva diventare generica.",
+      proof: ["150+ eventi l’anno", "1M+ visualizzazioni mensili", "programmazione continua"],
       sections: [
         {
           title: "Il problema",
-          body: "Largo non aveva bisogno di singoli post riusciti. Aveva bisogno di una struttura capace di sostenere ritmo, varietà e identità, settimana dopo settimana, senza collassare nella ripetizione."
+          body: "Largo non aveva bisogno di singoli post riusciti. Aveva bisogno di una struttura capace di sostenere calendario, promozione, varietà e identità, settimana dopo settimana, senza collassare nella ripetizione."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho impostato un impianto editoriale e promozionale capace di tenere insieme programmazione, format ricorrenti, annunci, repertorio fotografico e tono di voce. Non una sequenza di output isolati, ma una macchina creativa leggibile e continua."
+          body: "Ho impostato un impianto editoriale e promozionale capace di tenere insieme programmazione, format ricorrenti, annunci, adv, repertorio fotografico e tono di voce. Non una sequenza di output isolati, ma una macchina leggibile e continua."
         },
         {
           title: "Cosa ha retto davvero",
@@ -62,17 +62,17 @@ const CASE_STUDIES = {
       openLabel: "Apri case study",
       kicker: "Case study",
       heroImage: "https://www.robertomarchesini.com/assets/clients/notre_dame_case_hero.jpg",
-      meta: "Direzione creativa · Sistema contenuti · Crescita audience",
-      lead: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia. Un lavoro lungo, costruito per dare continuità e scala a un racconto che non poteva disperdersi.",
-      proof: ["12 anni di continuità", "400K+ audience", "narrazione a scala nazionale"],
+      meta: "Comunicazione digitale · Contenuti · Promozione",
+      lead: "Dodici anni di comunicazione digitale, contenuti e promozione per uno dei live brand più riconoscibili in Italia. Un lavoro lungo, costruito per dare continuità, riconoscibilità e scala a un racconto che non poteva disperdersi.",
+      proof: ["12 anni di continuità", "400K+ audience", "scala nazionale"],
       sections: [
         {
           title: "Il problema",
-          body: "Notre Dame de Paris non chiedeva solo comunicazione. Chiedeva una struttura narrativa capace di restare coerente nel tempo, reggere cicli lunghi, tournée, riaperture e un pubblico molto ampio senza perdere riconoscibilità."
+          body: "Notre Dame de Paris non chiedeva solo presenza online. Chiedeva una struttura di comunicazione capace di restare coerente nel tempo, reggere cicli lunghi, tournée, riaperture e un pubblico molto ampio senza perdere riconoscibilità."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho lavorato su direzione creativa, contenuti e architettura del racconto digitale, tenendo insieme continuità, desiderabilità e memoria del progetto. Il punto non era produrre di più, ma dare al brand una traiettoria leggibile e persistente."
+          body: "Ho lavorato su contenuti, social, promozione digitale e architettura del racconto online, tenendo insieme continuità, desiderabilità e memoria del progetto. Il punto non era produrre di più, ma dare al brand una traiettoria leggibile e persistente."
         },
         {
           title: "Cosa ha retto davvero",
@@ -110,17 +110,17 @@ const CASE_STUDIES = {
       backLabel: "← Back to work",
       openLabel: "Open case study",
       kicker: "Case study",
-      meta: "Creative direction · Content system · Editorial continuity",
-      lead: "A content system built to sustain a venue with continuous programming, 150+ events per year, and an editorial presence that could not afford to become generic.",
-      proof: ["150+ events per year", "1M+ monthly views", "continuous weekly system"],
+      meta: "Communication · Content · Promotional system",
+      lead: "A content, communication, and promotion system built to sustain a venue with continuous programming, 150+ events per year, and weekly pressure that could not afford to become generic.",
+      proof: ["150+ events per year", "1M+ monthly views", "continuous programming"],
       sections: [
         {
           title: "The problem",
-          body: "Largo did not need isolated good posts. It needed a structure able to sustain rhythm, variety, and identity week after week, without collapsing into repetition."
+          body: "Largo did not need isolated good posts. It needed a structure able to sustain calendar, promotion, variety, and identity week after week, without collapsing into repetition."
         },
         {
           title: "The system built",
-          body: "I designed an editorial and promotional structure able to hold programming, recurring formats, announcements, live photography, and tone of voice together. Not a sequence of isolated outputs, but a readable and continuous creative machine."
+          body: "I designed an editorial and promotional structure able to hold programming, recurring formats, announcements, ads, live photography, and tone of voice together. Not a sequence of isolated outputs, but a readable and continuous system."
         },
         {
           title: "What actually held up",
@@ -134,17 +134,17 @@ const CASE_STUDIES = {
       openLabel: "Open case study",
       kicker: "Case study",
       heroImage: "https://www.robertomarchesini.com/assets/clients/notre_dame_case_hero.jpg",
-      meta: "Creative direction · Content system · Audience growth",
-      lead: "Twelve years of creative direction and content system design for one of Italy’s most recognizable live brands. Long-term work built to give continuity and scale to a narrative that could not afford to disperse.",
-      proof: ["12 years of continuity", "400K+ audience", "national-scale narrative"],
+      meta: "Digital communication · Content · Promotion",
+      lead: "Twelve years of digital communication, content, and promotion for one of Italy’s most recognizable live brands. Long-term work built to give continuity, recognizability, and scale to a narrative that could not afford to disperse.",
+      proof: ["12 years of continuity", "400K+ audience", "national scale"],
       sections: [
         {
           title: "The problem",
-          body: "Notre Dame de Paris did not need communication alone. It needed a narrative structure able to stay coherent over time, hold up through long cycles, tours, and relaunches, and speak to a very large audience without losing recognizability."
+          body: "Notre Dame de Paris did not need online presence alone. It needed a communication structure able to stay coherent over time, hold up through long cycles, tours, and relaunches, and speak to a very large audience without losing recognizability."
         },
         {
           title: "The system built",
-          body: "I worked on creative direction, content, and digital narrative architecture, keeping continuity, desirability, and memory of the project together. The point was not to produce more, but to give the brand a readable and persistent trajectory."
+          body: "I worked on content, social, digital promotion, and the architecture of the online narrative, keeping continuity, desirability, and memory of the project together. The point was not to produce more, but to give the brand a readable and persistent trajectory."
         },
         {
           title: "What actually held up",
@@ -186,42 +186,42 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Costruisco sistemi creativi per trasformare idee complesse in contenuti, prodotti ed esperienze che reggano nel tempo.",
+    hero: "Costruisco sistemi creativi per comunicazione, contenuti ed esperienze digitali che devono reggere nel tempo.",
     heroSub: "",
-    heroMobileSub: "Direzione creativa, narrativa e AI con criterio.",
-    proofStrip: "Narrativa · sistemi · AI",
-    proofStripMobile: "Narrativa · sistemi · AI",
+    heroMobileSub: "Comunicazione, contenuti e sistemi creativi con criterio.",
+    proofStrip: "Digitale · comunicazione · sistemi",
+    proofStripMobile: "Digitale · comunicazione · sistemi",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Chiarezza", subtitle: "Capire cosa rendere chiaro", desc: "Definisco posizionamento, messaggio e struttura, così un progetto smette di disperdersi e inizia a farsi leggere meglio.", mobileDesc: "Definisco posizionamento, messaggio e struttura." },
-      { title: "Forma", subtitle: "Dare forma visiva e narrativa", desc: "Trasformo idee e materiali sparsi in una struttura visiva e narrativa più coerente, leggibile e durevole.", mobileDesc: "Trasformo materiali sparsi in una struttura più coerente." },
-      { title: "Rilascio", subtitle: "Far emergere un progetto nel modo giusto", desc: "Organizzo contenuti, gerarchie e touchpoint perché un progetto emerga nel modo giusto e venga capito meglio.", mobileDesc: "Organizzo contenuti, gerarchie e touchpoint." },
-      { title: "Sistema", subtitle: "Costruire meglio, con controllo", desc: "Progetto workflow creativi con AI per aumentare velocità, varianti e controllo qualitativo senza abbassare il livello.", mobileDesc: "Progetto workflow creativi con AI per aumentare velocità e controllo." },
+      { title: "Posizionamento", subtitle: "Messaggio, tono e struttura", desc: "Aiuto brand e progetti a chiarire cosa dire, come dirlo e con quale struttura presentarsi in modo più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
+      { title: "Sistemi contenuti", subtitle: "Format, calendario, continuità", desc: "Progetto impianti editoriali e promozionali che tengono insieme ritmo, varietà e riconoscibilità senza disperdersi nella ripetizione.", mobileDesc: "Progetto impianti editoriali e promozionali." },
+      { title: "Esperienze digitali", subtitle: "Siti, pagine, percorsi", desc: "Costruisco architetture ed esperienze digitali più chiare, credibili e utili, dal sito alle landing fino ai principali punti di contatto.", mobileDesc: "Costruisco siti, landing e percorsi più chiari." },
+      { title: "Workflow creativi con AI", subtitle: "Velocità, varianti, controllo", desc: "Uso l’AI per aumentare possibilità e controllo nei processi creativi, senza trasformare il lavoro in produzione automatica di rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
     ],
     selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Tre progetti reali. Responsabilità vere. Strutture che hanno dovuto reggere.",
-    selectedWorkMobileSub: "Progetti reali. Responsabilità vere. Strutture che hanno dovuto reggere.",
+    selectedWorkSub: "Tre progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
+    selectedWorkMobileSub: "Progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
-        narrative: "Direzione creativa e sistema contenuti per una venue con oltre 150 eventi l'anno.",
-        mobileNarrative: "Direzione creativa e sistema contenuti per una venue con oltre 150 eventi l'anno.",
-        narrative2: "Un impianto editoriale costruito per reggere ritmo, varietà e riconoscibilità nel tempo. Oltre 1M di visualizzazioni mensili.",
-        technical: "Identità · Sistema contenuti · Continuità editoriale",
-        proof: ["150+ eventi/anno", "1M+ view/mese", "sistema continuativo"],
+        narrative: "Sistema contenuti, comunicazione e promozione per una venue con programmazione continua e oltre 150 eventi l'anno.",
+        mobileNarrative: "Sistema contenuti, comunicazione e promozione per una venue con oltre 150 eventi l'anno.",
+        narrative2: "Un impianto costruito per reggere calendario, promo, adv, archivio e pressione settimanale senza diventare generico. Oltre 1M di visualizzazioni mensili.",
+        technical: "Comunicazione · Contenuti · Sistema promozionale",
+        proof: ["150+ eventi/anno", "1M+ view/mese", "programmazione continua"],
         tags: ["Cultural venue", "Content system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia.",
-        mobileNarrative: "Dodici anni di direzione creativa e sistema contenuti per uno dei live brand più riconoscibili in Italia.",
-        narrative2: "Un sistema costruito nel tempo per dare continuità, scala e riconoscibilità al racconto del progetto, con un'audience cresciuta oltre 400K persone.",
-        technical: "Direzione creativa · Sistema contenuti · Crescita audience",
-        proof: ["12 anni di continuità", "audience oltre 400K", "sistema a scala nazionale"],
+        narrative: "Dodici anni di comunicazione, contenuti e promozione digitale per uno dei live brand più riconoscibili in Italia.",
+        mobileNarrative: "Dodici anni di comunicazione, contenuti e promozione digitale per uno dei live brand più riconoscibili in Italia.",
+        narrative2: "Un sistema costruito nel tempo per dare continuità, riconoscibilità e scala a tournée, riaperture e cicli lunghi di comunicazione.",
+        technical: "Comunicazione digitale · Contenuti · Promozione",
+        proof: ["12 anni di continuità", "audience oltre 400K", "scala nazionale"],
         tags: ["Live entertainment", "Project narrative", "Digital experience"]
       },
       {
@@ -238,9 +238,9 @@ const LANG = {
     ],
     howLabel: "Metodo",
     method: [
-      { title: "Chiarezza prima del rumore", desc: "Si parte da ciò che deve essere capito, percepito o ricordato.", mobileDesc: "Si parte da ciò che deve restare." },
-      { title: "Gli strumenti non bastano", desc: "Gli strumenti valgono per quello che rendono possibile, ma solo dentro una struttura che li governa.", mobileDesc: "Gli strumenti valgono dentro una struttura." },
-      { title: "Creatività che regge nella realtà", desc: "Un sistema creativo deve reggere tempi, adattamenti, contesto e pressione.", mobileDesc: "La creatività deve reggere tempi, contesto e pressione." },
+      { title: "Partire dal problema reale", desc: "Capisco dove sta davvero il nodo: cosa non funziona, cosa si perde e cosa va reso più leggibile o più efficace.", mobileDesc: "Capisco dove sta il nodo reale." },
+      { title: "Dare forma senza complicare", desc: "Tolgo rumore, ordino gerarchie e scelgo solo ciò che serve perché un progetto si capisca meglio e regga di più.", mobileDesc: "Tolgo rumore e ordino le gerarchie." },
+      { title: "Tenere insieme gusto e funzione", desc: "L’estetica conta, ma deve lavorare con tempi, contesto, promozione e obiettivi reali. Altrimenti resta solo superficie.", mobileDesc: "L’estetica deve lavorare con la realtà." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
@@ -353,42 +353,42 @@ const LANG = {
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "I build creative systems to turn complex ideas into content, products, and experiences that hold up over time.",
+    hero: "I build creative systems for communication, content, and digital experiences that are meant to hold up over time.",
     heroSub: "",
-    heroMobileSub: "Creative direction, narrative, and AI where they actually help.",
-    proofStrip: "Narrative · systems · AI",
-    proofStripMobile: "Narrative · systems · AI",
+    heroMobileSub: "Communication, content, and creative systems with judgment.",
+    proofStrip: "Digital · communication · systems",
+    proofStripMobile: "Digital · communication · systems",
     whatido: "What I build",
     services: [
-      { title: "Position", subtitle: "Clarify what needs to be understood", desc: "I define positioning, message, and structure so a project stops dispersing and starts reading more clearly.", mobileDesc: "I define positioning, message, and structure." },
-      { title: "Shape", subtitle: "Give ideas visual and narrative form", desc: "I turn ideas and scattered materials into a visual and narrative structure that is more coherent, readable, and durable.", mobileDesc: "I turn scattered materials into a more coherent structure." },
-      { title: "Launch", subtitle: "Make a project land the right way", desc: "I organize content, hierarchy, and touchpoints so a project lands in the right way and is understood more clearly.", mobileDesc: "I organize content, hierarchy, and touchpoints." },
-      { title: "System", subtitle: "Build better, with control", desc: "I design AI-assisted creative workflows to increase speed, variation, and quality control without lowering the standard.", mobileDesc: "I design AI-assisted workflows to increase speed and control." },
+      { title: "Positioning", subtitle: "Message, tone, structure", desc: "I help brands and projects clarify what they need to say, how they should say it, and how they should present themselves more clearly and credibly.", mobileDesc: "I clarify message, tone, and structure." },
+      { title: "Content systems", subtitle: "Formats, calendar, continuity", desc: "I design editorial and promotional systems that keep rhythm, variety, and recognizability together without dissolving into repetition.", mobileDesc: "I design editorial and promotional systems." },
+      { title: "Digital experiences", subtitle: "Websites, pages, journeys", desc: "I build clearer, more credible, and more useful digital structures and experiences, from websites and landing pages to key touchpoints.", mobileDesc: "I build clearer websites, landing pages, and journeys." },
+      { title: "AI creative workflows", subtitle: "Speed, variation, control", desc: "I use AI to expand possibilities and control inside creative processes, without turning the work into automated noise.", mobileDesc: "I use AI to expand possibilities and control." },
     ],
     selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Three real projects. Real responsibility. Structures that had to hold up.",
-    selectedWorkMobileSub: "Real projects. Real responsibility. Structures that had to hold up.",
+    selectedWorkSub: "Three real projects. Clear responsibility. Structures that had to hold up.",
+    selectedWorkMobileSub: "Real projects. Clear responsibility. Structures that had to hold up.",
     selectedWork: [
       {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
-        narrative: "Creative direction and content system for a venue with weekly programming and over 150 events a year.",
-        mobileNarrative: "Creative direction and content system for a venue with over 150 events a year.",
-        narrative2: "An editorial and promotional structure built to sustain rhythm, variety, and recognizability over time. Over 1M monthly views.",
-        technical: "Identity · Content system · Editorial continuity",
-        proof: ["150+ events/year", "1M+ monthly views", "continuous content system"],
+        narrative: "Content system, communication, and promotion for a venue with continuous programming and over 150 events a year.",
+        mobileNarrative: "Content system, communication, and promotion for a venue with over 150 events a year.",
+        narrative2: "A structure built to sustain calendar, promotion, ads, archive, and weekly pressure without becoming generic. Over 1M monthly views.",
+        technical: "Communication · Content · Promotional system",
+        proof: ["150+ events/year", "1M+ monthly views", "continuous programming"],
         tags: ["Cultural venue", "Content system", "Weekly execution"]
       },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Twelve years of creative direction and content system design for the digital communication of one of Italy's most recognizable live brands.",
-        mobileNarrative: "Twelve years of creative direction and content systems for one of Italy's strongest live brands.",
-        narrative2: "A system built over time to give continuity, scale, and recognizability to the project’s narrative, with an audience grown beyond 400K people.",
-        technical: "Creative direction · Content system · Audience growth",
-        proof: ["12 years of continuity", "audience beyond 400K", "system at national scale"],
+        narrative: "Twelve years of communication, content, and digital promotion for one of Italy's most recognizable live brands.",
+        mobileNarrative: "Twelve years of communication, content, and digital promotion for one of Italy's most recognizable live brands.",
+        narrative2: "A system built over time to give continuity, recognizability, and scale to tours, relaunches, and long communication cycles.",
+        technical: "Digital communication · Content · Promotion",
+        proof: ["12 years of continuity", "audience beyond 400K", "national scale"],
         tags: ["Live entertainment", "Project narrative", "Digital experience"]
       },
       {
@@ -405,9 +405,9 @@ const LANG = {
     ],
     howLabel: "Method",
     method: [
-      { title: "Clarity before noise", desc: "Start from what needs to be understood, perceived, or remembered. The rest comes later.", mobileDesc: "Start from what needs to remain." },
-      { title: "Tools are not enough", desc: "Tools matter for what they make possible, but only inside a structure that governs them.", mobileDesc: "Tools matter inside a structure." },
-      { title: "Creativity that holds up in reality", desc: "A creative system has to hold up across timing, adaptations, context, and pressure.", mobileDesc: "Creativity has to survive timing, context, and pressure." },
+      { title: "Start from the real problem", desc: "I identify where the actual knot is: what is not working, what gets lost, and what needs to become clearer or more effective.", mobileDesc: "I identify the real knot first." },
+      { title: "Shape without overcomplicating", desc: "I remove noise, order hierarchy, and choose only what is needed so a project becomes clearer and holds up better.", mobileDesc: "I remove noise and order the hierarchy." },
+      { title: "Keep taste and function together", desc: "Aesthetics matter, but they have to work with time, context, promotion, and real goals. Otherwise they remain surface only.", mobileDesc: "Aesthetics have to work with reality." },
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
@@ -3650,8 +3650,8 @@ export default function Roberto() {
         .svc:hover .svc-t{color:#FF4D00!important;text-shadow:0 0 15px rgba(255,77,0,.12)}
         .work-card{transition:all .3s;padding-left:0;border-left:3px solid transparent}
         .work-card:hover{border-left-color:#FF4D00;padding-left:22px;background:linear-gradient(90deg,rgba(255,77,0,.03) 0%,transparent 46%)}
-        .mth{padding:4px 0 4px 20px;border-left:2px solid #161616;transition:all .25s;cursor:default}
-        .mth:hover{border-left-color:#FF4D00;padding-left:24px}
+        .mth{padding:18px 20px 18px 22px;border:1px solid #151515;border-left:2px solid rgba(255,77,0,.18);border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,.01),rgba(255,255,255,.004));transition:all .25s;cursor:default}
+        .mth:hover{border-color:rgba(255,77,0,.18);border-left-color:#FF4D00;background:linear-gradient(180deg,rgba(255,77,0,.03),rgba(255,255,255,.006));transform:translateX(2px)}
         .mth:hover .mth-t{color:#FF4D00!important}
         .btn-trash{min-width:140px;padding:16px 38px;background:transparent;border:1px solid #FF4D00;color:#FF4D00;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:background .2s,color .2s}
         .btn-talk{padding:16px 38px;background:transparent;border:1px solid #444;color:#AAA;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:all .25s}
@@ -3667,11 +3667,15 @@ export default function Roberto() {
         .home-balance{text-wrap:balance}
         .home-section-kicker{display:inline-block;font-size:clamp(24px,3vw,31px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.94;font-family:'Playfair Display',serif;font-style:italic;line-height:1.04;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
         .home-section-sub{font-size:15px;color:#b7afa5;margin-bottom:48px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.9;max-width:520px;text-wrap:pretty}
+        .home-selected-heading-row{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+        .home-selected-heading-line{display:block;width:54px;height:1px;background:linear-gradient(90deg,rgba(255,77,0,.72),rgba(255,77,0,0))}
+        .home-selected-heading{font-size:clamp(32px,4.4vw,46px);line-height:1.02;color:#F5F0E8;font-family:'Playfair Display',serif;font-style:italic;letter-spacing:-.35px;text-wrap:balance}
         .home-work-narrative{font-size:16px;color:#F4F0EA;line-height:1.9;margin-bottom:14px;max-width:600px;text-wrap:pretty}
         .home-work-secondary{font-size:13px;color:#aca39a;line-height:2.0;margin-bottom:22px;max-width:560px;text-wrap:pretty}
         .home-service-title{font-size:35px;font-weight:600;color:#EEE8E0;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.02;text-wrap:balance}
         .home-service-sub{font-size:13px;color:#bcaea1;margin-bottom:14px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.66;text-wrap:pretty}
         .home-service-desc{font-size:14px;color:#ddd7cf;line-height:1.96;text-wrap:pretty;max-width:500px}
+        .home-method-index{font-size:10px;letter-spacing:1.8px;color:#7d756d;font-family:'IBM Plex Mono',monospace;line-height:1.6;text-transform:uppercase;padding-top:2px}
         .home-method-title{font-size:16px;font-weight:500;color:#ece5dc;margin-bottom:10px;transition:all .2s;letter-spacing:.1px;line-height:1.42;text-wrap:balance}
         .home-method-desc{font-size:14px;color:#c1b8ae;line-height:2.0;max-width:540px;text-wrap:pretty}
         .ghost-mobile{text-align:center}
@@ -3695,7 +3699,7 @@ export default function Roberto() {
         .home-cta-shell{position:relative;width:100%}
         .home-cta-actions{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap;width:100%}
         .home-trash-wrap{position:relative;display:flex;align-items:center;justify-content:center}
-        .home-trash-sidekick{position:absolute;top:50%;left:50%;transform:translate(calc(-50% - 170px), -50%);pointer-events:none;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center}
+        .home-trash-sidekick{position:absolute;top:50%;left:50%;transform:translate(calc(-50% - 188px), -50%);pointer-events:none;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center}
         .home-cestina-teaser{position:relative;flex:0 0 auto;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center;opacity:.72;transform:translateY(0);transition:opacity .24s ease,transform .24s ease,filter .24s ease;filter:drop-shadow(0 0 6px rgba(240,236,230,.08))}
         .home-cestina-teaser.is-active,.home-cta-shell:hover .home-cestina-teaser{opacity:.92;transform:translateY(-1px);filter:drop-shadow(0 0 10px rgba(240,236,230,.12))}
         .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:1px;width:14px;height:4px;border-radius:50%;background:rgba(0,0,0,.2);filter:blur(2px);transform:translateX(-50%)}
@@ -3977,6 +3981,9 @@ export default function Roberto() {
           .pixel-social-link-mobile{min-width:0}
           .pixel-social-link-mobile .pixel-social-label{font-size:8px;letter-spacing:1.2px}
           .home-section-kicker{font-size:24px!important;line-height:1.05!important;margin-bottom:14px!important}
+          .home-selected-heading-row{gap:10px!important;margin-bottom:12px!important}
+          .home-selected-heading-line{width:34px!important}
+          .home-selected-heading{font-size:28px!important;line-height:1.02!important}
           .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
           .home-work-narrative{font-size:12px!important;line-height:1.84!important;color:#d8d2ca!important;max-width:100%!important}
           .home-work-secondary{display:none!important}
@@ -4120,7 +4127,10 @@ export default function Roberto() {
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
             <div style={{ marginBottom: isMobileViewport ? 58 : 72 }}>
-              <div className="home-section-kicker" style={{ marginBottom: 10 }}>{T.selectedWorkLabel}</div>
+              <div className="home-selected-heading-row">
+                <span className="home-selected-heading-line" />
+                <div className="home-selected-heading">{T.selectedWorkLabel}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span></div>
+              </div>
               <div className="home-section-sub">{selectedWorkSubText}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
@@ -4231,8 +4241,13 @@ export default function Roberto() {
               <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 18 : 22 }}>
                 {T.method.map((m, i) => (
                   <div key={i} className="mth">
-                    <div className="mth-t home-method-title">{m.title}</div>
-                    <div className="home-method-desc">{isMobileViewport ? (m.mobileDesc || m.desc) : m.desc}</div>
+                    <div style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "78px minmax(0,1fr)", gap: isMobileViewport ? 8 : 24, alignItems: "start" }}>
+                      <div className="home-method-index">{String(i + 1).padStart(2, "0")}</div>
+                      <div>
+                        <div className="mth-t home-method-title">{m.title}</div>
+                        <div className="home-method-desc">{isMobileViewport ? (m.mobileDesc || m.desc) : m.desc}</div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
