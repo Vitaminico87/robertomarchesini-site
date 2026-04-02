@@ -350,6 +350,18 @@ const LANG = {
       ],
       continueBtn: "Continua",
       backToSurface: "← Torna in superficie",
+    },
+    ch4: {
+      kicker: "Capitolo 4 · Futuro",
+      introTitle: "Futuro",
+      prompt: "Inserisci il controller per giocare il Capitolo 4.",
+      promptSub: "Qui non si chiude niente. Si apre in due.",
+      connectBtn: "Inserisci il controller",
+      connectedLine: "Secondo controller connesso.",
+      connectedHintDesktop: "Premi Enter per iniziare.",
+      connectedHintMobile: "Tocca per iniziare.",
+      ctaBtn: "Inizia",
+      backToSurface: "← Torna in superficie",
     }
   },
   en: {
@@ -516,6 +528,18 @@ const LANG = {
         "It needed a fixed point, not more motion.",
       ],
       continueBtn: "Continue",
+      backToSurface: "← Back to surface",
+    },
+    ch4: {
+      kicker: "Chapter 4 · Future",
+      introTitle: "Future",
+      prompt: "Insert the controller to play Chapter 4.",
+      promptSub: "Nothing closes here. It opens with someone else.",
+      connectBtn: "Insert controller",
+      connectedLine: "Second controller connected.",
+      connectedHintDesktop: "Press Enter to begin.",
+      connectedHintMobile: "Tap to begin.",
+      ctaBtn: "Begin",
       backToSurface: "← Back to surface",
     }
   },
@@ -3379,6 +3403,160 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   );
 }
 
+function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
+  const [controllerInserted, setControllerInserted] = useState(false);
+  const [showCTA, setShowCTA] = useState(false);
+  const [isMobileHint, setIsMobileHint] = useState(false);
+  const ctaTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    const update = () => {
+      if (typeof window === "undefined") return;
+      setIsMobileHint(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 900);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!controllerInserted) return;
+    onUnlockProfile?.("future");
+    if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
+    ctaTimeoutRef.current = setTimeout(() => setShowCTA(true), 520);
+  }, [controllerInserted, onUnlockProfile]);
+
+  const handleAdvance = useCallback(() => {
+    if (!controllerInserted) {
+      setControllerInserted(true);
+      return;
+    }
+    onContact?.();
+  }, [controllerInserted, onContact]);
+
+  const PixelController = ({ accent = "#111", shell = "#111", details = "#f5f2eb", ghost = false }) => (
+    <div style={{
+      position: "relative",
+      width: 224,
+      height: 120,
+      opacity: ghost ? .26 : 1,
+      filter: ghost ? "none" : "drop-shadow(0 16px 28px rgba(0,0,0,.12))",
+    }}>
+      <div style={{ position: "absolute", inset: "18px 38px 22px 38px", borderRadius: 38, background: shell, border: `1px solid ${ghost ? "rgba(16,16,16,.08)" : "rgba(16,16,16,.16)"}` }} />
+      <div style={{ position: "absolute", left: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(16,16,16,.08)" : "rgba(16,16,16,.16)"}` }} />
+      <div style={{ position: "absolute", right: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(16,16,16,.08)" : "rgba(16,16,16,.16)"}` }} />
+      <div style={{ position: "absolute", left: 60, top: 52, width: 28, height: 8, borderRadius: 999, background: details, opacity: ghost ? .5 : 1 }} />
+      <div style={{ position: "absolute", left: 70, top: 42, width: 8, height: 28, borderRadius: 999, background: details, opacity: ghost ? .5 : 1 }} />
+      <div style={{ position: "absolute", right: 58, top: 44, width: 12, height: 12, borderRadius: 999, background: details, boxShadow: `20px 0 0 ${details}, 10px -10px 0 ${details}, 10px 10px 0 ${details}`, opacity: ghost ? .5 : 1 }} />
+      <div style={{ position: "absolute", left: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .4 : .9 }} />
+      <div style={{ position: "absolute", right: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .4 : .9 }} />
+      <div style={{ position: "absolute", left: 107, top: 34, width: 10, height: 10, borderRadius: 999, background: accent, boxShadow: `0 0 0 6px ${ghost ? "rgba(16,16,16,.06)" : "rgba(255,255,255,.45)"}`, opacity: ghost ? .45 : 1 }} />
+    </div>
+  );
+
+  return (
+    <div className="ch1-root">
+      <div className="ch1-wrap">
+        <div className="ch1-top-slot">
+          <div className="ch1-top">
+            <div className="ch1-kicker">{T.kicker}</div>
+            <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+          </div>
+        </div>
+
+        <div
+          className="ch2-stage"
+          role="button"
+          tabIndex={0}
+          onClick={handleAdvance}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleAdvance();
+            }
+          }}
+          style={{
+            position: "relative",
+            background: "#f5f2eb",
+            border: "1px solid rgba(20,20,20,.12)",
+            boxShadow: "0 0 0 1px rgba(0,0,0,.03), 0 30px 70px rgba(0,0,0,.14)",
+            cursor: "pointer",
+            overflow: "hidden",
+          }}
+        >
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 62%, rgba(255,255,255,.82) 0%, rgba(245,242,235,.96) 42%, rgba(236,231,221,.98) 100%)" }} />
+          <div style={{ position: "absolute", inset: 0, opacity: .18, backgroundImage: "linear-gradient(to right, rgba(16,16,16,.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(16,16,16,.02) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,0) 26%, rgba(16,16,16,.04) 100%)" }} />
+          <div style={{ position: "absolute", left: "50%", bottom: "18%", width: "66%", height: "22%", transform: "translateX(-50%)", background: "radial-gradient(circle, rgba(16,16,16,.08) 0%, rgba(16,16,16,.04) 34%, rgba(16,16,16,0) 72%)", filter: "blur(18px)" }} />
+
+          <div style={{ position: "absolute", top: "9%", left: "50%", transform: "translateX(-50%)", textAlign: "center", width: "100%", padding: "0 28px", zIndex: 3 }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.8, textTransform: "uppercase", color: "#80766b", marginBottom: 14 }}>{T.prompt}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(18px, 2.4vw, 26px)", lineHeight: 1.2, color: "#141414", opacity: .86 }}>{T.promptSub}</div>
+          </div>
+
+          <div style={{ position: "absolute", left: "50%", top: controllerInserted ? "51.5%" : "54%", transform: "translate(-50%, -50%)", width: "82%", height: "46%", zIndex: 4, transition: "top .5s ease" }}>
+            <div style={{ position: "absolute", left: controllerInserted ? "14%" : "50%", top: "52%", transform: controllerInserted ? "translate(-50%, -50%)" : "translate(-50%, -50%)", transition: "left .7s cubic-bezier(.22,.61,.36,1)", animation: "ch4ControllerFloat 5.8s ease-in-out infinite" }}>
+              <PixelController accent="#111" shell="#111" details="#f5f2eb" />
+            </div>
+
+            <div style={{ position: "absolute", right: controllerInserted ? "14%" : "50%", top: "52%", transform: controllerInserted ? "translate(50%, -50%)" : "translate(50%, -50%)", opacity: controllerInserted ? 1 : 0, transition: "right .78s cubic-bezier(.22,.61,.36,1), opacity .34s ease", animation: controllerInserted ? "ch4ControllerFloatRight 5.8s ease-in-out infinite .15s" : "none" }}>
+              <PixelController accent="#FF4D00" shell="#faf6ef" details="#141414" ghost={!controllerInserted} />
+            </div>
+
+            <div style={{ position: "absolute", left: "50%", top: "53%", width: controllerInserted ? "34%" : "0%", height: 2, transform: "translate(-50%, -50%)", background: "linear-gradient(90deg, rgba(255,77,0,0) 0%, rgba(255,77,0,.55) 18%, rgba(255,77,0,.82) 50%, rgba(255,77,0,.55) 82%, rgba(255,77,0,0) 100%)", boxShadow: "0 0 18px rgba(255,77,0,.22)", transition: "width .66s cubic-bezier(.22,.61,.36,1)", overflow: "hidden" }}>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,.75) 50%, transparent 100%)", transform: "translateX(-120%)", animation: controllerInserted ? "homeSignalSweep 2.4s linear infinite" : "none" }} />
+            </div>
+
+            <div style={{ position: "absolute", left: "50%", top: controllerInserted ? "16%" : "19%", width: 18, height: 18, borderRadius: 999, transform: "translate(-50%, -50%)", background: controllerInserted ? "#FF4D00" : "#111", boxShadow: controllerInserted ? "0 0 0 10px rgba(255,77,0,.08), 0 0 24px rgba(255,77,0,.18)" : "0 0 0 10px rgba(16,16,16,.05)", transition: "all .42s ease", animation: controllerInserted ? "glowPulse 2s infinite" : "ch4PortPulse 2.2s ease-in-out infinite" }} />
+          </div>
+
+          <div style={{ position: "absolute", left: "50%", bottom: "10.5%", transform: "translateX(-50%)", textAlign: "center", zIndex: 5, width: "100%", padding: "0 28px" }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.2, textTransform: "uppercase", color: controllerInserted ? "#FF4D00" : "#4b433b", marginBottom: 12, opacity: controllerInserted ? 1 : .78, transition: "color .28s ease" }}>
+              {controllerInserted ? T.connectedLine : T.connectBtn}
+            </div>
+            <div style={{ opacity: showCTA ? 1 : 0, transform: showCTA ? "translateY(0)" : "translateY(10px)", transition: "opacity .32s ease, transform .32s ease" }}>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "clamp(22px, 2.8vw, 32px)", color: "#101010", marginBottom: 10 }}>
+                {controllerInserted ? (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop) : ""}
+              </div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 999, border: "1px solid rgba(20,20,20,.12)", background: "rgba(255,255,255,.72)", boxShadow: "0 6px 20px rgba(0,0,0,.06)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 1.6, textTransform: "uppercase", color: "#141414" }}>
+                <span style={{ width: 8, height: 8, borderRadius: 999, background: "#FF4D00", boxShadow: "0 0 0 6px rgba(255,77,0,.08)" }} />
+                {T.ctaBtn}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="ch1-controls-slot">
+          <div className="ch1-controls ch2-controls">
+            {!controllerInserted ? (
+              <Ch1ChoiceButton onClick={() => setControllerInserted(true)}>{T.connectBtn}</Ch1ChoiceButton>
+            ) : (
+              <Ch1ChoiceButton onClick={onContact}>{isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop}</Ch1ChoiceButton>
+            )}
+          </div>
+        </div>
+
+        <div className="ch1-profile-slot ch2-profile-slot">
+          <EmergingProfilePanel
+            title={profileUi.title}
+            idle={profileUi.idle}
+            profiles={profileEntries}
+            unlockedIds={unlockedProfileIds}
+            currentId={currentProfileId}
+            currentLabel={profileUi.currentLabel}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ============================================================================
 // FALLING WORDS GENERATOR
 // ============================================================================
@@ -3969,6 +4147,9 @@ export default function Roberto() {
         @keyframes ch3BranchGlow{0%,100%{opacity:.24}50%{opacity:.46}}
         @keyframes ch3FlowDrift{0%{transform:translateY(-14px)}100%{transform:translateY(14px)}}
         @keyframes ch3GroundBreath{0%,100%{opacity:.36;transform:translateY(0)}50%{opacity:.56;transform:translateY(-2px)}}
+        @keyframes ch4ControllerFloat{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-4px)}}
+        @keyframes ch4ControllerFloatRight{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-4px)}}
+        @keyframes ch4PortPulse{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
@@ -4487,6 +4668,14 @@ export default function Roberto() {
         />
       )}
 
+      {phase === "game" && gameFlow === "chapter4Intro" && (
+        <ChapterIntroCard
+          number="4"
+          title={T.ch4.introTitle}
+          label={lang === "it" ? "Capitolo" : "Chapter"}
+          onDone={() => setGameFlow("chapter4")}
+        />
+      )}
 
       {phase === "game" && gameFlow === "chapter2Intro" && (
         <ChapterIntroCard
@@ -4537,7 +4726,7 @@ export default function Roberto() {
         <ChapterThreeScene
           T={T.ch3}
           onBack={handleBack}
-          onComplete={() => setPhase("comingSoon")}
+          onComplete={() => setGameFlow("chapter4Intro")}
           profileUi={{
             title: T.ch1.profileTitle,
             idle: T.ch1.profileIdle,
@@ -4546,6 +4735,23 @@ export default function Roberto() {
           profileEntries={profileMeta.entries}
           unlockedProfileIds={unlockedProfileIds}
           currentProfileId={unlockedProfileIds.includes("synthesis") ? null : "synthesis"}
+          onUnlockProfile={unlockProfile}
+        />
+      )}
+
+      {phase === "game" && gameFlow === "chapter4" && (
+        <ChapterFourScene
+          T={T.ch4}
+          onBack={handleBack}
+          onContact={openContact}
+          profileUi={{
+            title: T.ch1.profileTitle,
+            idle: T.ch1.profileIdle,
+            currentLabel: profileMeta.currentLabel,
+          }}
+          profileEntries={profileMeta.entries}
+          unlockedProfileIds={unlockedProfileIds}
+          currentProfileId={unlockedProfileIds.includes("future") ? null : "future"}
           onUnlockProfile={unlockProfile}
         />
       )}
