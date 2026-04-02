@@ -2027,8 +2027,6 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
     }, 1800);
     return () => {
       if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
-      if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
-      if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
     };
   }, []);
 
@@ -2507,6 +2505,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
   const [scene, setScene] = useState('meadow');
   const [showMeadowFeedback, setShowMeadowFeedback] = useState(false);
   const [showMeadowBirds, setShowMeadowBirds] = useState(false);
+  const [meadowBirdBurstKey, setMeadowBirdBurstKey] = useState(0);
   const [showApproach, setShowApproach] = useState(false);
   const [activated, setActivated] = useState(false);
   const [profileUnlocked, setProfileUnlocked] = useState(false);
@@ -2601,7 +2600,9 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
   const handleStay = useCallback(() => {
     unlockAudio();
     setShowMeadowFeedback(true);
-    setShowMeadowBirds(true);
+    setShowMeadowBirds(false);
+    setMeadowBirdBurstKey((k) => k + 1);
+    requestAnimationFrame(() => setShowMeadowBirds(true));
     if (meadowFeedbackTimeoutRef.current) clearTimeout(meadowFeedbackTimeoutRef.current);
     if (meadowBirdsTimeoutRef.current) clearTimeout(meadowBirdsTimeoutRef.current);
     meadowFeedbackTimeoutRef.current = setTimeout(() => setShowMeadowFeedback(false), 2200);
@@ -2706,7 +2707,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
                 <div className={`ch1-stay-feedback ${showMeadowFeedback ? 'show' : ''}`}>
                   {T.stayFeedback}
                 </div>
-                <div className={`ch1-birds ${showMeadowBirds ? 'show' : ''}`} aria-hidden="true">
+                <div key={meadowBirdBurstKey} className={`ch1-birds ${showMeadowBirds ? 'show' : ''}`} aria-hidden="true">
                   <span className="ch1-bird ch1-bird-a" />
                   <span className="ch1-bird ch1-bird-b" />
                   <span className="ch1-bird ch1-bird-c" />
@@ -2881,8 +2882,6 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
 
     return () => {
       if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
-      if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
-      if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
     };
   }, [expectedId, isComplete]);
 
@@ -3677,10 +3676,10 @@ export default function Roberto() {
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
         .ch1-stay-feedback{position:absolute;right:22px;top:22px;z-index:9;font-size:15px;color:rgba(220,231,222,.85);font-family:Georgia,serif;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.5);opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease}
         .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
-        .ch1-birds{position:absolute;left:-14%;right:-8%;top:9%;height:20%;z-index:7;pointer-events:none;opacity:0;transition:opacity .24s ease}
+        .ch1-birds{position:absolute;left:-8%;right:-2%;top:5%;height:28%;z-index:11;pointer-events:none;opacity:0;transition:opacity .18s ease}
         .ch1-birds.show{opacity:1}
-        .ch1-bird{position:absolute;width:22px;height:10px;color:rgba(12,12,12,.88);opacity:1;filter:drop-shadow(0 1px 0 rgba(220,231,222,.08));animation:ch1BirdPass 2.8s linear forwards}
-        .ch1-bird::before,.ch1-bird::after{content:"";position:absolute;top:0;width:8px;height:3px;background:currentColor}
+        .ch1-bird{position:absolute;width:40px;height:16px;color:rgba(10,10,10,.98);opacity:1;filter:drop-shadow(0 0 0 rgba(245,245,245,.8)) drop-shadow(0 1px 1px rgba(245,245,245,.5));animation:ch1BirdPass 3.1s linear forwards}
+        .ch1-bird::before,.ch1-bird::after{content:"";position:absolute;top:0;width:14px;height:5px;background:currentColor}
         .ch1-bird::before{left:0;transform:skewX(-28deg)}
         .ch1-bird::after{right:0;transform:skewX(28deg)}
         .ch1-bird-a{top:16%;animation-delay:.0s}
@@ -3838,7 +3837,7 @@ export default function Roberto() {
         @keyframes ch2StreetSweepBack{0%,100%{transform:translateX(0) skewX(-13deg);opacity:0}16%{opacity:0}34%{opacity:.032}64%{transform:translateX(272%) skewX(-13deg);opacity:.105}82%{opacity:.024}100%{transform:translateX(272%) skewX(-13deg);opacity:0}}
         @keyframes ch2StreetSweepFront{0%,100%{transform:translateX(0) skewX(-13deg);opacity:0}20%{opacity:0}40%{opacity:.04}70%{transform:translateX(282%) skewX(-13deg);opacity:.145}88%{opacity:.03}100%{transform:translateX(282%) skewX(-13deg);opacity:0}}
         @keyframes ch2MonitorBreath{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.62;transform:scale(1.04)}}
-        @keyframes ch1BirdPass{0%{transform:translateX(0) translateY(0)}45%{transform:translateX(58vw) translateY(-10px)}100%{transform:translateX(112vw) translateY(2px);opacity:0}}
+        @keyframes ch1BirdPass{0%{transform:translateX(0) translateY(0) scale(1)}45%{transform:translateX(56vw) translateY(-12px) scale(1.04)}100%{transform:translateX(108vw) translateY(4px) scale(.98);opacity:0}}
         @keyframes ch2LampPulse{0%,100%{opacity:.74;transform:scale(1)}50%{opacity:.96;transform:scale(1.04)}}
         @keyframes ch2RainBackShift{0%{background-position:0 -6px, 12px 18px}100%{background-position:-18px 56px, -8px 82px}}
         @keyframes ch2RainFrontShift{0%{background-position:8px -10px, 20px 10px}100%{background-position:-22px 72px, -10px 96px}}
@@ -4317,21 +4316,22 @@ export default function Roberto() {
         />
       )}
 
-      {phase === "game" && gameFlow === "chapter2Intro" && (
-        <ChapterIntroCard
-          number="2"
-          title={T.ch2.introTitle}
-          label={lang === "it" ? "Capitolo" : "Chapter"}
-          onDone={() => setGameFlow("chapter2")}
-        />
-      )}
-
       {phase === "game" && gameFlow === "chapter3Intro" && (
         <ChapterIntroCard
           number="3"
           title={T.ch3.introTitle}
           label={lang === "it" ? "Capitolo" : "Chapter"}
           onDone={() => setGameFlow("chapter3")}
+        />
+      )}
+
+
+      {phase === "game" && gameFlow === "chapter2Intro" && (
+        <ChapterIntroCard
+          number="2"
+          title={T.ch2.introTitle}
+          label={lang === "it" ? "Capitolo" : "Chapter"}
+          onDone={() => setGameFlow("chapter2")}
         />
       )}
 
