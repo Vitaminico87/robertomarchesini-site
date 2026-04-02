@@ -26,6 +26,10 @@ const ASSETS = {
   chapter3OpenChatter: "https://www.robertomarchesini.com/assets/chapter3/ch3_open_chatter.wav",
 };
 const CV_DOWNLOAD_URL = "/assets/roberto-marchesini-cv.pdf";
+const HOME_TEASER_ASSETS = {
+  idle: "/assets/clients/child-idle.png",
+  jump: "/assets/clients/child-jump.png",
+};
 
 
 const CASE_STUDIES = {
@@ -808,6 +812,37 @@ function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
         <button className="btn-talk" onClick={onContact}>{lang === "it" ? "Parliamone" : "Let's talk"}</button>
         <button className="top-btn case-study-back-btn" onClick={onBack}>{data.backLabel}</button>
       </div>
+    </div>
+  );
+}
+
+function HomeCestinaTeaser({ active = false }) {
+  const [frame, setFrame] = useState("idle");
+
+  useEffect(() => {
+    if (active) {
+      setFrame("jump");
+      const t = setTimeout(() => setFrame("idle"), 820);
+      return () => clearTimeout(t);
+    }
+
+    const interval = setInterval(() => {
+      setFrame("jump");
+      const t = setTimeout(() => setFrame("idle"), 520);
+      return () => clearTimeout(t);
+    }, 6200);
+
+    return () => clearInterval(interval);
+  }, [active]);
+
+  return (
+    <div className={`home-cestina-teaser ${active ? 'is-active' : ''}`} aria-hidden="true">
+      <img
+        src={frame === "jump" ? HOME_TEASER_ASSETS.jump : HOME_TEASER_ASSETS.idle}
+        alt=""
+        className="home-cestina-teaser-sprite"
+        draggable={false}
+      />
     </div>
   );
 }
@@ -2602,13 +2637,16 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
   const handleStay = useCallback(() => {
     unlockAudio();
     setShowMeadowFeedback(true);
-    setShowMeadowBirds(false);
-    setMeadowBirdBurstKey((k) => k + 1);
-    requestAnimationFrame(() => setShowMeadowBirds(true));
+    meadowStayCountRef.current += 1;
+    const nextDirection = meadowStayCountRef.current % 2 === 1 ? 'left' : 'right';
+    setMeadowKiteDirection(nextDirection);
+    setShowMeadowKite(false);
+    setMeadowKiteBurstKey((k) => k + 1);
+    requestAnimationFrame(() => setShowMeadowKite(true));
     if (meadowFeedbackTimeoutRef.current) clearTimeout(meadowFeedbackTimeoutRef.current);
     if (meadowKiteTimeoutRef.current) clearTimeout(meadowKiteTimeoutRef.current);
     meadowFeedbackTimeoutRef.current = setTimeout(() => setShowMeadowFeedback(false), 2200);
-    meadowBirdsTimeoutRef.current = setTimeout(() => setShowMeadowBirds(false), 2600);
+    meadowKiteTimeoutRef.current = setTimeout(() => setShowMeadowKite(false), 2300);
   }, [unlockAudio]);
 
   const handleToDiscover = useCallback(() => {
@@ -3563,8 +3601,18 @@ export default function Roberto() {
   };
 
   const openContact = () => window.open("mailto:info@robertomarchesini.com", "_blank");
-  const openCaseStudy = useCallback((slug) => setActiveCaseStudy(slug), []);
-  const closeCaseStudy = useCallback(() => setActiveCaseStudy(null), []);
+  const openCaseStudy = useCallback((slug) => {
+    setActiveCaseStudy(slug);
+    if (typeof window !== "undefined") {
+      requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+    }
+  }, []);
+  const closeCaseStudy = useCallback(() => {
+    setActiveCaseStudy(null);
+    if (typeof window !== "undefined") {
+      requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+    }
+  }, []);
 
   return (
     <div style={{ background: "#050505", minHeight: "100vh", color: "#E8E4DE", fontFamily: "'IBM Plex Mono','Courier New',monospace", position: "relative", overflow: "hidden" }}>
@@ -3662,6 +3710,11 @@ export default function Roberto() {
         .pixel-social-link-mobile{padding:8px 10px;background:rgba(7,7,7,.9)}
         .pixel-social-icon{display:flex;align-items:center;justify-content:center;flex:0 0 auto}
         .pixel-social-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;line-height:1}
+        .home-cestina-teaser{position:relative;width:78px;height:108px;display:flex;align-items:flex-end;justify-content:center;opacity:.32;transform:translateX(10px);transition:opacity .28s ease,transform .28s ease,filter .28s ease;filter:drop-shadow(0 0 10px rgba(240,236,230,.06))}
+        .home-cestina-teaser.is-active,.home-cestina-teaser:hover{opacity:.62;transform:translateX(0)}
+        .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:2px;width:38px;height:8px;border-radius:50%;background:rgba(0,0,0,.28);filter:blur(3px);transform:translateX(-50%)}
+        .home-cestina-teaser-sprite{position:relative;z-index:1;width:100%;height:auto;display:block;image-rendering:pixelated;animation:homeTeaserFloat 4.6s ease-in-out infinite;pointer-events:none;user-select:none}
+        @keyframes homeTeaserFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
         
         /* Chapter 1 styles */
         .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,5vh,44px) 16px 20px;padding-bottom:env(safe-area-inset-bottom,20px)}
@@ -4203,6 +4256,9 @@ export default function Roberto() {
             <div style={{ marginBottom: 8 }}>
               <div className="home-pretty" style={{ textAlign: "center", marginBottom: 22, fontSize: 11, color: "#9c9186", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.9, maxWidth: 380, marginInline: "auto" }}>
                 {T.availableFor}
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <HomeCestinaTeaser active={hoverTrash} />
               </div>
               <div className="brow" style={{ display: "flex", gap: 18, justifyContent: "center", alignItems: "center" }}>
                 <button className="btn-trash" onClick={handleTrash}
