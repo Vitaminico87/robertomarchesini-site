@@ -3286,7 +3286,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     finalLineTimeoutRef.current = setTimeout(() => {
       setShowFinalLine(true);
       setShowFutureBtn(true);
-    }, 420);
+    }, 220);
     return () => {
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
@@ -3880,8 +3880,10 @@ export default function Roberto() {
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
-        @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(0) rotate(-8deg)}24%{transform:translateX(16vw) translateY(-6px) rotate(-3deg)}58%{transform:translateX(34vw) translateY(-2px) rotate(4deg)}100%{transform:translateX(56vw) translateY(-8px) rotate(9deg)}}
-        @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(0) rotate(8deg)}24%{transform:translateX(-16vw) translateY(-6px) rotate(3deg)}58%{transform:translateX(-34vw) translateY(-2px) rotate(-4deg)}100%{transform:translateX(-56vw) translateY(-8px) rotate(-9deg)}}
+        @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(2px) rotate(-16deg)}12%{transform:translateX(6vw) translateY(-7px) rotate(-9deg)}26%{transform:translateX(15vw) translateY(-3px) rotate(-2deg)}42%{transform:translateX(25vw) translateY(-10px) rotate(6deg)}58%{transform:translateX(36vw) translateY(-5px) rotate(1deg)}76%{transform:translateX(49vw) translateY(-13px) rotate(10deg)}100%{transform:translateX(64vw) translateY(-7px) rotate(4deg)}}
+        @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(2px) rotate(16deg)}12%{transform:translateX(-6vw) translateY(-7px) rotate(9deg)}26%{transform:translateX(-15vw) translateY(-3px) rotate(2deg)}42%{transform:translateX(-25vw) translateY(-10px) rotate(-6deg)}58%{transform:translateX(-36vw) translateY(-5px) rotate(-1deg)}76%{transform:translateX(-49vw) translateY(-13px) rotate(-10deg)}100%{transform:translateX(-64vw) translateY(-7px) rotate(-4deg)}}
+        @keyframes ch1KiteBodyFlutter{0%,100%{transform:rotate(45deg) skewX(0deg)}50%{transform:rotate(45deg) skewX(3deg)}}
+        @keyframes ch1KiteTailFlutter{0%,100%{opacity:.88}50%{opacity:.56}}
 
         @keyframes homeSignalPulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.72;transform:scale(1.06)}}
         @keyframes homeSignalBlink{0%,84%,100%{opacity:.22}88%{opacity:.7}92%{opacity:.3}}
@@ -3967,12 +3969,12 @@ export default function Roberto() {
         .home-cta-shell{position:relative;width:100%}
         .home-cta-actions{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap;width:100%}
         .home-trash-wrap{position:relative;display:flex;align-items:center;justify-content:center}
-        .home-trash-sidekick{position:absolute;top:50%;left:50%;transform:translate(calc(-50% - 252px), -50%);pointer-events:none;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center}
-        .home-cestina-teaser{position:relative;flex:0 0 auto;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center;opacity:.72;transform:translateY(0);transition:opacity .24s ease,transform .24s ease,filter .24s ease;filter:drop-shadow(0 0 6px rgba(240,236,230,.08))}
-        .home-cestina-teaser.is-active,.home-cta-shell:hover .home-cestina-teaser{opacity:.92;transform:translateY(-1px);filter:drop-shadow(0 0 10px rgba(240,236,230,.12))}
-        .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:1px;width:14px;height:4px;border-radius:50%;background:rgba(0,0,0,.2);filter:blur(2px);transform:translateX(-50%)}
-        .home-cestina-teaser-sprite{position:relative;z-index:1;width:100%;height:auto;display:block;image-rendering:pixelated;animation:homeTeaserSway 5.8s ease-in-out infinite;pointer-events:none;user-select:none;transform-origin:center bottom;opacity:.94}
-        @keyframes homeTeaserSway{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-1px) rotate(1deg)}}
+        .home-trash-sidekick{display:none}
+        .home-cestina-teaser{display:none}
+        .home-cestina-teaser.is-active,.home-cta-shell:hover .home-cestina-teaser{display:none}
+        .home-cestina-teaser::after{display:none}
+        .home-cestina-teaser-sprite{display:none}
+        @keyframes homeTeaserSway{0%,100%{transform:none}50%{transform:none}}
         
         /* Chapter 1 styles */
         .ch1-root{min-height:100dvh;background:#050505;color:#ece7de;font-family:"IBM Plex Mono",monospace;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,5vh,44px) 16px 20px;padding-bottom:env(safe-area-inset-bottom,20px)}
@@ -3995,10 +3997,10 @@ export default function Roberto() {
         .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
         .ch1-kite-burst{position:absolute;left:0;right:0;top:6%;height:26%;z-index:11;pointer-events:none;opacity:0;transition:opacity .18s ease}
         .ch1-kite-burst.show{opacity:1}
-        .ch1-kite{position:absolute;top:10%;width:42px;height:42px;animation-duration:3.6s;animation-timing-function:linear;animation-fill-mode:forwards;filter:drop-shadow(0 1px 1px rgba(255,245,235,.45))}
+        .ch1-kite{position:absolute;top:10%;width:42px;height:42px;animation-duration:4.8s;animation-timing-function:cubic-bezier(.24,.08,.28,1);animation-fill-mode:forwards;filter:drop-shadow(0 1px 1px rgba(255,245,235,.45))}
         .ch1-kite-burst.from-left .ch1-kite{left:-10%;animation-name:ch1KitePassLeft}
         .ch1-kite-burst.from-right .ch1-kite{right:-10%;animation-name:ch1KitePassRight}
-        .ch1-kite-diamond{position:absolute;left:8px;top:4px;width:20px;height:20px;background:rgba(238,86,24,.96);border:1px solid rgba(255,220,198,.35);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
+        .ch1-kite-diamond{position:absolute;left:8px;top:4px;width:20px;height:20px;background:rgba(238,86,24,.96);border:1px solid rgba(255,220,198,.35);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset;animation:ch1KiteBodyFlutter 1.7s ease-in-out infinite}
         .ch1-kite-diamond::before,.ch1-kite-diamond::after{content:'';position:absolute;background:rgba(255,214,188,.72)}
         .ch1-kite-diamond::before{left:9px;top:-1px;width:1px;height:22px;transform:rotate(-45deg);transform-origin:center}
         .ch1-kite-diamond::after{left:-1px;top:9px;width:22px;height:1px;transform:rotate(-45deg);transform-origin:center}
@@ -4006,6 +4008,7 @@ export default function Roberto() {
         .ch1-kite-tail-a{top:25px;height:12px;transform:rotate(18deg)}
         .ch1-kite-tail-b{top:35px;height:11px;left:30px;transform:rotate(-10deg)}
         .ch1-kite-tail-c{top:44px;height:10px;left:27px;transform:rotate(14deg)}
+        .ch1-kite-tail-a,.ch1-kite-tail-b,.ch1-kite-tail-c{animation:ch1KiteTailFlutter 1.35s ease-in-out infinite}
         .ch1-discover-frame{filter:saturate(.96) contrast(1.02) brightness(.97)}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(4,7,10,.10),rgba(5,8,10,.24)),radial-gradient(circle at 20% 68%,rgba(102,156,124,.12),transparent 20%)}
         .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,rgba(0,0,0,.25) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}
@@ -4232,14 +4235,14 @@ export default function Roberto() {
         .ch3-stage.is-transitioning .ch3-vignette{opacity:.78}
         .ch3-transition-wash{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 52%, rgba(255,197,118,.14), rgba(0,0,0,.08) 46%, rgba(0,0,0,.42) 100%);opacity:0;transition:opacity .48s ease}
         .ch3-transition-wash.active{opacity:1}
-        .ch3-synthesis-core-glow{position:absolute;right:6%;top:11%;width:48%;height:64%;pointer-events:none;background:radial-gradient(circle at 58% 46%, rgba(255,219,162,.38) 0%, rgba(255,190,110,.24) 24%, rgba(255,176,92,.12) 42%, rgba(0,0,0,0) 72%);mix-blend-mode:screen;filter:blur(12px);opacity:.76;animation:ch3TreePulse 4.8s ease-in-out infinite}
-        .ch3-synthesis-branch-glow{position:absolute;right:-1%;top:4%;width:68%;height:84%;pointer-events:none;background:linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,184,102,.06) 34%, rgba(255,208,144,.22) 62%, rgba(255,188,110,.08) 100%);mix-blend-mode:screen;filter:blur(6px);opacity:.62;animation:ch3BranchGlow 4.2s ease-in-out infinite}
-        .ch3-synthesis-flow{position:absolute;right:6%;top:7%;width:54%;height:78%;pointer-events:none;clip-path:polygon(16% 6%, 90% 6%, 98% 40%, 94% 86%, 48% 90%, 12% 74%, 0% 34%);background:repeating-linear-gradient(180deg, rgba(255,182,102,.0) 0 9px, rgba(255,196,122,.20) 9px 11px, rgba(255,182,102,.0) 11px 22px);mix-blend-mode:screen;opacity:.28;animation:ch3FlowDrift 7.5s linear infinite}
-        .ch3-synthesis-ground-haze{position:absolute;right:0;bottom:0;width:56%;height:32%;pointer-events:none;background:radial-gradient(ellipse at 58% 74%, rgba(255,182,108,.26) 0%, rgba(255,182,108,.14) 20%, rgba(0,0,0,0) 72%);mix-blend-mode:screen;opacity:.62;animation:ch3GroundBreath 4.6s ease-in-out infinite}
-        .ch3-synthesis-amber-shimmer{position:absolute;right:10%;top:14%;width:40%;height:54%;pointer-events:none;background:linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,222,178,.12) 46%, rgba(255,241,214,.30) 52%, rgba(255,206,142,.10) 58%, rgba(255,255,255,0) 100%);mix-blend-mode:screen;opacity:.32;transform:translateX(-18%);animation:ch3ShimmerSweep 8.2s ease-in-out infinite}
-        .ch3-synthesis-circuit-pulse{position:absolute;right:7%;top:9%;width:52%;height:76%;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.14) 0%, rgba(255,199,124,.06) 20%, rgba(0,0,0,0) 52%);mix-blend-mode:screen;opacity:.34;animation:ch3CircuitPulse 3.8s ease-in-out infinite}
+        .ch3-synthesis-core-glow{position:absolute;right:8%;top:10%;width:44%;height:62%;z-index:3;pointer-events:none;background:radial-gradient(circle at 58% 46%, rgba(255,226,172,.54) 0%, rgba(255,196,118,.34) 24%, rgba(255,176,92,.16) 42%, rgba(0,0,0,0) 74%);mix-blend-mode:screen;filter:blur(10px);opacity:.96;animation:ch3TreePulse 4.2s ease-in-out infinite}
+        .ch3-synthesis-branch-glow{position:absolute;right:-2%;top:3%;width:70%;height:84%;z-index:3;pointer-events:none;background:linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,184,102,.10) 34%, rgba(255,208,144,.32) 62%, rgba(255,188,110,.12) 100%);mix-blend-mode:screen;filter:blur(5px);opacity:.84;animation:ch3BranchGlow 3.9s ease-in-out infinite}
+        .ch3-synthesis-flow{position:absolute;right:8%;top:7%;width:50%;height:78%;z-index:3;pointer-events:none;clip-path:polygon(16% 6%, 90% 6%, 98% 40%, 94% 86%, 48% 90%, 12% 74%, 0% 34%);background:repeating-linear-gradient(180deg, rgba(255,182,102,.0) 0 8px, rgba(255,200,126,.34) 8px 11px, rgba(255,182,102,.0) 11px 20px);mix-blend-mode:screen;opacity:.46;animation:ch3FlowDrift 6.6s linear infinite}
+        .ch3-synthesis-ground-haze{position:absolute;right:0;bottom:0;width:56%;height:32%;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 58% 74%, rgba(255,188,118,.34) 0%, rgba(255,182,108,.18) 20%, rgba(0,0,0,0) 72%);mix-blend-mode:screen;opacity:.8;animation:ch3GroundBreath 4.4s ease-in-out infinite}
+        .ch3-synthesis-amber-shimmer{position:absolute;right:10%;top:14%;width:40%;height:54%;z-index:3;pointer-events:none;background:linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,222,178,.16) 46%, rgba(255,241,214,.40) 52%, rgba(255,206,142,.14) 58%, rgba(255,255,255,0) 100%);mix-blend-mode:screen;opacity:.42;transform:translateX(-18%);animation:ch3ShimmerSweep 7.2s ease-in-out infinite}
+        .ch3-synthesis-circuit-pulse{position:absolute;right:8%;top:8%;width:50%;height:76%;z-index:3;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.22) 0%, rgba(255,199,124,.10) 20%, rgba(0,0,0,0) 52%);mix-blend-mode:screen;opacity:.5;animation:ch3CircuitPulse 3.2s ease-in-out infinite}
         .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.14) 72%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(12,8,7,.08) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.26) 100%)}
-        .ch3-distant-kite{position:absolute;left:18%;top:15%;width:18%;height:16%;pointer-events:none;opacity:.9;animation:ch3KiteDrift 12s ease-in-out infinite}
+        .ch3-distant-kite{position:absolute;left:34%;top:19%;width:18%;height:16%;z-index:4;pointer-events:none;opacity:.92;animation:ch3KiteDrift 12s ease-in-out infinite}
         .ch3-kite{position:absolute;left:28%;top:22%;width:18px;height:18px;filter:drop-shadow(0 0 6px rgba(255,214,188,.18))}
         .ch3-kite-diamond{position:absolute;left:4px;top:2px;width:8px;height:8px;background:rgba(238,86,24,.96);border:1px solid rgba(255,220,198,.28);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
         .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.68)}
@@ -4249,9 +4252,9 @@ export default function Roberto() {
         .ch3-kite-tail-a{top:10px;height:5px;transform:rotate(18deg)}
         .ch3-kite-tail-b{top:14px;height:4px;left:12px;transform:rotate(-10deg)}
         .ch3-kite-tail-c{top:18px;height:4px;left:10px;transform:rotate(14deg)}
-        .ch3-line-block-final{border-top-color:rgba(255,214,168,.24);background:linear-gradient(180deg, rgba(10,7,6,.22) 0%, rgba(7,6,5,.46) 18%, rgba(5,5,5,.84) 100%);box-shadow:0 -12px 28px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,222,184,.06);backdrop-filter:blur(6px);opacity:0;transform:translateY(12px);transition:opacity .7s ease, transform .7s ease}
+        .ch3-line-block-final{z-index:9;border-top-color:rgba(255,214,168,.28);background:linear-gradient(180deg, rgba(12,8,7,.30) 0%, rgba(8,6,5,.62) 22%, rgba(5,5,5,.92) 100%);box-shadow:0 -14px 30px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,222,184,.08);backdrop-filter:blur(7px);opacity:0;transform:translateY(12px);transition:opacity .7s ease, transform .7s ease}
         .ch3-line-block-final.show{opacity:1;transform:translateY(0)}
-        .ch3-line-final{white-space:normal;text-align:center;max-width:760px;margin:0 auto;line-height:1.14;text-shadow:0 1px 0 rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.22)}
+        .ch3-line-final{white-space:normal;text-align:center;max-width:760px;margin:0 auto;line-height:1.14;color:rgba(246,236,221,.98);text-shadow:0 1px 0 rgba(0,0,0,.28), 0 8px 24px rgba(0,0,0,.42)}
         .ch3-controls-final{justify-content:center}
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
@@ -4269,12 +4272,12 @@ export default function Roberto() {
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
           .ch3-line-final{font-size:clamp(18px,5.2vw,26px);line-height:1.16}
-          .ch3-synthesis-core-glow{right:2%;top:12%;width:60%;height:56%;opacity:.86}
-          .ch3-synthesis-branch-glow{right:-4%;width:78%;height:78%;opacity:.68}
-          .ch3-synthesis-flow{right:0;width:72%;height:76%;opacity:.34}
-          .ch3-synthesis-amber-shimmer{right:0;width:60%;height:58%;opacity:.26}
-          .ch3-synthesis-circuit-pulse{right:0;width:70%;height:78%}
-          .ch3-distant-kite{left:12%;top:13%;width:24%;height:18%}
+          .ch3-synthesis-core-glow{right:3%;top:12%;width:60%;height:56%;opacity:.98}
+          .ch3-synthesis-branch-glow{right:-4%;width:78%;height:78%;opacity:.82}
+          .ch3-synthesis-flow{right:2%;width:72%;height:76%;opacity:.44}
+          .ch3-synthesis-amber-shimmer{right:2%;width:60%;height:58%;opacity:.34}
+          .ch3-synthesis-circuit-pulse{right:2%;width:70%;height:78%;opacity:.54}
+          .ch3-distant-kite{left:28%;top:16%;width:24%;height:18%}
           .ch3-kite{transform:scale(.9)}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
@@ -4580,9 +4583,6 @@ export default function Roberto() {
                 {T.availableFor}
               </div>
               <div className="home-cta-shell">
-                <div className="home-trash-sidekick" aria-hidden="true">
-                  <HomeCestinaTeaser active={hoverTrash} />
-                </div>
                 <div className="home-cta-actions">
                   <div className="home-trash-wrap">
                     <button className="btn-trash" onClick={handleTrash}
