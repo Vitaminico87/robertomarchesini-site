@@ -2500,12 +2500,14 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
   const mountCrossingTimeoutRef = useRef(null);
   const swoshTimeoutRef = useRef(null);
   const meadowFeedbackTimeoutRef = useRef(null);
-  const meadowBirdsTimeoutRef = useRef(null);
+  const meadowKiteTimeoutRef = useRef(null);
 
   const [scene, setScene] = useState('meadow');
   const [showMeadowFeedback, setShowMeadowFeedback] = useState(false);
-  const [showMeadowBirds, setShowMeadowBirds] = useState(false);
-  const [meadowBirdBurstKey, setMeadowBirdBurstKey] = useState(0);
+  const [showMeadowKite, setShowMeadowKite] = useState(false);
+  const [meadowKiteBurstKey, setMeadowKiteBurstKey] = useState(0);
+  const [meadowKiteDirection, setMeadowKiteDirection] = useState('left');
+  const meadowStayCountRef = useRef(0);
   const [showApproach, setShowApproach] = useState(false);
   const [activated, setActivated] = useState(false);
   const [profileUnlocked, setProfileUnlocked] = useState(false);
@@ -2593,7 +2595,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
       if (mountCrossingTimeoutRef.current) clearTimeout(mountCrossingTimeoutRef.current);
       if (swoshTimeoutRef.current) clearTimeout(swoshTimeoutRef.current);
       if (meadowFeedbackTimeoutRef.current) clearTimeout(meadowFeedbackTimeoutRef.current);
-      if (meadowBirdsTimeoutRef.current) clearTimeout(meadowBirdsTimeoutRef.current);
+      if (meadowKiteTimeoutRef.current) clearTimeout(meadowKiteTimeoutRef.current);
     };
   }, []);
 
@@ -2604,7 +2606,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
     setMeadowBirdBurstKey((k) => k + 1);
     requestAnimationFrame(() => setShowMeadowBirds(true));
     if (meadowFeedbackTimeoutRef.current) clearTimeout(meadowFeedbackTimeoutRef.current);
-    if (meadowBirdsTimeoutRef.current) clearTimeout(meadowBirdsTimeoutRef.current);
+    if (meadowKiteTimeoutRef.current) clearTimeout(meadowKiteTimeoutRef.current);
     meadowFeedbackTimeoutRef.current = setTimeout(() => setShowMeadowFeedback(false), 2200);
     meadowBirdsTimeoutRef.current = setTimeout(() => setShowMeadowBirds(false), 2600);
   }, [unlockAudio]);
@@ -2707,11 +2709,13 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
                 <div className={`ch1-stay-feedback ${showMeadowFeedback ? 'show' : ''}`}>
                   {T.stayFeedback}
                 </div>
-                <div key={meadowBirdBurstKey} className={`ch1-birds ${showMeadowBirds ? 'show' : ''}`} aria-hidden="true">
-                  <span className="ch1-bird ch1-bird-a" />
-                  <span className="ch1-bird ch1-bird-b" />
-                  <span className="ch1-bird ch1-bird-c" />
-                  <span className="ch1-bird ch1-bird-d" />
+                <div key={meadowKiteBurstKey} className={`ch1-kite-burst ${showMeadowKite ? 'show' : ''} ${meadowKiteDirection === 'right' ? 'from-right' : 'from-left'}`} aria-hidden="true">
+                  <span className="ch1-kite">
+                    <span className="ch1-kite-diamond" />
+                    <span className="ch1-kite-tail ch1-kite-tail-a" />
+                    <span className="ch1-kite-tail ch1-kite-tail-b" />
+                    <span className="ch1-kite-tail ch1-kite-tail-c" />
+                  </span>
                 </div>
               </section>
 
@@ -3579,6 +3583,8 @@ export default function Roberto() {
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
+        @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(0) rotate(-8deg)}20%{transform:translateX(22vw) translateY(-8px) rotate(-2deg)}55%{transform:translateX(48vw) translateY(-2px) rotate(6deg)}100%{transform:translateX(74vw) translateY(-10px) rotate(12deg)}}
+        @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(0) rotate(8deg)}20%{transform:translateX(-22vw) translateY(-8px) rotate(2deg)}55%{transform:translateX(-48vw) translateY(-2px) rotate(-6deg)}100%{transform:translateX(-74vw) translateY(-10px) rotate(-12deg)}}
 
         @keyframes homeSignalPulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.72;transform:scale(1.06)}}
         @keyframes homeSignalBlink{0%,84%,100%{opacity:.22}88%{opacity:.7}92%{opacity:.3}}
@@ -3676,16 +3682,19 @@ export default function Roberto() {
         .ch1-meadow-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08));z-index:3}
         .ch1-stay-feedback{position:absolute;right:22px;top:22px;z-index:9;font-size:15px;color:rgba(220,231,222,.85);font-family:Georgia,serif;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.5);opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease}
         .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
-        .ch1-birds{position:absolute;left:-8%;right:-2%;top:5%;height:28%;z-index:11;pointer-events:none;opacity:0;transition:opacity .18s ease}
-        .ch1-birds.show{opacity:1}
-        .ch1-bird{position:absolute;width:40px;height:16px;color:rgba(10,10,10,.98);opacity:1;filter:drop-shadow(0 0 0 rgba(245,245,245,.8)) drop-shadow(0 1px 1px rgba(245,245,245,.5));animation:ch1BirdPass 3.1s linear forwards}
-        .ch1-bird::before,.ch1-bird::after{content:"";position:absolute;top:0;width:14px;height:5px;background:currentColor}
-        .ch1-bird::before{left:0;transform:skewX(-28deg)}
-        .ch1-bird::after{right:0;transform:skewX(28deg)}
-        .ch1-bird-a{top:16%;animation-delay:.0s}
-        .ch1-bird-b{top:28%;animation-delay:.14s;transform:scale(.85)}
-        .ch1-bird-c{top:11%;animation-delay:.28s;transform:scale(1.1)}
-        .ch1-bird-d{top:24%;animation-delay:.42s;transform:scale(.72)}
+        .ch1-kite-burst{position:absolute;left:0;right:0;top:6%;height:26%;z-index:11;pointer-events:none;opacity:0;transition:opacity .18s ease}
+        .ch1-kite-burst.show{opacity:1}
+        .ch1-kite{position:absolute;top:10%;width:42px;height:42px;animation-duration:2.2s;animation-timing-function:linear;animation-fill-mode:forwards;filter:drop-shadow(0 1px 1px rgba(255,245,235,.45))}
+        .ch1-kite-burst.from-left .ch1-kite{left:-10%;animation-name:ch1KitePassLeft}
+        .ch1-kite-burst.from-right .ch1-kite{right:-10%;animation-name:ch1KitePassRight}
+        .ch1-kite-diamond{position:absolute;left:8px;top:4px;width:20px;height:20px;background:rgba(238,86,24,.96);border:1px solid rgba(255,220,198,.35);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
+        .ch1-kite-diamond::before,.ch1-kite-diamond::after{content:'';position:absolute;background:rgba(255,214,188,.72)}
+        .ch1-kite-diamond::before{left:9px;top:-1px;width:1px;height:22px;transform:rotate(-45deg);transform-origin:center}
+        .ch1-kite-diamond::after{left:-1px;top:9px;width:22px;height:1px;transform:rotate(-45deg);transform-origin:center}
+        .ch1-kite-tail{position:absolute;left:28px;width:1px;background:rgba(255,222,204,.62);transform-origin:top center}
+        .ch1-kite-tail-a{top:25px;height:12px;transform:rotate(18deg)}
+        .ch1-kite-tail-b{top:35px;height:11px;left:30px;transform:rotate(-10deg)}
+        .ch1-kite-tail-c{top:44px;height:10px;left:27px;transform:rotate(14deg)}
         .ch1-discover-frame{filter:saturate(.96) contrast(1.02) brightness(.97)}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(4,7,10,.10),rgba(5,8,10,.24)),radial-gradient(circle at 20% 68%,rgba(102,156,124,.12),transparent 20%)}
         .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,rgba(0,0,0,.25) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}
