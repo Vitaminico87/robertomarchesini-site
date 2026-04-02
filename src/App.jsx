@@ -230,6 +230,7 @@ const LANG = {
       { title: "Esperienze digitali", subtitle: "Siti, pagine, percorsi", desc: "Costruisco architetture ed esperienze digitali più chiare, credibili e utili, dal sito alle landing fino ai principali punti di contatto.", mobileDesc: "Costruisco siti, landing e percorsi più chiari." },
       { title: "Workflow creativi con AI", subtitle: "Velocità, varianti, controllo", desc: "Uso l’AI per aumentare possibilità e controllo nei processi creativi, senza trasformare il lavoro in produzione automatica di rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
     ],
+    selectedWorkKicker: "Selezione",
     selectedWorkLabel: "Lavori scelti",
     selectedWorkSub: "Tre progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
     selectedWorkMobileSub: "Progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
@@ -419,6 +420,7 @@ const LANG = {
       { title: "Digital experiences", subtitle: "Websites, pages, journeys", desc: "I build clearer, more credible, and more useful digital structures and experiences, from websites and landing pages to key touchpoints.", mobileDesc: "I build clearer websites, landing pages, and journeys." },
       { title: "AI creative workflows", subtitle: "Speed, variation, control", desc: "I use AI to expand possibilities and control inside creative processes, without turning the work into automated noise.", mobileDesc: "I use AI to expand possibilities and control." },
     ],
+    selectedWorkKicker: "Selection",
     selectedWorkLabel: "Selected Work",
     selectedWorkSub: "Three real projects. Clear responsibility. Structures that had to hold up.",
     selectedWorkMobileSub: "Real projects. Clear responsibility. Structures that had to hold up.",
@@ -4674,7 +4676,7 @@ export default function Roberto() {
               {/* Header sezione: kicker + titolo + sottotitolo a due colonne */}
               <div style={{ borderTop: "1px solid rgba(255,255,255,.09)", paddingTop: 22, marginBottom: isMobileViewport ? 40 : 52 }}>
                 <div style={{ fontSize: 9, letterSpacing: 3, color: "#4a4540", fontFamily: "'IBM Plex Mono',monospace", textTransform: "uppercase", marginBottom: 14 }}>
-                  {T.selectedWorkLabel}
+                  {T.selectedWorkKicker}
                 </div>
                 <div style={{
                   display: isMobileViewport ? "block" : "grid",
@@ -4845,19 +4847,49 @@ export default function Roberto() {
                 </div>
               </div>
             </div>
+            <div style={{ textAlign: "center", marginTop: 28, fontSize: 11, color: "#3d3a36", fontFamily: "'IBM Plex Mono',monospace", letterSpacing: 0.6, lineHeight: 1.7, fontStyle: "italic" }}>
+              {T.hintTrash}
+            </div>
           </Section>
 
-          <div style={{
-            borderTop: "1px solid #0F0F0F", padding: "24px 0 10px", marginTop: 72,
-            display: "flex", justifyContent: "center", alignItems: "center", gap: 16, flexWrap: "wrap",
-            fontSize: 10, letterSpacing: .8, fontFamily: "'IBM Plex Mono',monospace",
+          <footer style={{
+            borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 40, marginTop: 80,
+            paddingBottom: 32, fontFamily: "'IBM Plex Mono',monospace",
           }}>
-            <span className="foot-l">{T.footerPiva}</span>
-            <span style={{ color: "#1A1A1A" }}>·</span>
-            <span className="foot-l">{T.footerPrivacy}</span>
-            <span style={{ color: "#1A1A1A" }}>·</span>
-            <span className="foot-l" onClick={openContact}>info@robertomarchesini.com</span>
-          </div>
+            {/* Footer top: nome + social */}
+            <div style={{
+              display: "flex", justifyContent: "space-between", alignItems: "flex-start",
+              flexWrap: "wrap", gap: 20, marginBottom: 28,
+            }}>
+              <div>
+                <div style={{ fontSize: 13, color: "#E8E4DE", fontFamily: "'Playfair Display',serif", fontStyle: "italic", marginBottom: 6 }}>
+                  Roberto Marchesini
+                </div>
+                <div style={{ fontSize: 9, letterSpacing: 2.2, color: "#4a4540", textTransform: "uppercase" }}>
+                  Creative Director · AI Systems
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                <a href="https://www.instagram.com/roberto_marchesini_/" target="_blank" rel="noopener noreferrer" className="foot-l" style={{ fontSize: 9, letterSpacing: 1.4, textTransform: "uppercase", textDecoration: "none" }}>Instagram</a>
+                <a href="https://www.linkedin.com/in/robertocreativegrowth/" target="_blank" rel="noopener noreferrer" className="foot-l" style={{ fontSize: 9, letterSpacing: 1.4, textTransform: "uppercase", textDecoration: "none" }}>LinkedIn</a>
+                <span className="foot-l" style={{ fontSize: 9, letterSpacing: 1.4, textTransform: "uppercase", cursor: "pointer" }} onClick={openContact}>Contatto</span>
+              </div>
+            </div>
+            {/* Footer bottom: legal */}
+            <div style={{
+              borderTop: "1px solid rgba(255,255,255,.04)", paddingTop: 18,
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              flexWrap: "wrap", gap: 12,
+              fontSize: 9, letterSpacing: .6, color: "#333",
+            }}>
+              <span>© {new Date().getFullYear()} Roberto Marchesini</span>
+              <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                <span className="foot-l">{T.footerPiva}</span>
+                <span style={{ color: "#1A1A1A" }}>·</span>
+                <span className="foot-l">{T.footerPrivacy}</span>
+              </div>
+            </div>
+          </footer>
         </div>
       )}
 
