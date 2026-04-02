@@ -355,9 +355,16 @@ const LANG = {
     ch4: {
       kicker: "Capitolo 4 · Futuro",
       introTitle: "Futuro",
-      prompt: "Inserisci il controller per giocare il Capitolo 4.",
+      prompt: "Inserisci il controller.",
       promptSub: "Qui non si chiude niente. Si apre in due.",
+      syncTitle: "Stabilizza il segnale.",
+      syncSub: "Allinea tre canali. Basta il centro.",
+      syncIdleLine: "Tre canali. Un solo ritmo.",
+      channelLabel: "Canale",
+      channelLocked: "Canale stabile.",
+      channelRetry: "Fuori soglia. Riprova.",
       connectBtn: "Inserisci il controller",
+      syncBtn: "Stabilizza",
       connectedLine: "Secondo controller connesso.",
       connectedHintDesktop: "Premi Enter per iniziare.",
       connectedHintMobile: "Tocca per iniziare.",
@@ -535,9 +542,16 @@ const LANG = {
     ch4: {
       kicker: "Chapter 4 · Future",
       introTitle: "Future",
-      prompt: "Insert the controller to play Chapter 4.",
+      prompt: "Insert the controller.",
       promptSub: "Nothing closes here. It opens with someone else.",
+      syncTitle: "Stabilize the signal.",
+      syncSub: "Align three channels. The center is enough.",
+      syncIdleLine: "Three channels. One shared rhythm.",
+      channelLabel: "Channel",
+      channelLocked: "Channel stable.",
+      channelRetry: "Out of band. Try again.",
       connectBtn: "Insert controller",
+      syncBtn: "Stabilize",
       connectedLine: "Second controller connected.",
       connectedHintDesktop: "Press Enter to begin.",
       connectedHintMobile: "Tap to begin.",
@@ -3206,7 +3220,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
             </div>
             <div className="ch1-controls-slot">
               {deskTransitioning ? (
-                <div className="ch2-desk-transition-copy">{T.streetBridgeHint}</div>
+                <div className="ch2-desk-transition-copy" aria-hidden="true" />
               ) : (
                 <div className="ch1-controls ch2-controls">
                   <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
@@ -3286,7 +3300,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     setShowFinalLine(true);
     finalLineTimeoutRef.current = setTimeout(() => {
       setShowFutureBtn(true);
-    }, 140);
+    }, 180);
     return () => {
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
@@ -3342,7 +3356,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     setFinalFade(true);
     continueTimeoutRef.current = setTimeout(() => {
       onComplete?.();
-    }, 420);
+    }, 180);
   }, [scene, onComplete]);
 
   return (
@@ -3432,10 +3446,40 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
 }
 
 function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
-  const [controllerInserted, setControllerInserted] = useState(false);
+  const [stageStep, setStageStep] = useState("insert");
+  const [activeChannel, setActiveChannel] = useState(0);
+  const [lockedChannels, setLockedChannels] = useState([false, false, false]);
+  const [statusTone, setStatusTone] = useState("idle");
   const [showCTA, setShowCTA] = useState(false);
   const [isMobileHint, setIsMobileHint] = useState(false);
+  const [signalRunKey, setSignalRunKey] = useState(0);
+  const feedbackTimeoutRef = useRef(null);
   const ctaTimeoutRef = useRef(null);
+  const phaseStartRef = useRef(0);
+  const channelDurations = useMemo(() => [1820, 1560, 1280], []);
+  const targetWindows = useMemo(() => [0.12, 0.105, 0.095], []);
+  const channelAccents = useMemo(() => ["#7A5CFF", "#9274FF", "#B3A1FF"], []);
+  const channelMarks = useMemo(() => ["I", "II", "III"], []);
+
+  const stopPulse = useCallback(() => {
+    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+    feedbackTimeoutRef.current = null;
+  }, []);
+
+  const pulseStatus = useCallback((tone = "idle", hold = 560) => {
+    stopPulse();
+    setStatusTone(tone);
+    if (tone === "connected") return;
+    feedbackTimeoutRef.current = setTimeout(() => {
+      setStatusTone("idle");
+      feedbackTimeoutRef.current = null;
+    }, hold);
+  }, [stopPulse]);
+
+  const resetSignal = useCallback(() => {
+    phaseStartRef.current = (typeof performance !== "undefined" ? performance.now() : Date.now());
+    setSignalRunKey((value) => value + 1);
+  }, []);
 
   useEffect(() => {
     const update = () => {
@@ -3449,42 +3493,138 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
 
   useEffect(() => {
     return () => {
+      stopPulse();
       if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
     };
-  }, []);
+  }, [stopPulse]);
 
   useEffect(() => {
-    if (!controllerInserted) return;
+    if (stageStep !== "connected") return;
     onUnlockProfile?.("future");
     if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
-    ctaTimeoutRef.current = setTimeout(() => setShowCTA(true), 520);
-  }, [controllerInserted, onUnlockProfile]);
+    ctaTimeoutRef.current = setTimeout(() => setShowCTA(true), 760);
+    return () => {
+      if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
+    };
+  }, [stageStep, onUnlockProfile]);
 
-  const handleAdvance = useCallback(() => {
-    if (!controllerInserted) {
-      setControllerInserted(true);
+  const getChannelProgress = useCallback((index, now) => {
+    const duration = channelDurations[index] || channelDurations[0];
+    const timestamp = typeof now === "number" ? now : (typeof performance !== "undefined" ? performance.now() : Date.now());
+    const elapsed = ((timestamp - phaseStartRef.current) % duration + duration) % duration;
+    const cycle = elapsed / duration;
+    return cycle < 0.5 ? cycle * 2 : (1 - cycle) * 2;
+  }, [channelDurations]);
+
+  const beginSync = useCallback(() => {
+    setStageStep("sync");
+    setActiveChannel(0);
+    setLockedChannels([false, false, false]);
+    setShowCTA(false);
+    pulseStatus("idle");
+    resetSignal();
+  }, [pulseStatus, resetSignal]);
+
+  const finishConnection = useCallback(() => {
+    setStageStep("connected");
+    setShowCTA(false);
+    setStatusTone("connected");
+    stopPulse();
+  }, [stopPulse]);
+
+  const attemptSync = useCallback(() => {
+    const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+    const progress = getChannelProgress(activeChannel, now);
+    const distance = Math.abs(progress - 0.5);
+    const threshold = targetWindows[activeChannel] || targetWindows[targetWindows.length - 1];
+
+    if (distance <= threshold) {
+      const nextLocked = lockedChannels.map((locked, index) => (index === activeChannel ? true : locked));
+      setLockedChannels(nextLocked);
+      if (activeChannel >= nextLocked.length - 1) {
+        finishConnection();
+        return;
+      }
+      pulseStatus("success", 640);
+      setActiveChannel((value) => value + 1);
+      resetSignal();
       return;
     }
-    onContact?.();
-  }, [controllerInserted, onContact]);
 
-  const PixelController = ({ accent = "#111", shell = "#111", details = "#f5f2eb", ghost = false }) => (
+    pulseStatus("error", 460);
+    resetSignal();
+  }, [activeChannel, finishConnection, getChannelProgress, lockedChannels, pulseStatus, resetSignal, targetWindows]);
+
+  const handleAdvance = useCallback(() => {
+    if (stageStep === "insert") {
+      beginSync();
+      return;
+    }
+    if (stageStep === "sync") {
+      attemptSync();
+      return;
+    }
+    if (stageStep === "connected") {
+      if (!showCTA) return;
+      onContact?.();
+    }
+  }, [attemptSync, beginSync, onContact, showCTA, stageStep]);
+
+  const lockedCount = lockedChannels.filter(Boolean).length;
+  const stageTitle = stageStep === "insert"
+    ? T.prompt
+    : stageStep === "sync"
+      ? T.syncTitle
+      : T.connectedLine;
+  const stageSubline = stageStep === "insert"
+    ? T.promptSub
+    : stageStep === "sync"
+      ? T.syncSub
+      : (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop);
+  const statusText = stageStep === "connected"
+    ? T.connectedLine
+    : stageStep === "sync"
+      ? (statusTone === "success" ? T.channelLocked : statusTone === "error" ? T.channelRetry : T.syncIdleLine)
+      : T.connectBtn;
+  const primaryControlLabel = stageStep === "insert"
+    ? T.connectBtn
+    : stageStep === "sync"
+      ? `${T.syncBtn} · ${activeChannel + 1}/3`
+      : T.ctaBtn;
+  const stageToneColor = stageStep === "connected"
+    ? "#d6cdfd"
+    : stageStep === "sync"
+      ? "#bcaefe"
+      : "#9d90cf";
+  const stageAccentColor = stageStep === "connected"
+    ? "#b39aff"
+    : stageStep === "sync"
+      ? channelAccents[activeChannel] || channelAccents[0]
+      : "#7055ff";
+  const bridgeWidth = stageStep === "insert"
+    ? 0
+    : stageStep === "connected"
+      ? 52
+      : 18 + lockedCount * 11;
+
+  const PixelController = ({ accent = "#7A5CFF", shell = "#11131b", details = "#f4f1ff", ghost = false, lit = false }) => (
     <div style={{
       position: "relative",
       width: 224,
       height: 120,
-      opacity: ghost ? .26 : 1,
-      filter: ghost ? "none" : "drop-shadow(0 16px 28px rgba(0,0,0,.12))",
+      opacity: ghost ? .22 : 1,
+      filter: ghost ? "none" : `drop-shadow(0 18px 34px rgba(0,0,0,.28)) drop-shadow(0 0 24px ${lit ? "rgba(122,92,255,.22)" : "rgba(0,0,0,.1)"})`,
+      transition: "opacity .4s ease, filter .4s ease",
     }}>
-      <div style={{ position: "absolute", inset: "18px 38px 22px 38px", borderRadius: 38, background: shell, border: `1px solid ${ghost ? "rgba(16,16,16,.08)" : "rgba(16,16,16,.16)"}` }} />
-      <div style={{ position: "absolute", left: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(16,16,16,.08)" : "rgba(16,16,16,.16)"}` }} />
-      <div style={{ position: "absolute", right: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(16,16,16,.08)" : "rgba(16,16,16,.16)"}` }} />
-      <div style={{ position: "absolute", left: 60, top: 52, width: 28, height: 8, borderRadius: 999, background: details, opacity: ghost ? .5 : 1 }} />
-      <div style={{ position: "absolute", left: 70, top: 42, width: 8, height: 28, borderRadius: 999, background: details, opacity: ghost ? .5 : 1 }} />
-      <div style={{ position: "absolute", right: 58, top: 44, width: 12, height: 12, borderRadius: 999, background: details, boxShadow: `20px 0 0 ${details}, 10px -10px 0 ${details}, 10px 10px 0 ${details}`, opacity: ghost ? .5 : 1 }} />
-      <div style={{ position: "absolute", left: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .4 : .9 }} />
-      <div style={{ position: "absolute", right: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .4 : .9 }} />
-      <div style={{ position: "absolute", left: 107, top: 34, width: 10, height: 10, borderRadius: 999, background: accent, boxShadow: `0 0 0 6px ${ghost ? "rgba(16,16,16,.06)" : "rgba(255,255,255,.45)"}`, opacity: ghost ? .45 : 1 }} />
+      <div style={{ position: "absolute", inset: "18px 38px 22px 38px", borderRadius: 38, background: shell, border: `1px solid ${ghost ? "rgba(221,214,255,.06)" : "rgba(214,205,253,.14)"}` }} />
+      <div style={{ position: "absolute", left: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(221,214,255,.05)" : "rgba(214,205,253,.12)"}` }} />
+      <div style={{ position: "absolute", right: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(221,214,255,.05)" : "rgba(214,205,253,.12)"}` }} />
+      <div style={{ position: "absolute", left: 60, top: 52, width: 28, height: 8, borderRadius: 999, background: details, opacity: ghost ? .32 : .86 }} />
+      <div style={{ position: "absolute", left: 70, top: 42, width: 8, height: 28, borderRadius: 999, background: details, opacity: ghost ? .32 : .86 }} />
+      <div style={{ position: "absolute", right: 58, top: 44, width: 12, height: 12, borderRadius: 999, background: details, boxShadow: `20px 0 0 ${details}, 10px -10px 0 ${details}, 10px 10px 0 ${details}`, opacity: ghost ? .3 : .84 }} />
+      <div style={{ position: "absolute", left: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .22 : .72 }} />
+      <div style={{ position: "absolute", right: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .22 : .72 }} />
+      <div style={{ position: "absolute", left: 107, top: 34, width: 10, height: 10, borderRadius: 999, background: accent, boxShadow: lit ? `0 0 0 7px rgba(122,92,255,.14), 0 0 28px rgba(122,92,255,.28)` : `0 0 0 6px ${ghost ? "rgba(122,92,255,.05)" : "rgba(122,92,255,.08)"}`, opacity: ghost ? .34 : 1, transition: "all .32s ease" }} />
     </div>
   );
 
@@ -3502,6 +3642,7 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
           className="ch2-stage"
           role="button"
           tabIndex={0}
+          aria-label={stageTitle}
           onClick={handleAdvance}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -3511,62 +3652,103 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
           }}
           style={{
             position: "relative",
-            background: "#f5f2eb",
-            border: "1px solid rgba(20,20,20,.12)",
-            boxShadow: "0 0 0 1px rgba(0,0,0,.03), 0 30px 70px rgba(0,0,0,.14)",
-            cursor: "pointer",
+            background: "#090913",
+            border: "1px solid rgba(150,132,255,.16)",
+            boxShadow: "0 0 0 1px rgba(122,92,255,.08), 0 34px 90px rgba(0,0,0,.48)",
+            cursor: showCTA || stageStep !== "connected" ? "pointer" : "default",
             overflow: "hidden",
           }}
         >
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 62%, rgba(255,255,255,.82) 0%, rgba(245,242,235,.96) 42%, rgba(236,231,221,.98) 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, opacity: .18, backgroundImage: "linear-gradient(to right, rgba(16,16,16,.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(16,16,16,.02) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,0) 26%, rgba(16,16,16,.04) 100%)" }} />
-          <div style={{ position: "absolute", left: "50%", bottom: "18%", width: "66%", height: "22%", transform: "translateX(-50%)", background: "radial-gradient(circle, rgba(16,16,16,.08) 0%, rgba(16,16,16,.04) 34%, rgba(16,16,16,0) 72%)", filter: "blur(18px)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 36%, rgba(102,79,218,.34) 0%, rgba(47,35,88,.52) 24%, rgba(12,12,22,.96) 62%, rgba(7,8,14,1) 100%)" }} />
+          <div style={{ position: "absolute", inset: 0, opacity: .16, backgroundImage: "linear-gradient(to right, rgba(214,205,253,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(214,205,253,.04) 1px, transparent 1px)", backgroundSize: "34px 34px" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,0) 22%, rgba(0,0,0,.22) 100%)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 82%, rgba(122,92,255,.14), rgba(0,0,0,0) 44%)", animation: "ch4AuraPulse 6s ease-in-out infinite" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "repeating-linear-gradient(180deg, rgba(255,255,255,.018) 0px, rgba(255,255,255,.018) 1px, transparent 1px, transparent 4px)", opacity: .1 }} />
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, transparent 34%, rgba(0,0,0,.22) 72%, rgba(0,0,0,.58) 100%)" }} />
 
-          <div style={{ position: "absolute", top: "9%", left: "50%", transform: "translateX(-50%)", textAlign: "center", width: "100%", padding: "0 28px", zIndex: 3 }}>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.8, textTransform: "uppercase", color: "#80766b", marginBottom: 14 }}>{T.prompt}</div>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(18px, 2.4vw, 26px)", lineHeight: 1.2, color: "#141414", opacity: .86 }}>{T.promptSub}</div>
+          <div style={{ position: "absolute", top: "9%", left: "50%", transform: "translateX(-50%)", textAlign: "center", width: "100%", padding: "0 28px", zIndex: 4 }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.9, textTransform: "uppercase", color: stageToneColor, marginBottom: 14, opacity: .92 }}>{stageStep === "sync" ? `${T.channelLabel} ${activeChannel + 1}/3` : T.kicker}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 34px)", lineHeight: 1.12, color: "#f3efff", marginBottom: 12, textWrap: "balance" }}>{stageTitle}</div>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, lineHeight: 1.85, letterSpacing: .05, color: "rgba(224,217,255,.72)", maxWidth: 480, margin: "0 auto" }}>{stageSubline}</div>
           </div>
 
-          <div style={{ position: "absolute", left: "50%", top: controllerInserted ? "51.5%" : "54%", transform: "translate(-50%, -50%)", width: "82%", height: "46%", zIndex: 4, transition: "top .5s ease" }}>
-            <div style={{ position: "absolute", left: controllerInserted ? "14%" : "50%", top: "52%", transform: controllerInserted ? "translate(-50%, -50%)" : "translate(-50%, -50%)", transition: "left .7s cubic-bezier(.22,.61,.36,1)", animation: "ch4ControllerFloat 5.8s ease-in-out infinite" }}>
-              <PixelController accent="#111" shell="#111" details="#f5f2eb" />
+          <div style={{ position: "absolute", left: "50%", top: "53%", transform: "translate(-50%, -50%)", width: "84%", height: "50%", zIndex: 4 }}>
+            <div style={{ position: "absolute", left: stageStep === "insert" ? "50%" : "14%", top: "44%", transform: "translate(-50%, -50%)", transition: "left .8s cubic-bezier(.22,.61,.36,1)", animation: stageStep === "insert" ? "ch4ControllerFloatCenter 6.2s ease-in-out infinite" : "ch4ControllerFloat 5.8s ease-in-out infinite" }}>
+              <PixelController accent={stageAccentColor} shell="#161724" details="#f3efff" lit={stageStep !== "insert"} />
             </div>
 
-            <div style={{ position: "absolute", right: controllerInserted ? "14%" : "50%", top: "52%", transform: controllerInserted ? "translate(50%, -50%)" : "translate(50%, -50%)", opacity: controllerInserted ? 1 : 0, transition: "right .78s cubic-bezier(.22,.61,.36,1), opacity .34s ease", animation: controllerInserted ? "ch4ControllerFloatRight 5.8s ease-in-out infinite .15s" : "none" }}>
-              <PixelController accent="#FF4D00" shell="#faf6ef" details="#141414" ghost={!controllerInserted} />
+            <div style={{ position: "absolute", right: stageStep === "connected" ? "14%" : "18%", top: "44%", transform: "translate(50%, -50%)", opacity: stageStep === "insert" ? 0 : (stageStep === "connected" ? 1 : .34), transition: "right .78s cubic-bezier(.22,.61,.36,1), opacity .38s ease", animation: stageStep === "connected" ? "ch4ControllerFloatRight 5.8s ease-in-out infinite .15s" : stageStep === "sync" ? "ch4GhostRise 5.2s ease-in-out infinite" : "none" }}>
+              <PixelController accent="#C8BCFF" shell={stageStep === "connected" ? "#f4efff" : "#1a1828"} details={stageStep === "connected" ? "#171423" : "#c7bbf7"} ghost={stageStep !== "connected"} lit={stageStep === "connected"} />
             </div>
 
-            <div style={{ position: "absolute", left: "50%", top: "53%", width: controllerInserted ? "34%" : "0%", height: 2, transform: "translate(-50%, -50%)", background: "linear-gradient(90deg, rgba(255,77,0,0) 0%, rgba(255,77,0,.55) 18%, rgba(255,77,0,.82) 50%, rgba(255,77,0,.55) 82%, rgba(255,77,0,0) 100%)", boxShadow: "0 0 18px rgba(255,77,0,.22)", transition: "width .66s cubic-bezier(.22,.61,.36,1)", overflow: "hidden" }}>
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,.75) 50%, transparent 100%)", transform: "translateX(-120%)", animation: controllerInserted ? "homeSignalSweep 2.4s linear infinite" : "none" }} />
+            <div style={{ position: "absolute", left: "50%", top: "42.5%", width: 130, height: 130, transform: "translate(-50%, -50%)", pointerEvents: "none" }}>
+              <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "radial-gradient(circle, rgba(122,92,255,.24) 0%, rgba(122,92,255,.06) 42%, rgba(122,92,255,0) 74%)", filter: "blur(6px)", opacity: stageStep === "insert" ? .42 : .88, animation: stageStep === "connected" ? "glowPulse 2.2s infinite" : "ch4AuraPulse 3.8s ease-in-out infinite" }} />
+              <div style={{ position: "absolute", left: "50%", top: "50%", width: 46, height: 46, transform: "translate(-50%, -50%)", borderRadius: "50%", border: "1px solid rgba(214,205,253,.32)", background: "rgba(11,10,18,.72)", boxShadow: stageStep === "connected" ? "0 0 0 10px rgba(122,92,255,.08), 0 0 28px rgba(122,92,255,.18)" : "0 0 0 8px rgba(122,92,255,.05)" }} />
+              <div style={{ position: "absolute", left: "50%", top: "50%", width: 14, height: 14, transform: "translate(-50%, -50%)", borderRadius: "50%", background: stageStep === "insert" ? "#7f74a9" : stageAccentColor, boxShadow: stageStep === "connected" ? "0 0 0 8px rgba(179,161,255,.12), 0 0 24px rgba(122,92,255,.42)" : "0 0 0 8px rgba(122,92,255,.08)" }} />
             </div>
 
-            <div style={{ position: "absolute", left: "50%", top: controllerInserted ? "16%" : "19%", width: 18, height: 18, borderRadius: 999, transform: "translate(-50%, -50%)", background: controllerInserted ? "#FF4D00" : "#111", boxShadow: controllerInserted ? "0 0 0 10px rgba(255,77,0,.08), 0 0 24px rgba(255,77,0,.18)" : "0 0 0 10px rgba(16,16,16,.05)", transition: "all .42s ease", animation: controllerInserted ? "glowPulse 2s infinite" : "ch4PortPulse 2.2s ease-in-out infinite" }} />
+            <div style={{ position: "absolute", left: "50%", top: "44%", width: `${bridgeWidth}%`, height: 2, transform: "translate(-50%, -50%)", opacity: stageStep === "insert" ? 0 : 1, transition: "width .58s cubic-bezier(.22,.61,.36,1), opacity .28s ease", pointerEvents: "none" }}>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(122,92,255,0) 0%, rgba(122,92,255,.52) 18%, rgba(214,205,253,.88) 50%, rgba(122,92,255,.52) 82%, rgba(122,92,255,0) 100%)", boxShadow: "0 0 18px rgba(122,92,255,.24)" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,.86) 50%, transparent 100%)", transform: "translateX(-120%)", animation: stageStep === "insert" ? "none" : "homeSignalSweep 2.3s linear infinite" }} />
+            </div>
+
+            <div style={{ position: "absolute", left: "50%", top: "63%", transform: "translate(-50%, -50%)", width: "min(72%, 560px)", display: "grid", gap: 12 }}>
+              {channelMarks.map((mark, index) => {
+                const isLocked = lockedChannels[index];
+                const isActive = stageStep === "sync" && activeChannel === index;
+                const accent = channelAccents[index];
+                return (
+                  <div key={mark} style={{ display: "grid", gridTemplateColumns: "48px minmax(0, 1fr)", alignItems: "center", gap: 12, opacity: stageStep === "insert" ? .28 : 1, transition: "opacity .3s ease" }}>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 2.2, textTransform: "uppercase", color: isLocked ? "#d9d1fe" : (isActive ? accent : "rgba(190,181,236,.46)"), transition: "color .28s ease" }}>{mark}</div>
+                    <div style={{ position: "relative", height: 16, borderRadius: 999, background: "rgba(18,18,30,.78)", border: `1px solid ${isLocked ? "rgba(214,205,253,.18)" : "rgba(214,205,253,.1)"}`, overflow: "hidden" }}>
+                      <div style={{ position: "absolute", left: "50%", top: 1, bottom: 1, width: 54, transform: "translateX(-50%)", borderRadius: 999, background: isLocked ? "rgba(214,205,253,.2)" : "rgba(122,92,255,.12)", boxShadow: isLocked ? `0 0 24px ${accent}44` : "none", transition: "background .28s ease, box-shadow .28s ease" }} />
+                      <div style={{ position: "absolute", inset: 1, width: isLocked ? "100%" : `${index < lockedCount ? 100 : 0}%`, borderRadius: 999, background: `linear-gradient(90deg, ${accent}33 0%, ${accent}88 50%, ${accent}44 100%)`, boxShadow: isLocked ? `0 0 18px ${accent}55` : "none", transition: "width .42s ease, box-shadow .28s ease" }} />
+                      {isActive ? (
+                        <div
+                          key={`${index}-${signalRunKey}`}
+                          style={{ position: "absolute", left: 1, top: "50%", width: 14, height: 14, borderRadius: "50%", transform: "translateY(-50%)", background: accent, boxShadow: `0 0 0 6px ${accent}22, 0 0 20px ${accent}55`, animation: `ch4SignalTravel ${channelDurations[index]}ms linear infinite alternate` }}
+                        />
+                      ) : null}
+                      {isLocked ? <div style={{ position: "absolute", left: "50%", top: "50%", width: 12, height: 12, borderRadius: "50%", transform: "translate(-50%, -50%)", background: "#f4efff", boxShadow: `0 0 0 6px ${accent}22, 0 0 20px ${accent}44`, animation: "ch4TargetLock 1.8s ease-in-out infinite" }} /> : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          <div style={{ position: "absolute", left: "50%", bottom: "10.5%", transform: "translateX(-50%)", textAlign: "center", zIndex: 5, width: "100%", padding: "0 28px" }}>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.2, textTransform: "uppercase", color: controllerInserted ? "#FF4D00" : "#4b433b", marginBottom: 12, opacity: controllerInserted ? 1 : .78, transition: "color .28s ease" }}>
-              {controllerInserted ? T.connectedLine : T.connectBtn}
-            </div>
-            <div style={{ opacity: showCTA ? 1 : 0, transform: showCTA ? "translateY(0)" : "translateY(10px)", transition: "opacity .32s ease, transform .32s ease" }}>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "clamp(22px, 2.8vw, 32px)", color: "#101010", marginBottom: 10 }}>
-                {controllerInserted ? (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop) : ""}
+          <div style={{ position: "absolute", left: "50%", bottom: 18, width: "min(calc(100% - 40px), 720px)", transform: "translateX(-50%)", zIndex: 5, pointerEvents: "none" }}>
+            <div style={{ border: "1px solid rgba(214,205,253,.12)", borderRadius: 12, padding: "14px 18px 15px", background: "linear-gradient(180deg, rgba(10,9,18,.82), rgba(8,8,14,.58))", boxShadow: "0 12px 28px rgba(0,0,0,.2)", backdropFilter: "blur(8px)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 10, flexWrap: "wrap" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "rgba(214,205,253,.72)" }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 999, background: stageAccentColor, boxShadow: `0 0 0 6px ${stageAccentColor}18` }} />
+                  {stageStep === "sync" ? `${T.channelLabel} ${Math.min(activeChannel + 1, 3)}/3` : T.ctaBtn}
+                </div>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: statusTone === "error" ? "#ffb1b1" : statusTone === "success" ? "#d8c8ff" : "rgba(214,205,253,.52)", transition: "color .24s ease" }} aria-live="polite">
+                  {statusText}
+                </div>
               </div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 999, border: "1px solid rgba(20,20,20,.12)", background: "rgba(255,255,255,.72)", boxShadow: "0 6px 20px rgba(0,0,0,.06)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 1.6, textTransform: "uppercase", color: "#141414" }}>
-                <span style={{ width: 8, height: 8, borderRadius: 999, background: "#FF4D00", boxShadow: "0 0 0 6px rgba(255,77,0,.08)" }} />
-                {T.ctaBtn}
+              <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "clamp(22px, 2.4vw, 30px)", lineHeight: 1.08, color: "#f4efff", letterSpacing: -.2, marginBottom: 10, textWrap: "balance" }}>
+                {stageStep === "connected" ? T.connectedLine : stageStep === "sync" ? T.syncTitle : T.prompt}
               </div>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, lineHeight: 1.82, color: "rgba(224,217,255,.72)" }}>
+                {stageStep === "connected" ? (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop) : stageStep === "sync" ? T.syncSub : T.promptSub}
+              </div>
+              {stageStep === "connected" ? (
+                <div style={{ marginTop: 14, opacity: showCTA ? 1 : 0, transform: showCTA ? "translateY(0)" : "translateY(8px)", transition: "opacity .28s ease, transform .28s ease" }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 999, border: "1px solid rgba(214,205,253,.16)", background: "rgba(255,255,255,.06)", boxShadow: "0 10px 26px rgba(0,0,0,.18)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: "#f4efff" }}>
+                    <span style={{ width: 8, height: 8, borderRadius: 999, background: stageAccentColor, boxShadow: `0 0 0 6px ${stageAccentColor}18` }} />
+                    {isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
 
         <div className="ch1-controls-slot">
-          <div className="ch1-controls ch2-controls">
-            {!controllerInserted ? (
-              <Ch1ChoiceButton onClick={() => setControllerInserted(true)}>{T.connectBtn}</Ch1ChoiceButton>
-            ) : (
-              <Ch1ChoiceButton onClick={onContact}>{isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop}</Ch1ChoiceButton>
-            )}
+          <div className="ch1-controls ch2-controls" onClick={(e) => e.stopPropagation()}>
+            <Ch1ChoiceButton onClick={handleAdvance} disabled={stageStep === "connected" && !showCTA}>{primaryControlLabel}</Ch1ChoiceButton>
           </div>
         </div>
 
@@ -3881,8 +4063,8 @@ export default function Roberto() {
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
-        @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(8px) rotate(-18deg)}10%{transform:translateX(4vw) translateY(-2px) rotate(-8deg)}20%{transform:translateX(9vw) translateY(-15px) rotate(3deg)}30%{transform:translateX(14vw) translateY(-7px) rotate(10deg)}40%{transform:translateX(19vw) translateY(-17px) rotate(1deg)}50%{transform:translateX(17vw) translateY(-1px) rotate(-9deg)}62%{transform:translateX(28vw) translateY(-13px) rotate(4deg)}74%{transform:translateX(39vw) translateY(-4px) rotate(11deg)}86%{transform:translateX(52vw) translateY(-16px) rotate(2deg)}100%{transform:translateX(66vw) translateY(-9px) rotate(6deg)}}
-        @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(8px) rotate(18deg)}10%{transform:translateX(-4vw) translateY(-2px) rotate(8deg)}20%{transform:translateX(-9vw) translateY(-15px) rotate(-3deg)}30%{transform:translateX(-14vw) translateY(-7px) rotate(-10deg)}40%{transform:translateX(-19vw) translateY(-17px) rotate(-1deg)}50%{transform:translateX(-17vw) translateY(-1px) rotate(9deg)}62%{transform:translateX(-28vw) translateY(-13px) rotate(-4deg)}74%{transform:translateX(-39vw) translateY(-4px) rotate(-11deg)}86%{transform:translateX(-52vw) translateY(-16px) rotate(-2deg)}100%{transform:translateX(-66vw) translateY(-9px) rotate(-6deg)}}
+        @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(18px) rotate(-20deg)}8%{transform:translateX(3vw) translateY(10px) rotate(-12deg)}16%{transform:translateX(8vw) translateY(-2px) rotate(-4deg)}24%{transform:translateX(12vw) translateY(-13px) rotate(6deg)}32%{transform:translateX(15vw) translateY(-22px) rotate(12deg)}40%{transform:translateX(19vw) translateY(-14px) rotate(4deg)}48%{transform:translateX(23vw) translateY(1px) rotate(-8deg)}56%{transform:translateX(29vw) translateY(11px) rotate(-16deg)}64%{transform:translateX(36vw) translateY(4px) rotate(-5deg)}72%{transform:translateX(43vw) translateY(-10px) rotate(7deg)}80%{transform:translateX(50vw) translateY(-21px) rotate(14deg)}90%{transform:translateX(59vw) translateY(-9px) rotate(3deg)}100%{transform:translateX(68vw) translateY(6px) rotate(-6deg)}}
+        @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(18px) rotate(20deg)}8%{transform:translateX(-3vw) translateY(10px) rotate(12deg)}16%{transform:translateX(-8vw) translateY(-2px) rotate(4deg)}24%{transform:translateX(-12vw) translateY(-13px) rotate(-6deg)}32%{transform:translateX(-15vw) translateY(-22px) rotate(-12deg)}40%{transform:translateX(-19vw) translateY(-14px) rotate(-4deg)}48%{transform:translateX(-23vw) translateY(1px) rotate(8deg)}56%{transform:translateX(-29vw) translateY(11px) rotate(16deg)}64%{transform:translateX(-36vw) translateY(4px) rotate(5deg)}72%{transform:translateX(-43vw) translateY(-10px) rotate(-7deg)}80%{transform:translateX(-50vw) translateY(-21px) rotate(-14deg)}90%{transform:translateX(-59vw) translateY(-9px) rotate(-3deg)}100%{transform:translateX(-68vw) translateY(6px) rotate(6deg)}}
         @keyframes ch1KiteBodyFlutter{0%,100%{transform:rotate(45deg) skewX(0deg)}50%{transform:rotate(45deg) skewX(3deg)}}
         @keyframes ch1KiteTailFlutter{0%,100%{opacity:.88}50%{opacity:.56}}
 
@@ -3998,7 +4180,7 @@ export default function Roberto() {
         .ch1-stay-feedback.show{opacity:1;transform:translateY(0)}
         .ch1-kite-burst{position:absolute;left:0;right:0;top:6%;height:26%;z-index:11;pointer-events:none;opacity:0;transition:opacity .18s ease}
         .ch1-kite-burst.show{opacity:1}
-        .ch1-kite{position:absolute;top:10%;width:42px;height:42px;animation-duration:4.8s;animation-timing-function:cubic-bezier(.24,.08,.28,1);animation-fill-mode:forwards;filter:drop-shadow(0 1px 1px rgba(255,245,235,.45))}
+        .ch1-kite{position:absolute;top:10%;width:42px;height:42px;animation-duration:6.2s;animation-timing-function:cubic-bezier(.22,.08,.24,1);animation-fill-mode:forwards;filter:drop-shadow(0 1px 1px rgba(255,245,235,.45))}
         .ch1-kite-burst.from-left .ch1-kite{left:-10%;animation-name:ch1KitePassLeft}
         .ch1-kite-burst.from-right .ch1-kite{right:-10%;animation-name:ch1KitePassRight}
         .ch1-kite-diamond{position:absolute;left:8px;top:4px;width:20px;height:20px;background:rgba(238,86,24,.96);border:1px solid rgba(255,220,198,.35);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset;animation:ch1KiteBodyFlutter 1.7s ease-in-out infinite}
@@ -4012,7 +4194,7 @@ export default function Roberto() {
         .ch1-kite-tail-a,.ch1-kite-tail-b,.ch1-kite-tail-c{animation:ch1KiteTailFlutter 1.35s ease-in-out infinite}
         .ch1-discover-frame{filter:saturate(.96) contrast(1.02) brightness(.97)}
         .ch1-discover-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(4,7,10,.10),rgba(5,8,10,.24)),radial-gradient(circle at 20% 68%,rgba(102,156,124,.12),transparent 20%)}
-        .ch1-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,rgba(0,0,0,.25) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}
+        .ch1-line-block{position:absolute;left:0;right:0;bottom:0;z-index:8;max-width:none;border-top:1px solid rgba(167,203,216,.18);padding:12px 18px 11px;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.36) 18%,rgba(0,0,0,.82) 100%)}
         .ch1-line-block.ch1-reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch1-line-block.ch1-reveal.show{opacity:1;transform:translateY(0)}
         .ch1-line{color:#dce7de;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}
@@ -4104,7 +4286,7 @@ export default function Roberto() {
         .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:31.9%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
         .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
         .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
-        .ch2-line-block{position:absolute;left:22px;right:22px;bottom:26px;z-index:8;max-width:560px;border-top:1px solid rgba(192,218,244,.18);padding-top:12px;background:linear-gradient(to top,rgba(0,0,0,.42) 0%,rgba(0,0,0,.22) 70%,transparent 100%);padding-bottom:8px;margin-bottom:-8px}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:50%;transform:translateY(-50%);left:36px;right:36px;font-size:clamp(20px,2.3vw,28px);line-height:1.18}.ch2-feedback-overlay.show.is-bridge{transform:translateY(-50%)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-desk-transition-copy{width:100%;max-width:560px;margin:0;border-top:1px solid rgba(192,218,244,.14);padding-top:12px;color:rgba(226,232,239,.9);font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:left;animation:fadeIn .24s ease-out}
+        .ch2-line-block{position:absolute;left:0;right:0;bottom:0;z-index:8;max-width:none;border-top:1px solid rgba(192,218,244,.18);padding:12px 18px 11px;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.34) 18%,rgba(0,0,0,.80) 100%)}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3;text-align:left}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:50%;transform:translateY(-50%);left:36px;right:36px;font-size:clamp(20px,2.3vw,28px);line-height:1.18}.ch2-feedback-overlay.show.is-bridge{transform:translateY(-50%)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-desk-transition-copy{width:100%;max-width:560px;min-height:46px;margin:0}
         .ch2-street-stage{background:#081012}
         .ch2-street-frame{filter:saturate(1.03) contrast(1.03) brightness(.95);transform:scale(1.006);animation:ch2StreetFrameDrift 10s ease-in-out infinite}
         .ch2-street-grade,.ch2-street-cool-wash,.ch2-street-door-bloom,.ch2-street-reflection-boost,.ch2-street-rain,.ch2-street-headlights,.ch2-street-vignette{position:absolute;pointer-events:none}
@@ -4143,7 +4325,7 @@ export default function Roberto() {
           radial-gradient(ellipse at center, transparent 36%, rgba(0,0,0,.14) 68%, rgba(0,0,0,.5) 100%),
           linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.14) 100%)}
         .ch2-street-line-block{left:50%;right:auto;bottom:20px;width:min(calc(100% - 34px),690px);transform:translateX(-50%);border-top-color:rgba(255,203,154,.16);background:linear-gradient(to top,rgba(0,0,0,.68) 0%,rgba(0,0,0,.28) 70%,transparent 100%)}
-        .ch2-street-line-block .ch2-line{text-align:center;font-size:clamp(18px,2.2vw,26px);white-space:nowrap}
+        .ch2-street-line-block .ch2-line{text-align:left;font-size:clamp(18px,2.2vw,26px);white-space:normal}
         .ch2-street-narrative-wrap{position:absolute;left:50%;top:46px;z-index:9;width:min(calc(100% - 56px),760px);transform:translateX(-50%)}
         .ch2-street-narrative{color:rgba(239,233,224,.96);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.88);background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));padding:12px 20px;border-top:1px solid rgba(255,203,154,.20);border-radius:8px;backdrop-filter:blur(5px)}
         .ch2-street-narrative-line{display:block}
@@ -4179,8 +4361,13 @@ export default function Roberto() {
         @keyframes ch3FlowDrift{0%{transform:translateY(-14px)}100%{transform:translateY(14px)}}
         @keyframes ch3GroundBreath{0%,100%{opacity:.36;transform:translateY(0)}50%{opacity:.56;transform:translateY(-2px)}}
         @keyframes ch4ControllerFloat{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-4px)}}
+        @keyframes ch4ControllerFloatCenter{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-6px)}}
         @keyframes ch4ControllerFloatRight{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-4px)}}
+        @keyframes ch4GhostRise{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-5px)}}
         @keyframes ch4PortPulse{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+        @keyframes ch4AuraPulse{0%,100%{opacity:.42;transform:scale(.985)}50%{opacity:.72;transform:scale(1.02)}}
+        @keyframes ch4SignalTravel{0%{transform:translateY(-50%) translateX(0)}100%{transform:translateY(-50%) translateX(calc(100% - 16px))}}
+        @keyframes ch4TargetLock{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.08)}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
@@ -4243,7 +4430,7 @@ export default function Roberto() {
         .ch3-synthesis-amber-shimmer{position:absolute;right:16%;top:16%;width:28%;height:44%;z-index:3;pointer-events:none;background:linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,228,186,.06) 42%, rgba(255,239,208,.16) 52%, rgba(255,206,142,.06) 60%, rgba(255,255,255,0) 100%);mix-blend-mode:screen;opacity:.18;transform:translateX(-12%);animation:ch3ShimmerSweep 9.8s ease-in-out infinite}
         .ch3-synthesis-circuit-pulse{position:absolute;right:15%;top:15%;width:30%;height:52%;z-index:3;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.14) 0%, rgba(255,199,124,.06) 24%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.16;animation:ch3CircuitPulse 4.8s ease-in-out infinite}
         .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.12) 74%, rgba(0,0,0,.38) 100%), linear-gradient(180deg, rgba(12,8,7,.06) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.22) 100%)}
-        .ch3-distant-kite{position:absolute;left:41.8%;top:47.2%;width:13%;height:13%;z-index:8;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
+        .ch3-distant-kite{position:absolute;left:31.5%;top:38.8%;width:12%;height:12%;z-index:8;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
         .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;transform:scale(1.22);filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
         .ch3-kite-diamond{position:absolute;left:6px;top:2px;width:11px;height:11px;background:rgba(238,86,24,.98);border:1px solid rgba(255,220,198,.38);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.18) inset}
         .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.76)}
@@ -4253,9 +4440,9 @@ export default function Roberto() {
         .ch3-kite-tail-a{top:13px;height:7px;transform:rotate(18deg)}
         .ch3-kite-tail-b{top:18px;height:6px;left:15px;transform:rotate(-10deg)}
         .ch3-kite-tail-c{top:24px;height:5px;left:13px;transform:rotate(14deg)}
-        .ch3-synthesis-caption{position:absolute;left:22px;right:22px;bottom:26px;z-index:14;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:560px}
+        .ch3-synthesis-caption{position:absolute;left:0;right:0;bottom:0;z-index:14;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:none}
         .ch3-synthesis-caption.show{opacity:1;transform:translateY(0)}
-        .ch3-synthesis-caption-inner{display:block;max-width:560px;width:100%;padding:12px 14px 11px;border-top:1px solid rgba(255,218,178,.20);background:linear-gradient(180deg, rgba(10,7,6,.10) 0%, rgba(8,6,5,.58) 18%, rgba(5,5,5,.92) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,228,198,.08);backdrop-filter:blur(6px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.28;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34), 0 10px 24px rgba(0,0,0,.48);white-space:normal}
+        .ch3-synthesis-caption-inner{display:block;max-width:none;width:100%;padding:12px 18px 11px;border-top:1px solid rgba(255,218,178,.20);background:linear-gradient(180deg, rgba(10,7,6,.06) 0%, rgba(8,6,5,.34) 16%, rgba(5,5,5,.84) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,228,198,.08);backdrop-filter:blur(5px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.05vw,24px);line-height:1.24;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34), 0 10px 24px rgba(0,0,0,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .ch3-controls-final{justify-content:center}
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
@@ -4272,15 +4459,15 @@ export default function Roberto() {
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
-          .ch3-synthesis-caption{left:16px;right:16px;bottom:18px;max-width:none}
-          .ch3-synthesis-caption-inner{padding:12px 12px 11px;font-size:clamp(18px,5.2vw,26px);line-height:1.18;max-width:none}
+          .ch3-synthesis-caption{left:0;right:0;bottom:0;max-width:none}
+          .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
           .ch3-synthesis-branch-glow{right:2%;top:10%;width:60%;height:66%;opacity:.30}
           .ch3-synthesis-flow{right:10%;top:12%;width:40%;height:66%;opacity:.14}
           .ch3-synthesis-amber-shimmer{right:12%;top:18%;width:34%;height:42%;opacity:.14}
           .ch3-synthesis-circuit-pulse{right:12%;top:16%;width:38%;height:54%;opacity:.14}
-          .ch3-distant-kite{left:40.8%;top:45.6%;width:18%;height:16%}
-          .ch3-kite{transform:scale(1.12)}
+          .ch3-distant-kite{left:33.5%;top:40.8%;width:18%;height:16%}
+          .ch3-kite{transform:scale(1.18)}
           .ch2-street-narrative-wrap{display:none}
           .ch2-street-line-block{display:none}
           .ch2-street-mobile-copy{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
@@ -4323,7 +4510,7 @@ export default function Roberto() {
           .ghost-phrase{font-size:11px!important}
           .ch1-root{padding:18px 16px 16px;align-items:flex-start}
           .ch1-wrap{width:min(94vw,760px)}
-          .ch1-line-block,.ch1-feedback{left:16px;right:16px;bottom:18px}
+          .ch1-line-block,.ch1-feedback{left:0;right:0;bottom:0}
           .ch1-top-slot{min-height:44px;margin-bottom:12px}
           .ch1-top{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;min-height:32px}
           .ch1-controls-slot{min-height:114px;margin-top:12px}
@@ -4331,7 +4518,7 @@ export default function Roberto() {
           .ch1-back-btn{padding:4px 10px;font-size:9px}
           .ch2-street-transition-copy,.ch2-desk-transition-copy{max-width:none;font-size:11px;line-height:1.72}
           .ch2-street-line-block{width:min(calc(100% - 24px),620px);bottom:16px}
-          .ch2-street-line-block .ch2-line{white-space:normal;font-size:clamp(17px,5.2vw,24px)}
+          .ch2-street-line-block .ch2-line{white-space:normal;font-size:clamp(17px,5.2vw,24px);text-align:left}
           .ch2-street-narrative-wrap{left:50%;right:auto;top:26px;width:min(calc(100% - 20px),560px);transform:translateX(-50%)}
           .ch2-street-narrative{font-size:10px;line-height:1.68;padding:10px 12px}
           .ch2-street-door-bloom{left:35%;top:16%;width:34%;height:48%}
