@@ -3861,6 +3861,7 @@ export default function Roberto() {
   const hasScrolled = useRef(false);
 
   const T = LANG[lang];
+  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   const profileMeta = EMERGED_PROFILE[lang];
   const proofStripText = isMobileViewport ? (T.proofStripMobile || T.proofStrip) : T.proofStrip;
   const selectedWorkSubText = isMobileViewport ? (T.selectedWorkMobileSub || T.selectedWorkSub) : T.selectedWorkSub;
@@ -3930,10 +3931,10 @@ export default function Roberto() {
   useEffect(() => {
     const iv = setInterval(() => {
       setProgress(p => {
-        if (p >= 100) { clearInterval(iv); setTimeout(() => { setFlicker(true); setTimeout(() => { setPhase("main"); setFlicker(false); }, 200); }, 400); return 100; }
-        return p + Math.random() * 12 + 3;
+        if (p >= 100) { clearInterval(iv); setTimeout(() => { setFlicker(true); setTimeout(() => { setPhase("main"); setFlicker(false); }, 120); }, 180); return 100; }
+        return p + Math.random() * 28 + 14;
       });
-    }, 90);
+    }, 40);
     return () => clearInterval(iv);
   }, []);
 
@@ -4089,7 +4090,6 @@ export default function Roberto() {
   return (
     <div style={{ background: "#050505", minHeight: "100vh", color: "#E8E4DE", fontFamily: "'IBM Plex Mono','Courier New',monospace", position: "relative", overflow: "hidden" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
         ::selection{background:#FF4D00;color:#050505}
         @keyframes scanbeam{0%{transform:translateY(-100vh)}100%{transform:translateY(100vh)}}
@@ -4140,9 +4140,9 @@ export default function Roberto() {
         .svc{padding:30px 32px;border:1px solid #151515;border-radius:4px;transition:all .3s;cursor:default}
         .svc:hover{border-color:rgba(255,77,0,.35);background:rgba(255,77,0,.02)}
         .svc:hover .svc-t{color:#FF4D00!important;text-shadow:0 0 15px rgba(255,77,0,.12)}
-        .mth{padding:18px 20px 18px 22px;border:1px solid #151515;border-left:2px solid rgba(255,77,0,.18);border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,.01),rgba(255,255,255,.004));transition:all .25s;cursor:default}
-        .mth:hover{border-color:rgba(255,77,0,.18);border-left-color:#FF4D00;background:linear-gradient(180deg,rgba(255,77,0,.03),rgba(255,255,255,.006));transform:translateX(2px)}
-        .mth:hover .mth-t{color:#FF4D00!important}
+        .mth{padding:18px 20px;border:1px solid #151515;border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,.01),rgba(255,255,255,.004));transition:all .25s;cursor:default}
+        .mth:hover{border-color:rgba(255,255,255,.07);background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006))}
+        .mth:hover .mth-t{color:#F0ECE6!important}
         .btn-trash{min-width:140px;padding:16px 38px;background:transparent;border:1px solid #FF4D00;color:#FF4D00;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:background .2s,color .2s}
         .btn-talk{padding:16px 38px;background:transparent;border:1px solid #444;color:#AAA;font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;font-weight:500;transition:all .25s}
         .btn-talk:hover{background:#E8E4DE;color:#050505;border-color:#E8E4DE;box-shadow:0 0 20px rgba(232,228,222,.12)}
