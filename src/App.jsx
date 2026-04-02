@@ -221,8 +221,8 @@ const LANG = {
     heroBackground: "Vengo da fotografia e design. Oggi porto quello stesso rigore dentro sistemi creativi, contenuti e direzione.",
     heroSub: "",
     heroMobileSub: "Comunicazione, contenuti, workflow e automazioni—con criterio.",
-    proofStrip: "Digitale · contenuti · automazioni",
-    proofStripMobile: "Digitale · contenuti · automazioni",
+    proofStrip: "15+ anni di direzione creativa · Comunicazione, contenuti, sistemi · Progetti che durano",
+    proofStripMobile: "15+ anni · Direzione creativa, contenuti, sistemi",
     whatido: "Cosa costruisco",
     services: [
       { title: "Posizionamento", subtitle: "Messaggio, tono e struttura", desc: "Aiuto brand e progetti a chiarire cosa dire, come dirlo e con quale struttura presentarsi in modo più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
@@ -410,8 +410,8 @@ const LANG = {
     heroBackground: "I come from photography and design. Today I bring that same rigour into creative systems, content, and direction.",
     heroSub: "",
     heroMobileSub: "Communication, content, workflows and automation—with judgment.",
-    proofStrip: "Digital · content · automation",
-    proofStripMobile: "Digital · content · automation",
+    proofStrip: "15+ years of creative direction · Communication, content, systems · Projects built to last",
+    proofStripMobile: "15+ years · Creative direction, content, systems",
     whatido: "What I build",
     services: [
       { title: "Positioning", subtitle: "Message, tone, structure", desc: "I help brands and projects clarify what they need to say, how they should say it, and how they should present themselves more clearly and credibly.", mobileDesc: "I clarify message, tone, and structure." },
@@ -4656,6 +4656,15 @@ export default function Roberto() {
               </h1>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 16 : 15, color: "#F0ECE6", marginTop: 18, lineHeight: isMobileViewport ? 1.8 : 1.95, maxWidth: isMobileViewport ? 430 : 500, textWrap: "pretty" }}>{T.hero}</div>
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
+            </div>
+          </Section>
+
+          {/* 3. PROOF STRIP */}
+          <Section delay={0.09}>
+            <div style={{ marginBottom: 60, paddingBottom: 22, borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+              <div style={{ fontSize: 10, color: "#5a5450", fontFamily: "'IBM Plex Mono',monospace", letterSpacing: 1.6, lineHeight: 2.0, textTransform: "uppercase" }}>
+                {proofStripText}
+              </div>
             </div>
           </Section>
 
