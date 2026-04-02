@@ -35,6 +35,12 @@ const CASE_STUDIES = {
       backLabel: "← Torna ai lavori",
       openLabel: "Apri case study",
       kicker: "Case study",
+      heroImage: "https://www.robertomarchesini.com/assets/clients/largo_hero.jpg",
+      images: [
+        { src: "https://www.robertomarchesini.com/assets/clients/largo_01.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/largo_02.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/largo_03.jpg", caption: "" },
+      ],
       meta: "Comunicazione · Contenuti · Sistema promozionale",
       lead: "Un sistema di contenuti, comunicazione e promozione costruito per reggere una venue con programmazione continua, oltre 150 eventi l’anno e una pressione settimanale che non poteva diventare generica.",
       proof: ["150+ eventi l’anno", "1M+ visualizzazioni mensili", "programmazione continua"],
@@ -59,6 +65,11 @@ const CASE_STUDIES = {
       openLabel: "Apri case study",
       kicker: "Case study",
       heroImage: "https://www.robertomarchesini.com/assets/clients/notre_dame_case_hero.jpg",
+      images: [
+        { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_01.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_02.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_03.jpg", caption: "" },
+      ],
       meta: "Comunicazione digitale · Contenuti · Promozione",
       lead: "Dodici anni di comunicazione digitale, contenuti e promozione per uno dei live brand più riconoscibili in Italia. Un lavoro lungo, costruito per dare continuità, riconoscibilità e scala a un racconto che non poteva disperdersi.",
       proof: ["12 anni di continuità", "400K+ audience", "scala nazionale"],
@@ -82,6 +93,12 @@ const CASE_STUDIES = {
       backLabel: "← Torna ai lavori",
       openLabel: "Apri case study",
       kicker: "Case study",
+      heroImage: "https://www.robertomarchesini.com/assets/clients/theia_hero.jpg",
+      images: [
+        { src: "https://www.robertomarchesini.com/assets/clients/theia_01.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/theia_02.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/theia_03.jpg", caption: "" },
+      ],
       meta: "Posizionamento · Sito · Architettura digitale",
       lead: "Un lavoro di posizionamento, direzione del sito e struttura digitale pensato per aumentare credibilità, chiarezza e capacità di contatto di un brand eventi premium.",
       proof: ["posizionamento premium", "brand + landing + tracking", "architettura orientata al lead"],
@@ -107,6 +124,12 @@ const CASE_STUDIES = {
       backLabel: "← Back to work",
       openLabel: "Open case study",
       kicker: "Case study",
+      heroImage: "https://www.robertomarchesini.com/assets/clients/largo_hero.jpg",
+      images: [
+        { src: "https://www.robertomarchesini.com/assets/clients/largo_01.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/largo_02.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/largo_03.jpg", caption: "" },
+      ],
       meta: "Communication · Content · Promotional system",
       lead: "A content, communication, and promotion system built to sustain a venue with continuous programming, 150+ events per year, and weekly pressure that could not afford to become generic.",
       proof: ["150+ events per year", "1M+ monthly views", "continuous programming"],
@@ -131,6 +154,11 @@ const CASE_STUDIES = {
       openLabel: "Open case study",
       kicker: "Case study",
       heroImage: "https://www.robertomarchesini.com/assets/clients/notre_dame_case_hero.jpg",
+      images: [
+        { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_01.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_02.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_03.jpg", caption: "" },
+      ],
       meta: "Digital communication · Content · Promotion",
       lead: "Twelve years of digital communication, content, and promotion for one of Italy’s most recognizable live brands. Long-term work built to give continuity, recognizability, and scale to a narrative that could not afford to disperse.",
       proof: ["12 years of continuity", "400K+ audience", "national scale"],
@@ -154,6 +182,12 @@ const CASE_STUDIES = {
       backLabel: "← Back to work",
       openLabel: "Open case study",
       kicker: "Case study",
+      heroImage: "https://www.robertomarchesini.com/assets/clients/theia_hero.jpg",
+      images: [
+        { src: "https://www.robertomarchesini.com/assets/clients/theia_01.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/theia_02.jpg", caption: "" },
+        { src: "https://www.robertomarchesini.com/assets/clients/theia_03.jpg", caption: "" },
+      ],
       meta: "Positioning · Website · Digital architecture",
       lead: "A positioning, website direction, and digital structure project designed to increase credibility, clarity, and lead quality for a premium event brand.",
       proof: ["premium positioning", "brand + landing + tracking", "lead-oriented architecture"],
@@ -792,64 +826,84 @@ function getWorkSlug(title) {
 }
 
 function CaseStudyPage({ lang = "it", work, data, onBack, onContact }) {
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 680);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
   if (!work || !data) return null;
   const hasHeroImage = Boolean(data.heroImage);
+  const images = data.images || [];
   return (
-    <div className="case-study-page" style={{ maxWidth: 1040, margin: "0 auto", padding: "72px 0 42px", animation: "fadeIn .28s ease-out" }}>
-      <button className="top-btn case-study-back-btn" onClick={onBack} style={{ marginBottom: 48, color: "#FF4D00", borderColor: "rgba(255,77,0,.32)", background: "rgba(255,77,0,.03)" }}>{data.backLabel}</button>
+    <div style={{ maxWidth: 1040, margin: "0 auto", padding: isMobile ? "52px 20px 40px" : "80px 0 52px", animation: "fadeIn .28s ease-out" }}>
+      <button className="top-btn" onClick={onBack} style={{ marginBottom: 52, color: "#FF4D00", borderColor: "rgba(255,77,0,.28)", background: "rgba(255,77,0,.03)" }}>{data.backLabel}</button>
 
       {hasHeroImage ? (
-        <div className="case-study-hero-image-shell" style={{ position: "relative", marginBottom: 40, borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,.06)", aspectRatio: "1.68 / 1", background: "#080808" }}>
-          <img src={data.heroImage} alt={work.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(1) contrast(1.02) brightness(.82)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(5,5,5,.74) 0%, rgba(5,5,5,.28) 38%, rgba(5,5,5,.10) 100%), linear-gradient(180deg, rgba(5,5,5,.12) 0%, rgba(5,5,5,.42) 100%)" }} />
-          <div style={{ position: "absolute", left: 24, right: 24, bottom: 20, maxWidth: 560 }}>
-            <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 12 }}>{data.kicker}</div>
-            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(38px,5.6vw,64px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 12px", letterSpacing: "-.02em" }}>
+        <div style={{ position: "relative", marginBottom: 60, borderRadius: 6, overflow: "hidden", aspectRatio: isMobile ? "4/3" : "2/1", background: "#080808", border: "1px solid rgba(255,255,255,.05)" }}>
+          <img src={data.heroImage} alt={work.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(1) contrast(1.06) brightness(.76)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(5,5,5,.88) 0%, rgba(5,5,5,.32) 48%, rgba(5,5,5,.06) 100%), linear-gradient(180deg, rgba(5,5,5,.06) 0%, rgba(5,5,5,.62) 100%)" }} />
+          <div style={{ position: "absolute", left: isMobile ? 22 : 36, right: isMobile ? 22 : 36, bottom: isMobile ? 22 : 32, maxWidth: 600 }}>
+            <div style={{ fontSize: 9, letterSpacing: 3.5, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono',monospace", marginBottom: 14 }}>{data.kicker}</div>
+            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: isMobile ? "clamp(32px,8vw,48px)" : "clamp(44px,5.8vw,70px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.96, color: "#F6F1EA", margin: "0 0 14px", letterSpacing: "-.02em" }}>
               {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
             </h2>
-            <div style={{ fontSize: 11, color: "#c1b6aa", letterSpacing: 1.45, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.7 }}>
-              {work.period} · {data.meta}
-            </div>
+            <div style={{ fontSize: 10, color: "#b2a89e", letterSpacing: 1.6, textTransform: "uppercase", fontFamily: "'IBM Plex Mono',monospace", lineHeight: 1.8 }}>{work.period} · {data.meta}</div>
           </div>
         </div>
       ) : (
-        <div className="case-study-hero" style={{ marginBottom: 48 }}>
-          <div className="case-study-kicker" style={{ fontSize: 10, letterSpacing: 3, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 16 }}>{data.kicker}</div>
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(42px,6vw,68px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.98, color: "#F6F1EA", margin: "0 0 14px", letterSpacing: "-.02em" }}>
+        <div style={{ marginBottom: 52, paddingBottom: 40, borderBottom: "1px solid rgba(255,255,255,.07)" }}>
+          <div style={{ fontSize: 9, letterSpacing: 3.5, color: "#FF4D00", textTransform: "uppercase", fontFamily: "'IBM Plex Mono',monospace", marginBottom: 20 }}>{data.kicker}</div>
+          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: isMobile ? "clamp(42px,10vw,60px)" : "clamp(52px,6.8vw,82px)", fontStyle: "italic", fontWeight: 600, lineHeight: 0.95, color: "#F6F1EA", margin: "0 0 20px", letterSpacing: "-.02em" }}>
             {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
           </h2>
-          <div style={{ fontSize: 11, color: "#9d948a", letterSpacing: 1.55, textTransform: "uppercase", marginBottom: 28, fontFamily: "'IBM Plex Mono', monospace" }}>
-            {work.period} · {data.meta}
-          </div>
+          <div style={{ fontSize: 10, color: "#9d948a", letterSpacing: 1.6, textTransform: "uppercase", fontFamily: "'IBM Plex Mono',monospace" }}>{work.period} · {data.meta}</div>
         </div>
       )}
 
-      <div className="case-study-hero-copy" style={{ marginBottom: 42 }}>
-        <div className="home-pretty" style={{ fontSize: 22, color: "#F6F1EA", lineHeight: 1.68, maxWidth: 700 }}>{data.lead}</div>
+      <div style={{ marginBottom: 40 }}>
+        <p className="home-pretty" style={{ fontSize: isMobile ? 19 : 22, color: "#F0ECE4", lineHeight: 1.72, maxWidth: 700, margin: 0 }}>{data.lead}</p>
       </div>
 
-      <div className="case-study-proof-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 18, marginBottom: 56 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit,minmax(190px,1fr))", gap: 12, marginBottom: images[0] ? 56 : 64 }}>
         {data.proof.map((item, idx) => (
-          <div key={idx} className="case-study-proof-card" style={{ padding: "18px 18px", border: "1px solid rgba(255,77,0,.12)", borderRadius: 4, background: "linear-gradient(180deg, rgba(255,77,0,.03), rgba(255,255,255,.008))", color: "#F6F1EA", fontSize: 10, lineHeight: 1.82, letterSpacing: .36, textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>{item}</div>
+          <div key={idx} style={{ padding: "13px 15px", border: "1px solid rgba(255,77,0,.1)", borderRadius: 3, background: "linear-gradient(180deg, rgba(255,77,0,.028), rgba(255,255,255,.005))", color: "#EDE8DF", fontSize: 10, lineHeight: 1.7, letterSpacing: .42, textTransform: "uppercase", fontFamily: "'IBM Plex Mono',monospace" }}>{item}</div>
         ))}
       </div>
 
-      <div className="case-study-sections" style={{ display: "flex", flexDirection: "column", gap: 46, marginBottom: 56 }}>
+      {images[0] && (
+        <div style={{ marginBottom: 72 }}>
+          <div style={{ width: "100%", aspectRatio: isMobile ? "4/3" : "16/8", borderRadius: 4, overflow: "hidden", background: "#0a0a0a", border: "1px solid rgba(255,255,255,.05)" }}>
+            <img src={images[0].src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(.12) contrast(1.04) brightness(.88)" }} />
+          </div>
+          {images[0].caption && (<div style={{ fontSize: 10, color: "#5e5850", fontFamily: "'IBM Plex Mono',monospace", letterSpacing: .9, marginTop: 10, paddingLeft: 2 }}>{images[0].caption}</div>)}
+        </div>
+      )}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 52, marginBottom: 68 }}>
         {data.sections.map((section, idx) => (
-          <section key={idx} className="case-study-section" style={{ paddingTop: 18, borderTop: "1px solid rgba(255,255,255,.07)" }}>
-            <div style={{ fontSize: 25, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#F6F1EA", marginBottom: 14, lineHeight: 1.14 }}>{section.title}</div>
-            <div className="home-pretty" style={{ fontSize: 16, color: "#E0D8CE", lineHeight: 1.96, maxWidth: 720 }}>{section.body}</div>
+          <section key={idx} style={{ paddingTop: 22, borderTop: "1px solid rgba(255,255,255,.07)" }}>
+            <div style={{ fontSize: isMobile ? 22 : 26, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#F6F1EA", marginBottom: 18, lineHeight: 1.12 }}>{section.title}</div>
+            <div className="home-pretty" style={{ fontSize: isMobile ? 15 : 16, color: "#DDD6CB", lineHeight: 2.0, maxWidth: 700 }}>{section.body}</div>
           </section>
         ))}
       </div>
 
-      <div className="case-study-closing" style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 30, marginBottom: 38 }}>
-        <div className="home-pretty" style={{ fontSize: 17, color: "#F6F1EA", lineHeight: 1.88, maxWidth: 690 }}>{data.closing}</div>
+      {(images[1] || images[2]) && (
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : (images[2] ? "1.6fr 1fr" : "1fr"), gap: isMobile ? 14 : 18, marginBottom: 72, alignItems: "start" }}>
+          {images[1] && (<div style={{ borderRadius: 4, overflow: "hidden", background: "#0a0a0a", border: "1px solid rgba(255,255,255,.05)", aspectRatio: isMobile ? "16/10" : "4/3" }}><img src={images[1].src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(.1) contrast(1.03) brightness(.86)" }} /></div>)}
+          {images[2] && (<div style={{ borderRadius: 4, overflow: "hidden", background: "#0a0a0a", border: "1px solid rgba(255,255,255,.05)", aspectRatio: isMobile ? "16/10" : "3/4", marginTop: isMobile ? 0 : 64 }}><img src={images[2].src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(.1) contrast(1.03) brightness(.86)" }} /></div>)}
+        </div>
+      )}
+
+      <div style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 34, marginBottom: 48 }}>
+        <div className="home-pretty" style={{ fontSize: isMobile ? 16 : 18, color: "#F6F1EA", lineHeight: 1.88, maxWidth: 660, fontFamily: "'Playfair Display',serif", fontStyle: "italic" }}>{data.closing}</div>
       </div>
 
       <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
         <button className="btn-talk" onClick={onContact}>{lang === "it" ? "Parliamone" : "Let's talk"}</button>
-        <button className="top-btn case-study-back-btn" onClick={onBack}>{data.backLabel}</button>
+        <button className="top-btn" onClick={onBack} style={{ color: "#FF4D00", borderColor: "rgba(255,77,0,.28)", background: "rgba(255,77,0,.03)" }}>{data.backLabel}</button>
       </div>
     </div>
   );
@@ -4079,13 +4133,11 @@ export default function Roberto() {
         .home-signal-port-shell{position:absolute;left:26%;right:26%;top:28%;bottom:28%;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.012)}
         .home-signal-port-slot{position:absolute;left:39%;right:39%;top:44%;height:10px;border-radius:2px;background:#0b0b0b;box-shadow:0 0 0 1px rgba(255,255,255,.04)}
         .home-signal-port-led{position:absolute;right:31%;top:35%;width:6px;height:6px;border-radius:50%;background:rgba(255,77,0,.62);box-shadow:0 0 10px rgba(255,77,0,.24);animation:homeSignalBlink 4.8s linear infinite}
-        .work-card{transition:all .3s}
-        .work-card:hover{padding-left:12px;border-left:2px solid rgba(255,77,0,.4)!important}
+        .work-card{transition:opacity .22s}
+        .work-card:hover{opacity:.82}
         .svc{padding:30px 32px;border:1px solid #151515;border-radius:4px;transition:all .3s;cursor:default}
         .svc:hover{border-color:rgba(255,77,0,.35);background:rgba(255,77,0,.02)}
         .svc:hover .svc-t{color:#FF4D00!important;text-shadow:0 0 15px rgba(255,77,0,.12)}
-        .work-card{transition:all .3s;padding-left:0;border-left:3px solid transparent}
-        .work-card:hover{border-left-color:#FF4D00;padding-left:22px;background:linear-gradient(90deg,rgba(255,77,0,.03) 0%,transparent 46%)}
         .mth{padding:18px 20px 18px 22px;border:1px solid #151515;border-left:2px solid rgba(255,77,0,.18);border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,.01),rgba(255,255,255,.004));transition:all .25s;cursor:default}
         .mth:hover{border-color:rgba(255,77,0,.18);border-left-color:#FF4D00;background:linear-gradient(180deg,rgba(255,77,0,.03),rgba(255,255,255,.006));transform:translateX(2px)}
         .mth:hover .mth-t{color:#FF4D00!important}
@@ -4102,13 +4154,13 @@ export default function Roberto() {
         .home-pretty{text-wrap:pretty}
         .home-balance{text-wrap:balance}
         .home-section-kicker{display:inline-block;font-size:clamp(24px,3vw,31px);letter-spacing:0;color:#FF4D00;text-transform:none;opacity:.94;font-family:'Playfair Display',serif;font-style:italic;line-height:1.04;text-wrap:balance;text-shadow:0 0 18px rgba(255,77,0,.06)}
-        .home-section-sub{font-size:15px;color:#b7afa5;margin-bottom:48px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.9;max-width:520px;text-wrap:pretty}
-        .home-selected-heading-wrap{margin-bottom:14px}
-                .home-selected-heading{display:inline-block;font-size:clamp(34px,4.6vw,48px);line-height:1.01;color:#F5F0E8;font-family:'Playfair Display',serif;font-style:italic;letter-spacing:-.4px;text-wrap:balance}
+        .home-section-sub{font-size:15px;color:#b7afa5;margin-bottom:52px;font-style:italic;font-family:'Playfair Display',serif;line-height:2.0;max-width:540px;text-wrap:pretty}
+        .home-selected-heading-wrap{margin-bottom:16px}
+        .home-selected-heading{display:inline-block;font-size:clamp(38px,5.2vw,58px);line-height:1.0;color:#F5F0E8;font-family:'Playfair Display',serif;font-style:italic;letter-spacing:-.5px;text-wrap:balance}
         .has-accent-dot::after{content:'.';color:#FF4D00;font-style:normal}
         .svc-tw{min-width:0}
-        .home-work-narrative{font-size:16px;color:#F4F0EA;line-height:1.9;margin-bottom:14px;max-width:600px;text-wrap:pretty}
-        .home-work-secondary{font-size:13px;color:#aca39a;line-height:2.0;margin-bottom:22px;max-width:560px;text-wrap:pretty}
+        .home-work-narrative{font-size:17px;color:#EDE8E0;line-height:1.96;margin-bottom:16px;max-width:620px;text-wrap:pretty;font-family:'Playfair Display',serif;font-style:italic}
+        .home-work-secondary{font-size:14px;color:#b0a89f;line-height:2.0;margin-bottom:22px;max-width:580px;text-wrap:pretty}
         .home-service-title{font-size:33px;font-weight:600;color:#EEE8E0;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.04;letter-spacing:-.02em;text-wrap:balance;word-break:normal;overflow-wrap:normal;max-width:100%}
         .home-service-sub{font-size:13px;color:#bcaea1;margin-bottom:14px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.66;text-wrap:pretty}
         .home-service-desc{font-size:14px;color:#ddd7cf;line-height:1.96;text-wrap:pretty;max-width:500px}
@@ -4607,12 +4659,12 @@ export default function Roberto() {
 
           {/* 2. DIVIDER */}
           <Section delay={0.1}>
-            <div style={{ height: 1, background: "linear-gradient(to right,#FF4D00 0%,rgba(255,77,0,.12) 45%,transparent 100%)", marginBottom: 48 }} />
+            <div style={{ height: 1, background: "linear-gradient(to right,rgba(255,255,255,.14) 0%,rgba(255,255,255,.05) 50%,transparent 100%)", marginBottom: 72 }} />
           </Section>
 
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
-            <div style={{ marginBottom: isMobileViewport ? 58 : 72 }}>
+            <div style={{ marginBottom: isMobileViewport ? 64 : 88 }}>
               <div className="home-selected-heading-wrap">
                 <div className="home-selected-heading has-accent-dot">{T.selectedWorkLabel}</div>
               </div>
@@ -4620,8 +4672,8 @@ export default function Roberto() {
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {T.selectedWork.map((work, i) => (
                   <div key={i} className="work-card" style={{
-                    paddingTop: isMobileViewport ? 26 : 38,
-                    paddingBottom: isMobileViewport ? 26 : 38,
+                    paddingTop: isMobileViewport ? 32 : 54,
+                    paddingBottom: isMobileViewport ? 32 : 54,
                     paddingRight: 0,
                     borderBottom: i < T.selectedWork.length - 1 ? "1px solid #141414" : "none",
                     cursor: "pointer",
@@ -4638,8 +4690,11 @@ export default function Roberto() {
                     tabIndex={0}
                     aria-label={`${CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}: ${work.title}`}
                   >
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 12, flexWrap: "wrap" }}>
-                      <div style={{ fontSize: 30, fontWeight: 600, color: "#F5F0E8", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.04 }}>
+                    <div style={{ marginBottom: 6 }}>
+                      <div style={{ fontSize: 10, letterSpacing: 2.5, color: "#4a4540", fontFamily: "'IBM Plex Mono',monospace", marginBottom: 16 }}>0{i + 1}</div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
+                      <div style={{ fontSize: "clamp(28px,3.8vw,44px)", fontWeight: 600, color: "#F5F0E8", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.04 }}>
                         {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
