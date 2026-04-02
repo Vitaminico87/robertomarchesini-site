@@ -2720,10 +2720,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
       setLibraryPropagationActive(true);
     }, 150);
 
-    thesisTimeoutRef.current = setTimeout(() => {
-      setShowLibraryThesis(true);
-    }, 540);
-
     revealTimeoutRef.current = setTimeout(() => {
       setLibraryRoomGreen(true);
       setProfileUnlocked(true);
@@ -2794,10 +2790,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
                 <div className={`ch1-library-base-layer ${libraryTakeoverSolid ? 'taken' : ''}`}>
                   <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
                   <div className="ch1-library-glow" />
-                  <div className={`ch1-line-block ch1-thesis ${showLibraryThesis ? 'show' : ''}`}>
-                    <div className="ch1-line">{T.revealCopy}</div>
                   </div>
-                </div>
                 <video
                   ref={libraryFullRef}
                   className={`ch1-fill ch1-library-activation-video ${activated ? 'active' : ''}`}
@@ -3296,11 +3289,8 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (scene !== "synthesis") return undefined;
     onUnlockProfile?.("synthesis");
     setFinalFade(false);
-    setShowFutureBtn(false);
+    setShowFutureBtn(true);
     setShowFinalLine(true);
-    finalLineTimeoutRef.current = setTimeout(() => {
-      setShowFutureBtn(true);
-    }, 180);
     return () => {
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
@@ -3354,12 +3344,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (scene !== "synthesis") return;
     if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
     setFinalFade(true);
-    const run = () => onComplete?.();
-    if (typeof requestAnimationFrame === "function") {
-      requestAnimationFrame(run);
-    } else {
-      continueTimeoutRef.current = setTimeout(run, 0);
-    }
+    onComplete?.();
   }, [scene, onComplete]);
 
   return (
@@ -3428,7 +3413,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             </div>
           ) : (
             <div className="ch1-controls ch2-controls ch3-controls-final">
-              <Ch1ChoiceButton onClick={handleToFuture} disabled={!showFutureBtn}>{T.nextBtn || T.continueBtn}</Ch1ChoiceButton>
+              <Ch1ChoiceButton onClick={handleToFuture}>{T.nextBtn || T.continueBtn}</Ch1ChoiceButton>
             </div>
           )}
         </div>
