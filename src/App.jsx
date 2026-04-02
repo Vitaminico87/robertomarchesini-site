@@ -3692,12 +3692,12 @@ export default function Roberto() {
         .pixel-social-link-mobile{padding:8px 10px;background:rgba(7,7,7,.9)}
         .pixel-social-icon{display:flex;align-items:center;justify-content:center;flex:0 0 auto}
         .pixel-social-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;line-height:1}
-        .home-cta-shell{position:relative;display:flex;justify-content:center;align-items:flex-end;width:100%}
-        .home-cta-actions{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap}
+        .home-cta-shell{position:relative;width:100%}
+        .home-cta-actions{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap;width:100%}
         .home-trash-wrap{position:relative;display:flex;align-items:center;justify-content:center}
-        .home-trash-sidekick{position:absolute;left:50%;bottom:2px;transform:translateX(calc(-50% - 126px));pointer-events:none}
+        .home-trash-sidekick{position:absolute;top:50%;left:50%;transform:translate(calc(-50% - 170px), -50%);pointer-events:none;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center}
         .home-cestina-teaser{position:relative;flex:0 0 auto;width:24px;height:42px;display:flex;align-items:flex-end;justify-content:center;opacity:.72;transform:translateY(0);transition:opacity .24s ease,transform .24s ease,filter .24s ease;filter:drop-shadow(0 0 6px rgba(240,236,230,.08))}
-        .home-cestina-teaser.is-active,.home-trash-wrap:hover ~ .home-trash-sidekick .home-cestina-teaser,.home-trash-sidekick:hover .home-cestina-teaser{opacity:.92;transform:translateY(-1px);filter:drop-shadow(0 0 10px rgba(240,236,230,.12))}
+        .home-cestina-teaser.is-active,.home-cta-shell:hover .home-cestina-teaser{opacity:.92;transform:translateY(-1px);filter:drop-shadow(0 0 10px rgba(240,236,230,.12))}
         .home-cestina-teaser::after{content:"";position:absolute;left:50%;bottom:1px;width:14px;height:4px;border-radius:50%;background:rgba(0,0,0,.2);filter:blur(2px);transform:translateX(-50%)}
         .home-cestina-teaser-sprite{position:relative;z-index:1;width:100%;height:auto;display:block;image-rendering:pixelated;animation:homeTeaserSway 5.8s ease-in-out infinite;pointer-events:none;user-select:none;transform-origin:center bottom;opacity:.94}
         @keyframes homeTeaserSway{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-1px) rotate(1deg)}}
@@ -4022,9 +4022,9 @@ export default function Roberto() {
         }
 
         @media (max-width:600px){
-          .home-cta-shell{display:flex;justify-content:center}
+          .home-cta-shell{display:block}
           .home-cta-actions{gap:14px}
-          .home-trash-sidekick{position:absolute;left:50%;transform:translateX(calc(-50% - 104px));bottom:4px}
+          .home-trash-sidekick{display:none}
           .home-cestina-teaser{width:18px;height:32px;opacity:.82}
         }
       `}</style>
@@ -4251,6 +4251,9 @@ export default function Roberto() {
                 {T.availableFor}
               </div>
               <div className="home-cta-shell">
+                <div className="home-trash-sidekick" aria-hidden="true">
+                  <HomeCestinaTeaser active={hoverTrash} />
+                </div>
                 <div className="home-cta-actions">
                   <div className="home-trash-wrap">
                     <button className="btn-trash" onClick={handleTrash}
@@ -4269,9 +4272,6 @@ export default function Roberto() {
                     onMouseEnter={() => setHoverContact(true)} onMouseLeave={() => setHoverContact(false)}>
                     {hoverContact ? T.contactHover : T.contactBtn}
                   </button>
-                </div>
-                <div className="home-trash-sidekick" aria-hidden="true">
-                  <HomeCestinaTeaser active={hoverTrash} />
                 </div>
               </div>
             </div>
