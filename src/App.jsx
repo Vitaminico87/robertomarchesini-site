@@ -22,7 +22,7 @@ const ASSETS = {
   chapter2StreetFrame: `${ASSET_BASE_CH2}/chapter2_street_frame_v01.png?v=1`,
   chapter2DeskGameBase: `${ASSET_BASE_CH2}/chapter2_desk_game_base.png?v=1`,
   chapter3Frame1: "https://www.robertomarchesini.com/assets/chapter3/chapter3_q1_backstage.png",
-  chapter3Frame2: "/assets/chapter3/chapter3_q2_synthesis_tree.webp?v=1",
+  chapter3Frame2: "https://www.robertomarchesini.com/assets/chapter3/chapter3_q2_synthesis_tree.webp?v=1",
   chapter3RoomTone: "https://www.robertomarchesini.com/assets/chapter3/ch3_roomtone.wav",
   chapter3OpenChatter: "https://www.robertomarchesini.com/assets/chapter3/ch3_open_chatter.wav",
 };
@@ -3314,20 +3314,26 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   const handleCenter = useCallback(() => {
     if (scene !== "backstage" || sceneTransitioning) return;
     unlockAmbience();
+    ambience.stop();
     setFeedbackText("");
     setSceneTransitioning(true);
     setShowFinalLine(false);
+    setFinalFade(false);
     setSynthesisRevealed(false);
+    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
     if (sceneSwitchTimeoutRef.current) clearTimeout(sceneSwitchTimeoutRef.current);
     if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
+    if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
+    if (finalFadeTimeoutRef.current) clearTimeout(finalFadeTimeoutRef.current);
+    if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+
+    setScene("synthesis");
     sceneSwitchTimeoutRef.current = setTimeout(() => {
-      ambience.stop();
-      setScene("synthesis");
-      requestAnimationFrame(() => setSynthesisRevealed(true));
-    }, 620);
+      setSynthesisRevealed(true);
+    }, 40);
     sceneTransitionTimeoutRef.current = setTimeout(() => {
       setSceneTransitioning(false);
-    }, 1220);
+    }, 520);
   }, [scene, sceneTransitioning, unlockAmbience, ambience]);
 
   return (
