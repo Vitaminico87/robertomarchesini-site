@@ -4655,16 +4655,8 @@ export default function Roberto() {
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
               <div className="home-pretty" style={{ fontSize: isMobileViewport ? 16 : 15, color: "#F0ECE6", marginTop: 18, lineHeight: isMobileViewport ? 1.8 : 1.95, maxWidth: isMobileViewport ? 430 : 500, textWrap: "pretty" }}>{T.hero}</div>
-              {T.heroBackground && (
-                <div className="home-pretty" style={{ fontSize: isMobileViewport ? 13 : 12, color: "#857d74", marginTop: isMobileViewport ? 14 : 16, lineHeight: 1.88, maxWidth: isMobileViewport ? 390 : 440, textWrap: "pretty", fontStyle: "italic", fontFamily: "'Playfair Display',serif" }}>{T.heroBackground}</div>
-              )}
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
-          </Section>
-
-          {/* 2. DIVIDER */}
-          <Section delay={0.1}>
-            <div style={{ height: 1, background: "linear-gradient(to right,rgba(255,255,255,.14) 0%,rgba(255,255,255,.05) 50%,transparent 100%)", marginBottom: 72 }} />
           </Section>
 
           {/* 4. SELECTED WORK */}
