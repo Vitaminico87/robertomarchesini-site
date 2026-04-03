@@ -80,7 +80,7 @@ const CASE_STUDIES = {
         },
         {
           title: "Il sistema costruito",
-          body: "Ho lavorato su contenuti, social, promozione digitale e architettura del racconto online, tenendo insieme continuità, desiderabilità e memoria del progetto. Il punto non era produrre di più, ma dare al brand una traiettoria leggibile e persistente."
+          body: "Ho lavorato su contenuti, social e promozione digitale costruendo una continuità di racconto capace di reggere tournée, riaperture e cicli lunghi senza perdere riconoscibilità. Il punto non era aumentare il volume, ma tenere insieme presenza e memoria."
         },
         {
           title: "Cosa ha retto davvero",
@@ -100,20 +100,20 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/theia_03.jpg", caption: "" },
       ],
       meta: "Posizionamento · Sito · Architettura digitale",
-      lead: "Un lavoro di posizionamento, direzione del sito e struttura digitale pensato per aumentare credibilità, chiarezza e capacità di contatto di un brand eventi premium.",
+      lead: "Un lavoro di posizionamento, direzione del sito e struttura digitale pensato per rendere il brand più chiaro, più credibile e più solido nel momento del contatto.",
       proof: ["posizionamento premium", "brand + landing + tracking", "architettura orientata al lead"],
       sections: [
         {
           title: "Il problema",
-          body: "THEIA non aveva bisogno di un sito decorativo. Aveva bisogno di una presenza digitale capace di sostenere percezione premium, chiarezza dell’offerta e qualità del contatto commerciale."
+          body: "THEIA non aveva bisogno di un sito bello. Aveva bisogno di una presenza digitale capace di sostenere percezione premium, chiarezza dell’offerta e qualità del primo contatto commerciale."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho lavorato su tono, struttura delle pagine, gerarchia dei contenuti e architettura del sito per costruire un’esperienza più credibile, più leggibile e più utile come macchina di presentazione e di acquisizione."
+          body: "Ho lavorato su tono, struttura delle pagine e gerarchia dei contenuti per costruire un’esperienza più chiara e più credibile, utile sia come presentazione del brand sia come macchina di contatto."
         },
         {
           title: "Cosa ha retto davvero",
-          body: "L’allineamento tra percezione del brand, navigazione e qualità del lead. Non solo un’estetica premium, ma una struttura digitale pensata per sostenere fiducia e contatto."
+          body: "L’allineamento tra percezione del brand, navigazione e qualità del contatto. Non un’estetica premium fine a sé stessa, ma una struttura pensata per sostenere fiducia e conversione."
         }
       ],
       closing: "Quando posizionamento e struttura lavorano insieme, il sito smette di essere vetrina e diventa sistema."
@@ -169,7 +169,7 @@ const CASE_STUDIES = {
         },
         {
           title: "The system built",
-          body: "I worked on content, social, digital promotion, and the architecture of the online narrative, keeping continuity, desirability, and memory of the project together. The point was not to produce more, but to give the brand a readable and persistent trajectory."
+          body: "I worked on content, social, and digital promotion, building a narrative continuity able to sustain tours, relaunches, and long cycles without losing recognizability. The point was not to increase volume, but to hold presence and memory together."
         },
         {
           title: "What actually held up",
@@ -189,20 +189,20 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/theia_03.jpg", caption: "" },
       ],
       meta: "Positioning · Website · Digital architecture",
-      lead: "A positioning, website direction, and digital structure project designed to increase credibility, clarity, and lead quality for a premium event brand.",
+      lead: "A positioning, website direction, and digital structure project designed to make the brand clearer, more credible, and more solid at the point of contact.",
       proof: ["premium positioning", "brand + landing + tracking", "lead-oriented architecture"],
       sections: [
         {
           title: "The problem",
-          body: "THEIA did not need a decorative website. It needed a digital presence able to sustain premium perception, clarity of offer, and the quality of commercial contact."
+          body: "THEIA did not need a beautiful website. It needed a digital presence able to sustain premium perception, clarity of offer, and the quality of the first commercial contact."
         },
         {
           title: "The system built",
-          body: "I worked on tone, page structure, content hierarchy, and website architecture to build an experience that was more credible, more readable, and more useful as both a presentation layer and an acquisition system."
+          body: "I worked on tone, page structure, and content hierarchy to build a clearer, more credible experience, useful both as brand presentation and as a contact engine."
         },
         {
           title: "What actually held up",
-          body: "The alignment between brand perception, navigation, and lead quality. Not just a premium aesthetic, but a digital structure designed to sustain trust and contact."
+          body: "The alignment between brand perception, navigation, and contact quality. Not a premium aesthetic for its own sake, but a structure designed to sustain trust and conversion."
         }
       ],
       closing: "When positioning and structure work together, the website stops being a showcase and becomes a system."
@@ -225,10 +225,10 @@ const LANG = {
     proofStripMobile: "15+ anni · Direzione creativa, contenuti, sistemi",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Posizionamento", subtitle: "Messaggio, tono e struttura", desc: "Aiuto brand e progetti a chiarire cosa dire, come dirlo e con quale struttura presentarsi in modo più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
-      { title: "Sistemi contenuti", subtitle: "Format, calendario, continuità", desc: "Progetto impianti editoriali e promozionali che tengono insieme ritmo, varietà e riconoscibilità senza disperdersi nella ripetizione.", mobileDesc: "Progetto impianti editoriali e promozionali." },
-      { title: "Esperienze digitali", subtitle: "Siti, pagine, percorsi", desc: "Costruisco architetture ed esperienze digitali più chiare, credibili e utili, dal sito alle landing fino ai principali punti di contatto.", mobileDesc: "Costruisco siti, landing e percorsi più chiari." },
-      { title: "Workflow creativi con AI", subtitle: "Velocità, varianti, controllo", desc: "Uso l’AI per aumentare possibilità e controllo nei processi creativi, senza trasformare il lavoro in produzione automatica di rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
+      { title: "Posizionamento", subtitle: "Messaggio, tono, struttura", desc: "Chiarisco cosa dire, come dirlo e con quale forma un progetto pu più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
+      { title: "Sistemi contenuti", subtitle: "Format, calendario, continuità", desc: "Progetto impianti editoriali e promozionali che tengono insieme ritmo, varietà e riconoscibilità senza collassare nella ripetizione.", mobileDesc: "Progetto impianti editoriali e promozionali." },
+      { title: "Esperienze digitali", subtitle: "Siti, pagine, percorsi", desc: "Costruisco strutture digitali più chiare, utili e credibili, dal sito ai principali punti di contatto.", mobileDesc: "Costruisco siti, landing e percorsi più chiari." },
+      { title: "Workflow creativi con AI", subtitle: "Velocità, varianti, controllo", desc: "Uso l’AI per aumentare possibilità e controllo non per automatizzare rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
     ],
     selectedWorkKicker: "Selezione",
     selectedWorkLabel: "Lavori scelti",
@@ -415,10 +415,10 @@ const LANG = {
     proofStripMobile: "15+ years · Creative direction, content, systems",
     whatido: "What I build",
     services: [
-      { title: "Positioning", subtitle: "Message, tone, structure", desc: "I help brands and projects clarify what they need to say, how they should say it, and how they should present themselves more clearly and credibly.", mobileDesc: "I clarify message, tone, and structure." },
-      { title: "Content systems", subtitle: "Formats, calendar, continuity", desc: "I design editorial and promotional systems that keep rhythm, variety, and recognizability together without dissolving into repetition.", mobileDesc: "I design editorial and promotional systems." },
-      { title: "Digital experiences", subtitle: "Websites, pages, journeys", desc: "I build clearer, more credible, and more useful digital structures and experiences, from websites and landing pages to key touchpoints.", mobileDesc: "I build clearer websites, landing pages, and journeys." },
-      { title: "AI creative workflows", subtitle: "Speed, variation, control", desc: "I use AI to expand possibilities and control inside creative processes, without turning the work into automated noise.", mobileDesc: "I use AI to expand possibilities and control." },
+      { title: "Positioning", subtitle: "Message, tone, structure", desc: "I clarify what to say, how to say it, and how a project can present itself more clearly and credibly.", mobileDesc: "I clarify message, tone, and structure." },
+      { title: "Content systems", subtitle: "Formats, calendar, continuity", desc: "I design editorial and promotional systems that keep rhythm, variety, and recognizability together without collapsing into repetition.", mobileDesc: "Editorial and promotional systems." },
+      { title: "Digital experiences", subtitle: "Websites, pages, journeys", desc: "I build clearer, more useful, and more credible digital structures, from websites to key touchpoints.", mobileDesc: "Clearer websites, landing pages, and journeys." },
+      { title: "AI creative workflows", subtitle: "Speed, variation, control", desc: "I use AI to expand possibilities and control, not to automate noise.", mobileDesc: "AI for possibilities and control." },
     ],
     selectedWorkKicker: "Selection",
     selectedWorkLabel: "Selected Work",
@@ -4757,15 +4757,6 @@ export default function Roberto() {
                         ))}
                       </div>
                     ) : null}
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-                      {work.tags.map((tag, j) => (
-                        <span key={j} style={{ 
-                          fontSize: 9, letterSpacing: 1.2, color: "#9d958d", textTransform: "uppercase", 
-                          fontFamily: "'IBM Plex Mono', monospace",
-                          padding: "3px 8px", border: "1px solid #2A2A2A", borderRadius: 2,
-                        }}>{tag}</span>
-                      ))}
-                    </div>
                     <button className="top-btn" onClick={(e) => { e.stopPropagation(); openCaseStudy(getWorkSlug(work.title)); }}>{CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}</button>
                   </div>
                 ))}
@@ -4795,27 +4786,8 @@ export default function Roberto() {
             </div>
           </Section>
 
-          {/* 6. HOW I WORK */}
-          <Section delay={0.18}>
-            <div style={{ marginBottom: isMobileViewport ? 50 : 60 }}>
-              <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.howLabel}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 18 : 22 }}>
-                {T.method.map((m, i) => (
-                  <div key={i} className="mth">
-                    <div style={{ display: "block" }}>
-                      <div>
-                        <div className="mth-t home-method-title">{m.title}</div>
-                        <div className="home-method-desc">{isMobileViewport ? (m.mobileDesc || m.desc) : m.desc}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Section>
-
           {/* DIVIDER */}
-          <Section delay={0.2}>
+          <Section delay={0.18}>
             <div style={{ height: 1, background: "linear-gradient(to right,transparent,#1A1A1A,transparent)", marginBottom: 40 }} />
           </Section>
 
