@@ -306,7 +306,7 @@ const LANG = {
       toLibraryBtn: "Riportalo in biblioteca",
       approachBtn: "Avvicinati",
       backOffBtn: "Smetti di giocarci",
-      continueBtn: "Continua",
+      continueBtn: "Entraci",
       stayFeedback: "Sarei potuto restare lì.",
       profileTitle: "Profilo emerso",
       profileIdle: "Si aggiorna mentre il percorso prende forma.",
@@ -504,7 +504,7 @@ const LANG = {
       toLibraryBtn: "Take him back to the library",
       approachBtn: "Get closer",
       backOffBtn: "Stop playing with it",
-      continueBtn: "Continue",
+      continueBtn: "Step inside",
       stayFeedback: "I could have stayed there.",
       profileTitle: "Emerging profile",
       profileIdle: "Updates as the path takes shape.",
@@ -2658,6 +2658,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
   const [showCrossing, setShowCrossing] = useState(false);
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const [showLibraryThesis, setShowLibraryThesis] = useState(false);
+  const [libraryPortalOpen, setLibraryPortalOpen] = useState(false);
   const [libraryMonitorBloom, setLibraryMonitorBloom] = useState(false);
   const [libraryPropagationActive, setLibraryPropagationActive] = useState(false);
   const [libraryRoomGreen, setLibraryRoomGreen] = useState(false);
@@ -2793,30 +2794,32 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
     setLibraryPropagationActive(false);
     setLibraryRoomGreen(false);
     setLibraryTakeoverSolid(false);
+    setLibraryPortalOpen(false);
     setShowLibraryThesis(false);
 
     swoshTimeoutRef.current = setTimeout(() => {
       playLibrarySwosh();
+      setLibraryPortalOpen(true);
       setLibraryMonitorBloom(true);
-    }, 50);
+    }, 40);
 
     floodTimeoutRef.current = setTimeout(() => {
       setLibraryPropagationActive(true);
-    }, 150);
+    }, 180);
 
     revealTimeoutRef.current = setTimeout(() => {
       setLibraryRoomGreen(true);
       setProfileUnlocked(true);
       onUnlockProfile?.('origin');
-    }, 860);
+    }, 620);
 
     dissolveTimeoutRef.current = setTimeout(() => {
       setLibraryTakeoverSolid(true);
-    }, 1320);
+    }, 980);
 
     mountCrossingTimeoutRef.current = setTimeout(() => {
       setShowCrossing(true);
-    }, 1650);
+    }, 1180);
   }, [activated, unlockAudio, playLibrarySwosh, onUnlockProfile]);
 
   const handleCrossingComplete = useCallback(() => {
@@ -2884,6 +2887,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
                   preload="auto"
                 />
                 <div className={`ch1-library-activated-glow ${activated ? 'active' : ''}`} />
+                <div className={`ch1-library-monitor-portal ${libraryPortalOpen ? 'active' : ''}`} />
                 <div className={`ch1-library-monitor-bloom ${libraryMonitorBloom ? 'active' : ''}`} />
                 <div className={`ch1-library-green-propagation ${libraryPropagationActive ? 'active' : ''}`} />
                 <div className={`ch1-library-room-green ${libraryRoomGreen ? 'active' : ''}`} />
@@ -4559,7 +4563,11 @@ export default function Roberto() {
         .ch1-library-full-green.active{opacity:1;clip-path:circle(188% at 21% 70%);filter:blur(2px) saturate(.98)}
         .ch1-line-block.ch1-thesis{z-index:8;opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
         .ch1-line-block.ch1-thesis.show{opacity:1;transform:translateY(0)}
-        .ch1-crossing-shell{position:relative;width:100%}
+        .ch1-library-monitor-portal{position:absolute;left:46.8%;top:31.5%;width:9.5%;height:8.2%;opacity:0;pointer-events:none;border-radius:2px;background:radial-gradient(circle at center,rgba(225,255,220,.92) 0%,rgba(165,220,150,.78) 26%,rgba(90,170,95,.34) 55%,rgba(90,170,95,0) 78%);box-shadow:0 0 18px rgba(170,230,160,.30),0 0 42px rgba(120,200,120,.18);transform:scale(1);transform-origin:center center;filter:blur(.2px)}
+        .ch1-library-monitor-portal.active{animation:ch1MonitorPortalOpen 820ms cubic-bezier(.2,.7,.2,1) forwards}
+        @keyframes ch1MonitorPortalOpen{0%{opacity:0;transform:scale(.92)}18%{opacity:.95;transform:scale(1.18)}45%{opacity:.92;transform:scale(2.8,2.3)}72%{opacity:.88;transform:scale(5.8,4.6)}100%{opacity:.82;transform:scale(11.5,8.8)}}
+        .ch1-crossing-shell{position:relative;width:100%;animation:ch1CrossingBloomIn 280ms ease-out both}
+        @keyframes ch1CrossingBloomIn{0%{opacity:0;transform:scale(1.015);filter:brightness(1.2)}100%{opacity:1;transform:scale(1);filter:brightness(1)}}
 
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
         .ch1-feedback.show{opacity:1;transform:translateY(0)}
