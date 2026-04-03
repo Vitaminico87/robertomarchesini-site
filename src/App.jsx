@@ -225,10 +225,10 @@ const LANG = {
     proofStripMobile: "15+ anni · Direzione creativa, contenuti, sistemi",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Posizionamento", subtitle: "Messaggio, tono, struttura", desc: "Chiarisco cosa dire, come dirlo e con quale forma un progetto pu più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
+      { title: "Posizionamento", subtitle: "Messaggio, tono, struttura", desc: "Chiarisco cosa dire, come dirlo e con quale forma un progetto può risultare più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
       { title: "Sistemi contenuti", subtitle: "Format, calendario, continuità", desc: "Progetto impianti editoriali e promozionali che tengono insieme ritmo, varietà e riconoscibilità senza collassare nella ripetizione.", mobileDesc: "Progetto impianti editoriali e promozionali." },
       { title: "Esperienze digitali", subtitle: "Siti, pagine, percorsi", desc: "Costruisco strutture digitali più chiare, utili e credibili, dal sito ai principali punti di contatto.", mobileDesc: "Costruisco siti, landing e percorsi più chiari." },
-      { title: "Workflow creativi con AI", subtitle: "Velocità, varianti, controllo", desc: "Uso l’AI per aumentare possibilità e controllo non per automatizzare rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
+      { title: "Workflow creativi con AI", subtitle: "Velocità, varianti, controllo", desc: "Uso l’AI per aumentare possibilità e controllo, non per automatizzare rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
     ],
     selectedWorkKicker: "Selezione",
     selectedWorkLabel: "Lavori scelti",
