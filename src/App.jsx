@@ -394,6 +394,7 @@ const LANG = {
       cartCopy: "Inserisci la cartuccia.",
       idleCopy: "Accendi lo schermo.",
       activatedCopy: "Apri il canale.",
+      pressStartCopy: "Premi START per unirti alla partita.",
       connectedCopy: "Secondo controller connesso.",
       formTitle: "Apri la connessione.",
       formDa: "Da",
@@ -591,6 +592,7 @@ const LANG = {
       cartCopy: "Insert the cartridge.",
       idleCopy: "Turn on the screen.",
       activatedCopy: "Open the channel.",
+      pressStartCopy: "Press START to join the game.",
       connectedCopy: "Second controller connected.",
       formTitle: "Open the connection.",
       formDa: "From",
@@ -3679,7 +3681,7 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
           phaseRef.current = "connected"; setPhase("connected");
           setCableEnd({ ...CH4_SOCKET });
           onUnlockProfile?.("future");
-          connectTORef.current = setTimeout(() => setShowForm(true), 900);
+          connectTORef.current = setTimeout(() => { phaseRef.current = "press_start"; setPhase("press_start"); }, 900);
           rafRef.current = null; return;
         }
       }
@@ -3724,6 +3726,12 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
       return;
     }
     if (ph === "cart_drag") return;
+    if (ph === "press_start") {
+      e.preventDefault();
+      phaseRef.current = "unlocked"; setPhase("unlocked");
+      setShowForm(true);
+      return;
+    }
     if (ph === "cart_in" || ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
       const tipR = 0.075 * (mob ? 1.4 : 1);
       const ce = currentRef.current;
@@ -3787,14 +3795,16 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   const cdx = ex - ox, sag = Math.abs(cdx) * 0.06;
   const cablePath = `M ${ox} ${oy} C ${ox + cdx * 0.28} ${oy + sag} ${ex - cdx * 0.22} ${ey + sag * 0.4} ${ex} ${ey}`;
   const passedCount = passed.filter(Boolean).length;
-  const cableColor  = phase === "connected" || phase === "unlocked" ? "#d6cdfd"
+  const cableColor  = phase === "connected" || phase === "press_start" || phase === "unlocked" ? "#d6cdfd"
     : passedCount === 0 ? "#7B6FD4" : passedCount === 1 ? "#6A9BC5" : passedCount === 2 ? "#8BBCB8" : "#BFB6F5";
   const isCrtOn     = phase !== "idle";
   const showCart    = phase === "crt_on" || phase === "cart_drag";
-  const isActive    = phase === "cart_in" || phase === "cable" || phase === "passed1" || phase === "passed2" || phase === "passed3" || phase === "connected" || phase === "unlocked";
+  const isActive    = phase === "cart_in" || phase === "cable" || phase === "passed1" || phase === "passed2" || phase === "passed3" || phase === "connected" || phase === "press_start" || phase === "unlocked";
   const isDragPhase = phase === "cart_in" || phase === "cable" || phase === "passed1" || phase === "passed2" || phase === "passed3";
-  const isConnected = phase === "connected" || phase === "unlocked";
-  const copyText    = isConnected ? t4.connectedCopy
+  const isConnected = phase === "connected" || phase === "press_start" || phase === "unlocked";
+  const isPressStart = phase === "press_start";
+  const copyText    = isPressStart ? t4.pressStartCopy
+    : isConnected ? t4.connectedCopy
     : isDragPhase ? t4.activatedCopy
     : showCart ? t4.cartCopy
     : t4.idleCopy;
@@ -3816,7 +3826,7 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
             position: "relative", background: "#080510",
             border: "1px solid rgba(130,100,200,.12)",
             boxShadow: "0 0 0 1px rgba(122,92,255,.06), 0 34px 90px rgba(0,0,0,.5)",
-            overflow: "hidden", cursor: isDragging ? "grabbing" : "default", userSelect: "none",
+            overflow: "hidden", cursor: isDragging ? "grabbing" : isPressStart ? "pointer" : "default", userSelect: "none",
           }}
         >
           <img src={CH4_IMG_URL} alt="" draggable={false} style={{
@@ -3987,6 +3997,24 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
                 )}
               </>
             )}
+
+            {isPressStart && (() => {
+              const cx = sx(CH4_CRT_SCREEN.x), cy = sy(CH4_CRT_SCREEN.y);
+              const fs = Math.max(9, sw * 0.022);
+              return (
+                <g style={{ cursor: "pointer" }}>
+                  <rect x={0} y={0} width={sw} height={sh} fill="transparent" />
+                  <rect x={cx - sw * .13} y={cy - sh * .06} width={sw * .26} height={sh * .12}
+                    rx={3} fill="rgba(0,8,4,.62)" />
+                  <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle"
+                    fontFamily="'IBM Plex Mono',monospace" fontSize={fs} fontWeight="700"
+                    fill="rgba(140,255,200,.95)" letterSpacing={Math.max(2, sw * 0.004)}
+                    style={{ animation:"ch4PressStart 1.1s step-end infinite", pointerEvents:"none", textTransform:"uppercase" }}>
+                    PRESS START
+                  </text>
+                </g>
+              );
+            })()}
           </svg>
 
           {!showForm && (
@@ -4603,7 +4631,7 @@ export default function Roberto() {
         .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:31.9%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
         .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
         .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
-        .ch2-line-block{position:absolute;left:0;right:0;bottom:0;z-index:8;max-width:none;border-top:1px solid rgba(192,218,244,.18);padding:12px 18px 11px;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.34) 18%,rgba(0,0,0,.80) 100%)}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3;text-align:left}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:50%;transform:translateY(-50%);left:36px;right:36px;font-size:clamp(20px,2.3vw,28px);line-height:1.18}.ch2-feedback-overlay.show.is-bridge{transform:translateY(-50%)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-stage-transitioning .ch2-window-video{filter:saturate(.94) brightness(.92) contrast(1.02);transform:scale(1.01);transition:filter .45s ease,transform .45s ease}.ch2-stage-transitioning .ch2-line-block{opacity:.72;transition:opacity .35s ease}.ch2-desk-transition-copy{width:100%;max-width:560px;min-height:46px;margin:0}
+        .ch2-line-block{position:absolute;left:0;right:0;bottom:0;z-index:8;max-width:none;border-top:1px solid rgba(192,218,244,.18);padding:12px 18px 11px;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.34) 18%,rgba(0,0,0,.80) 100%)}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3;text-align:left}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:0;left:0;right:0;transform:translateY(-8px);padding:18px 28px 22px;font-size:clamp(18px,2.1vw,24px);line-height:1.22;background:linear-gradient(180deg,rgba(2,6,14,.82) 0%,rgba(4,10,22,.62) 70%,transparent 100%);text-shadow:0 2px 18px rgba(0,0,0,.95),0 0 40px rgba(0,0,0,.7)}.ch2-feedback-overlay.show.is-bridge{transform:translateY(0)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-stage-transitioning .ch2-window-video{filter:saturate(.94) brightness(.92) contrast(1.02);transform:scale(1.01);transition:filter .45s ease,transform .45s ease}.ch2-stage-transitioning .ch2-line-block{opacity:.72;transition:opacity .35s ease}.ch2-desk-transition-copy{width:100%;max-width:560px;min-height:46px;margin:0}
         .ch2-street-stage{background:#081012}
         .ch2-street-frame{filter:saturate(1.03) contrast(1.03) brightness(.95);transform:scale(1.006);animation:ch2StreetFrameDrift 10s ease-in-out infinite}
         .ch2-street-grade,.ch2-street-cool-wash,.ch2-street-door-bloom,.ch2-street-reflection-boost,.ch2-street-rain,.ch2-street-headlights,.ch2-street-vignette{position:absolute;pointer-events:none}
@@ -4691,6 +4719,7 @@ export default function Roberto() {
         @keyframes ch4ChairSpill{from{opacity:0}to{opacity:1}}
         @keyframes ch4CrtGlow{0%,100%{opacity:.72}50%{opacity:1}}
         @keyframes ch4CartHint{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+        @keyframes ch4PressStart{0%,49%{opacity:1}50%,100%{opacity:0}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
