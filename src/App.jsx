@@ -3473,17 +3473,17 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     futurePulseTimeoutsRef.current = [];
     setFutureActivating(true);
     setShowFutureBtn(false);
-    [0, 170, 360].forEach((delay, i) => {
-      const step = i + 1;
+    // Three distinct flash pulses: ON → OFF → ON → OFF → ON (hold) → fade
+    [[0,1],[220,0],[400,2],[620,0],[800,3]].forEach(([delay, step]) => {
       const t = setTimeout(() => {
         setFuturePulseStep(step);
-        playFuturePulseNote(step);
+        if (step > 0) playFuturePulseNote(step);
       }, delay);
       futurePulseTimeoutsRef.current.push(t);
     });
-    const fadeT = setTimeout(() => setFinalFade(true), 620);
+    const fadeT = setTimeout(() => setFinalFade(true), 1180);
     futurePulseTimeoutsRef.current.push(fadeT);
-    const completeT = setTimeout(() => onComplete?.(), 760);
+    const completeT = setTimeout(() => onComplete?.(), 1340);
     futurePulseTimeoutsRef.current.push(completeT);
   }, [scene, futureActivating, onComplete, playFuturePulseNote]);
 
@@ -3527,6 +3527,46 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             <div className="ch3-synthesis-amber-shimmer" />
             <div className="ch3-synthesis-circuit-pulse" />
             <div className="ch3-synthesis-vignette" />
+            <svg className="ch3-pulse-branches" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <filter id="bGlow1" x="-120%" y="-120%" width="340%" height="340%">
+                  <feGaussianBlur stdDeviation="0.9" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="bGlow2" x="-120%" y="-120%" width="340%" height="340%">
+                  <feGaussianBlur stdDeviation="1.7" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="bGlow3" x="-120%" y="-120%" width="340%" height="340%">
+                  <feGaussianBlur stdDeviation="2.8" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              {/* trunk — visible from step 1 */}
+              <g className="bpg-trunk">
+                <polyline points="66,92 65,41" stroke="#ffb84a" strokeWidth="1.8" strokeLinecap="round" fill="none" filter="url(#bGlow2)"/>
+                <polyline points="66,92 65,41" stroke="#ffe5a8" strokeWidth="0.6" strokeLinecap="round" fill="none"/>
+              </g>
+              {/* main branches — step 2 */}
+              <g className="bpg-main">
+                <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ffb84a" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#bGlow2)"/>
+                <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ffe5a8" strokeWidth="0.45" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <polyline points="65,41 74,23 84,6" stroke="#ffb84a" strokeWidth="1.0" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#bGlow2)"/>
+                <polyline points="65,41 74,23 84,6" stroke="#ffe5a8" strokeWidth="0.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <polyline points="66,38 68,14 70,3" stroke="#ffb84a" strokeWidth="0.85" strokeLinecap="round" fill="none" filter="url(#bGlow1)"/>
+                <polyline points="66,38 68,14 70,3" stroke="#ffe5a8" strokeWidth="0.35" strokeLinecap="round" fill="none"/>
+              </g>
+              {/* tips / sub-branches — step 3 */}
+              <g className="bpg-tips">
+                <polyline points="50,28 38,16 23,13" stroke="#ffb84a" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#bGlow1)"/>
+                <polyline points="34,18 27,12" stroke="#ffb84a" strokeWidth="0.6" strokeLinecap="round" fill="none" filter="url(#bGlow1)"/>
+                <polyline points="74,23 89,14 96,7" stroke="#ffb84a" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#bGlow1)"/>
+                <polyline points="17,9 9,4" stroke="#ffb84a" strokeWidth="0.55" strokeLinecap="round" fill="none" filter="url(#bGlow1)"/>
+                <polyline points="84,6 90,3" stroke="#ffb84a" strokeWidth="0.55" strokeLinecap="round" fill="none" filter="url(#bGlow1)"/>
+                <polyline points="5,6 1,9" stroke="#ffb84a" strokeWidth="0.45" strokeLinecap="round" fill="none" filter="url(#bGlow1)"/>
+                <polyline points="50,28 42,21 30,20" stroke="#ffb84a" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#bGlow1)"/>
+              </g>
+            </svg>
             <div className="ch3-distant-kite" aria-hidden="true">
               <span className="ch3-kite">
                 <span className="ch3-kite-diamond" />
@@ -4888,21 +4928,25 @@ export default function Roberto() {
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
         .ch3-stage.is-final-fade .ch3-synthesis-caption{opacity:0;transform:translateY(18px)}
-        .ch3-synthesis-panel.is-future-arming .ch3-synthesis-core-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-branch-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-circuit-pulse,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-flow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-amber-shimmer{transition:opacity .14s ease,filter .14s ease,transform .14s ease}
+        .ch3-synthesis-panel.is-future-arming .ch3-synthesis-core-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-branch-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-circuit-pulse,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-flow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-amber-shimmer{transition:opacity .18s ease,filter .18s ease,transform .18s ease}
         .ch3-synthesis-panel.is-future-arming .ch3-synthesis-core-glow{transform-origin:62% 44%}
         .ch3-synthesis-panel.is-future-arming .ch3-synthesis-branch-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-circuit-pulse,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-flow{transform-origin:60% 40%}
-        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-core-glow{opacity:.88;filter:blur(20px);transform:scale(1.05);mix-blend-mode:screen}
-        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-branch-glow{opacity:.56;filter:blur(18px)}
-        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-circuit-pulse{opacity:.34;transform:scale(1.03)}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-core-glow{opacity:1;filter:blur(22px);transform:scale(1.08);mix-blend-mode:screen}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-branch-glow{opacity:.72;filter:blur(20px);transform:scale(1.02)}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-circuit-pulse{opacity:.48;transform:scale(1.05)}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-flow{opacity:.30;filter:blur(5px)}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-core-glow{opacity:1;filter:blur(24px);transform:scale(1.12);mix-blend-mode:screen}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-branch-glow{opacity:.9;filter:blur(22px);transform:scale(1.04)}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-circuit-pulse{opacity:.62;transform:scale(1.08)}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-flow{opacity:.42;filter:blur(4px)}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-amber-shimmer{opacity:.34;transform:translateX(-6%)}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-core-glow{opacity:.72;filter:blur(20px);transform:scale(1.04);mix-blend-mode:screen;transition:opacity .05s ease,filter .05s ease,transform .05s ease}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-core-glow{opacity:.88;filter:blur(22px);transform:scale(1.07);mix-blend-mode:screen;transition:opacity .05s ease,filter .05s ease,transform .05s ease}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-branch-glow{opacity:.55;filter:blur(18px);transition:opacity .07s ease,filter .07s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-core-glow{opacity:1;filter:blur(26px);transform:scale(1.11);mix-blend-mode:screen;transition:opacity .05s ease,filter .05s ease,transform .05s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-branch-glow{opacity:.78;filter:blur(22px);transform:scale(1.03);transition:opacity .07s ease,filter .07s ease,transform .07s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-flow{opacity:.36;filter:blur(5px);transition:opacity .07s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-amber-shimmer{opacity:.28;transform:translateX(-6%);transition:opacity .07s ease,transform .07s ease}
+        /* SVG branch overlay — asymmetric flash: fast attack, slow decay */
+        .ch3-pulse-branches{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;mix-blend-mode:screen}
+        .ch3-pulse-branches .bpg-trunk,.ch3-pulse-branches .bpg-main,.ch3-pulse-branches .bpg-tips{opacity:0;transition:opacity .22s ease}
+        .pulse-step-1 .ch3-pulse-branches .bpg-trunk{opacity:.70;transition:opacity .04s ease}
+        .pulse-step-2 .ch3-pulse-branches .bpg-trunk{opacity:.85;transition:opacity .04s ease}
+        .pulse-step-2 .ch3-pulse-branches .bpg-main{opacity:.68;transition:opacity .06s ease}
+        .pulse-step-3 .ch3-pulse-branches .bpg-trunk{opacity:1;transition:opacity .04s ease}
+        .pulse-step-3 .ch3-pulse-branches .bpg-main{opacity:.88;transition:opacity .06s ease}
+        .pulse-step-3 .ch3-pulse-branches .bpg-tips{opacity:.70;transition:opacity .08s ease}
 
         @keyframes ch3ShimmerSweep{0%,100%{opacity:.08;transform:translateX(-10%)}42%{opacity:.18;transform:translateX(0%)}68%{opacity:.12;transform:translateX(4%)}}
         @keyframes ch3CircuitPulse{0%,100%{opacity:.10;transform:scale(.995)}46%{opacity:.18;transform:scale(1.01)}}
