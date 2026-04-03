@@ -221,8 +221,8 @@ const LANG = {
     heroBackground: "Vengo da fotografia e design. Oggi porto quello stesso rigore dentro sistemi creativi, contenuti e direzione.",
     heroSub: "",
     heroMobileSub: "Comunicazione, contenuti, workflow e automazioni—con criterio.",
-    proofStrip: "15+ anni di direzione creativa · Comunicazione, contenuti, sistemi · Progetti che durano",
-    proofStripMobile: "15+ anni · Direzione creativa, contenuti, sistemi",
+    proofStrip: "Leggo, scrivo, costruisco. 15+ anni di direzione creativa tra comunicazione, contenuti e sistemi.",
+    proofStripMobile: "Leggo, scrivo, costruisco. 15+ anni di direzione creativa.",
     whatido: "Cosa costruisco",
     services: [
       { title: "Posizionamento", subtitle: "Messaggio, tono, struttura", desc: "Chiarisco cosa dire, come dirlo e con quale forma un progetto può risultare più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
@@ -411,8 +411,8 @@ const LANG = {
     heroBackground: "I come from photography and design. Today I bring that same rigour into creative systems, content, and direction.",
     heroSub: "",
     heroMobileSub: "Communication, content, workflows and automation—with judgment.",
-    proofStrip: "15+ years of creative direction · Communication, content, systems · Projects built to last",
-    proofStripMobile: "15+ years · Creative direction, content, systems",
+    proofStrip: "I read, I write, I build. 15+ years of creative direction across communication, content, and systems.",
+    proofStripMobile: "I read, I write, I build. 15+ years of creative direction.",
     whatido: "What I build",
     services: [
       { title: "Positioning", subtitle: "Message, tone, structure", desc: "I clarify what to say, how to say it, and how a project can present itself more clearly and credibly.", mobileDesc: "I clarify message, tone, and structure." },
