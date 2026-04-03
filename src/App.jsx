@@ -3363,8 +3363,6 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
       if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
-      futurePulseTimeoutsRef.current.forEach(clearTimeout);
-      futurePulseTimeoutsRef.current = [];
       clearInterval(breathT);
       clearInterval(crewT);
       ambience.stop();
@@ -3376,6 +3374,12 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (scene !== "backstage") ambience.stop();
     return undefined;
   }, [audioUnlocked, scene, ambience]);
+
+  useEffect(() => {
+    return () => {
+      futurePulseTimeoutsRef.current.forEach(clearTimeout);
+    };
+  }, []);
 
   useEffect(() => {
     if (scene !== "synthesis") return undefined;
