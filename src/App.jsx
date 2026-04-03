@@ -3244,7 +3244,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
     selectionTimeoutRef.current = setTimeout(() => {
       setScene("selection");
-    }, 1150);
+    }, 2600);
   }, [T, deskTransitioning, onUnlockProfile]);
 
   useEffect(() => {
@@ -3346,6 +3346,10 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   const [synthesisRevealed, setSynthesisRevealed] = useState(false);
   const [showFinalLine, setShowFinalLine] = useState(false);
   const [showFutureBtn, setShowFutureBtn] = useState(false);
+  const [futureActivating, setFutureActivating] = useState(false);
+  const [futurePulseStep, setFuturePulseStep] = useState(0);
+  const futurePulseTimeoutsRef = useRef([]);
+  const futureAudioCtxRef = useRef(null);
 
   useEffect(() => {
     const breathT = setInterval(() => setSceneBreath((v) => !v), 2800);
@@ -3359,6 +3363,8 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
       if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
+      futurePulseTimeoutsRef.current.forEach(clearTimeout);
+      futurePulseTimeoutsRef.current = [];
       clearInterval(breathT);
       clearInterval(crewT);
       ambience.stop();
@@ -3426,12 +3432,56 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     }, 520);
   }, [scene, sceneTransitioning, unlockAmbience, ambience]);
 
+  const playFuturePulseNote = useCallback((step) => {
+    try {
+      if (!futureAudioCtxRef.current) {
+        futureAudioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = futureAudioCtxRef.current;
+      if (ctx.state === "suspended") ctx.resume();
+      const now = ctx.currentTime;
+      const freqs = [392, 494, 587]; // G4, B4, D5
+      const freq = freqs[Math.min(step - 1, freqs.length - 1)];
+      const osc = ctx.createOscillator();
+      osc.type = step === 3 ? "sine" : "triangle";
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.06, now + 0.16);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(step === 3 ? 0.03 : 0.022, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+      const filter = ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(step === 3 ? 1700 : 1300, now);
+      filter.Q.setValueAtTime(0.8, now);
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.28);
+    } catch (_) {}
+  }, []);
+
   const handleToFuture = useCallback(() => {
-    if (scene !== "synthesis") return;
+    if (scene !== "synthesis" || futureActivating) return;
     if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
-    setFinalFade(true);
-    onComplete?.();
-  }, [scene, onComplete]);
+    futurePulseTimeoutsRef.current.forEach(clearTimeout);
+    futurePulseTimeoutsRef.current = [];
+    setFutureActivating(true);
+    setShowFutureBtn(false);
+    [0, 170, 360].forEach((delay, i) => {
+      const step = i + 1;
+      const t = setTimeout(() => {
+        setFuturePulseStep(step);
+        playFuturePulseNote(step);
+      }, delay);
+      futurePulseTimeoutsRef.current.push(t);
+    });
+    const fadeT = setTimeout(() => setFinalFade(true), 620);
+    futurePulseTimeoutsRef.current.push(fadeT);
+    const completeT = setTimeout(() => onComplete?.(), 760);
+    futurePulseTimeoutsRef.current.push(completeT);
+  }, [scene, futureActivating, onComplete, playFuturePulseNote]);
 
   return (
     <div className="ch1-root">
@@ -3464,7 +3514,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             <div className={`ch2-feedback-overlay ch3-feedback-overlay ${feedbackText ? 'show' : ''}`}>{feedbackText}</div>
           </section>
 
-          <section className={`ch3-scene-panel ch3-synthesis-panel ${scene === 'synthesis' ? 'is-active' : ''} ${synthesisRevealed ? 'is-revealed' : ''}`}>
+          <section className={`ch3-scene-panel ch3-synthesis-panel ${scene === 'synthesis' ? 'is-active' : ''} ${synthesisRevealed ? 'is-revealed' : ''} ${futureActivating ? 'is-future-arming' : ''} ${futurePulseStep ? `pulse-step-${futurePulseStep}` : ''}`}>
             <img className="ch2-fill" src={ASSETS.chapter3Frame2} alt="" />
             <div className="ch3-synthesis-core-glow" />
             <div className="ch3-synthesis-branch-glow" />
@@ -3499,7 +3549,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             </div>
           ) : (
             <div className="ch1-controls ch2-controls ch3-controls-final">
-              <Ch1ChoiceButton onClick={handleToFuture}>{T.nextBtn || T.continueBtn}</Ch1ChoiceButton>
+              <Ch1ChoiceButton onClick={handleToFuture} disabled={futureActivating}>{T.nextBtn || T.continueBtn}</Ch1ChoiceButton>
             </div>
           )}
         </div>
@@ -3521,19 +3571,19 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
 
 // ── Chapter 4: Handshake Analogico ──
 const CH4_IMG_URL    = "https://www.robertomarchesini.com/assets/chapter4/finale.png";
-const CH4_ORIGIN     = { x: 0.595, y: 0.775 }; // cable tip on controller (floor, right)
-const CH4_CTRL_AREA  = { x: 0.60, y: 0.780, r: 0.07 }; // controller grab area
+const CH4_ORIGIN     = { x: 0.595, y: 0.810 }; // cable tip on controller (floor, right)
+const CH4_CTRL_AREA  = { x: 0.60, y: 0.815, r: 0.07 }; // controller grab area
 const CH4_THRESHOLDS = [
-  { x: 0.475, y: 0.760, rx: 0.065, ry: 0.042 }, // near controller
-  { x: 0.340, y: 0.725, rx: 0.070, ry: 0.046 }, // mid room
-  { x: 0.210, y: 0.695, rx: 0.060, ry: 0.040 }, // near TV
+  { x: 0.475, y: 0.795, rx: 0.065, ry: 0.042 }, // near controller
+  { x: 0.340, y: 0.760, rx: 0.070, ry: 0.046 }, // mid room
+  { x: 0.210, y: 0.720, rx: 0.060, ry: 0.040 }, // near TV
 ];
-const CH4_SOCKET     = { x: 0.155, y: 0.675 }; // port on TV cabinet
+const CH4_SOCKET     = { x: 0.155, y: 0.700 }; // port on TV cabinet
 const CH4_SNAP_R     = 0.038;
 const CH4_CHAIR      = { x: 0.84, y: 0.65, rx: 0.11, ry: 0.13 };
-const CH4_CRT_SCREEN = { x: 0.105, y: 0.470, rx: 0.048, ry: 0.072 }; // TV screen (lower-left)
-const CH4_CART_ORIGIN = { x: 0.505, y: 0.762 }; // cartridge near controller on floor
-const CH4_CART_SLOT   = { x: 0.138, y: 0.630 }; // console slot on TV cabinet
+const CH4_CRT_SCREEN = { x: 0.105, y: 0.520, rx: 0.048, ry: 0.068 }; // TV screen
+const CH4_CART_ORIGIN = { x: 0.505, y: 0.800 }; // cartridge on floor near controller
+const CH4_CART_SLOT   = { x: 0.138, y: 0.670 }; // console slot on TV cabinet
 const CH4_CART_SNAP_R = 0.060;
 const CH4_FORM_LABEL = { display:"block", fontFamily:"'IBM Plex Mono',monospace", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", color:"rgba(180,160,255,.52)", marginBottom:5 };
 const CH4_FORM_INPUT = { width:"100%", fontFamily:"'IBM Plex Mono',monospace", fontSize:11, color:"#e0d8ff", background:"rgba(16,12,32,.85)", border:"1px solid rgba(130,100,220,.2)", borderRadius:4, padding:"8px 10px", outline:"none", boxSizing:"border-box", WebkitAppearance:"none", appearance:"none" };
@@ -4029,16 +4079,16 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
             )}
 
             {isPressStart && (() => {
-              const cx = sx(CH4_CRT_SCREEN.x), cy = sy(CH4_CRT_SCREEN.y);
-              const fs = Math.max(9, sw * 0.022);
+              const cx = sw / 2, cy = sh / 2;
+              const fs = Math.max(11, sw * 0.026);
               return (
                 <g style={{ cursor: "pointer" }}>
                   <rect x={0} y={0} width={sw} height={sh} fill="transparent" />
-                  <rect x={cx - sw * .13} y={cy - sh * .06} width={sw * .26} height={sh * .12}
-                    rx={3} fill="rgba(0,8,4,.62)" />
+                  <rect x={cx - sw * .18} y={cy - sh * .08} width={sw * .36} height={sh * .16}
+                    rx={4} fill="rgba(0,6,3,.72)" />
                   <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle"
                     fontFamily="'IBM Plex Mono',monospace" fontSize={fs} fontWeight="700"
-                    fill="rgba(140,255,200,.95)" letterSpacing={Math.max(2, sw * 0.004)}
+                    fill="rgba(140,255,200,.95)" letterSpacing={Math.max(3, sw * 0.005)}
                     style={{ animation:"ch4PressStart 1.1s step-end infinite", pointerEvents:"none", textTransform:"uppercase" }}>
                     PRESS START
                   </text>
@@ -4059,25 +4109,25 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
             </div>
           )}
 
-          <div style={{
+          <div className="ch4-form-overlay" style={{
             position:"absolute", inset:0, zIndex:9,
-            background:"rgba(4,3,10,.88)", backdropFilter:"blur(3px)",
+            background:"rgba(4,3,10,.92)", backdropFilter:"blur(4px)",
             display:"flex", alignItems:"center", justifyContent:"center",
             opacity: showForm ? 1 : 0,
             transform: showForm ? "translateY(0)" : "translateY(18px)",
             transition:"opacity .42s ease, transform .42s ease",
             pointerEvents: showForm ? "all" : "none",
-            padding:"16px",
+            padding:"12px", overflowY:"auto",
           }}>
-            <div style={{ width:"min(100%,400px)", border:"1px solid rgba(150,120,255,.2)", borderRadius:8,
-              background:"rgba(8,7,18,.97)", padding:"22px 24px 24px",
+            <div style={{ width:"min(100%,580px)", border:"1px solid rgba(150,120,255,.22)", borderRadius:8,
+              background:"rgba(8,7,18,.97)", padding:"28px 32px 30px",
               boxShadow:"0 0 0 1px rgba(122,92,255,.08), 0 24px 60px rgba(0,0,0,.65)" }}>
               {!formSent ? (
                 <>
-                  <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:8, letterSpacing:3.5,
-                    textTransform:"uppercase", color:"#7B6FD4", marginBottom:5 }}>PLAYER 2</div>
+                  <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:9, letterSpacing:3.5,
+                    textTransform:"uppercase", color:"#7B6FD4", marginBottom:6 }}>PLAYER 2</div>
                   <div style={{ fontFamily:"'Playfair Display',serif", fontStyle:"italic",
-                    fontSize:18, color:"#F3EFFF", marginBottom:20, lineHeight:1.2 }}>{t4.formTitle}</div>
+                    fontSize:22, color:"#F3EFFF", marginBottom:24, lineHeight:1.2 }}>{t4.formTitle}</div>
                   <form onSubmit={handleSubmit} style={{ display:"flex", flexDirection:"column", gap:12 }}>
                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
                       <div>
@@ -4665,7 +4715,7 @@ export default function Roberto() {
         .ch2-window-spill{position:absolute;left:18.8%;top:14.8%;width:44.2%;height:31.9%;z-index:3;pointer-events:none;background:radial-gradient(circle at 50% 46%, rgba(205,232,255,.34), rgba(156,214,255,.16) 44%, rgba(0,0,0,0) 78%);mix-blend-mode:screen;transition:opacity .4s ease}
         .ch2-monitor-breath{position:absolute;left:31.6%;top:47.1%;width:13.8%;height:11.6%;z-index:3;pointer-events:none;background:radial-gradient(circle, rgba(215,255,255,.22) 0%, rgba(155,225,255,.11) 36%, rgba(0,0,0,0) 74%);filter:blur(10px);animation:ch2MonitorBreath 4.6s ease-in-out infinite}
         .ch2-room-daylift{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle at 41% 33%, rgba(215,235,255,.26), rgba(173,214,255,.10) 40%, rgba(0,0,0,0) 75%);mix-blend-mode:screen;transition:opacity .45s ease}.ch2-room-nightshade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg, rgba(2,7,14,.10), rgba(2,6,12,.28));mix-blend-mode:multiply;transition:opacity .45s ease}.ch2-room-grade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(13,24,38,.03), rgba(4,8,12,.10));mix-blend-mode:multiply}
-        .ch2-line-block{position:absolute;left:0;right:0;bottom:0;z-index:8;max-width:none;border-top:1px solid rgba(192,218,244,.18);padding:12px 18px 11px;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.34) 18%,rgba(0,0,0,.80) 100%)}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3;text-align:left}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:0;left:0;right:0;transform:translateY(-8px);padding:18px 28px 22px;font-size:clamp(18px,2.1vw,24px);line-height:1.22;background:linear-gradient(180deg,rgba(2,6,14,.82) 0%,rgba(4,10,22,.62) 70%,transparent 100%);text-shadow:0 2px 18px rgba(0,0,0,.95),0 0 40px rgba(0,0,0,.7)}.ch2-feedback-overlay.show.is-bridge{transform:translateY(0)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-stage-transitioning .ch2-window-video{filter:saturate(.94) brightness(.92) contrast(1.02);transform:scale(1.01);transition:filter .45s ease,transform .45s ease}.ch2-stage-transitioning .ch2-line-block{opacity:.72;transition:opacity .35s ease}.ch2-desk-transition-copy{width:100%;max-width:560px;min-height:46px;margin:0}
+        .ch2-line-block{position:absolute;left:0;right:0;bottom:0;z-index:8;max-width:none;border-top:1px solid rgba(192,218,244,.18);padding:12px 18px 11px;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.34) 18%,rgba(0,0,0,.80) 100%)}.ch2-line{color:#e0e9f2;font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);line-height:1.3;text-align:left}.ch2-controls{margin-top:14px}.ch2-feedback-overlay{position:absolute;left:22px;right:22px;top:24px;z-index:9;display:flex;justify-content:center;pointer-events:none;color:#eef5ff;font-size:clamp(18px,2vw,24px);line-height:1.3;text-align:center;font-style:italic;font-family:'Playfair Display',serif;opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease;text-shadow:0 2px 14px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.45)}.ch2-feedback-overlay.show{opacity:1;transform:translateY(0)}.ch2-feedback-overlay.is-bridge{top:0;left:0;right:0;transform:translateY(-10px);padding:22px 32px 28px;font-size:clamp(20px,2.4vw,28px);line-height:1.2;background:linear-gradient(180deg,rgba(1,4,10,.92) 0%,rgba(2,6,16,.80) 60%,transparent 100%);text-shadow:0 2px 22px rgba(0,0,0,1),0 0 50px rgba(0,0,0,.8);transition:opacity .48s ease,transform .48s ease}.ch2-feedback-overlay.show.is-bridge{transform:translateY(0)}.ch2-stage-transitioning .ch2-window-mask,.ch2-stage-transitioning .ch2-monitor-breath{opacity:.82}.ch2-stage-transitioning .ch2-room-grade{background:linear-gradient(180deg, rgba(13,24,38,.08), rgba(4,8,12,.22))}.ch2-stage-transitioning .ch2-window-video{filter:saturate(.94) brightness(.92) contrast(1.02);transform:scale(1.01);transition:filter .45s ease,transform .45s ease}.ch2-stage-transitioning .ch2-line-block{opacity:.72;transition:opacity .35s ease}.ch2-desk-transition-copy{width:100%;max-width:560px;min-height:46px;margin:0}
         .ch2-street-stage{background:#081012}
         .ch2-street-frame{filter:saturate(1.03) contrast(1.03) brightness(.95);transform:scale(1.006);animation:ch2StreetFrameDrift 10s ease-in-out infinite}
         .ch2-street-grade,.ch2-street-cool-wash,.ch2-street-door-bloom,.ch2-street-reflection-boost,.ch2-street-rain,.ch2-street-headlights,.ch2-street-vignette{position:absolute;pointer-events:none}
@@ -4834,6 +4884,21 @@ export default function Roberto() {
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
         .ch3-stage.is-final-fade .ch3-synthesis-caption{opacity:0;transform:translateY(18px)}
+        .ch3-synthesis-panel.is-future-arming .ch3-synthesis-core-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-branch-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-circuit-pulse,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-flow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-amber-shimmer{transition:opacity .14s ease,filter .14s ease,transform .14s ease}
+        .ch3-synthesis-panel.is-future-arming .ch3-synthesis-core-glow{transform-origin:62% 44%}
+        .ch3-synthesis-panel.is-future-arming .ch3-synthesis-branch-glow,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-circuit-pulse,.ch3-synthesis-panel.is-future-arming .ch3-synthesis-flow{transform-origin:60% 40%}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-core-glow{opacity:.88;filter:blur(20px);transform:scale(1.05);mix-blend-mode:screen}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-branch-glow{opacity:.56;filter:blur(18px)}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-circuit-pulse{opacity:.34;transform:scale(1.03)}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-core-glow{opacity:1;filter:blur(22px);transform:scale(1.08);mix-blend-mode:screen}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-branch-glow{opacity:.72;filter:blur(20px);transform:scale(1.02)}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-circuit-pulse{opacity:.48;transform:scale(1.05)}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-flow{opacity:.30;filter:blur(5px)}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-core-glow{opacity:1;filter:blur(24px);transform:scale(1.12);mix-blend-mode:screen}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-branch-glow{opacity:.9;filter:blur(22px);transform:scale(1.04)}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-circuit-pulse{opacity:.62;transform:scale(1.08)}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-flow{opacity:.42;filter:blur(4px)}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-amber-shimmer{opacity:.34;transform:translateX(-6%)}
 
         @keyframes ch3ShimmerSweep{0%,100%{opacity:.08;transform:translateX(-10%)}42%{opacity:.18;transform:translateX(0%)}68%{opacity:.12;transform:translateX(4%)}}
         @keyframes ch3CircuitPulse{0%,100%{opacity:.10;transform:scale(.995)}46%{opacity:.18;transform:scale(1.01)}}
@@ -4845,7 +4910,8 @@ export default function Roberto() {
 
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
-          .ch3-line{white-space:normal;font-size:clamp(17px,5vw,24px);line-height:1.18;text-align:center}
+          .ch3-line-block{position:relative;bottom:auto;left:auto;right:auto;border-top:none;background:transparent;padding:10px 14px 4px;margin-top:0;z-index:1}
+          .ch3-line{white-space:normal;font-size:clamp(15px,4.5vw,20px);line-height:1.22;text-align:center;color:rgba(224,233,242,.88)}
           .ch3-synthesis-caption{left:0;right:0;bottom:0;max-width:none}
           .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
@@ -4922,6 +4988,7 @@ export default function Roberto() {
           .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
           .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
           .chapter-intro-inner{transform:translateY(0)}
+          .ch4-form-overlay{align-items:flex-start!important;padding:6px!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
         }
 
         @media (max-width:600px){
