@@ -382,14 +382,16 @@ const LANG = {
         "Serviva un punto fermo, non altro movimento.",
       ],
       continueBtn: "Continua",
-      nextBtn: "E ora?",
+      nextBtn: "Apri il futuro.",
       backToSurface: "← Torna in superficie",
     },
     ch4: {
       kicker: "Capitolo 4 · Futuro",
       introTitle: "Futuro",
-      connectBtn: "Inserisci il controller",
-      idleCopy: "Inserisci il controller.",
+      connectBtn: "Accendi lo schermo",
+      crtBtn: "Accendi lo schermo",
+      cartCopy: "Inserisci la cartuccia.",
+      idleCopy: "Accendi lo schermo.",
       activatedCopy: "Apri il canale.",
       connectedCopy: "Secondo controller connesso.",
       formTitle: "Apri la connessione.",
@@ -576,14 +578,16 @@ const LANG = {
         "It needed a fixed point, not more motion.",
       ],
       continueBtn: "Continue",
-      nextBtn: "And now?",
+      nextBtn: "Open the future.",
       backToSurface: "← Back to surface",
     },
     ch4: {
       kicker: "Chapter 4 · Future",
       introTitle: "Future",
-      connectBtn: "Insert the controller",
-      idleCopy: "Insert the controller.",
+      connectBtn: "Turn on the screen",
+      crtBtn: "Turn on the screen",
+      cartCopy: "Insert the cartridge.",
+      idleCopy: "Turn on the screen.",
       activatedCopy: "Open the channel.",
       connectedCopy: "Second controller connected.",
       formTitle: "Open the connection.",
@@ -2034,6 +2038,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   const [finalTimingFill, setFinalTimingFill] = useState(0);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [unlockCue, setUnlockCue] = useState("");
+  const [unlockCueSide, setUnlockCueSide] = useState("right");
 
   const playLandingNote = useLandingSound();
 
@@ -2216,6 +2221,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
     const nextCue = unlockLines[nodeIndex];
     if (nextCue) {
+      setUnlockCueSide(prev => prev === "right" ? "left" : "right");
       setUnlockCue(nextCue);
       if (unlockCueTimeoutRef.current) clearTimeout(unlockCueTimeoutRef.current);
       unlockCueTimeoutRef.current = setTimeout(() => setUnlockCue(""), 1150);
@@ -2318,6 +2324,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
   };
 
   return (
+    <>
     <div
       role="button"
       tabIndex={0}
@@ -2571,7 +2578,7 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       )}
 
       {unlockCue ? (
-        <div className="ch1-crossing-unlock-cue">{unlockCue}</div>
+        <div className={unlockCueSide === "left" ? "ch1-crossing-unlock-cue ch1-crossing-unlock-cue--left" : "ch1-crossing-unlock-cue"}>{unlockCue}</div>
       ) : null}
 
       {transition && (
@@ -2595,6 +2602,28 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
 
       <div className="ch1-scan" />
     </div>
+    {isTouchDevice && !isComplete && (
+      <button
+        onPointerDown={(e) => { e.stopPropagation(); handleAdvance(); }}
+        style={{
+          display: "block",
+          margin: "12px auto 0",
+          padding: "10px 32px",
+          background: "#fff",
+          color: "#0a0d0b",
+          border: "none",
+          borderRadius: 999,
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 12,
+          letterSpacing: 2,
+          textTransform: "uppercase",
+          cursor: "pointer",
+          userSelect: "none",
+          touchAction: "manipulation",
+        }}
+      >Salta</button>
+    )}
+    </>
   );
 }
 
@@ -3496,6 +3525,10 @@ const CH4_THRESHOLDS = [
 const CH4_SOCKET     = { x: 0.29, y: 0.69 };
 const CH4_SNAP_R     = 0.040;
 const CH4_CHAIR      = { x: 0.84, y: 0.69, rx: 0.11, ry: 0.13 };
+const CH4_CRT_SCREEN = { x: 0.19, y: 0.39, rx: 0.10, ry: 0.12 }; // CRT screen hit area
+const CH4_CART_ORIGIN = { x: 0.51, y: 0.745 }; // cartridge on desk
+const CH4_CART_SLOT   = { x: 0.305, y: 0.695 }; // slot on TV cabinet
+const CH4_CART_SNAP_R = 0.065;
 const CH4_FORM_LABEL = { display:"block", fontFamily:"'IBM Plex Mono',monospace", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", color:"rgba(180,160,255,.52)", marginBottom:5 };
 const CH4_FORM_INPUT = { width:"100%", fontFamily:"'IBM Plex Mono',monospace", fontSize:11, color:"#e0d8ff", background:"rgba(16,12,32,.85)", border:"1px solid rgba(130,100,220,.2)", borderRadius:4, padding:"8px 10px", outline:"none", boxSizing:"border-box", WebkitAppearance:"none", appearance:"none" };
 
@@ -3529,6 +3562,7 @@ function Ch4Controller({ lit = false, ghost = false, accent = "#7A5CFF", flip = 
 
 function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const t4 = T;
+  // phases: idle | crt_on | cart_drag | cart_in | cable | passed1 | passed2 | passed3 | connected | unlocked
   const [phase, setPhase]           = useState("idle");
   const [passed, setPassed]         = useState([false, false, false]);
   const [cableEnd, setCableEnd]     = useState({ ...CH4_ORIGIN });
@@ -3538,6 +3572,8 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   const [formSent, setFormSent]     = useState(false);
   const [stageDims, setStageDims]   = useState({ w: 700, h: 525 });
   const [formData, setFormData]     = useState({ da: "", oggetto: "", messaggio: "", urgenza: "" });
+  const [cartPos, setCartPos]       = useState({ ...CH4_CART_ORIGIN });
+  const [isCartDragging, setIsCartDragging] = useState(false);
 
   const stageRef      = useRef(null);
   const phaseRef      = useRef("idle");
@@ -3549,6 +3585,10 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   const isMobileRef   = useRef(false);
   const rafRef        = useRef(null);
   const connectTORef  = useRef(null);
+  const cartPosRef    = useRef({ ...CH4_CART_ORIGIN });
+  const cartTargetRef = useRef({ ...CH4_CART_ORIGIN });
+  const isCartDragRef = useRef(false);
+  const cartRafRef    = useRef(null);
 
   useEffect(() => {
     const upd = () => { isMobileRef.current = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 600; };
@@ -3571,8 +3611,35 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (cartRafRef.current) cancelAnimationFrame(cartRafRef.current);
       if (connectTORef.current) clearTimeout(connectTORef.current);
     };
+  }, []);
+
+  const startCartLoop = useCallback(() => {
+    if (cartRafRef.current) cancelAnimationFrame(cartRafRef.current);
+    const loop = () => {
+      const tx = cartTargetRef.current.x, ty = cartTargetRef.current.y;
+      const cx = cartPosRef.current.x, cy = cartPosRef.current.y;
+      const dx = tx - cx, dy = ty - cy;
+      const nx = cx + dx * 0.13, ny = cy + dy * 0.13;
+      cartPosRef.current = { x: nx, y: ny };
+      setCartPos({ x: nx, y: ny });
+      const mob = isMobileRef.current;
+      const snapR = CH4_CART_SNAP_R * (mob ? 1.3 : 1);
+      if (Math.sqrt((nx - CH4_CART_SLOT.x) ** 2 + (ny - CH4_CART_SLOT.y) ** 2) < snapR && phaseRef.current === "cart_drag") {
+        cartPosRef.current = { ...CH4_CART_SLOT };
+        cartTargetRef.current = { ...CH4_CART_SLOT };
+        isCartDragRef.current = false; setIsCartDragging(false);
+        phaseRef.current = "cart_in"; setPhase("cart_in");
+        setCartPos({ ...CH4_CART_SLOT });
+        cartRafRef.current = null; return;
+      }
+      if (isCartDragRef.current || Math.sqrt(dx * dx + dy * dy) > 0.001) {
+        cartRafRef.current = requestAnimationFrame(loop);
+      } else { cartRafRef.current = null; }
+    };
+    cartRafRef.current = requestAnimationFrame(loop);
   }, []);
 
   const startLoop = useCallback(() => {
@@ -3635,29 +3702,48 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
     if (!pos) return;
     const mob = isMobileRef.current;
     if (ph === "idle") {
-      const hitR = CH4_CTRL_AREA.r * (mob ? 1.3 : 1);
-      if (Math.sqrt((pos.x - CH4_CTRL_AREA.x) ** 2 + (pos.y - CH4_CTRL_AREA.y) ** 2) <= hitR) {
+      // click CRT screen to turn on
+      const m = mob ? 1.4 : 1;
+      if (((pos.x - CH4_CRT_SCREEN.x) / (CH4_CRT_SCREEN.rx * m)) ** 2 + ((pos.y - CH4_CRT_SCREEN.y) / (CH4_CRT_SCREEN.ry * m)) ** 2 <= 1) {
         e.preventDefault();
-        phaseRef.current = "activated"; setPhase("activated");
-        currentRef.current = { ...CH4_ORIGIN }; targetRef.current = { ...CH4_ORIGIN }; lastCPRef.current = { ...CH4_ORIGIN };
-        setCableEnd({ ...CH4_ORIGIN });
+        phaseRef.current = "crt_on"; setPhase("crt_on");
       }
       return;
     }
-    if (ph === "activated" || ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
+    if (ph === "crt_on") {
+      // grab cartridge
+      const tipR = 0.075 * (mob ? 1.4 : 1);
+      const cp = cartPosRef.current;
+      if (Math.sqrt((pos.x - cp.x) ** 2 + (pos.y - cp.y) ** 2) <= tipR) {
+        e.preventDefault();
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+        isCartDragRef.current = true; setIsCartDragging(true);
+        phaseRef.current = "cart_drag"; setPhase("cart_drag");
+        cartTargetRef.current = pos; startCartLoop();
+      }
+      return;
+    }
+    if (ph === "cart_drag") return;
+    if (ph === "cart_in" || ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
       const tipR = 0.075 * (mob ? 1.4 : 1);
       const ce = currentRef.current;
       if (Math.sqrt((pos.x - ce.x) ** 2 + (pos.y - ce.y) ** 2) <= tipR) {
         e.preventDefault();
         try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
         isDraggingRef.current = true; setIsDragging(true);
-        if (ph === "activated") { phaseRef.current = "cable"; setPhase("cable"); }
+        if (ph === "cart_in") { phaseRef.current = "cable"; setPhase("cable"); }
         targetRef.current = pos; startLoop();
       }
     }
-  }, [getNorm, startLoop]);
+  }, [getNorm, startLoop, startCartLoop]);
 
   const handlePointerMove = useCallback((e) => {
+    if (isCartDragRef.current) {
+      e.preventDefault();
+      const pos = getNorm(e);
+      if (pos) cartTargetRef.current = pos;
+      return;
+    }
     if (!isDraggingRef.current) return;
     e.preventDefault();
     const pos = getNorm(e);
@@ -3665,17 +3751,24 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   }, [getNorm]);
 
   const handlePointerUp = useCallback(() => {
+    if (isCartDragRef.current) {
+      isCartDragRef.current = false; setIsCartDragging(false);
+      if (phaseRef.current !== "cart_in") {
+        cartTargetRef.current = { ...CH4_CART_ORIGIN };
+        phaseRef.current = "crt_on"; setPhase("crt_on");
+        startCartLoop();
+      }
+      return;
+    }
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false; setIsDragging(false);
     const ph = phaseRef.current;
     if (ph !== "connected" && ph !== "unlocked") { targetRef.current = { ...lastCPRef.current }; startLoop(); }
-  }, [startLoop]);
+  }, [startLoop, startCartLoop]);
 
   const handleActivateBtn = useCallback(() => {
     if (phaseRef.current !== "idle") return;
-    phaseRef.current = "activated"; setPhase("activated");
-    currentRef.current = { ...CH4_ORIGIN }; targetRef.current = { ...CH4_ORIGIN }; lastCPRef.current = { ...CH4_ORIGIN };
-    setCableEnd({ ...CH4_ORIGIN });
+    phaseRef.current = "crt_on"; setPhase("crt_on");
   }, []);
 
   const handleSubmit = useCallback((e) => {
@@ -3696,10 +3789,15 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   const passedCount = passed.filter(Boolean).length;
   const cableColor  = phase === "connected" || phase === "unlocked" ? "#d6cdfd"
     : passedCount === 0 ? "#7B6FD4" : passedCount === 1 ? "#6A9BC5" : passedCount === 2 ? "#8BBCB8" : "#BFB6F5";
-  const isActive    = phase !== "idle";
-  const isDragPhase = phase === "activated" || phase === "cable" || phase === "passed1" || phase === "passed2" || phase === "passed3";
+  const isCrtOn     = phase !== "idle";
+  const showCart    = phase === "crt_on" || phase === "cart_drag";
+  const isActive    = phase === "cart_in" || phase === "cable" || phase === "passed1" || phase === "passed2" || phase === "passed3" || phase === "connected" || phase === "unlocked";
+  const isDragPhase = phase === "cart_in" || phase === "cable" || phase === "passed1" || phase === "passed2" || phase === "passed3";
   const isConnected = phase === "connected" || phase === "unlocked";
-  const copyText    = isConnected ? t4.connectedCopy : isActive ? t4.activatedCopy : t4.idleCopy;
+  const copyText    = isConnected ? t4.connectedCopy
+    : isDragPhase ? t4.activatedCopy
+    : showCart ? t4.cartCopy
+    : t4.idleCopy;
 
   return (
     <div className="ch1-root">
@@ -3766,7 +3864,61 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
               </filter>
             </defs>
 
+            {/* CRT screen: idle = pulsing hint, crt_on+ = glow */}
             {phase === "idle" && (
+              <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
+                rx={CH4_CRT_SCREEN.rx * sw} ry={CH4_CRT_SCREEN.ry * sh}
+                fill="rgba(0,0,0,0)" stroke="rgba(140,220,180,.18)" strokeWidth={1}
+                style={{ cursor:"pointer", animation:"ch4CtrlHint 3s ease-in-out infinite" }} />
+            )}
+            {isCrtOn && (
+              <g>
+                <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
+                  rx={CH4_CRT_SCREEN.rx * sw * 1.1} ry={CH4_CRT_SCREEN.ry * sh * 1.1}
+                  fill="rgba(120,240,180,.06)" filter="url(#ch4nBloom)" />
+                <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
+                  rx={CH4_CRT_SCREEN.rx * sw * .72} ry={CH4_CRT_SCREEN.ry * sh * .72}
+                  fill="rgba(160,255,200,.09)" style={{ animation:"ch4CrtGlow 3.8s ease-in-out infinite" }} />
+              </g>
+            )}
+
+            {/* Cartridge slot indicator */}
+            {showCart && (() => {
+              const slx = sx(CH4_CART_SLOT.x), sly = sy(CH4_CART_SLOT.y);
+              const cw = sw * 0.045, ch_ = sh * 0.032;
+              return (
+                <g>
+                  <rect x={slx - cw * .7} y={sly - ch_ * .7} width={cw * 1.4} height={ch_ * 1.4}
+                    fill="rgba(140,220,180,.04)" filter="url(#ch4nBloom)" />
+                  <rect x={slx - cw * .5} y={sly - ch_ * .5} width={cw} height={ch_}
+                    fill="rgba(8,18,12,.6)" stroke="rgba(140,220,180,.28)" strokeWidth={1}
+                    rx={2} style={{ animation:"ch4SocketPulse 2s ease-in-out infinite" }} />
+                </g>
+              );
+            })()}
+
+            {/* Draggable cartridge */}
+            {showCart && (() => {
+              const cpx = sx(cartPos.x), cpy = sy(cartPos.y);
+              const cw = sw * 0.045, ch_ = sh * 0.032;
+              const isSnapped = phase === "cart_drag" && Math.sqrt((cartPos.x - CH4_CART_SLOT.x) ** 2 + (cartPos.y - CH4_CART_SLOT.y) ** 2) < CH4_CART_SNAP_R;
+              return (
+                <g style={{ cursor: isCartDragging ? "grabbing" : "grab", animation: isCartDragging ? "none" : "ch4CartHint 2.4s ease-in-out infinite" }}>
+                  {isCartDragging && <rect x={cpx - cw} y={cpy - ch_} width={cw * 2} height={ch_ * 2} rx={3} fill={`rgba(140,220,180,.06)`} filter="url(#ch4nBloom)" />}
+                  <rect x={cpx - cw * .5} y={cpy - ch_ * .5} width={cw} height={ch_}
+                    fill={isSnapped ? "rgba(140,220,180,.35)" : "rgba(60,180,110,.22)"}
+                    stroke={isSnapped ? "rgba(160,255,200,.7)" : "rgba(120,220,160,.5)"}
+                    strokeWidth={1} rx={2} />
+                  <line x1={cpx - cw * .2} y1={cpy - ch_ * .15} x2={cpx + cw * .2} y2={cpy - ch_ * .15}
+                    stroke="rgba(200,255,220,.35)" strokeWidth={0.8} />
+                  <line x1={cpx - cw * .2} y1={cpy + ch_ * .12} x2={cpx + cw * .2} y2={cpy + ch_ * .12}
+                    stroke="rgba(200,255,220,.2)" strokeWidth={0.6} />
+                </g>
+              );
+            })()}
+
+            {/* Cable grab hint when cart inserted */}
+            {phase === "cart_in" && (
               <circle cx={sx(CH4_CTRL_AREA.x)} cy={sy(CH4_CTRL_AREA.y)} r={CH4_CTRL_AREA.r * sw}
                 fill="rgba(0,0,0,0)" stroke="rgba(180,150,255,.14)" strokeWidth={1}
                 style={{ cursor:"pointer", animation:"ch4CtrlHint 3s ease-in-out infinite" }} />
@@ -3922,7 +4074,7 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
         <div className="ch1-controls-slot">
           <div className="ch1-controls ch2-controls" onClick={e => e.stopPropagation()}>
             <Ch1ChoiceButton onClick={phase === "idle" ? handleActivateBtn : undefined} disabled={phase !== "idle"}>
-              {phase === "idle" ? t4.connectBtn : isConnected ? t4.connectedCopy : t4.activatedCopy}
+              {phase === "idle" ? t4.crtBtn : isConnected ? t4.connectedCopy : showCart ? t4.cartCopy : t4.activatedCopy}
             </Ch1ChoiceButton>
           </div>
         </div>
@@ -4421,6 +4573,7 @@ export default function Roberto() {
         .ch1-crossing-complete{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:6;background:rgba(215,225,183,.14);backdrop-filter:blur(2px)}
         .ch1-crossing-complete-line{color:#111611;font-family:Georgia,serif;font-style:italic;font-size:clamp(24px,2.8vw,32px)}
         .ch1-crossing-unlock-cue{position:absolute;right:14px;top:16%;z-index:21;padding:8px 10px;border:1px solid rgba(199,212,160,.18);border-radius:999px;background:rgba(6,12,8,.72);color:rgba(220,232,188,.92);font-size:10px;line-height:1;letter-spacing:1px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;text-shadow:0 1px 4px rgba(0,0,0,.65);backdrop-filter:blur(6px);pointer-events:none;animation:crossingUnlockCueIn 1.12s ease-out forwards}
+        .ch1-crossing-unlock-cue--left{right:auto;left:14px}
         
         /* ConnectionsCrossing animations */
         @keyframes crossingIdleFloat{0%{transform:translate(-50%,-100%) scaleX(-1) translateY(0)}50%{transform:translate(-50%,-100%) scaleX(-1) translateY(-3px)}100%{transform:translate(-50%,-100%) scaleX(-1) translateY(0)}}
@@ -4536,6 +4689,8 @@ export default function Roberto() {
         @keyframes ch4PulseRing{0%{opacity:.45;transform:scale(1)}100%{opacity:0;transform:scale(1.95)}}
         @keyframes ch4SocketPulse{0%,100%{opacity:.48}50%{opacity:.84}}
         @keyframes ch4ChairSpill{from{opacity:0}to{opacity:1}}
+        @keyframes ch4CrtGlow{0%,100%{opacity:.72}50%{opacity:1}}
+        @keyframes ch4CartHint{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
