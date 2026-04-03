@@ -231,8 +231,8 @@ const LANG = {
       { title: "Workflow AI e orchestrazione", subtitle: "Processi potenziati da AI", desc: "Uso l’AI per aumentare possibilità e controllo, non per automatizzare rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
     ],
     selectedWorkKicker: "Selezione",
-    selectedWorkLabel: "Lavori scelti",
-    selectedWorkSub: "Tre progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
+    selectedWorkLabel: "Tre storie",
+    selectedWorkSub: "Progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
     selectedWorkMobileSub: "Progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
     selectedWork: [
       {
@@ -417,9 +417,9 @@ const LANG = {
       { title: "AI workflows & orchestration", subtitle: "AI-powered processes", desc: "I use AI to expand possibilities and control, not to automate noise.", mobileDesc: "AI for possibilities and control." },
     ],
     selectedWorkKicker: "Selection",
-    selectedWorkLabel: "Selected Work",
-    selectedWorkSub: "Three real projects. Clear responsibility. Structures that had to hold up.",
-    selectedWorkMobileSub: "Real projects. Clear responsibility. Structures that had to hold up.",
+    selectedWorkLabel: "Three stories",
+    selectedWorkSub: "Real projects. Clear scope. Structures that had to hold up.",
+    selectedWorkMobileSub: "Real projects. Clear scope. Structures that had to hold up.",
     selectedWork: [
       {
         title: "Largo Venue",
