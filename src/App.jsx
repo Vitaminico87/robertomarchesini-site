@@ -277,6 +277,7 @@ const LANG = {
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
+    ctaBridge: "Parliamone. O cestinami. La seconda è più interessante di quanto pensi.",
     availableFor: "Aperto a poche collaborazioni selezionate.",
     trashPlay: "Gioca",
     ctaHint: "",
@@ -387,16 +388,24 @@ const LANG = {
     ch4: {
       kicker: "Capitolo 4 · Futuro",
       introTitle: "Futuro",
-      prompt: "Inserisci il controller.",
-      promptSub: "Qui non si chiude niente. Si apre in due.",
-      cableTitle: "Apri il canale.",
-      cableSub: "Trascina il segnale attraverso le soglie.",
-      allFieldsReady: "Tutte le soglie attraversate.",
       connectBtn: "Inserisci il controller",
-      connectedLine: "Secondo controller connesso.",
-      connectedHintDesktop: "Premi Enter per iniziare.",
-      connectedHintMobile: "Tocca per iniziare.",
-      ctaBtn: "Inizia",
+      idleCopy: "Inserisci il controller.",
+      activatedCopy: "Apri il canale.",
+      connectedCopy: "Secondo controller connesso.",
+      formTitle: "Apri la connessione.",
+      formDa: "Da",
+      formDaPlaceholder: "Nome o email",
+      formOggetto: "Oggetto",
+      formOggettoPlaceholder: "Di cosa si tratta",
+      formMessaggio: "Messaggio",
+      formMessaggioPlaceholder: "Racconta il progetto.",
+      formUrgenza: "Urgenza",
+      formUrgenzaOptions: ["Quando hai tempo", "Questa settimana", "Urgente"],
+      formSubmit: "Invia",
+      formNote: "Rispondo di solito entro 48 ore.",
+      formSentKicker: "Connessione stabilita.",
+      formSentTitle: "Messaggio inviato.",
+      formSentNote: "Ti rispondo entro 48 ore.",
       backToSurface: "← Torna in superficie",
     }
   },
@@ -463,6 +472,7 @@ const LANG = {
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
+    ctaBridge: "Let's talk. Or bin me. The second option is more interesting than you'd think.",
     availableFor: "Open to a small number of selected collaborations.",
     trashPlay: "Play",
     ctaHint: "",
@@ -572,16 +582,24 @@ const LANG = {
     ch4: {
       kicker: "Chapter 4 · Future",
       introTitle: "Future",
-      prompt: "Insert the controller.",
-      promptSub: "Nothing closes here. It opens with someone else.",
-      cableTitle: "Open the channel.",
-      cableSub: "Drag the signal through the thresholds.",
-      allFieldsReady: "All thresholds crossed.",
-      connectBtn: "Insert controller",
-      connectedLine: "Second controller connected.",
-      connectedHintDesktop: "Press Enter to begin.",
-      connectedHintMobile: "Tap to begin.",
-      ctaBtn: "Begin",
+      connectBtn: "Insert the controller",
+      idleCopy: "Insert the controller.",
+      activatedCopy: "Open the channel.",
+      connectedCopy: "Second controller connected.",
+      formTitle: "Open the connection.",
+      formDa: "From",
+      formDaPlaceholder: "Name or email",
+      formOggetto: "Subject",
+      formOggettoPlaceholder: "What's it about",
+      formMessaggio: "Message",
+      formMessaggioPlaceholder: "Tell me about the project.",
+      formUrgenza: "Urgency",
+      formUrgenzaOptions: ["Whenever you're free", "This week", "Urgent"],
+      formSubmit: "Send",
+      formNote: "I usually reply within 48 hours.",
+      formSentKicker: "Connection established.",
+      formSentTitle: "Message sent.",
+      formSentNote: "I'll reply within 48 hours.",
       backToSurface: "← Back to surface",
     }
   },
@@ -3467,15 +3485,19 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
 }
 
 // ── Chapter 4: Handshake Analogico ──
-const CH4_CABLE_ORIGIN = { x: 0.290, y: 0.500 };
-const CH4_FIELDS = [
-  { x: 0.400, y: 0.390, color: "#5BA8C9", rgb: "91,168,201" },
-  { x: 0.565, y: 0.610, color: "#B8C944", rgb: "184,201,68" },
-  { x: 0.730, y: 0.390, color: "#D4874E", rgb: "212,135,78" },
+const CH4_IMG_URL    = "https://www.robertomarchesini.com/assets/chapter4/finale.png";
+const CH4_ORIGIN     = { x: 0.59, y: 0.78 };
+const CH4_CTRL_AREA  = { x: 0.61, y: 0.79, r: 0.08 };
+const CH4_THRESHOLDS = [
+  { x: 0.56, y: 0.79, rx: 0.07, ry: 0.045 },
+  { x: 0.45, y: 0.76, rx: 0.08, ry: 0.050 },
+  { x: 0.31, y: 0.70, rx: 0.07, ry: 0.045 },
 ];
-const CH4_PORT = { x: 0.878, y: 0.500, r: 0.056 };
-const CH4_FIELD_R = 0.086;
-const CH4_HOLD_MS = 860;
+const CH4_SOCKET     = { x: 0.29, y: 0.69 };
+const CH4_SNAP_R     = 0.040;
+const CH4_CHAIR      = { x: 0.84, y: 0.69, rx: 0.11, ry: 0.13 };
+const CH4_FORM_LABEL = { display:"block", fontFamily:"'IBM Plex Mono',monospace", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", color:"rgba(180,160,255,.52)", marginBottom:5 };
+const CH4_FORM_INPUT = { width:"100%", fontFamily:"'IBM Plex Mono',monospace", fontSize:11, color:"#e0d8ff", background:"rgba(16,12,32,.85)", border:"1px solid rgba(130,100,220,.2)", borderRadius:4, padding:"8px 10px", outline:"none", boxSizing:"border-box", WebkitAppearance:"none", appearance:"none" };
 
 function Ch4Controller({ lit = false, ghost = false, accent = "#7A5CFF", flip = false }) {
   return (
@@ -3506,28 +3528,30 @@ function Ch4Controller({ lit = false, ghost = false, accent = "#7A5CFF", flip = 
 }
 
 function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
-  const [stageStep, setStageStep] = useState("insert");
-  const [activatedFields, setActivatedFields] = useState([false, false, false]);
-  const [cableEnd, setCableEnd] = useState({ x: CH4_CABLE_ORIGIN.x, y: CH4_CABLE_ORIGIN.y });
+  const t4 = T.ch4;
+  const [phase, setPhase]           = useState("idle");
+  const [passed, setPassed]         = useState([false, false, false]);
+  const [cableEnd, setCableEnd]     = useState({ ...CH4_ORIGIN });
   const [isDragging, setIsDragging] = useState(false);
-  const [isHoldingPort, setIsHoldingPort] = useState(false);
-  const [holdProgress, setHoldProgress] = useState(0);
-  const [showCTA, setShowCTA] = useState(false);
-  const [isMobileHint, setIsMobileHint] = useState(false);
-  const [stageDims, setStageDims] = useState({ w: 700, h: 525 });
+  const [pulsing, setPulsing]       = useState(-1);
+  const [showForm, setShowForm]     = useState(false);
+  const [formSent, setFormSent]     = useState(false);
+  const [stageDims, setStageDims]   = useState({ w: 700, h: 525 });
+  const [formData, setFormData]     = useState({ da: "", oggetto: "", messaggio: "", urgenza: "" });
 
-  const stageRef = useRef(null);
-  const stageStepRef = useRef("insert");
-  const targetPosRef = useRef({ ...CH4_CABLE_ORIGIN });
-  const currentPosRef = useRef({ ...CH4_CABLE_ORIGIN });
-  const activatedFieldsRef = useRef([false, false, false]);
+  const stageRef      = useRef(null);
+  const phaseRef      = useRef("idle");
+  const passedRef     = useRef([false, false, false]);
+  const lastCPRef     = useRef({ ...CH4_ORIGIN });
+  const targetRef     = useRef({ ...CH4_ORIGIN });
+  const currentRef    = useRef({ ...CH4_ORIGIN });
   const isDraggingRef = useRef(false);
-  const holdStartRef = useRef(null);
-  const rafRef = useRef(null);
-  const ctaTimeoutRef = useRef(null);
+  const isMobileRef   = useRef(false);
+  const rafRef        = useRef(null);
+  const connectTORef  = useRef(null);
 
   useEffect(() => {
-    const upd = () => setIsMobileHint(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 900);
+    const upd = () => { isMobileRef.current = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 600; };
     upd(); window.addEventListener("resize", upd);
     return () => window.removeEventListener("resize", upd);
   }, []);
@@ -3547,57 +3571,57 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
+      if (connectTORef.current) clearTimeout(connectTORef.current);
     };
   }, []);
-
-  useEffect(() => {
-    if (stageStep !== "connected") return;
-    onUnlockProfile?.("future");
-    ctaTimeoutRef.current = setTimeout(() => setShowCTA(true), 760);
-    return () => { if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current); };
-  }, [stageStep, onUnlockProfile]);
 
   const startLoop = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     const loop = () => {
-      if (stageStepRef.current === "connected") { rafRef.current = null; return; }
-      const tx = targetPosRef.current.x, ty = targetPosRef.current.y;
-      const cx = currentPosRef.current.x, cy = currentPosRef.current.y;
+      const ph = phaseRef.current;
+      if (ph === "connected" || ph === "unlocked") { rafRef.current = null; return; }
+      const tx = targetRef.current.x, ty = targetRef.current.y;
+      const cx = currentRef.current.x, cy = currentRef.current.y;
       const dx = tx - cx, dy = ty - cy;
       const nx = cx + dx * 0.13, ny = cy + dy * 0.13;
-      currentPosRef.current = { x: nx, y: ny };
+      currentRef.current = { x: nx, y: ny };
       setCableEnd({ x: nx, y: ny });
-      if (stageStepRef.current === "cable") {
-        let changed = false;
-        for (let i = 0; i < CH4_FIELDS.length; i++) {
-          if (!activatedFieldsRef.current[i]) {
-            const fd = Math.sqrt((nx - CH4_FIELDS[i].x) ** 2 + (ny - CH4_FIELDS[i].y) ** 2);
-            if (fd < CH4_FIELD_R) { activatedFieldsRef.current[i] = true; changed = true; }
+      if (ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
+        const mob = isMobileRef.current;
+        for (let i = 0; i < CH4_THRESHOLDS.length; i++) {
+          if (!passedRef.current[i]) {
+            const th = CH4_THRESHOLDS[i];
+            const m = mob ? 1.25 : 1;
+            if (((nx - th.x) / (th.rx * m)) ** 2 + ((ny - th.y) / (th.ry * m)) ** 2 <= 1) {
+              passedRef.current[i] = true;
+              lastCPRef.current = { x: th.x, y: th.y };
+              phaseRef.current = i === 0 ? "passed1" : i === 1 ? "passed2" : "passed3";
+              setPhase(phaseRef.current);
+              setPassed([...passedRef.current]);
+              const pi = i;
+              setPulsing(pi);
+              setTimeout(() => setPulsing(p => p === pi ? -1 : p), 750);
+            }
           }
         }
-        if (changed) setActivatedFields([...activatedFieldsRef.current]);
-        const allActive = activatedFieldsRef.current.every(Boolean);
-        const pd = Math.sqrt((nx - CH4_PORT.x) ** 2 + (ny - CH4_PORT.y) ** 2);
-        if (pd < CH4_PORT.r && allActive) {
-          if (holdStartRef.current === null) { holdStartRef.current = performance.now(); setIsHoldingPort(true); }
-          const prog = Math.min((performance.now() - holdStartRef.current) / CH4_HOLD_MS, 1);
-          setHoldProgress(prog);
-          if (prog >= 1) {
-            stageStepRef.current = "connected"; setStageStep("connected");
-            setIsHoldingPort(false); setHoldProgress(0); holdStartRef.current = null;
-            rafRef.current = null; return;
-          }
-        } else if (holdStartRef.current !== null) {
-          holdStartRef.current = null; setIsHoldingPort(false); setHoldProgress(0);
+        const sr = CH4_SNAP_R * (mob ? 1.3 : 1);
+        const pd = Math.sqrt((nx - CH4_SOCKET.x) ** 2 + (ny - CH4_SOCKET.y) ** 2);
+        if (pd < sr && passedRef.current.every(Boolean)) {
+          currentRef.current = { ...CH4_SOCKET }; targetRef.current = { ...CH4_SOCKET };
+          isDraggingRef.current = false; setIsDragging(false);
+          phaseRef.current = "connected"; setPhase("connected");
+          setCableEnd({ ...CH4_SOCKET });
+          onUnlockProfile?.("future");
+          connectTORef.current = setTimeout(() => setShowForm(true), 900);
+          rafRef.current = null; return;
         }
       }
-      if (isDraggingRef.current || Math.sqrt(dx * dx + dy * dy) > 0.0008) {
+      if (isDraggingRef.current || Math.sqrt(dx * dx + dy * dy) > 0.001) {
         rafRef.current = requestAnimationFrame(loop);
       } else { rafRef.current = null; }
     };
     rafRef.current = requestAnimationFrame(loop);
-  }, []);
+  }, [onUnlockProfile]);
 
   const getNorm = useCallback((e) => {
     if (!stageRef.current) return null;
@@ -3606,64 +3630,84 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
   }, []);
 
   const handlePointerDown = useCallback((e) => {
-    if (stageStepRef.current !== "cable") return;
-    e.preventDefault();
-    try { e.currentTarget.setPointerCapture(e.pointerId); } catch(_) {}
-    isDraggingRef.current = true; setIsDragging(true);
+    const ph = phaseRef.current;
     const pos = getNorm(e);
-    if (pos) targetPosRef.current = pos;
-    startLoop();
+    if (!pos) return;
+    const mob = isMobileRef.current;
+    if (ph === "idle") {
+      const hitR = CH4_CTRL_AREA.r * (mob ? 1.3 : 1);
+      if (Math.sqrt((pos.x - CH4_CTRL_AREA.x) ** 2 + (pos.y - CH4_CTRL_AREA.y) ** 2) <= hitR) {
+        e.preventDefault();
+        phaseRef.current = "activated"; setPhase("activated");
+        currentRef.current = { ...CH4_ORIGIN }; targetRef.current = { ...CH4_ORIGIN }; lastCPRef.current = { ...CH4_ORIGIN };
+        setCableEnd({ ...CH4_ORIGIN });
+      }
+      return;
+    }
+    if (ph === "activated" || ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
+      const tipR = 0.075 * (mob ? 1.4 : 1);
+      const ce = currentRef.current;
+      if (Math.sqrt((pos.x - ce.x) ** 2 + (pos.y - ce.y) ** 2) <= tipR) {
+        e.preventDefault();
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+        isDraggingRef.current = true; setIsDragging(true);
+        if (ph === "activated") { phaseRef.current = "cable"; setPhase("cable"); }
+        targetRef.current = pos; startLoop();
+      }
+    }
   }, [getNorm, startLoop]);
 
   const handlePointerMove = useCallback((e) => {
     if (!isDraggingRef.current) return;
     e.preventDefault();
     const pos = getNorm(e);
-    if (pos) targetPosRef.current = pos;
+    if (pos) targetRef.current = pos;
   }, [getNorm]);
 
   const handlePointerUp = useCallback(() => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false; setIsDragging(false);
-    if (stageStepRef.current === "cable") { targetPosRef.current = { ...CH4_CABLE_ORIGIN }; startLoop(); }
+    const ph = phaseRef.current;
+    if (ph !== "connected" && ph !== "unlocked") { targetRef.current = { ...lastCPRef.current }; startLoop(); }
   }, [startLoop]);
 
-  const handleInsert = useCallback(() => {
-    if (stageStepRef.current !== "insert") return;
-    stageStepRef.current = "cable"; setStageStep("cable");
-    currentPosRef.current = { ...CH4_CABLE_ORIGIN };
-    targetPosRef.current = { ...CH4_CABLE_ORIGIN };
-    setCableEnd({ ...CH4_CABLE_ORIGIN });
-    activatedFieldsRef.current = [false, false, false];
-    setActivatedFields([false, false, false]);
+  const handleActivateBtn = useCallback(() => {
+    if (phaseRef.current !== "idle") return;
+    phaseRef.current = "activated"; setPhase("activated");
+    currentRef.current = { ...CH4_ORIGIN }; targetRef.current = { ...CH4_ORIGIN }; lastCPRef.current = { ...CH4_ORIGIN };
+    setCableEnd({ ...CH4_ORIGIN });
   }, []);
 
-  const handleContact = useCallback(() => {
-    if (stageStep === "connected" && showCTA) onContact?.();
-  }, [stageStep, showCTA, onContact]);
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
+    const subj = encodeURIComponent(formData.oggetto || t4.formOggettoPlaceholder);
+    const urgLine = formData.urgenza ? `${t4.formUrgenza}: ${formData.urgenza}\n` : "";
+    const body = encodeURIComponent(`${t4.formDa}: ${formData.da}\n${urgLine}\n${formData.messaggio}`);
+    window.open(`mailto:info@robertomarchesini.com?subject=${subj}&body=${body}`, "_blank");
+    setFormSent(true);
+  }, [formData, t4]);
 
   const sw = stageDims.w, sh = stageDims.h;
   const sx = (nx) => nx * sw, sy = (ny) => ny * sh;
-  const ox = sx(CH4_CABLE_ORIGIN.x), oy = sy(CH4_CABLE_ORIGIN.y);
   const ex = sx(cableEnd.x), ey = sy(cableEnd.y);
-  const tension = Math.abs(ex - ox) * 0.52;
-  const cablePath = `M ${ox} ${oy} C ${ox + tension} ${oy}, ${ex - tension * 0.55} ${ey}, ${ex} ${ey}`;
-  const activatedCount = activatedFields.filter(Boolean).length;
-  const cableColor = stageStep === "connected" ? "#d6cdfd"
-    : activatedCount === 0 ? "#7A5CFF"
-    : activatedCount === 1 ? "#6B9FC8"
-    : activatedCount === 2 ? "#A8B83D" : "#C47A45";
-  const portReady = activatedFields.every(Boolean) && stageStep === "cable";
-  const statusLine = stageStep === "connected" ? T.connectedLine
-    : stageStep === "cable" ? (activatedCount === 3 ? T.allFieldsReady : `${activatedCount}/3`) : T.connectBtn;
+  const ox = sx(CH4_ORIGIN.x), oy = sy(CH4_ORIGIN.y);
+  const cdx = ex - ox, sag = Math.abs(cdx) * 0.06;
+  const cablePath = `M ${ox} ${oy} C ${ox + cdx * 0.28} ${oy + sag} ${ex - cdx * 0.22} ${ey + sag * 0.4} ${ex} ${ey}`;
+  const passedCount = passed.filter(Boolean).length;
+  const cableColor  = phase === "connected" || phase === "unlocked" ? "#d6cdfd"
+    : passedCount === 0 ? "#7B6FD4" : passedCount === 1 ? "#6A9BC5" : passedCount === 2 ? "#8BBCB8" : "#BFB6F5";
+  const isActive    = phase !== "idle";
+  const isDragPhase = phase === "activated" || phase === "cable" || phase === "passed1" || phase === "passed2" || phase === "passed3";
+  const isConnected = phase === "connected" || phase === "unlocked";
+  const copyText    = isConnected ? t4.connectedCopy : isActive ? t4.activatedCopy : t4.idleCopy;
 
   return (
     <div className="ch1-root">
       <div className="ch1-wrap">
         <div className="ch1-top-slot">
           <div className="ch1-top">
-            <div className="ch1-kicker">{T.kicker}</div>
-            <button className="ch1-back-btn" onClick={onBack}>{T.backToSurface}</button>
+            <div className="ch1-kicker">{t4.kicker}</div>
+            <button className="ch1-back-btn" onClick={onBack}>{t4.backToSurface}</button>
           </div>
         </div>
 
@@ -3671,152 +3715,204 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
           ref={stageRef}
           className="ch2-stage"
           style={{
-            position: "relative", background: "#090913",
-            border: "1px solid rgba(150,132,255,.16)",
-            boxShadow: "0 0 0 1px rgba(122,92,255,.08), 0 34px 90px rgba(0,0,0,.48)",
-            overflow: "hidden",
-            cursor: stageStep === "cable" ? (isDragging ? "grabbing" : "crosshair") : "pointer",
+            position: "relative", background: "#080510",
+            border: "1px solid rgba(130,100,200,.12)",
+            boxShadow: "0 0 0 1px rgba(122,92,255,.06), 0 34px 90px rgba(0,0,0,.5)",
+            overflow: "hidden", cursor: isDragging ? "grabbing" : "default", userSelect: "none",
           }}
-          onClick={stageStep === "insert" ? handleInsert : (stageStep === "connected" ? handleContact : undefined)}
         >
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 36%, rgba(102,79,218,.34) 0%, rgba(47,35,88,.52) 24%, rgba(12,12,22,.96) 62%, rgba(7,8,14,1) 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, opacity: .14, backgroundImage: "linear-gradient(to right, rgba(214,205,253,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(214,205,253,.04) 1px, transparent 1px)", backgroundSize: "34px 34px" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,0) 22%, rgba(0,0,0,.22) 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 82%, rgba(122,92,255,.12), rgba(0,0,0,0) 44%)", animation: "ch4AuraPulse 6s ease-in-out infinite" }} />
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "repeating-linear-gradient(180deg, rgba(255,255,255,.018) 0px, rgba(255,255,255,.018) 1px, transparent 1px, transparent 4px)", opacity: .1 }} />
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, transparent 34%, rgba(0,0,0,.22) 72%, rgba(0,0,0,.58) 100%)" }} />
-
-          <div style={{ position: "absolute", top: "9%", left: "50%", transform: "translateX(-50%)", textAlign: "center", width: "100%", padding: "0 28px", zIndex: 4, pointerEvents: "none" }}>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.9, textTransform: "uppercase", color: stageStep === "connected" ? "#d6cdfd" : "#9d90cf", marginBottom: 14, opacity: .92 }}>{T.kicker}</div>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 34px)", lineHeight: 1.12, color: "#f3efff", marginBottom: 12, textWrap: "balance" }}>
-              {stageStep === "insert" ? T.prompt : stageStep === "cable" ? T.cableTitle : T.connectedLine}
-            </div>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, lineHeight: 1.85, color: "rgba(224,217,255,.72)", maxWidth: 480, margin: "0 auto" }}>
-              {stageStep === "insert" ? T.promptSub : stageStep === "cable" ? T.cableSub : (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop)}
-            </div>
-          </div>
-
-          <div style={{
-            position: "absolute",
-            left: stageStep === "insert" ? "50%" : "3%",
-            top: "50%",
-            transform: stageStep === "insert" ? "translate(-50%, -50%)" : "translate(0, -50%)",
-            transition: "left .9s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.22,.61,.36,1)",
-            animation: stageStep === "insert" ? "ch4ControllerFloatCenter 6.2s ease-in-out infinite" : "ch4ControllerFloat 5.8s ease-in-out infinite",
-            zIndex: 3, pointerEvents: "none",
-          }}>
-            <Ch4Controller lit={stageStep !== "insert"} accent={cableColor} />
-          </div>
-
-          <div style={{
-            position: "absolute",
-            right: stageStep === "connected" ? "3%" : "6%",
-            top: "50%",
-            transform: "translate(0, -50%)",
-            opacity: stageStep === "insert" ? 0 : stageStep === "connected" ? 1 : 0.26,
-            transition: "opacity .5s ease, right .8s cubic-bezier(.22,.61,.36,1)",
-            animation: stageStep === "connected" ? "ch4ControllerFloat 5.8s ease-in-out infinite .2s" : "ch4GhostRise 5.2s ease-in-out infinite",
-            zIndex: 3, pointerEvents: "none",
-          }}>
-            <Ch4Controller ghost={stageStep !== "connected"} lit={stageStep === "connected"} accent={stageStep === "connected" ? "#d6cdfd" : "#7A5CFF"} flip />
-          </div>
-
-          {stageStep !== "insert" && (
-            <svg
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 4, pointerEvents: stageStep === "cable" ? "all" : "none", touchAction: "none", overflow: "visible" }}
-              viewBox={`0 0 ${sw} ${sh}`}
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-              onPointerCancel={handlePointerUp}
-            >
-              <defs>
-                <filter id="ch4Glow" x="-60%" y="-60%" width="220%" height="220%">
-                  <feGaussianBlur stdDeviation="5" result="blur" />
-                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
-                <filter id="ch4FGlow" x="-80%" y="-80%" width="260%" height="260%">
-                  <feGaussianBlur stdDeviation="10" result="blur" />
-                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
-              </defs>
-
-              {CH4_FIELDS.map((f, i) => {
-                const fx = sx(f.x), fy = sy(f.y), fr = CH4_FIELD_R * sw;
-                const active = activatedFields[i];
-                return (
-                  <g key={i}>
-                    <circle cx={fx} cy={fy} r={fr * 1.5} fill={`rgba(${f.rgb},.${active ? "12" : "04"})`} filter="url(#ch4FGlow)" />
-                    <circle cx={fx} cy={fy} r={fr} fill={`rgba(${f.rgb},.${active ? "16" : "05"})`} stroke={`rgba(${f.rgb},.${active ? "68" : "22"})`} strokeWidth={active ? 1.5 : 1} />
-                    {active && <circle cx={fx} cy={fy} r={fr * 0.32} fill={`rgba(${f.rgb},.44)`} />}
-                    <text x={fx} y={fy + 0.5} textAnchor="middle" dominantBaseline="middle"
-                      fontFamily="'IBM Plex Mono',monospace" fontSize={Math.max(8, sw * 0.012)}
-                      letterSpacing="1" fill={`rgba(${f.rgb},.${active ? "88" : "34"})`} style={{ userSelect: "none" }}>
-                      {["I","II","III"][i]}
-                    </text>
-                  </g>
-                );
-              })}
-
-              {(() => {
-                const px = sx(CH4_PORT.x), py = sy(CH4_PORT.y), pr = CH4_PORT.r * sw;
-                const circ = 2 * Math.PI * (pr + 7);
-                return (
-                  <g>
-                    {portReady && <circle cx={px} cy={py} r={pr * 1.7} fill="rgba(214,205,253,.06)" filter="url(#ch4FGlow)" />}
-                    <circle cx={px} cy={py} r={pr}
-                      fill={isHoldingPort ? "rgba(214,205,253,.16)" : portReady ? "rgba(122,92,255,.14)" : "rgba(10,8,18,.72)"}
-                      stroke={isHoldingPort ? "rgba(214,205,253,.78)" : portReady ? "rgba(122,92,255,.62)" : "rgba(214,205,253,.18)"}
-                      strokeWidth={1.5} />
-                    <circle cx={px} cy={py} r={pr * 0.28} fill={portReady ? "rgba(122,92,255,.72)" : "rgba(100,90,140,.24)"} />
-                    {isHoldingPort && holdProgress > 0 && (
-                      <circle cx={px} cy={py} r={pr + 7} fill="none" stroke="rgba(214,205,253,.84)" strokeWidth={2}
-                        strokeDasharray={circ} strokeDashoffset={circ * (1 - holdProgress)}
-                        strokeLinecap="round" transform={`rotate(-90 ${px} ${py})`} />
-                    )}
-                  </g>
-                );
-              })()}
-
-              <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={5} strokeLinecap="round" opacity={0.28} filter="url(#ch4Glow)" />
-              <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={1.6} strokeLinecap="round" opacity={0.86} />
-
-              {stageStep === "cable" && (
-                <>
-                  {isDragging && <circle cx={ex} cy={ey} r={sw * 0.028} fill={`${cableColor}22`} filter="url(#ch4Glow)" />}
-                  <circle cx={ex} cy={ey} r={Math.max(4.5, sw * 0.009)} fill={cableColor} stroke="rgba(255,255,255,.55)" strokeWidth={1.2} style={{ cursor: "grab" }} />
-                  {!isDragging && activatedCount === 0 && (
-                    <g style={{ animation: "ch4HintDrift 2.2s ease-in-out infinite" }} opacity={0.45}>
-                      <line x1={ex + sw * 0.012} y1={ey} x2={ex + sw * 0.038} y2={ey} stroke={`${cableColor}99`} strokeWidth={1} />
-                      <polygon points={`${ex + sw * 0.040},${ey - 3} ${ex + sw * 0.053},${ey} ${ex + sw * 0.040},${ey + 3}`} fill={`${cableColor}99`} />
-                    </g>
-                  )}
-                </>
-              )}
-            </svg>
+          <img src={CH4_IMG_URL} alt="" draggable={false} style={{
+            position: "absolute", inset: 0, width: "100%", height: "100%",
+            objectFit: "cover", pointerEvents: "none", display: "block",
+          }} />
+          <div style={{ position:"absolute", inset:0, pointerEvents:"none",
+            background:"radial-gradient(ellipse at center, transparent 28%, rgba(0,0,0,.28) 68%, rgba(0,0,0,.52) 100%)" }} />
+          <div style={{ position:"absolute", inset:"0 0 auto 0", height:"20%", pointerEvents:"none",
+            background:"linear-gradient(to bottom, rgba(0,0,0,.42), transparent)" }} />
+          <div style={{ position:"absolute", pointerEvents:"none",
+            left:"20%", top:"4%", width:"40%", height:"56%",
+            background:"radial-gradient(ellipse, rgba(255,130,60,.055) 0%, transparent 70%)",
+            animation:"ch4WindowBreathe 7s ease-in-out infinite" }} />
+          {isActive && (
+            <div style={{ position:"absolute", pointerEvents:"none",
+              left:`${(CH4_CTRL_AREA.x - 0.06) * 100}%`, top:`${(CH4_CTRL_AREA.y - 0.09) * 100}%`,
+              width:"12%", height:"18%",
+              background:"radial-gradient(ellipse, rgba(120,90,220,.28) 0%, transparent 70%)",
+              animation:"ch4CtrlLed 3.5s ease-in-out infinite" }} />
+          )}
+          {isConnected && (
+            <div style={{ position:"absolute", pointerEvents:"none",
+              left:`${(CH4_CHAIR.x - CH4_CHAIR.rx) * 100}%`, top:`${(CH4_CHAIR.y - CH4_CHAIR.ry) * 100}%`,
+              width:`${CH4_CHAIR.rx * 2 * 100}%`, height:`${CH4_CHAIR.ry * 2 * 100}%`,
+              background:"radial-gradient(ellipse, rgba(200,180,255,.15) 0%, rgba(140,110,230,.06) 55%, transparent 80%)",
+              animation:"ch4ChairSpill .55s ease-out forwards" }} />
           )}
 
-          <div style={{ position: "absolute", left: "50%", bottom: 18, width: "min(calc(100% - 40px), 720px)", transform: "translateX(-50%)", zIndex: 5, pointerEvents: "none" }}>
-            <div style={{ border: "1px solid rgba(214,205,253,.12)", borderRadius: 12, padding: "14px 18px 15px", background: "linear-gradient(180deg, rgba(10,9,18,.82), rgba(8,8,14,.58))", boxShadow: "0 12px 28px rgba(0,0,0,.2)", backdropFilter: "blur(8px)" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 10, flexWrap: "wrap" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "rgba(214,205,253,.72)" }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 999, background: cableColor, boxShadow: `0 0 0 6px ${cableColor}1e`, transition: "background .4s" }} />
-                  {stageStep === "cable" ? `${activatedCount}/3` : T.ctaBtn}
-                </div>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: "rgba(214,205,253,.52)" }}>{statusLine}</div>
+          <svg
+            style={{ position:"absolute", inset:0, width:"100%", height:"100%", zIndex:4,
+              pointerEvents: showForm ? "none" : "all", touchAction:"none", overflow:"visible" }}
+            viewBox={`0 0 ${sw} ${sh}`}
+            onPointerDown={handlePointerDown} onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}
+          >
+            <defs>
+              <filter id="ch4nGlow" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="5" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="ch4nBloom" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="11" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            {phase === "idle" && (
+              <circle cx={sx(CH4_CTRL_AREA.x)} cy={sy(CH4_CTRL_AREA.y)} r={CH4_CTRL_AREA.r * sw}
+                fill="rgba(0,0,0,0)" stroke="rgba(180,150,255,.14)" strokeWidth={1}
+                style={{ cursor:"pointer", animation:"ch4CtrlHint 3s ease-in-out infinite" }} />
+            )}
+
+            {CH4_THRESHOLDS.map((th, i) => {
+              const thx = sx(th.x), thy = sy(th.y), trx = th.rx * sw, try_ = th.ry * sh;
+              return (
+                <g key={i}>
+                  {passed[i] && <ellipse cx={thx} cy={thy} rx={trx * .55} ry={try_ * .55}
+                    fill={i===0 ? "rgba(140,120,220,.06)" : i===1 ? "rgba(100,160,200,.06)" : "rgba(140,190,170,.06)"}
+                    filter="url(#ch4nBloom)" />}
+                  {pulsing === i && (
+                    <g transform={`translate(${thx} ${thy})`}
+                       style={{ transformBox:"fill-box", transformOrigin:"center", animation:"ch4PulseRing .65s ease-out forwards" }}>
+                      <ellipse cx={0} cy={0} rx={trx * 1.3} ry={try_ * 1.3} fill="none"
+                        stroke={i===0 ? "rgba(140,120,220,.38)" : i===1 ? "rgba(100,160,200,.38)" : "rgba(140,190,170,.38)"}
+                        strokeWidth={1.5} />
+                    </g>
+                  )}
+                </g>
+              );
+            })}
+
+            {passed[1] && !isConnected && (() => {
+              const spx = sx(CH4_SOCKET.x), spy = sy(CH4_SOCKET.y), sr = CH4_SNAP_R * sw * .65;
+              return (
+                <g>
+                  <circle cx={spx} cy={spy} r={sr * 1.7} fill="rgba(180,160,255,.04)" filter="url(#ch4nBloom)" />
+                  <circle cx={spx} cy={spy} r={sr} fill="rgba(8,6,18,.55)" stroke="rgba(180,160,255,.38)" strokeWidth={1.2}
+                    style={{ animation:"ch4SocketPulse 2s ease-in-out infinite" }} />
+                  <circle cx={spx} cy={spy} r={sr * .32} fill="rgba(180,160,255,.5)" />
+                </g>
+              );
+            })()}
+
+            {isConnected && (() => {
+              const spx = sx(CH4_SOCKET.x), spy = sy(CH4_SOCKET.y), sr = CH4_SNAP_R * sw * .65;
+              return (
+                <g>
+                  <circle cx={spx} cy={spy} r={sr * 2.4} fill="rgba(214,205,253,.05)" filter="url(#ch4nBloom)" />
+                  <circle cx={spx} cy={spy} r={sr} fill="rgba(214,205,253,.22)" stroke="rgba(214,205,253,.7)" strokeWidth={1.5} />
+                  <circle cx={spx} cy={spy} r={sr * .4} fill="rgba(214,205,253,.88)" />
+                </g>
+              );
+            })()}
+
+            {isActive && (
+              <>
+                <path d={cablePath} fill="none" stroke="rgba(15,8,35,.65)" strokeWidth={5} strokeLinecap="round" filter="url(#ch4nBloom)" opacity={.45} />
+                <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={5.5} strokeLinecap="round" opacity={.15} filter="url(#ch4nGlow)" />
+                <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={1.8} strokeLinecap="round" opacity={.9} />
+              </>
+            )}
+
+            {isDragPhase && (
+              <>
+                {isDragging && <circle cx={ex} cy={ey} r={sw * .03} fill={`${cableColor}18`} filter="url(#ch4nGlow)" />}
+                <circle cx={ex} cy={ey} r={Math.max(5, sw * .0095)} fill={cableColor} stroke="rgba(255,255,255,.5)" strokeWidth={1.2}
+                  style={{ cursor: isDragging ? "grabbing" : "grab" }} />
+                {!isDragging && passedCount === 0 && (
+                  <g opacity={.42} style={{ animation:"ch4HintDrift 2.2s ease-in-out infinite" }}>
+                    <line x1={ex - sw*.013} y1={ey} x2={ex - sw*.036} y2={ey} stroke={`${cableColor}99`} strokeWidth={1} />
+                    <polygon points={`${ex-sw*.038},${ey-3} ${ex-sw*.052},${ey} ${ex-sw*.038},${ey+3}`} fill={`${cableColor}99`} />
+                  </g>
+                )}
+              </>
+            )}
+          </svg>
+
+          {!showForm && (
+            <div style={{ position:"absolute", bottom:0, left:0, right:0, zIndex:6, pointerEvents:"none",
+              padding:"20px 24px 14px",
+              background:"linear-gradient(to top, rgba(0,0,0,.68) 0%, rgba(0,0,0,.24) 65%, transparent 100%)" }}>
+              <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:10, letterSpacing:2.2,
+                textTransform:"uppercase", textAlign:"center", transition:"color .4s ease",
+                color: isConnected ? "rgba(214,205,253,.85)" : "rgba(200,190,230,.5)" }}>
+                {copyText}
               </div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "clamp(22px, 2.4vw, 30px)", lineHeight: 1.08, color: "#f4efff", letterSpacing: -.2, marginBottom: 10, textWrap: "balance" }}>
-                {stageStep === "connected" ? T.connectedLine : stageStep === "cable" ? T.cableTitle : T.prompt}
-              </div>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, lineHeight: 1.82, color: "rgba(224,217,255,.72)" }}>
-                {stageStep === "connected" ? (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop) : stageStep === "cable" ? T.cableSub : T.promptSub}
-              </div>
-              {stageStep === "connected" && (
-                <div style={{ marginTop: 14, opacity: showCTA ? 1 : 0, transform: showCTA ? "translateY(0)" : "translateY(8px)", transition: "opacity .28s ease, transform .28s ease" }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 999, border: "1px solid rgba(214,205,253,.16)", background: "rgba(255,255,255,.06)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: "#f4efff" }}>
-                    <span style={{ width: 8, height: 8, borderRadius: 999, background: "#d6cdfd", boxShadow: "0 0 0 6px rgba(214,205,253,.18)" }} />
-                    {isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop}
-                  </div>
+            </div>
+          )}
+
+          <div style={{
+            position:"absolute", inset:0, zIndex:9,
+            background:"rgba(4,3,10,.88)", backdropFilter:"blur(3px)",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            opacity: showForm ? 1 : 0,
+            transform: showForm ? "translateY(0)" : "translateY(18px)",
+            transition:"opacity .42s ease, transform .42s ease",
+            pointerEvents: showForm ? "all" : "none",
+            padding:"16px",
+          }}>
+            <div style={{ width:"min(100%,400px)", border:"1px solid rgba(150,120,255,.2)", borderRadius:8,
+              background:"rgba(8,7,18,.97)", padding:"22px 24px 24px",
+              boxShadow:"0 0 0 1px rgba(122,92,255,.08), 0 24px 60px rgba(0,0,0,.65)" }}>
+              {!formSent ? (
+                <>
+                  <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:8, letterSpacing:3.5,
+                    textTransform:"uppercase", color:"#7B6FD4", marginBottom:5 }}>PLAYER 2</div>
+                  <div style={{ fontFamily:"'Playfair Display',serif", fontStyle:"italic",
+                    fontSize:18, color:"#F3EFFF", marginBottom:20, lineHeight:1.2 }}>{t4.formTitle}</div>
+                  <form onSubmit={handleSubmit} style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+                      <div>
+                        <label style={CH4_FORM_LABEL}>{t4.formDa}</label>
+                        <input type="text" placeholder={t4.formDaPlaceholder} value={formData.da} required
+                          onChange={e => setFormData(f => ({ ...f, da: e.target.value }))} style={CH4_FORM_INPUT} />
+                      </div>
+                      <div>
+                        <label style={CH4_FORM_LABEL}>{t4.formUrgenza}</label>
+                        <select value={formData.urgenza} onChange={e => setFormData(f => ({ ...f, urgenza: e.target.value }))}
+                          style={{ ...CH4_FORM_INPUT, cursor:"pointer" }}>
+                          <option value="">—</option>
+                          {t4.formUrgenzaOptions.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label style={CH4_FORM_LABEL}>{t4.formOggetto}</label>
+                      <input type="text" placeholder={t4.formOggettoPlaceholder} value={formData.oggetto}
+                        onChange={e => setFormData(f => ({ ...f, oggetto: e.target.value }))} style={CH4_FORM_INPUT} />
+                    </div>
+                    <div>
+                      <label style={CH4_FORM_LABEL}>{t4.formMessaggio}</label>
+                      <textarea placeholder={t4.formMessaggioPlaceholder} value={formData.messaggio} rows={3}
+                        onChange={e => setFormData(f => ({ ...f, messaggio: e.target.value }))}
+                        style={{ ...CH4_FORM_INPUT, minHeight:76, resize:"vertical" }} />
+                    </div>
+                    <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:2, gap:12 }}>
+                      <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:9,
+                        color:"rgba(180,160,255,.38)", letterSpacing:.6, lineHeight:1.5 }}>{t4.formNote}</div>
+                      <button type="submit" style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:10, letterSpacing:2,
+                        textTransform:"uppercase", color:"#f4efff", background:"rgba(122,92,255,.16)",
+                        border:"1px solid rgba(150,120,255,.32)", borderRadius:4, padding:"9px 20px",
+                        cursor:"pointer", whiteSpace:"nowrap", flexShrink:0 }}>{t4.formSubmit}</button>
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <div style={{ textAlign:"center", padding:"16px 0" }}>
+                  <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:8, letterSpacing:3.5,
+                    textTransform:"uppercase", color:"#7B6FD4", marginBottom:12 }}>{t4.formSentKicker}</div>
+                  <div style={{ fontFamily:"'Playfair Display',serif", fontStyle:"italic",
+                    fontSize:18, color:"#F3EFFF", lineHeight:1.3, marginBottom:12 }}>{t4.formSentTitle}</div>
+                  <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:10,
+                    color:"rgba(180,160,255,.5)", lineHeight:1.7 }}>{t4.formSentNote}</div>
                 </div>
               )}
             </div>
@@ -3824,12 +3920,9 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
         </div>
 
         <div className="ch1-controls-slot">
-          <div className="ch1-controls ch2-controls" onClick={(e) => e.stopPropagation()}>
-            <Ch1ChoiceButton
-              onClick={stageStep === "insert" ? handleInsert : (stageStep === "connected" ? handleContact : undefined)}
-              disabled={stageStep === "cable" || (stageStep === "connected" && !showCTA)}
-            >
-              {stageStep === "insert" ? T.connectBtn : stageStep === "cable" ? T.cableTitle : T.ctaBtn}
+          <div className="ch1-controls ch2-controls" onClick={e => e.stopPropagation()}>
+            <Ch1ChoiceButton onClick={phase === "idle" ? handleActivateBtn : undefined} disabled={phase !== "idle"}>
+              {phase === "idle" ? t4.connectBtn : isConnected ? t4.connectedCopy : t4.activatedCopy}
             </Ch1ChoiceButton>
           </div>
         </div>
@@ -4436,7 +4529,13 @@ export default function Roberto() {
         @keyframes ch4ControllerFloatRight{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-4px)}}
         @keyframes ch4GhostRise{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-5px)}}
         @keyframes ch4AuraPulse{0%,100%{opacity:.42;transform:scale(.985)}50%{opacity:.72;transform:scale(1.02)}}
-        @keyframes ch4HintDrift{0%,100%{transform:translateX(0);opacity:.38}50%{transform:translateX(5px);opacity:.68}}
+        @keyframes ch4HintDrift{0%,100%{transform:translateX(0);opacity:.38}50%{transform:translateX(-5px);opacity:.68}}
+        @keyframes ch4WindowBreathe{0%,100%{opacity:.75}50%{opacity:1}}
+        @keyframes ch4CtrlLed{0%,100%{opacity:.5}50%{opacity:.88}}
+        @keyframes ch4CtrlHint{0%,100%{opacity:.08}50%{opacity:.22}}
+        @keyframes ch4PulseRing{0%{opacity:.45;transform:scale(1)}100%{opacity:0;transform:scale(1.95)}}
+        @keyframes ch4SocketPulse{0%,100%{opacity:.48}50%{opacity:.84}}
+        @keyframes ch4ChairSpill{from{opacity:0}to{opacity:1}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
@@ -4561,7 +4660,7 @@ export default function Roberto() {
           .pixel-social-link-mobile .pixel-social-label{font-size:8px;letter-spacing:1.2px}
           .home-section-kicker{font-size:24px!important;line-height:1.05!important;margin-bottom:14px!important}
           .home-selected-heading-wrap{margin-bottom:12px!important}
-          .home-selected-heading{font-size:28px!important;line-height:1.02!important}
+          .home-selected-heading{font-size:42px!important;line-height:1.02!important}
           .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
           .home-work-narrative{font-size:12px!important;line-height:1.84!important;color:#d8d2ca!important;max-width:100%!important}
           .home-work-secondary{display:none!important}
@@ -4828,8 +4927,8 @@ export default function Roberto() {
           {/* CTA + CESTINA - SEMPLIFICATO */}
           <Section delay={0.22}>
             <div style={{ marginBottom: 8 }}>
-              <div className="home-pretty" style={{ textAlign: "center", marginBottom: 22, fontSize: 11, color: "#9c9186", fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.9, maxWidth: 380, marginInline: "auto" }}>
-                {T.availableFor}
+              <div style={{ textAlign: "center", marginBottom: 32, fontSize: isMobileViewport ? 18 : 22, color: "#c8c0b4", fontFamily: "'Playfair Display', serif", fontStyle: "italic", lineHeight: 1.6, maxWidth: 480, marginInline: "auto" }}>
+                {T.ctaBridge}
               </div>
               <div className="home-cta-shell">
                 <div className="home-cta-actions">
