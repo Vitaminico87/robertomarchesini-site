@@ -3528,7 +3528,7 @@ function Ch4Controller({ lit = false, ghost = false, accent = "#7A5CFF", flip = 
 }
 
 function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
-  const t4 = T.ch4;
+  const t4 = T;
   const [phase, setPhase]           = useState("idle");
   const [passed, setPassed]         = useState([false, false, false]);
   const [cableEnd, setCableEnd]     = useState({ ...CH4_ORIGIN });
