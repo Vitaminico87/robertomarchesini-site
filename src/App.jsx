@@ -3521,20 +3521,20 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
 
 // ── Chapter 4: Handshake Analogico ──
 const CH4_IMG_URL    = "https://www.robertomarchesini.com/assets/chapter4/finale.png";
-const CH4_ORIGIN     = { x: 0.59, y: 0.78 };
-const CH4_CTRL_AREA  = { x: 0.61, y: 0.79, r: 0.08 };
+const CH4_ORIGIN     = { x: 0.595, y: 0.775 }; // cable tip on controller (floor, right)
+const CH4_CTRL_AREA  = { x: 0.60, y: 0.780, r: 0.07 }; // controller grab area
 const CH4_THRESHOLDS = [
-  { x: 0.56, y: 0.79, rx: 0.07, ry: 0.045 },
-  { x: 0.45, y: 0.76, rx: 0.08, ry: 0.050 },
-  { x: 0.31, y: 0.70, rx: 0.07, ry: 0.045 },
+  { x: 0.475, y: 0.760, rx: 0.065, ry: 0.042 }, // near controller
+  { x: 0.340, y: 0.725, rx: 0.070, ry: 0.046 }, // mid room
+  { x: 0.210, y: 0.695, rx: 0.060, ry: 0.040 }, // near TV
 ];
-const CH4_SOCKET     = { x: 0.29, y: 0.69 };
-const CH4_SNAP_R     = 0.040;
-const CH4_CHAIR      = { x: 0.84, y: 0.69, rx: 0.11, ry: 0.13 };
-const CH4_CRT_SCREEN = { x: 0.19, y: 0.39, rx: 0.10, ry: 0.12 }; // CRT screen hit area
-const CH4_CART_ORIGIN = { x: 0.51, y: 0.745 }; // cartridge on desk
-const CH4_CART_SLOT   = { x: 0.305, y: 0.695 }; // slot on TV cabinet
-const CH4_CART_SNAP_R = 0.065;
+const CH4_SOCKET     = { x: 0.155, y: 0.675 }; // port on TV cabinet
+const CH4_SNAP_R     = 0.038;
+const CH4_CHAIR      = { x: 0.84, y: 0.65, rx: 0.11, ry: 0.13 };
+const CH4_CRT_SCREEN = { x: 0.105, y: 0.470, rx: 0.048, ry: 0.072 }; // TV screen (lower-left)
+const CH4_CART_ORIGIN = { x: 0.505, y: 0.762 }; // cartridge near controller on floor
+const CH4_CART_SLOT   = { x: 0.138, y: 0.630 }; // console slot on TV cabinet
+const CH4_CART_SNAP_R = 0.060;
 const CH4_FORM_LABEL = { display:"block", fontFamily:"'IBM Plex Mono',monospace", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", color:"rgba(180,160,255,.52)", marginBottom:5 };
 const CH4_FORM_INPUT = { width:"100%", fontFamily:"'IBM Plex Mono',monospace", fontSize:11, color:"#e0d8ff", background:"rgba(16,12,32,.85)", border:"1px solid rgba(130,100,220,.2)", borderRadius:4, padding:"8px 10px", outline:"none", boxSizing:"border-box", WebkitAppearance:"none", appearance:"none" };
 
@@ -3841,10 +3841,19 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
             background:"radial-gradient(ellipse at center, transparent 28%, rgba(0,0,0,.28) 68%, rgba(0,0,0,.52) 100%)" }} />
           <div style={{ position:"absolute", inset:"0 0 auto 0", height:"20%", pointerEvents:"none",
             background:"linear-gradient(to bottom, rgba(0,0,0,.42), transparent)" }} />
+          {/* Sunset window glow — warm core + soft halo + shimmer */}
           <div style={{ position:"absolute", pointerEvents:"none",
-            left:"20%", top:"4%", width:"40%", height:"56%",
-            background:"radial-gradient(ellipse, rgba(255,130,60,.055) 0%, transparent 70%)",
+            left:"22%", top:"5%", width:"38%", height:"54%",
+            background:"radial-gradient(ellipse at 50% 44%, rgba(255,140,55,.09) 0%, rgba(240,100,40,.05) 38%, transparent 72%)",
             animation:"ch4WindowBreathe 7s ease-in-out infinite" }} />
+          <div style={{ position:"absolute", pointerEvents:"none",
+            left:"26%", top:"9%", width:"30%", height:"42%",
+            background:"radial-gradient(ellipse at 50% 38%, rgba(255,175,80,.07) 0%, rgba(255,120,50,.03) 50%, transparent 78%)",
+            animation:"ch4WindowBreathe 5.2s ease-in-out infinite reverse" }} />
+          <div style={{ position:"absolute", pointerEvents:"none",
+            left:"28%", top:"60%", right:"28%", height:"18%",
+            background:"linear-gradient(to bottom, rgba(200,80,40,.055) 0%, transparent 100%)",
+            animation:"ch4WindowBreathe 9s ease-in-out infinite" }} />
           {isActive && (
             <div style={{ position:"absolute", pointerEvents:"none",
               left:`${(CH4_CTRL_AREA.x - 0.06) * 100}%`, top:`${(CH4_CTRL_AREA.y - 0.09) * 100}%`,
@@ -3877,6 +3886,23 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
                 <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
+
+            {/* Sunset window dust particles */}
+            {[
+              { x:.32, y:.22, r:.0028, d:0,    dur:6.2 },
+              { x:.41, y:.15, r:.0022, d:1.1,  dur:7.8 },
+              { x:.50, y:.28, r:.0032, d:2.4,  dur:5.6 },
+              { x:.38, y:.34, r:.0018, d:0.7,  dur:8.4 },
+              { x:.55, y:.19, r:.0025, d:3.2,  dur:6.9 },
+              { x:.45, y:.08, r:.0020, d:1.8,  dur:7.2 },
+              { x:.60, y:.31, r:.0030, d:4.0,  dur:5.9 },
+              { x:.35, y:.42, r:.0022, d:2.6,  dur:9.1 },
+            ].map((p, i) => (
+              <circle key={`dust${i}`}
+                cx={sx(p.x)} cy={sy(p.y)} r={p.r * sw}
+                fill="rgba(255,160,80,.38)"
+                style={{ animation:`ch4DustFloat ${p.dur}s ${p.d}s ease-in-out infinite` }} />
+            ))}
 
             {/* CRT screen: idle = pulsing hint, crt_on+ = glow */}
             {phase === "idle" && (
@@ -4726,6 +4752,7 @@ export default function Roberto() {
         @keyframes ch4SocketPulse{0%,100%{opacity:.48}50%{opacity:.84}}
         @keyframes ch4ChairSpill{from{opacity:0}to{opacity:1}}
         @keyframes ch4CrtGlow{0%,100%{opacity:.72}50%{opacity:1}}
+        @keyframes ch4DustFloat{0%,100%{opacity:.12;transform:translateY(0) scale(1)}40%{opacity:.42;transform:translateY(-4px) scale(1.18)}70%{opacity:.22;transform:translateY(-7px) scale(.9)}}
         @keyframes ch4CartHint{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
         @keyframes ch4PressStart{0%,49%{opacity:1}50%,100%{opacity:0}}
         .ch2-game-stage{background:#0a0f12}
