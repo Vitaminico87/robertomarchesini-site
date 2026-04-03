@@ -389,14 +389,10 @@ const LANG = {
       introTitle: "Futuro",
       prompt: "Inserisci il controller.",
       promptSub: "Qui non si chiude niente. Si apre in due.",
-      syncTitle: "Stabilizza il segnale.",
-      syncSub: "Allinea tre canali. Sfiora il centro, non serve la perfezione.",
-      syncIdleLine: "Tre canali. Un solo ritmo.",
-      channelLabel: "Canale",
-      channelLocked: "Canale stabile.",
-      channelRetry: "Quasi. Riprova.",
+      cableTitle: "Apri il canale.",
+      cableSub: "Trascina il segnale attraverso le soglie.",
+      allFieldsReady: "Tutte le soglie attraversate.",
       connectBtn: "Inserisci il controller",
-      syncBtn: "Stabilizza",
       connectedLine: "Secondo controller connesso.",
       connectedHintDesktop: "Premi Enter per iniziare.",
       connectedHintMobile: "Tocca per iniziare.",
@@ -578,14 +574,10 @@ const LANG = {
       introTitle: "Future",
       prompt: "Insert the controller.",
       promptSub: "Nothing closes here. It opens with someone else.",
-      syncTitle: "Stabilize the signal.",
-      syncSub: "Align three channels. Brush the center — perfection is not the point.",
-      syncIdleLine: "Three channels. One shared rhythm.",
-      channelLabel: "Channel",
-      channelLocked: "Channel stable.",
-      channelRetry: "Out of band. Try again.",
+      cableTitle: "Open the channel.",
+      cableSub: "Drag the signal through the thresholds.",
+      allFieldsReady: "All thresholds crossed.",
       connectBtn: "Insert controller",
-      syncBtn: "Stabilize",
       connectedLine: "Second controller connected.",
       connectedHintDesktop: "Press Enter to begin.",
       connectedHintMobile: "Tap to begin.",
@@ -3474,216 +3466,196 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   );
 }
 
+// ── Chapter 4: Handshake Analogico ──
+const CH4_CABLE_ORIGIN = { x: 0.290, y: 0.500 };
+const CH4_FIELDS = [
+  { x: 0.400, y: 0.390, color: "#5BA8C9", rgb: "91,168,201" },
+  { x: 0.565, y: 0.610, color: "#B8C944", rgb: "184,201,68" },
+  { x: 0.730, y: 0.390, color: "#D4874E", rgb: "212,135,78" },
+];
+const CH4_PORT = { x: 0.878, y: 0.500, r: 0.056 };
+const CH4_FIELD_R = 0.086;
+const CH4_HOLD_MS = 860;
+
+function Ch4Controller({ lit = false, ghost = false, accent = "#7A5CFF", flip = false }) {
+  return (
+    <div style={{
+      position: "relative", width: 200, height: 110,
+      opacity: ghost ? 0.22 : 1,
+      filter: ghost ? "none" : `drop-shadow(0 18px 34px rgba(0,0,0,.32)) drop-shadow(0 0 20px ${lit ? "rgba(122,92,255,.26)" : "rgba(0,0,0,.06)"})`,
+      transform: flip ? "scaleX(-1)" : "none",
+      transition: "opacity .4s ease, filter .4s ease",
+    }}>
+      <div style={{ position: "absolute", inset: "16px 34px 20px 34px", borderRadius: 34, background: "#0f0e1b", border: `1px solid ${ghost ? "rgba(214,205,253,.06)" : "rgba(214,205,253,.16)"}`, boxShadow: "inset 0 1px 0 rgba(255,255,255,.04)" }} />
+      <div style={{ position: "absolute", left: 0, top: 28, width: 82, height: 64, borderRadius: 36, background: "#0d0c17", border: `1px solid ${ghost ? "rgba(214,205,253,.04)" : "rgba(214,205,253,.11)"}` }} />
+      <div style={{ position: "absolute", right: 0, top: 28, width: 82, height: 64, borderRadius: 36, background: "#0d0c17", border: `1px solid ${ghost ? "rgba(214,205,253,.04)" : "rgba(214,205,253,.11)"}` }} />
+      <div style={{ position: "absolute", left: 54, top: 48, width: 26, height: 7, borderRadius: 999, background: "#d6cdfd", opacity: ghost ? 0.24 : 0.82 }} />
+      <div style={{ position: "absolute", left: 63, top: 39, width: 7, height: 26, borderRadius: 999, background: "#d6cdfd", opacity: ghost ? 0.24 : 0.82 }} />
+      <div style={{ position: "absolute", right: 52, top: 40, width: 10, height: 10, borderRadius: 999, background: "#d6cdfd", boxShadow: "18px 0 0 #d6cdfd, 9px -9px 0 #d6cdfd, 9px 9px 0 #d6cdfd", opacity: ghost ? 0.2 : 0.74 }} />
+      <div style={{ position: "absolute", left: 87, top: 50, width: 12, height: 12, borderRadius: 999, border: "2px solid #d6cdfd", opacity: ghost ? 0.16 : 0.60 }} />
+      <div style={{ position: "absolute", right: 87, top: 50, width: 12, height: 12, borderRadius: 999, border: "2px solid #d6cdfd", opacity: ghost ? 0.16 : 0.60 }} />
+      <div style={{
+        position: "absolute", left: "50%", top: 28, width: 9, height: 9, borderRadius: 999,
+        transform: "translateX(-50%)",
+        background: lit ? accent : (ghost ? "rgba(122,92,255,.16)" : "rgba(80,70,110,.52)"),
+        boxShadow: lit ? `0 0 0 8px ${accent}1a, 0 0 26px ${accent}44` : "none",
+        transition: "all .32s ease",
+      }} />
+    </div>
+  );
+}
+
 function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const [stageStep, setStageStep] = useState("insert");
-  const [activeChannel, setActiveChannel] = useState(0);
-  const [lockedChannels, setLockedChannels] = useState([false, false, false]);
-  const [statusTone, setStatusTone] = useState("idle");
+  const [activatedFields, setActivatedFields] = useState([false, false, false]);
+  const [cableEnd, setCableEnd] = useState({ x: CH4_CABLE_ORIGIN.x, y: CH4_CABLE_ORIGIN.y });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isHoldingPort, setIsHoldingPort] = useState(false);
+  const [holdProgress, setHoldProgress] = useState(0);
   const [showCTA, setShowCTA] = useState(false);
   const [isMobileHint, setIsMobileHint] = useState(false);
-  const [signalRunKey, setSignalRunKey] = useState(0);
-  const feedbackTimeoutRef = useRef(null);
+  const [stageDims, setStageDims] = useState({ w: 700, h: 525 });
+
+  const stageRef = useRef(null);
+  const stageStepRef = useRef("insert");
+  const targetPosRef = useRef({ ...CH4_CABLE_ORIGIN });
+  const currentPosRef = useRef({ ...CH4_CABLE_ORIGIN });
+  const activatedFieldsRef = useRef([false, false, false]);
+  const isDraggingRef = useRef(false);
+  const holdStartRef = useRef(null);
+  const rafRef = useRef(null);
   const ctaTimeoutRef = useRef(null);
-  const phaseStartRef = useRef(0);
-  const channelDurations = useMemo(() => [1920, 1860, 1540], []);
-  const targetWindows = useMemo(() => [0.16, 0.215, 0.16], []);
-  const channelAccents = useMemo(() => ["#7A5CFF", "#9274FF", "#B3A1FF"], []);
-  const channelMarks = useMemo(() => ["I", "II", "III"], []);
 
-  const stopPulse = useCallback(() => {
-    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
-    feedbackTimeoutRef.current = null;
-  }, []);
-
-  const pulseStatus = useCallback((tone = "idle", hold = 560) => {
-    stopPulse();
-    setStatusTone(tone);
-    if (tone === "connected") return;
-    feedbackTimeoutRef.current = setTimeout(() => {
-      setStatusTone("idle");
-      feedbackTimeoutRef.current = null;
-    }, hold);
-  }, [stopPulse]);
-
-  const resetSignal = useCallback(() => {
-    phaseStartRef.current = (typeof performance !== "undefined" ? performance.now() : Date.now());
-    setSignalRunKey((value) => value + 1);
+  useEffect(() => {
+    const upd = () => setIsMobileHint(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 900);
+    upd(); window.addEventListener("resize", upd);
+    return () => window.removeEventListener("resize", upd);
   }, []);
 
   useEffect(() => {
-    const update = () => {
-      if (typeof window === "undefined") return;
-      setIsMobileHint(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 900);
+    const upd = () => {
+      if (!stageRef.current) return;
+      const { width, height } = stageRef.current.getBoundingClientRect();
+      if (width > 0) setStageDims({ w: width, h: height });
     };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    upd();
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(upd) : null;
+    if (ro && stageRef.current) ro.observe(stageRef.current);
+    return () => ro?.disconnect();
   }, []);
 
   useEffect(() => {
     return () => {
-      stopPulse();
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
     };
-  }, [stopPulse]);
+  }, []);
 
   useEffect(() => {
     if (stageStep !== "connected") return;
     onUnlockProfile?.("future");
-    if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
     ctaTimeoutRef.current = setTimeout(() => setShowCTA(true), 760);
-    return () => {
-      if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current);
-    };
+    return () => { if (ctaTimeoutRef.current) clearTimeout(ctaTimeoutRef.current); };
   }, [stageStep, onUnlockProfile]);
 
-  const getChannelProgress = useCallback((index, now) => {
-    const duration = channelDurations[index] || channelDurations[0];
-    const timestamp = typeof now === "number" ? now : (typeof performance !== "undefined" ? performance.now() : Date.now());
-    const elapsed = ((timestamp - phaseStartRef.current) % duration + duration) % duration;
-    const cycle = elapsed / duration;
-    return cycle < 0.5 ? cycle * 2 : (1 - cycle) * 2;
-  }, [channelDurations]);
-
-  const beginSync = useCallback(() => {
-    setStageStep("sync");
-    setActiveChannel(0);
-    setLockedChannels([false, false, false]);
-    setShowCTA(false);
-    pulseStatus("idle");
-    resetSignal();
-  }, [pulseStatus, resetSignal]);
-
-  const finishConnection = useCallback(() => {
-    setStageStep("connected");
-    setShowCTA(false);
-    setStatusTone("connected");
-    stopPulse();
-  }, [stopPulse]);
-
-  const attemptSync = useCallback(() => {
-    const now = typeof performance !== "undefined" ? performance.now() : Date.now();
-    const progress = getChannelProgress(activeChannel, now);
-    const distance = Math.abs(progress - 0.5);
-    const threshold = targetWindows[activeChannel] || targetWindows[targetWindows.length - 1];
-
-    if (distance <= threshold) {
-      const nextLocked = lockedChannels.map((locked, index) => (index === activeChannel ? true : locked));
-      setLockedChannels(nextLocked);
-      if (activeChannel >= nextLocked.length - 1) {
-        finishConnection();
-        return;
+  const startLoop = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    const loop = () => {
+      if (stageStepRef.current === "connected") { rafRef.current = null; return; }
+      const tx = targetPosRef.current.x, ty = targetPosRef.current.y;
+      const cx = currentPosRef.current.x, cy = currentPosRef.current.y;
+      const dx = tx - cx, dy = ty - cy;
+      const nx = cx + dx * 0.13, ny = cy + dy * 0.13;
+      currentPosRef.current = { x: nx, y: ny };
+      setCableEnd({ x: nx, y: ny });
+      if (stageStepRef.current === "cable") {
+        let changed = false;
+        for (let i = 0; i < CH4_FIELDS.length; i++) {
+          if (!activatedFieldsRef.current[i]) {
+            const fd = Math.sqrt((nx - CH4_FIELDS[i].x) ** 2 + (ny - CH4_FIELDS[i].y) ** 2);
+            if (fd < CH4_FIELD_R) { activatedFieldsRef.current[i] = true; changed = true; }
+          }
+        }
+        if (changed) setActivatedFields([...activatedFieldsRef.current]);
+        const allActive = activatedFieldsRef.current.every(Boolean);
+        const pd = Math.sqrt((nx - CH4_PORT.x) ** 2 + (ny - CH4_PORT.y) ** 2);
+        if (pd < CH4_PORT.r && allActive) {
+          if (holdStartRef.current === null) { holdStartRef.current = performance.now(); setIsHoldingPort(true); }
+          const prog = Math.min((performance.now() - holdStartRef.current) / CH4_HOLD_MS, 1);
+          setHoldProgress(prog);
+          if (prog >= 1) {
+            stageStepRef.current = "connected"; setStageStep("connected");
+            setIsHoldingPort(false); setHoldProgress(0); holdStartRef.current = null;
+            rafRef.current = null; return;
+          }
+        } else if (holdStartRef.current !== null) {
+          holdStartRef.current = null; setIsHoldingPort(false); setHoldProgress(0);
+        }
       }
-      pulseStatus("success", 640);
-      setActiveChannel((value) => value + 1);
-      resetSignal();
-      return;
-    }
+      if (isDraggingRef.current || Math.sqrt(dx * dx + dy * dy) > 0.0008) {
+        rafRef.current = requestAnimationFrame(loop);
+      } else { rafRef.current = null; }
+    };
+    rafRef.current = requestAnimationFrame(loop);
+  }, []);
 
-    pulseStatus("error", 460);
-    resetSignal();
-  }, [activeChannel, finishConnection, getChannelProgress, lockedChannels, pulseStatus, resetSignal, targetWindows]);
+  const getNorm = useCallback((e) => {
+    if (!stageRef.current) return null;
+    const r = stageRef.current.getBoundingClientRect();
+    return { x: Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), y: Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)) };
+  }, []);
 
-  const handleAdvance = useCallback(() => {
-    if (stageStep === "insert") {
-      beginSync();
-      return;
-    }
-    if (stageStep === "sync") {
-      attemptSync();
-      return;
-    }
-    if (stageStep === "connected") {
-      if (!showCTA) return;
-      onContact?.();
-    }
-  }, [attemptSync, beginSync, onContact, showCTA, stageStep]);
+  const handlePointerDown = useCallback((e) => {
+    if (stageStepRef.current !== "cable") return;
+    e.preventDefault();
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch(_) {}
+    isDraggingRef.current = true; setIsDragging(true);
+    const pos = getNorm(e);
+    if (pos) targetPosRef.current = pos;
+    startLoop();
+  }, [getNorm, startLoop]);
 
-  const lockedCount = lockedChannels.filter(Boolean).length;
-  const stageTitle = stageStep === "insert"
-    ? T.prompt
-    : stageStep === "sync"
-      ? T.syncTitle
-      : T.connectedLine;
-  const stageSubline = stageStep === "insert"
-    ? T.promptSub
-    : stageStep === "sync"
-      ? T.syncSub
-      : (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop);
-  const statusText = stageStep === "connected"
-    ? T.connectedLine
-    : stageStep === "sync"
-      ? (statusTone === "success" ? T.channelLocked : statusTone === "error" ? T.channelRetry : T.syncIdleLine)
-      : T.connectBtn;
-  const primaryControlLabel = stageStep === "insert"
-    ? T.connectBtn
-    : stageStep === "sync"
-      ? `${T.syncBtn} · ${activeChannel + 1}/3`
-      : T.ctaBtn;
-  const stageToneColor = stageStep === "connected"
-    ? "#d6cdfd"
-    : stageStep === "sync"
-      ? "#bcaefe"
-      : "#9d90cf";
-  const stageAccentColor = stageStep === "connected"
-    ? "#b39aff"
-    : stageStep === "sync"
-      ? channelAccents[activeChannel] || channelAccents[0]
-      : "#7055ff";
-  const bridgeWidth = stageStep === "insert"
-    ? 0
-    : stageStep === "connected"
-      ? 52
-      : 18 + lockedCount * 11;
+  const handlePointerMove = useCallback((e) => {
+    if (!isDraggingRef.current) return;
+    e.preventDefault();
+    const pos = getNorm(e);
+    if (pos) targetPosRef.current = pos;
+  }, [getNorm]);
 
-  const PixelController = ({ accent = "#7A5CFF", shell = "#11131b", details = "#f4f1ff", ghost = false, lit = false }) => (
-    <div style={{
-      position: "relative",
-      width: 224,
-      height: 120,
-      opacity: ghost ? .22 : 1,
-      filter: ghost ? "none" : `drop-shadow(0 18px 34px rgba(0,0,0,.28)) drop-shadow(0 0 24px ${lit ? "rgba(122,92,255,.22)" : "rgba(0,0,0,.1)"})`,
-      transition: "opacity .4s ease, filter .4s ease",
-    }}>
-      <div style={{ position: "absolute", inset: "18px 38px 22px 38px", borderRadius: 38, background: shell, border: `1px solid ${ghost ? "rgba(221,214,255,.06)" : "rgba(214,205,253,.14)"}` }} />
-      <div style={{ position: "absolute", left: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(221,214,255,.05)" : "rgba(214,205,253,.12)"}` }} />
-      <div style={{ position: "absolute", right: 2, top: 32, width: 92, height: 72, borderRadius: 40, background: shell, border: `1px solid ${ghost ? "rgba(221,214,255,.05)" : "rgba(214,205,253,.12)"}` }} />
-      <div style={{ position: "absolute", left: 60, top: 52, width: 28, height: 8, borderRadius: 999, background: details, opacity: ghost ? .32 : .86 }} />
-      <div style={{ position: "absolute", left: 70, top: 42, width: 8, height: 28, borderRadius: 999, background: details, opacity: ghost ? .32 : .86 }} />
-      <div style={{ position: "absolute", right: 58, top: 44, width: 12, height: 12, borderRadius: 999, background: details, boxShadow: `20px 0 0 ${details}, 10px -10px 0 ${details}, 10px 10px 0 ${details}`, opacity: ghost ? .3 : .84 }} />
-      <div style={{ position: "absolute", left: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .22 : .72 }} />
-      <div style={{ position: "absolute", right: 98, top: 58, width: 16, height: 16, borderRadius: 999, border: `2px solid ${details}`, opacity: ghost ? .22 : .72 }} />
-      <div style={{ position: "absolute", left: 107, top: 34, width: 10, height: 10, borderRadius: 999, background: accent, boxShadow: lit ? `0 0 0 7px rgba(122,92,255,.14), 0 0 28px rgba(122,92,255,.28)` : `0 0 0 6px ${ghost ? "rgba(122,92,255,.05)" : "rgba(122,92,255,.08)"}`, opacity: ghost ? .34 : 1, transition: "all .32s ease" }} />
-    </div>
-  );
+  const handlePointerUp = useCallback(() => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false; setIsDragging(false);
+    if (stageStepRef.current === "cable") { targetPosRef.current = { ...CH4_CABLE_ORIGIN }; startLoop(); }
+  }, [startLoop]);
 
-  const SignalLane = ({ mark, index, isLocked, isActive, accent }) => {
-    const guideOpacity = stageStep === "insert" ? .24 : 1;
-    return (
-      <div style={{ display: "grid", gridTemplateColumns: "52px minmax(0, 1fr)", alignItems: "center", gap: 12, opacity: guideOpacity, transition: "opacity .3s ease" }}>
-        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 2.2, textTransform: "uppercase", color: isLocked ? "#e7ddff" : (isActive ? accent : "rgba(190,181,236,.46)"), transition: "color .28s ease" }}>{mark}</div>
-        <div style={{ position: "relative", height: 18, borderRadius: 999, background: "linear-gradient(180deg, rgba(16,16,28,.94), rgba(12,12,22,.88))", border: `1px solid ${isLocked ? "rgba(214,205,253,.18)" : isActive ? "rgba(214,205,253,.14)" : "rgba(214,205,253,.08)"}`, overflow: "hidden", boxShadow: isActive ? `0 0 0 1px ${accent}18, inset 0 0 24px rgba(122,92,255,.08)` : "inset 0 0 18px rgba(0,0,0,.22)" }}>
-          <div style={{ position: "absolute", inset: 1, borderRadius: 999, background: "linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,0))" }} />
-          <div style={{ position: "absolute", left: "50%", top: 1, bottom: 1, width: 64, transform: "translateX(-50%)", borderRadius: 999, background: isLocked ? "linear-gradient(180deg, rgba(240,235,255,.18), rgba(200,188,255,.08))" : "linear-gradient(180deg, rgba(122,92,255,.18), rgba(122,92,255,.07))", boxShadow: isLocked ? `0 0 26px ${accent}44` : isActive ? `0 0 18px ${accent}22` : "none", transition: "background .28s ease, box-shadow .28s ease" }} />
-          <div style={{ position: "absolute", left: "50%", top: "50%", width: 2, height: 22, transform: "translate(-50%, -50%)", background: isLocked ? "rgba(244,239,255,.92)" : "rgba(214,205,253,.34)", boxShadow: isLocked ? `0 0 14px ${accent}66` : "none" }} />
-          <div style={{ position: "absolute", inset: 1, width: isLocked ? "100%" : `${index < lockedCount ? 100 : 0}%`, borderRadius: 999, background: `linear-gradient(90deg, ${accent}18 0%, ${accent}7a 52%, ${accent}2c 100%)`, boxShadow: isLocked ? `0 0 18px ${accent}55` : "none", transition: "width .42s ease, box-shadow .28s ease" }} />
-          {isActive ? (
-            <>
-              <div
-                key={`${index}-${signalRunKey}-trail`}
-                style={{ position: "absolute", left: 1, top: 1, bottom: 1, width: 42, borderRadius: 999, background: `linear-gradient(90deg, transparent 0%, ${accent}18 18%, ${accent}40 56%, transparent 100%)`, filter: "blur(2px)", animation: `ch4SignalTravel ${channelDurations[index]}ms linear infinite alternate` }}
-              />
-              <div
-                key={`${index}-${signalRunKey}`}
-                style={{ position: "absolute", left: 1, top: "50%", width: 14, height: 14, borderRadius: "50%", transform: "translateY(-50%)", background: accent, boxShadow: `0 0 0 6px ${accent}22, 0 0 20px ${accent}55`, animation: `ch4SignalTravel ${channelDurations[index]}ms linear infinite alternate` }}
-              />
-            </>
-          ) : null}
-          {isLocked ? <div style={{ position: "absolute", left: "50%", top: "50%", width: 12, height: 12, borderRadius: "50%", transform: "translate(-50%, -50%)", background: "#f4efff", boxShadow: `0 0 0 6px ${accent}22, 0 0 20px ${accent}44`, animation: "ch4TargetLock 1.8s ease-in-out infinite" }} /> : null}
-        </div>
-      </div>
-    );
-  };
+  const handleInsert = useCallback(() => {
+    if (stageStepRef.current !== "insert") return;
+    stageStepRef.current = "cable"; setStageStep("cable");
+    currentPosRef.current = { ...CH4_CABLE_ORIGIN };
+    targetPosRef.current = { ...CH4_CABLE_ORIGIN };
+    setCableEnd({ ...CH4_CABLE_ORIGIN });
+    activatedFieldsRef.current = [false, false, false];
+    setActivatedFields([false, false, false]);
+  }, []);
+
+  const handleContact = useCallback(() => {
+    if (stageStep === "connected" && showCTA) onContact?.();
+  }, [stageStep, showCTA, onContact]);
+
+  const sw = stageDims.w, sh = stageDims.h;
+  const sx = (nx) => nx * sw, sy = (ny) => ny * sh;
+  const ox = sx(CH4_CABLE_ORIGIN.x), oy = sy(CH4_CABLE_ORIGIN.y);
+  const ex = sx(cableEnd.x), ey = sy(cableEnd.y);
+  const tension = Math.abs(ex - ox) * 0.52;
+  const cablePath = `M ${ox} ${oy} C ${ox + tension} ${oy}, ${ex - tension * 0.55} ${ey}, ${ex} ${ey}`;
+  const activatedCount = activatedFields.filter(Boolean).length;
+  const cableColor = stageStep === "connected" ? "#d6cdfd"
+    : activatedCount === 0 ? "#7A5CFF"
+    : activatedCount === 1 ? "#6B9FC8"
+    : activatedCount === 2 ? "#A8B83D" : "#C47A45";
+  const portReady = activatedFields.every(Boolean) && stageStep === "cable";
+  const statusLine = stageStep === "connected" ? T.connectedLine
+    : stageStep === "cable" ? (activatedCount === 3 ? T.allFieldsReady : `${activatedCount}/3`) : T.connectBtn;
 
   return (
     <div className="ch1-root">
@@ -3696,119 +3668,183 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
         </div>
 
         <div
+          ref={stageRef}
           className="ch2-stage"
-          role="button"
-          tabIndex={0}
-          aria-label={stageTitle}
-          onClick={handleAdvance}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleAdvance();
-            }
-          }}
           style={{
-            position: "relative",
-            background: "#090913",
+            position: "relative", background: "#090913",
             border: "1px solid rgba(150,132,255,.16)",
             boxShadow: "0 0 0 1px rgba(122,92,255,.08), 0 34px 90px rgba(0,0,0,.48)",
-            cursor: showCTA || stageStep !== "connected" ? "pointer" : "default",
             overflow: "hidden",
+            cursor: stageStep === "cable" ? (isDragging ? "grabbing" : "crosshair") : "pointer",
           }}
+          onClick={stageStep === "insert" ? handleInsert : (stageStep === "connected" ? handleContact : undefined)}
         >
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 36%, rgba(102,79,218,.34) 0%, rgba(47,35,88,.52) 24%, rgba(12,12,22,.96) 62%, rgba(7,8,14,1) 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, opacity: .16, backgroundImage: "linear-gradient(to right, rgba(214,205,253,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(214,205,253,.04) 1px, transparent 1px)", backgroundSize: "34px 34px" }} />
+          <div style={{ position: "absolute", inset: 0, opacity: .14, backgroundImage: "linear-gradient(to right, rgba(214,205,253,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(214,205,253,.04) 1px, transparent 1px)", backgroundSize: "34px 34px" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,0) 22%, rgba(0,0,0,.22) 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 82%, rgba(122,92,255,.14), rgba(0,0,0,0) 44%)", animation: "ch4AuraPulse 6s ease-in-out infinite" }} />
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 82%, rgba(122,92,255,.12), rgba(0,0,0,0) 44%)", animation: "ch4AuraPulse 6s ease-in-out infinite" }} />
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "repeating-linear-gradient(180deg, rgba(255,255,255,.018) 0px, rgba(255,255,255,.018) 1px, transparent 1px, transparent 4px)", opacity: .1 }} />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, transparent 34%, rgba(0,0,0,.22) 72%, rgba(0,0,0,.58) 100%)" }} />
 
-          <div style={{ position: "absolute", top: "9%", left: "50%", transform: "translateX(-50%)", textAlign: "center", width: "100%", padding: "0 28px", zIndex: 4 }}>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.9, textTransform: "uppercase", color: stageToneColor, marginBottom: 14, opacity: .92 }}>{stageStep === "sync" ? `${T.channelLabel} ${activeChannel + 1}/3` : T.kicker}</div>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 34px)", lineHeight: 1.12, color: "#f3efff", marginBottom: 12, textWrap: "balance" }}>{stageTitle}</div>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, lineHeight: 1.85, letterSpacing: .05, color: "rgba(224,217,255,.72)", maxWidth: 480, margin: "0 auto" }}>{stageSubline}</div>
+          <div style={{ position: "absolute", top: "9%", left: "50%", transform: "translateX(-50%)", textAlign: "center", width: "100%", padding: "0 28px", zIndex: 4, pointerEvents: "none" }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: 2.9, textTransform: "uppercase", color: stageStep === "connected" ? "#d6cdfd" : "#9d90cf", marginBottom: 14, opacity: .92 }}>{T.kicker}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 34px)", lineHeight: 1.12, color: "#f3efff", marginBottom: 12, textWrap: "balance" }}>
+              {stageStep === "insert" ? T.prompt : stageStep === "cable" ? T.cableTitle : T.connectedLine}
+            </div>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, lineHeight: 1.85, color: "rgba(224,217,255,.72)", maxWidth: 480, margin: "0 auto" }}>
+              {stageStep === "insert" ? T.promptSub : stageStep === "cable" ? T.cableSub : (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop)}
+            </div>
           </div>
 
-          <div style={{ position: "absolute", left: "50%", top: "53%", transform: "translate(-50%, -50%)", width: "84%", height: "50%", zIndex: 4 }}>
-            <div style={{ position: "absolute", left: stageStep === "insert" ? "50%" : "14%", top: "44%", transform: "translate(-50%, -50%)", transition: "left .8s cubic-bezier(.22,.61,.36,1)", animation: stageStep === "insert" ? "ch4ControllerFloatCenter 6.2s ease-in-out infinite" : "ch4ControllerFloat 5.8s ease-in-out infinite" }}>
-              <PixelController accent={stageAccentColor} shell="#161724" details="#f3efff" lit={stageStep !== "insert"} />
-            </div>
+          <div style={{
+            position: "absolute",
+            left: stageStep === "insert" ? "50%" : "3%",
+            top: "50%",
+            transform: stageStep === "insert" ? "translate(-50%, -50%)" : "translate(0, -50%)",
+            transition: "left .9s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.22,.61,.36,1)",
+            animation: stageStep === "insert" ? "ch4ControllerFloatCenter 6.2s ease-in-out infinite" : "ch4ControllerFloat 5.8s ease-in-out infinite",
+            zIndex: 3, pointerEvents: "none",
+          }}>
+            <Ch4Controller lit={stageStep !== "insert"} accent={cableColor} />
+          </div>
 
-            <div style={{ position: "absolute", right: stageStep === "connected" ? "14%" : "18%", top: "44%", transform: "translate(50%, -50%)", opacity: stageStep === "insert" ? 0 : (stageStep === "connected" ? 1 : .34), transition: "right .78s cubic-bezier(.22,.61,.36,1), opacity .38s ease", animation: stageStep === "connected" ? "ch4ControllerFloatRight 5.8s ease-in-out infinite .15s" : stageStep === "sync" ? "ch4GhostRise 5.2s ease-in-out infinite" : "none" }}>
-              <PixelController accent="#C8BCFF" shell={stageStep === "connected" ? "#f4efff" : "#1a1828"} details={stageStep === "connected" ? "#171423" : "#c7bbf7"} ghost={stageStep !== "connected"} lit={stageStep === "connected"} />
-            </div>
+          <div style={{
+            position: "absolute",
+            right: stageStep === "connected" ? "3%" : "6%",
+            top: "50%",
+            transform: "translate(0, -50%)",
+            opacity: stageStep === "insert" ? 0 : stageStep === "connected" ? 1 : 0.26,
+            transition: "opacity .5s ease, right .8s cubic-bezier(.22,.61,.36,1)",
+            animation: stageStep === "connected" ? "ch4ControllerFloat 5.8s ease-in-out infinite .2s" : "ch4GhostRise 5.2s ease-in-out infinite",
+            zIndex: 3, pointerEvents: "none",
+          }}>
+            <Ch4Controller ghost={stageStep !== "connected"} lit={stageStep === "connected"} accent={stageStep === "connected" ? "#d6cdfd" : "#7A5CFF"} flip />
+          </div>
 
-            <div style={{ position: "absolute", left: "50%", top: "42.5%", width: 130, height: 130, transform: "translate(-50%, -50%)", pointerEvents: "none" }}>
-              <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "radial-gradient(circle, rgba(122,92,255,.24) 0%, rgba(122,92,255,.06) 42%, rgba(122,92,255,0) 74%)", filter: "blur(6px)", opacity: stageStep === "insert" ? .42 : .88, animation: stageStep === "connected" ? "glowPulse 2.2s infinite" : "ch4AuraPulse 3.8s ease-in-out infinite" }} />
-              <div style={{ position: "absolute", left: "50%", top: "50%", width: 46, height: 46, transform: "translate(-50%, -50%)", borderRadius: "50%", border: "1px solid rgba(214,205,253,.32)", background: "rgba(11,10,18,.72)", boxShadow: stageStep === "connected" ? "0 0 0 10px rgba(122,92,255,.08), 0 0 28px rgba(122,92,255,.18)" : "0 0 0 8px rgba(122,92,255,.05)" }} />
-              <div style={{ position: "absolute", left: "50%", top: "50%", width: 14, height: 14, transform: "translate(-50%, -50%)", borderRadius: "50%", background: stageStep === "insert" ? "#7f74a9" : stageAccentColor, boxShadow: stageStep === "connected" ? "0 0 0 8px rgba(179,161,255,.12), 0 0 24px rgba(122,92,255,.42)" : "0 0 0 8px rgba(122,92,255,.08)" }} />
-            </div>
+          {stageStep !== "insert" && (
+            <svg
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 4, pointerEvents: stageStep === "cable" ? "all" : "none", touchAction: "none", overflow: "visible" }}
+              viewBox={`0 0 ${sw} ${sh}`}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+            >
+              <defs>
+                <filter id="ch4Glow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="5" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+                <filter id="ch4FGlow" x="-80%" y="-80%" width="260%" height="260%">
+                  <feGaussianBlur stdDeviation="10" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+              </defs>
 
-            <div style={{ position: "absolute", left: "50%", top: "44%", width: `${bridgeWidth}%`, height: 2, transform: "translate(-50%, -50%)", opacity: stageStep === "insert" ? 0 : 1, transition: "width .58s cubic-bezier(.22,.61,.36,1), opacity .28s ease", pointerEvents: "none" }}>
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(122,92,255,0) 0%, rgba(122,92,255,.52) 18%, rgba(214,205,253,.88) 50%, rgba(122,92,255,.52) 82%, rgba(122,92,255,0) 100%)", boxShadow: "0 0 18px rgba(122,92,255,.24)" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,.86) 50%, transparent 100%)", transform: "translateX(-120%)", animation: stageStep === "insert" ? "none" : "homeSignalSweep 2.3s linear infinite" }} />
-            </div>
-
-            <div style={{ position: "absolute", left: "50%", top: "63%", transform: "translate(-50%, -50%)", width: "min(72%, 560px)", display: "grid", gap: 12 }}>
-              {channelMarks.map((mark, index) => {
-                const isLocked = lockedChannels[index];
-                const isActive = stageStep === "sync" && activeChannel === index;
-                const accent = channelAccents[index];
-                return <SignalLane key={mark} mark={mark} index={index} isLocked={isLocked} isActive={isActive} accent={accent} />;
+              {CH4_FIELDS.map((f, i) => {
+                const fx = sx(f.x), fy = sy(f.y), fr = CH4_FIELD_R * sw;
+                const active = activatedFields[i];
+                return (
+                  <g key={i}>
+                    <circle cx={fx} cy={fy} r={fr * 1.5} fill={`rgba(${f.rgb},.${active ? "12" : "04"})`} filter="url(#ch4FGlow)" />
+                    <circle cx={fx} cy={fy} r={fr} fill={`rgba(${f.rgb},.${active ? "16" : "05"})`} stroke={`rgba(${f.rgb},.${active ? "68" : "22"})`} strokeWidth={active ? 1.5 : 1} />
+                    {active && <circle cx={fx} cy={fy} r={fr * 0.32} fill={`rgba(${f.rgb},.44)`} />}
+                    <text x={fx} y={fy + 0.5} textAnchor="middle" dominantBaseline="middle"
+                      fontFamily="'IBM Plex Mono',monospace" fontSize={Math.max(8, sw * 0.012)}
+                      letterSpacing="1" fill={`rgba(${f.rgb},.${active ? "88" : "34"})`} style={{ userSelect: "none" }}>
+                      {["I","II","III"][i]}
+                    </text>
+                  </g>
+                );
               })}
-            </div>
-          </div>
+
+              {(() => {
+                const px = sx(CH4_PORT.x), py = sy(CH4_PORT.y), pr = CH4_PORT.r * sw;
+                const circ = 2 * Math.PI * (pr + 7);
+                return (
+                  <g>
+                    {portReady && <circle cx={px} cy={py} r={pr * 1.7} fill="rgba(214,205,253,.06)" filter="url(#ch4FGlow)" />}
+                    <circle cx={px} cy={py} r={pr}
+                      fill={isHoldingPort ? "rgba(214,205,253,.16)" : portReady ? "rgba(122,92,255,.14)" : "rgba(10,8,18,.72)"}
+                      stroke={isHoldingPort ? "rgba(214,205,253,.78)" : portReady ? "rgba(122,92,255,.62)" : "rgba(214,205,253,.18)"}
+                      strokeWidth={1.5} />
+                    <circle cx={px} cy={py} r={pr * 0.28} fill={portReady ? "rgba(122,92,255,.72)" : "rgba(100,90,140,.24)"} />
+                    {isHoldingPort && holdProgress > 0 && (
+                      <circle cx={px} cy={py} r={pr + 7} fill="none" stroke="rgba(214,205,253,.84)" strokeWidth={2}
+                        strokeDasharray={circ} strokeDashoffset={circ * (1 - holdProgress)}
+                        strokeLinecap="round" transform={`rotate(-90 ${px} ${py})`} />
+                    )}
+                  </g>
+                );
+              })()}
+
+              <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={5} strokeLinecap="round" opacity={0.28} filter="url(#ch4Glow)" />
+              <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={1.6} strokeLinecap="round" opacity={0.86} />
+
+              {stageStep === "cable" && (
+                <>
+                  {isDragging && <circle cx={ex} cy={ey} r={sw * 0.028} fill={`${cableColor}22`} filter="url(#ch4Glow)" />}
+                  <circle cx={ex} cy={ey} r={Math.max(4.5, sw * 0.009)} fill={cableColor} stroke="rgba(255,255,255,.55)" strokeWidth={1.2} style={{ cursor: "grab" }} />
+                  {!isDragging && activatedCount === 0 && (
+                    <g style={{ animation: "ch4HintDrift 2.2s ease-in-out infinite" }} opacity={0.45}>
+                      <line x1={ex + sw * 0.012} y1={ey} x2={ex + sw * 0.038} y2={ey} stroke={`${cableColor}99`} strokeWidth={1} />
+                      <polygon points={`${ex + sw * 0.040},${ey - 3} ${ex + sw * 0.053},${ey} ${ex + sw * 0.040},${ey + 3}`} fill={`${cableColor}99`} />
+                    </g>
+                  )}
+                </>
+              )}
+            </svg>
+          )}
 
           <div style={{ position: "absolute", left: "50%", bottom: 18, width: "min(calc(100% - 40px), 720px)", transform: "translateX(-50%)", zIndex: 5, pointerEvents: "none" }}>
             <div style={{ border: "1px solid rgba(214,205,253,.12)", borderRadius: 12, padding: "14px 18px 15px", background: "linear-gradient(180deg, rgba(10,9,18,.82), rgba(8,8,14,.58))", boxShadow: "0 12px 28px rgba(0,0,0,.2)", backdropFilter: "blur(8px)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 10, flexWrap: "wrap" }}>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "rgba(214,205,253,.72)" }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 999, background: stageAccentColor, boxShadow: `0 0 0 6px ${stageAccentColor}18` }} />
-                  {stageStep === "sync" ? `${T.channelLabel} ${Math.min(activeChannel + 1, 3)}/3` : T.ctaBtn}
+                  <span style={{ width: 8, height: 8, borderRadius: 999, background: cableColor, boxShadow: `0 0 0 6px ${cableColor}1e`, transition: "background .4s" }} />
+                  {stageStep === "cable" ? `${activatedCount}/3` : T.ctaBtn}
                 </div>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: statusTone === "error" ? "#ffb1b1" : statusTone === "success" ? "#d8c8ff" : "rgba(214,205,253,.52)", transition: "color .24s ease" }} aria-live="polite">
-                  {statusText}
-                </div>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: "rgba(214,205,253,.52)" }}>{statusLine}</div>
               </div>
               <div style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "clamp(22px, 2.4vw, 30px)", lineHeight: 1.08, color: "#f4efff", letterSpacing: -.2, marginBottom: 10, textWrap: "balance" }}>
-                {stageStep === "connected" ? T.connectedLine : stageStep === "sync" ? T.syncTitle : T.prompt}
+                {stageStep === "connected" ? T.connectedLine : stageStep === "cable" ? T.cableTitle : T.prompt}
               </div>
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, lineHeight: 1.82, color: "rgba(224,217,255,.72)" }}>
-                {stageStep === "connected" ? (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop) : stageStep === "sync" ? T.syncSub : T.promptSub}
+                {stageStep === "connected" ? (isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop) : stageStep === "cable" ? T.cableSub : T.promptSub}
               </div>
-              {stageStep === "connected" ? (
+              {stageStep === "connected" && (
                 <div style={{ marginTop: 14, opacity: showCTA ? 1 : 0, transform: showCTA ? "translateY(0)" : "translateY(8px)", transition: "opacity .28s ease, transform .28s ease" }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 999, border: "1px solid rgba(214,205,253,.16)", background: "rgba(255,255,255,.06)", boxShadow: "0 10px 26px rgba(0,0,0,.18)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: "#f4efff" }}>
-                    <span style={{ width: 8, height: 8, borderRadius: 999, background: stageAccentColor, boxShadow: `0 0 0 6px ${stageAccentColor}18` }} />
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 999, border: "1px solid rgba(214,205,253,.16)", background: "rgba(255,255,255,.06)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.8, textTransform: "uppercase", color: "#f4efff" }}>
+                    <span style={{ width: 8, height: 8, borderRadius: 999, background: "#d6cdfd", boxShadow: "0 0 0 6px rgba(214,205,253,.18)" }} />
                     {isMobileHint ? T.connectedHintMobile : T.connectedHintDesktop}
                   </div>
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
         </div>
 
         <div className="ch1-controls-slot">
           <div className="ch1-controls ch2-controls" onClick={(e) => e.stopPropagation()}>
-            <Ch1ChoiceButton onClick={handleAdvance} disabled={stageStep === "connected" && !showCTA}>{primaryControlLabel}</Ch1ChoiceButton>
+            <Ch1ChoiceButton
+              onClick={stageStep === "insert" ? handleInsert : (stageStep === "connected" ? handleContact : undefined)}
+              disabled={stageStep === "cable" || (stageStep === "connected" && !showCTA)}
+            >
+              {stageStep === "insert" ? T.connectBtn : stageStep === "cable" ? T.cableTitle : T.ctaBtn}
+            </Ch1ChoiceButton>
           </div>
         </div>
 
         <div className="ch1-profile-slot ch2-profile-slot">
           <EmergingProfilePanel
-            title={profileUi.title}
-            idle={profileUi.idle}
-            profiles={profileEntries}
-            unlockedIds={unlockedProfileIds}
-            currentId={currentProfileId}
-            currentLabel={profileUi.currentLabel}
+            title={profileUi.title} idle={profileUi.idle}
+            profiles={profileEntries} unlockedIds={unlockedProfileIds}
+            currentId={currentProfileId} currentLabel={profileUi.currentLabel}
           />
         </div>
       </div>
     </div>
   );
 }
-
 // ============================================================================
 // FALLING WORDS GENERATOR
 // ============================================================================
@@ -4399,10 +4435,8 @@ export default function Roberto() {
         @keyframes ch4ControllerFloatCenter{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-6px)}}
         @keyframes ch4ControllerFloatRight{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-4px)}}
         @keyframes ch4GhostRise{0%,100%{transform:translate(50%,-50%) translateY(0)}50%{transform:translate(50%,-50%) translateY(-5px)}}
-        @keyframes ch4PortPulse{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
         @keyframes ch4AuraPulse{0%,100%{opacity:.42;transform:scale(.985)}50%{opacity:.72;transform:scale(1.02)}}
-        @keyframes ch4SignalTravel{0%{transform:translateY(-50%) translateX(0)}100%{transform:translateY(-50%) translateX(calc(100% - 26px))}}
-        @keyframes ch4TargetLock{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.12)}}
+        @keyframes ch4HintDrift{0%,100%{transform:translateX(0);opacity:.38}50%{transform:translateX(5px);opacity:.68}}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
