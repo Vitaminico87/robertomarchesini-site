@@ -320,9 +320,9 @@ const LANG = {
       crossingComplete: "Il sistema si apre.",
       crossingUnlockLines: [
         "Sinapsi attiva.",
-        "+1 immaginazione.",
-        "Apertura di mondi.",
-        "Connessioni in corso.",
+        "",
+        "",
+        "",
         "Sistema aperto.",
       ],
       crossingTapHint: "Tocca quando la luce è al centro",
@@ -518,9 +518,9 @@ const LANG = {
       crossingComplete: "The system opens.",
       crossingUnlockLines: [
         "Synapse active.",
-        "+1 imagination.",
-        "Worlds opening.",
-        "Connections online.",
+        "",
+        "",
+        "",
         "System open.",
       ],
       crossingTapHint: "Tap when the light is centered",
@@ -3437,36 +3437,34 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
       const ctx = futureAudioCtxRef.current;
       if (ctx.state === "suspended") ctx.resume();
       const now = ctx.currentTime;
-      // Ancient war horn: low sawtooth + octave, slow attack, dense low-pass
+      // Ancient horn: sub-bass sawtooth, hard low-pass ceiling, near-inaudible highs
       const cfg = [
-        { f: 82,  vol: 0.055, dur: 2.0, lp: 340, lpRise: 1.20, fRise: 1.035 },
-        { f: 110, vol: 0.090, dur: 2.3, lp: 460, lpRise: 1.28, fRise: 1.055 },
-        { f: 138, vol: 0.140, dur: 2.8, lp: 600, lpRise: 1.38, fRise: 1.080 },
+        { f: 58,  vol: 0.032, dur: 2.0, lp: 160, lpRise: 1.08, fRise: 1.02 },
+        { f: 78,  vol: 0.052, dur: 2.3, lp: 200, lpRise: 1.10, fRise: 1.03 },
+        { f: 98,  vol: 0.080, dur: 2.8, lp: 240, lpRise: 1.12, fRise: 1.04 },
       ][step - 1];
-      const attack = 0.48;
-      // Two oscillators: fundamental + octave for body
-      [1, 2].forEach((mult) => {
-        const osc = ctx.createOscillator();
-        osc.type = "sawtooth";
-        osc.frequency.setValueAtTime(cfg.f * mult, now);
-        osc.frequency.exponentialRampToValueAtTime(cfg.f * mult * cfg.fRise, now + cfg.dur * 0.72);
-        const lp = ctx.createBiquadFilter();
-        lp.type = "lowpass";
-        lp.frequency.setValueAtTime(cfg.lp, now);
-        lp.frequency.linearRampToValueAtTime(cfg.lp * cfg.lpRise, now + cfg.dur * 0.55);
-        lp.Q.setValueAtTime(0.5, now);
-        const vol = mult === 1 ? cfg.vol : cfg.vol * 0.28;
-        const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.linearRampToValueAtTime(vol, now + attack);
-        gain.gain.setValueAtTime(vol, now + cfg.dur * 0.58);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + cfg.dur);
-        osc.connect(lp);
-        lp.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + cfg.dur + 0.05);
-      });
+      const attack = 0.55;
+      // Fundamental only (no octave — keeps it dense, not bright)
+      const osc = ctx.createOscillator();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(cfg.f, now);
+      osc.frequency.exponentialRampToValueAtTime(cfg.f * cfg.fRise, now + cfg.dur * 0.72);
+      // Tight low-pass: kills everything above ~200Hz, leaves only body
+      const lp = ctx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.setValueAtTime(cfg.lp, now);
+      lp.frequency.linearRampToValueAtTime(cfg.lp * cfg.lpRise, now + cfg.dur * 0.55);
+      lp.Q.setValueAtTime(0.3, now);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(cfg.vol, now + attack);
+      gain.gain.setValueAtTime(cfg.vol, now + cfg.dur * 0.58);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + cfg.dur);
+      osc.connect(lp);
+      lp.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + cfg.dur + 0.05);
     } catch (_) {}
   }, []);
 
