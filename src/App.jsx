@@ -217,56 +217,54 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    hero: "Costruisco sistemi creativi per comunicazione, contenuti ed esperienze digitali che devono reggere nel tempo.",
-    heroBackground: "Vengo da fotografia e design. Oggi porto quello stesso rigore dentro sistemi creativi, contenuti e direzione.",
-    heroSub: "",
-    heroMobileSub: "Comunicazione, contenuti, workflow e automazioni—con criterio.",
-    proofStrip: "Leggo, scrivo, costruisco. 15+ anni di direzione creativa tra comunicazione, marketing e sistemi.",
-    proofStripMobile: "Leggo, scrivo, costruisco. 15+ anni di direzione creativa.",
+    heroThesis: "Leggo, scrivo, costruisco.",
+    heroMainBefore: "Trasformo complessità in ",
+    heroMainEmphasis: "sistemi creativi",
+    heroMainAfter: " per comunicazione, contenuti ed esperienze digitali.",
+    heroProofTop: ["15+ anni di direzione creativa", "tra comunicazione, marketing e sistemi."],
+    heroProofBottomBefore: "Oggi lavoro con AI e workflow per dare più ",
+    heroProofBottomEmphasis: "controllo",
+    heroProofBottomAfter: ", non più rumore.",
+    proofStrip: "15+ anni tra direzione creativa, comunicazione, marketing e sistemi. Oggi uso AI e workflow per aumentare controllo e qualità.",
+    proofStripMobile: "15+ anni tra direzione creativa, comunicazione e sistemi.",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Comunicazione e contenuti", subtitle: "Messaggio, tono, continuità", desc: "Chiarisco cosa dire, come dirlo e con quale forma un progetto può risultare più leggibile e credibile.", mobileDesc: "Chiarisco messaggio, tono e struttura." },
-      { title: "Marketing e promozione", subtitle: "Strategia, struttura, scala", desc: "Progetto impianti editoriali e promozionali che tengono insieme ritmo, varietà e riconoscibilità senza collassare nella ripetizione.", mobileDesc: "Progetto impianti editoriali e promozionali." },
-      { title: "Esperienze digitali", subtitle: "Siti, pagine, percorsi", desc: "Costruisco strutture digitali più chiare, utili e credibili, dal sito ai principali punti di contatto.", mobileDesc: "Costruisco siti, landing e percorsi più chiari." },
-      { title: "Workflow AI e orchestrazione", subtitle: "Processi potenziati da AI", desc: "Uso l’AI per aumentare possibilità e controllo, non per automatizzare rumore.", mobileDesc: "Uso l’AI per aumentare possibilità e controllo." },
+      { title: "Chiarezza", description: "Quando un progetto non sa bene cosa dire, come dirlo o con quale tono risultare credibile." },
+      { title: "Struttura", description: "Quando contenuti, promozione e continuità devono tenere insieme ritmo, varietà e riconoscibilità senza collassare nella ripetizione." },
+      { title: "Presenza digitale", description: "Quando sito, landing e punti di contatto devono essere più chiari, leggibili e solidi nel momento in cui qualcuno arriva." },
+      { title: "Workflow AI", description: "Quando l’AI serve ad aumentare possibilità, velocità e controllo. Non a produrre più rumore." },
     ],
     selectedWorkKicker: "Selezione",
     selectedWorkLabel: "Tre storie",
-    selectedWorkSub: "Progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
-    selectedWorkMobileSub: "Progetti reali. Perimetri chiari. Strutture che hanno dovuto reggere.",
+    selectedWorkSub: "Progetti reali. Strutture che hanno dovuto reggere.",
+    selectedWorkMobileSub: "Progetti reali. Strutture che hanno dovuto reggere.",
     selectedWork: [
-      {
-        title: "Largo Venue",
-        period: "2019 – in corso",
-        status: "active",
-        narrative: "Sistema contenuti, comunicazione e promozione per una venue con programmazione continua e oltre 150 eventi l'anno.",
-        mobileNarrative: "Sistema contenuti, comunicazione e promozione per una venue con oltre 150 eventi l'anno.",
-        narrative2: "Un impianto costruito per reggere calendario, promo, adv, archivio e pressione settimanale senza diventare generico. Oltre 1M di visualizzazioni mensili.",
-        technical: "Comunicazione · Contenuti · Sistema promozionale",
-        proof: ["150+ eventi/anno", "1M+ view/mese", "programmazione continua"],
-        tags: ["Cultural venue", "Content system", "Weekly execution"]
-      },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Dodici anni di comunicazione, contenuti e promozione digitale per uno dei live brand più riconoscibili in Italia.",
-        mobileNarrative: "Dodici anni di comunicazione, contenuti e promozione digitale per uno dei live brand più riconoscibili in Italia.",
-        narrative2: "Un sistema costruito nel tempo per dare continuità, riconoscibilità e scala a tournée, riaperture e cicli lunghi di comunicazione.",
-        technical: "Comunicazione digitale · Contenuti · Promozione",
-        proof: ["12 anni di continuità", "audience oltre 400K", "scala nazionale"],
-        tags: ["Live entertainment", "Project narrative", "Digital experience"]
+        role: "Direzione creativa · Sistema contenuti",
+        main: "150+ eventi all'anno da oltre 12 anni. Un sistema di contenuti e comunicazione costruito per reggere nel tempo.",
+        sub: "Continuità, coordinamento e qualità mantenuti su larga scala.",
+        tags: ["Live events", "Content system", "Continuity"]
+      },
+      {
+        title: "Largo Venue",
+        period: "2019 – in corso",
+        status: "active",
+        role: "Direzione creativa · Marketing · Sistema contenuti",
+        main: "Programmazione settimanale continua e sistema contenuti attivo. Identità, promozione e direzione artistica tenute insieme ogni settimana.",
+        sub: "Gestione reale, non campagne isolate.",
+        tags: ["Cultural venue", "Weekly execution", "Content system"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
-        narrative: "Posizionamento premium, sito e architettura digitale per un brand eventi orientato a credibilità e contatti.",
-        mobileNarrative: "Posizionamento premium, sito e architettura digitale per un brand eventi orientato a credibilità e contatti.",
-        narrative2: "Un'identità più chiara e una presenza digitale progettata per reggere percezione, fiducia e contatto.",
-        technical: "Posizionamento · Sito · Architettura digitale",
-        proof: ["posizionamento premium", "architettura orientata al lead", "brand + landing + tracking"],
-        tags: ["Positioning", "Digital experience", "Qualified leads"]
+        role: "Sito · Struttura digitale · Lead generation",
+        main: "Sito e struttura progettati per generare contatti, non solo presenza. Sistema orientato a conversione e gestione delle richieste.",
+        sub: "Dal primo contatto alla decisione.",
+        tags: ["Website", "Lead generation", "Conversion"]
       }
     ],
     howLabel: "Metodo",
@@ -430,56 +428,54 @@ const LANG = {
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "listening to", watching: "last watched" },
-    hero: "I build creative systems for communication, content, and digital experiences that are meant to hold up over time.",
-    heroBackground: "I come from photography and design. Today I bring that same rigour into creative systems, content, and direction.",
-    heroSub: "",
-    heroMobileSub: "Communication, content, workflows and automation—with judgment.",
-    proofStrip: "I read, I write, I build. 15+ years of creative direction across communication, marketing, and systems.",
-    proofStripMobile: "I read, I write, I build. 15+ years of creative direction.",
+    heroThesis: "I read, I write, I build.",
+    heroMainBefore: "I turn complexity into ",
+    heroMainEmphasis: "creative systems",
+    heroMainAfter: " for communication, content, and digital experiences.",
+    heroProofTop: ["15+ years of creative direction", "across communication, marketing, and systems."],
+    heroProofBottomBefore: "Today I use AI and workflows to give more ",
+    heroProofBottomEmphasis: "control",
+    heroProofBottomAfter: ", not more noise.",
+    proofStrip: "15+ years across creative direction, communication, marketing, and systems. Today I use AI and workflows to increase control and quality.",
+    proofStripMobile: "15+ years across creative direction, communication, and systems.",
     whatido: "What I build",
     services: [
-      { title: "Communication & content", subtitle: "Message, tone, continuity", desc: "I clarify what to say, how to say it, and how a project can present itself more clearly and credibly.", mobileDesc: "I clarify message, tone, and structure." },
-      { title: "Marketing & promotion", subtitle: "Strategy, structure, scale", desc: "I design editorial and promotional systems that keep rhythm, variety, and recognizability together without collapsing into repetition.", mobileDesc: "Editorial and promotional systems." },
-      { title: "Digital experiences", subtitle: "Websites, pages, journeys", desc: "I build clearer, more useful, and more credible digital structures, from websites to key touchpoints.", mobileDesc: "Clearer websites, landing pages, and journeys." },
-      { title: "AI workflows & orchestration", subtitle: "AI-powered processes", desc: "I use AI to expand possibilities and control, not to automate noise.", mobileDesc: "AI for possibilities and control." },
+      { title: "Clarity", description: "When a project doesn't quite know what to say, how to say it, or what tone makes it credible." },
+      { title: "Structure", description: "When content, promotion, and continuity need to hold rhythm, variety, and recognizability together without collapsing into repetition." },
+      { title: "Digital presence", description: "When website, landing pages, and touchpoints need to be clearer, more readable, and more solid for the moment someone arrives." },
+      { title: "AI workflows", description: "When AI is there to expand possibilities, speed, and control. Not to produce more noise." },
     ],
     selectedWorkKicker: "Selection",
     selectedWorkLabel: "Three stories",
-    selectedWorkSub: "Real projects. Clear scope. Structures that had to hold up.",
-    selectedWorkMobileSub: "Real projects. Clear scope. Structures that had to hold up.",
+    selectedWorkSub: "Real projects. Structures that had to hold up.",
+    selectedWorkMobileSub: "Real projects. Structures that had to hold up.",
     selectedWork: [
-      {
-        title: "Largo Venue",
-        period: "2019 – ongoing",
-        status: "active",
-        narrative: "Content system, communication, and promotion for a venue with continuous programming and over 150 events a year.",
-        mobileNarrative: "Content system, communication, and promotion for a venue with over 150 events a year.",
-        narrative2: "A structure built to sustain calendar, promotion, ads, archive, and weekly pressure without becoming generic. Over 1M monthly views.",
-        technical: "Communication · Content · Promotional system",
-        proof: ["150+ events/year", "1M+ monthly views", "continuous programming"],
-        tags: ["Cultural venue", "Content system", "Weekly execution"]
-      },
       {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        narrative: "Twelve years of communication, content, and digital promotion for one of Italy's most recognizable live brands.",
-        mobileNarrative: "Twelve years of communication, content, and digital promotion for one of Italy's most recognizable live brands.",
-        narrative2: "A system built over time to give continuity, recognizability, and scale to tours, relaunches, and long communication cycles.",
-        technical: "Digital communication · Content · Promotion",
-        proof: ["12 years of continuity", "audience beyond 400K", "national scale"],
-        tags: ["Live entertainment", "Project narrative", "Digital experience"]
+        role: "Creative direction · Content system",
+        main: "150+ events a year for over 12 years. A content and communication system built to hold up over time.",
+        sub: "Continuity, coordination, and quality maintained at scale.",
+        tags: ["Live events", "Content system", "Continuity"]
+      },
+      {
+        title: "Largo Venue",
+        period: "2019 – ongoing",
+        status: "active",
+        role: "Creative direction · Marketing · Content system",
+        main: "Continuous weekly programming and an active content system. Identity, promotion, and artistic direction held together every week.",
+        sub: "Real ongoing management, not isolated campaigns.",
+        tags: ["Cultural venue", "Weekly execution", "Content system"]
       },
       {
         title: "THEIA Events",
         period: "2025",
         status: "active",
-        narrative: "Premium positioning, website direction, and digital architecture for an event brand driven by credibility and qualified leads.",
-        mobileNarrative: "Premium positioning, website, and digital architecture for an event brand built on credibility and leads.",
-        narrative2: "A clearer identity and a digital presence designed to sustain perception, trust, and contact.",
-        technical: "Positioning · Website · Digital architecture",
-        proof: ["premium positioning", "lead-oriented architecture", "brand + landing + tracking"],
-        tags: ["Positioning", "Digital experience", "Qualified leads"]
+        role: "Website · Digital structure · Lead generation",
+        main: "Website and structure designed to generate leads, not just presence. A system oriented toward conversion and request management.",
+        sub: "From first contact to decision.",
+        tags: ["Website", "Lead generation", "Conversion"]
       }
     ],
     howLabel: "Method",
@@ -4604,8 +4600,19 @@ export default function Roberto() {
         @keyframes arrowBob{0%,100%{transform:translateY(0);opacity:.65}50%{transform:translateY(5px);opacity:.90}}
         .selected-work-arrow{display:block;margin-top:10px;animation:arrowBob 2.6s ease-in-out infinite}
         .svc-tw{min-width:0}
-        .home-work-narrative{font-size:17px;color:#EDE8E0;line-height:1.96;margin-bottom:16px;max-width:620px;text-wrap:pretty;font-family:'Playfair Display',serif;font-style:italic}
-        .home-work-secondary{font-size:14px;color:#b0a89f;line-height:2.0;margin-bottom:22px;max-width:580px;text-wrap:pretty}
+        .home-work-list{display:flex;flex-direction:column;gap:0;border-top:1px solid rgba(255,255,255,0.08)}
+        .home-work-item{padding:2rem 0 1.9rem;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:transform 180ms ease,border-color 180ms ease}
+        .home-work-item:hover{transform:translateY(-2px);border-color:rgba(255,77,0,0.22)}
+        .home-work-top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:0.45rem}
+        .home-work-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.7rem,2.4vw,2.35rem);line-height:1;letter-spacing:-0.03em;color:#f6f1ea;margin:0;transition:color 180ms ease}
+        .home-work-item:hover .home-work-title{color:#ffffff}
+        .home-work-period{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;line-height:1.4;letter-spacing:0.08em;text-transform:uppercase;color:rgba(214,205,194,0.5);white-space:nowrap}
+        .home-work-role{margin-bottom:0.9rem;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.6;letter-spacing:0.04em;color:rgba(214,205,194,0.68)}
+        .home-work-main{max-width:34ch;margin:0 0 0.55rem 0;font-family:'Playfair Display',serif;font-size:clamp(1.05rem,1.3vw,1.25rem);line-height:1.45;letter-spacing:-0.01em;color:rgba(246,241,234,0.94)}
+        .home-work-sub{max-width:42ch;margin:0 0 0.9rem 0;font-family:'IBM Plex Mono',monospace;font-size:0.83rem;line-height:1.7;color:rgba(214,205,194,0.62)}
+        .home-work-tags{display:flex;flex-wrap:wrap;gap:0.45rem 0.7rem}
+        .home-work-tag{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;line-height:1.4;letter-spacing:0.04em;color:rgba(255,77,0,0.82);opacity:0.88;transition:opacity 180ms ease,color 180ms ease}
+        .home-work-item:hover .home-work-tag{opacity:1;color:#ff6a2a}
         .home-service-title{font-size:33px;font-weight:600;color:#EEE8E0;font-family:'Playfair Display',serif;font-style:italic;transition:all .25s;display:block;line-height:1.04;letter-spacing:-.02em;text-wrap:balance;word-break:normal;overflow-wrap:normal;max-width:100%}
         .home-service-sub{font-size:13px;color:#bcaea1;margin-bottom:14px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.66;text-wrap:pretty}
         .home-service-desc{font-size:14px;color:#ddd7cf;line-height:1.96;text-wrap:pretty;max-width:500px}
@@ -4623,6 +4630,16 @@ export default function Roberto() {
         @keyframes homeMemorySweep{0%,100%{transform:translateX(-8%);opacity:.45}50%{transform:translateX(8%);opacity:.9}}
 
         .home-hero-shell{position:relative;overflow:visible}
+        .home-hero-copy{display:flex;flex-direction:column;gap:1.1rem;max-width:760px}
+        .home-hero-thesis{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(2.6rem,5.8vw,4.8rem);line-height:0.96;letter-spacing:-0.03em;color:#f6f1ea;max-width:9ch}
+        .home-hero-main{max-width:19ch;font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2vw,1.85rem);line-height:1.18;letter-spacing:-0.02em;color:rgba(246,241,234,0.94)}
+        .home-hero-main em{font-style:italic;color:#ff4d00}
+        .home-hero-proof{margin-top:0.55rem;max-width:32ch;font-family:'IBM Plex Mono',monospace;font-size:clamp(0.78rem,1vw,0.92rem);line-height:1.8;letter-spacing:0.01em;color:rgba(214,205,194,0.78)}
+        .home-hero-proof em{font-style:normal;color:#f6f1ea}
+        .home-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem 2rem}
+        .home-service-card{padding:0 0 1.15rem 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .home-service-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.35rem,2vw,1.75rem);line-height:1.08;color:#f6f1ea;margin-bottom:0.55rem}
+        .home-service-description{max-width:34ch;font-family:'IBM Plex Mono',monospace;font-size:0.9rem;line-height:1.8;color:rgba(214,205,194,0.78)}
         .home-social-rail{position:absolute;top:8px;right:-98px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;z-index:6}
         .home-social-rail-mobile{position:relative;top:auto;right:auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
         .pixel-social-link{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1px solid rgba(255,255,255,.08);border-radius:4px;background:rgba(5,5,5,.82);color:#8b8b8b;text-decoration:none;transition:border-color .22s ease,color .22s ease,transform .22s ease,background .22s ease}
@@ -5027,11 +5044,23 @@ export default function Roberto() {
           .home-selected-heading-wrap{margin-bottom:12px!important}
           .home-selected-heading{font-size:42px!important;line-height:1.02!important}
           .home-section-sub{font-size:14px!important;line-height:1.72!important;max-width:100%!important;margin-bottom:24px!important;color:#8f8f8f!important}
-          .home-work-narrative{font-size:12px!important;line-height:1.84!important;color:#d8d2ca!important;max-width:100%!important}
-          .home-work-secondary{display:none!important}
-          .home-service-title{font-size:30px!important;line-height:1.03!important;display:block!important}
-          .home-service-sub{font-size:13px!important;line-height:1.5!important;margin-bottom:8px!important;color:#9a9a9a!important}
-          .home-service-desc{font-size:12px!important;line-height:1.82!important;color:#a5a5a5!important}
+          .home-work-item{padding:1.4rem 0 1.35rem!important}
+          .home-work-top{flex-direction:column!important;align-items:flex-start!important;gap:0.25rem!important;margin-bottom:0.4rem!important}
+          .home-work-title{font-size:1.6rem!important;line-height:1.02!important}
+          .home-work-period{white-space:normal!important;font-size:0.68rem!important}
+          .home-work-role{margin-bottom:0.75rem!important;font-size:0.74rem!important}
+          .home-work-main{max-width:100%!important;font-size:1rem!important;line-height:1.5!important}
+          .home-work-sub{max-width:100%!important;font-size:0.79rem!important;line-height:1.65!important}
+          .home-work-tags{gap:0.35rem 0.55rem!important}
+          .home-work-tag{font-size:0.68rem!important}
+          .home-hero-copy{gap:0.85rem!important;max-width:100%!important}
+          .home-hero-thesis{max-width:10ch!important;font-size:clamp(2.15rem,9vw,3.2rem)!important;line-height:0.98!important}
+          .home-hero-main{max-width:100%!important;font-size:clamp(1.12rem,4.8vw,1.35rem)!important;line-height:1.22!important}
+          .home-hero-proof{max-width:100%!important;margin-top:0.4rem!important;font-size:0.8rem!important;line-height:1.7!important}
+          .home-services-grid{grid-template-columns:1fr!important;gap:1rem!important}
+          .home-service-card{padding-bottom:1rem!important}
+          .home-service-title{font-size:1.25rem!important;margin-bottom:0.45rem!important}
+          .home-service-description{max-width:100%!important;font-size:0.84rem!important;line-height:1.75!important}
           .home-method-title{font-size:14px!important;line-height:1.42!important;margin-bottom:8px!important}
           .home-method-desc{font-size:12px!important;line-height:1.82!important;max-width:100%!important;color:#9e9e9e!important}
           .svc-tw{min-width:auto!important}
@@ -5203,11 +5232,21 @@ export default function Roberto() {
           {/* 1. HERO */}
           <Section delay={0.05}>
             <div className="home-hero-shell" style={{ marginBottom: isMobileViewport ? 34 : 40 }}>
-              <h1 className="nm" style={{ fontFamily: "'Playfair Display',serif", fontSize: 52, fontWeight: 700, lineHeight: 1.02, margin: "0 0 10px", color: "#F0ECE6", animation: "nameGlow 6s ease-in-out infinite" }}>
+              <h1 className="nm" style={{ fontFamily: "'Playfair Display',serif", fontSize: 52, fontWeight: 700, lineHeight: 1.02, margin: "0 0 18px", color: "#F0ECE6", animation: "nameGlow 6s ease-in-out infinite" }}>
                 <GlitchText text="Roberto" active={glitch} /><br />
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
-              <div className="home-pretty" style={{ fontSize: isMobileViewport ? 16 : 15, color: "#F0ECE6", marginTop: 18, lineHeight: isMobileViewport ? 1.8 : 1.95, maxWidth: isMobileViewport ? 430 : 500, textWrap: "pretty" }}>{T.hero}</div>
+              <div className="home-hero-copy">
+                <div className="home-hero-thesis">{T.heroThesis}</div>
+                <div className="home-hero-main">
+                  {T.heroMainBefore}<em>{T.heroMainEmphasis}</em>{T.heroMainAfter}
+                </div>
+                <div className="home-hero-proof">
+                  {T.heroProofTop.map((line, i) => <span key={i}>{line}<br /></span>)}
+                  <br />
+                  {T.heroProofBottomBefore}<em>{T.heroProofBottomEmphasis}</em>{T.heroProofBottomAfter}
+                </div>
+              </div>
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
@@ -5224,38 +5263,20 @@ export default function Roberto() {
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
             <div style={{ marginBottom: isMobileViewport ? 64 : 88 }}>
-              {/* Header sezione: kicker + titolo + sottotitolo a due colonne */}
-              <div style={{ borderTop: "1px solid rgba(255,255,255,.09)", paddingTop: 22, marginBottom: isMobileViewport ? 40 : 52 }}>
+              <div style={{ paddingTop: 22, marginBottom: isMobileViewport ? 32 : 44 }}>
                 <div style={{ fontSize: 9, letterSpacing: 3, color: "#4a4540", fontFamily: "'IBM Plex Mono',monospace", textTransform: "uppercase", marginBottom: 14 }}>
                   {T.selectedWorkKicker}
                 </div>
-                <div style={{
-                  display: isMobileViewport ? "block" : "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 48,
-                  alignItems: "center",
-                }}>
-                  <div style={{ marginBottom: isMobileViewport ? 14 : 0 }}>
-                    <div className="home-selected-heading">{T.selectedWorkLabel}</div>
-                    <svg className="selected-work-arrow" width="18" height="11" viewBox="0 0 18 11" fill="none" aria-hidden="true">
-                      <path d="M1 1.5L9 9L17 1.5" stroke="#FF4D00" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <div style={{ fontSize: 15, color: "#bfb4a8", fontStyle: "italic", fontFamily: "'Playfair Display',serif", lineHeight: 1.72, textWrap: "pretty", maxWidth: 360, paddingBottom: isMobileViewport ? 0 : 8 }}>
-                    {selectedWorkSubText}
-                  </div>
+                <div className="home-selected-heading">{T.selectedWorkLabel}</div>
+                <div style={{ marginTop: 10, fontSize: 15, color: "#bfb4a8", fontStyle: "italic", fontFamily: "'Playfair Display',serif", lineHeight: 1.72, textWrap: "pretty", maxWidth: 420 }}>
+                  {selectedWorkSubText}
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                {T.selectedWork.map((work, i) => (
-                  <div key={i} className="work-card" style={{
-                    paddingTop: isMobileViewport ? 32 : 54,
-                    paddingBottom: isMobileViewport ? 32 : 54,
-                    paddingRight: 0,
-                    borderBottom: i < T.selectedWork.length - 1 ? "1px solid #141414" : "none",
-                    cursor: "pointer",
-                    position: "relative",
-                  }}
+              <div className="home-work-list">
+                {T.selectedWork.map((work) => (
+                  <article
+                    key={work.title}
+                    className="home-work-item"
                     onClick={() => openCaseStudy(getWorkSlug(work.title))}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
@@ -5267,52 +5288,24 @@ export default function Roberto() {
                     tabIndex={0}
                     aria-label={`${CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}: ${work.title}`}
                   >
-                    <div style={{ marginBottom: 6 }}>
-                      <div style={{ fontSize: 10, letterSpacing: 2.5, color: "#4a4540", fontFamily: "'IBM Plex Mono',monospace", marginBottom: 16 }}>0{i + 1}</div>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
-                      <div style={{ fontSize: "clamp(28px,3.8vw,44px)", fontWeight: 600, color: "#F5F0E8", fontFamily: "'Playfair Display',serif", fontStyle: "italic", lineHeight: 1.04 }}>
-                        {work.title}<span style={{ color: "#FF4D00", fontStyle: "normal" }}>.</span>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 10, letterSpacing: 1.5, color: "#7d766d", fontFamily: "'IBM Plex Mono', monospace" }}>{work.period}</span>
+                    <div className="home-work-top">
+                      <h3 className="home-work-title">{work.title}</h3>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                        <span className="home-work-period">{work.period}</span>
                         {work.status === "active" && (
-                          <span style={{ 
-                            display: "inline-block", width: 6, height: 6, borderRadius: "50%", 
-                            background: "#FF4D00", boxShadow: "0 0 8px rgba(255,77,0,.4)",
-                            animation: "glowPulse 2s infinite",
-                          }} />
+                          <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#FF4D00", boxShadow: "0 0 8px rgba(255,77,0,.4)", animation: "glowPulse 2s infinite", flexShrink: 0 }} />
                         )}
                       </div>
                     </div>
-                    <div className="home-work-narrative">{isMobileViewport ? (work.mobileNarrative || work.narrative) : work.narrative}</div>
-                    {(!isMobileViewport && work.narrative2) && <div className="home-work-secondary">{work.narrative2}</div>}
-                    <div style={{ fontSize: 11, color: "#B1AAA1", lineHeight: 1.7, marginBottom: 16, letterSpacing: .35 }}>{work.technical}</div>
-                    {work.proof?.length ? (
-                      <div style={{
-                        display: "grid",
-                        gridTemplateColumns: isMobileViewport ? "1fr" : "repeat(3, minmax(0, 1fr))",
-                        gap: 8,
-                        marginBottom: 14,
-                      }}>
-                        {work.proof.map((item, proofIdx) => (
-                          <div key={proofIdx} style={{
-                            padding: isMobileViewport ? "9px 10px" : "10px 12px",
-                            border: "1px solid rgba(255,77,0,.12)",
-                            borderRadius: 4,
-                            background: "linear-gradient(180deg, rgba(255,77,0,.05), rgba(255,255,255,.012))",
-                            color: "#F0ECE6",
-                            fontSize: 10,
-                            lineHeight: 1.55,
-                            letterSpacing: .35,
-                            textTransform: "uppercase",
-                            fontFamily: "'IBM Plex Mono', monospace",
-                          }}>{item}</div>
-                        ))}
-                      </div>
-                    ) : null}
-                    <button className="top-btn" onClick={(e) => { e.stopPropagation(); openCaseStudy(getWorkSlug(work.title)); }}>{CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}</button>
-                  </div>
+                    <div className="home-work-role">{work.role}</div>
+                    <p className="home-work-main">{work.main}</p>
+                    {work.sub && <p className="home-work-sub">{work.sub}</p>}
+                    <div className="home-work-tags">
+                      {work.tags.map((tag) => (
+                        <span key={tag} className="home-work-tag">{tag}</span>
+                      ))}
+                    </div>
+                  </article>
                 ))}
               </div>
             </div>
@@ -5322,18 +5315,11 @@ export default function Roberto() {
           <Section delay={0.15}>
             <div style={{ marginBottom: isMobileViewport ? 52 : 66 }}>
               <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.whatido}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: isMobileViewport ? 16 : 22 }}>
-                {T.services.map((svc, i) => (
-                  <div key={i} className="svc">
-                    <div className="svc-in" style={{ display: isMobileViewport ? "block" : "grid", gridTemplateColumns: isMobileViewport ? "1fr" : "minmax(0,286px) minmax(0,1fr)", gap: isMobileViewport ? 0 : 40, alignItems: "start" }}>
-                      <div className="svc-tw" style={{ marginBottom: isMobileViewport ? 10 : 0, paddingRight: 0 }}>
-                        <span className="svc-t home-service-title has-accent-dot">{svc.title}</span>
-                      </div>
-                      <div>
-                        {svc.subtitle && <div className="home-service-sub">{svc.subtitle}</div>}
-                        <div className="home-service-desc">{isMobileViewport ? (svc.mobileDesc || svc.desc) : svc.desc}</div>
-                      </div>
-                    </div>
+              <div className="home-services-grid">
+                {T.services.map((svc) => (
+                  <div key={svc.title} className="home-service-card">
+                    <div className="home-service-title">{svc.title}</div>
+                    <div className="home-service-description">{svc.description}</div>
                   </div>
                 ))}
               </div>
