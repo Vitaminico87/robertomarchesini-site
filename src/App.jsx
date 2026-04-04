@@ -3474,9 +3474,9 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     // Title card appears inside the white
     futurePulseTimeoutsRef.current.push(setTimeout(() => setFutureTitleVisible(true), 6200));
     // Title begins to exit
-    futurePulseTimeoutsRef.current.push(setTimeout(() => setFutureTitleExit(true), 7300));
+    futurePulseTimeoutsRef.current.push(setTimeout(() => setFutureTitleExit(true), 9200));
     // Transition to chapter 4
-    futurePulseTimeoutsRef.current.push(setTimeout(() => onComplete?.(), 7900));
+    futurePulseTimeoutsRef.current.push(setTimeout(() => onComplete?.(), 9900));
   }, [scene, futureActivating, onComplete, playFuturePulseNote]);
 
   return (
@@ -3672,8 +3672,8 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
   }, []);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setNarrativeIdx(1), 2800);
-    const t2 = setTimeout(() => setSceneReady(true), 8500);
+    const t1 = setTimeout(() => setNarrativeIdx(1), 2200);
+    const t2 = setTimeout(() => setSceneReady(true), 5500);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
