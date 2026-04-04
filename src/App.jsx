@@ -387,6 +387,7 @@ const LANG = {
       connectBtn: "Accendi lo schermo",
       crtBtn: "Accendi lo schermo",
       cartCopy: "Inserisci la cartuccia.",
+      narrativeCopy: ["Quattro capitoli. Una sola direzione.", "Adesso scegli cosa tenere connesso."],
       idleCopy: "Accendi lo schermo.",
       activatedCopy: "Apri il canale.",
       pressStartCopy: "Premi START per unirti alla partita.",
@@ -595,6 +596,7 @@ const LANG = {
       connectBtn: "Turn on the screen",
       crtBtn: "Turn on the screen",
       cartCopy: "Insert the cartridge.",
+      narrativeCopy: ["Four chapters. One direction.", "Now choose what to keep connected."],
       idleCopy: "Turn on the screen.",
       activatedCopy: "Open the channel.",
       pressStartCopy: "Press START to join the game.",
@@ -2996,6 +2998,8 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const [slotPulse, setSlotPulse] = useState(false);
   const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
   const [imageState, setImageState] = useState("loading");
+  const [uiVisible, setUiVisible] = useState(false);
+  const [objectsVisible, setObjectsVisible] = useState(false);
   const completeTimeoutRef = useRef(null);
   const shakeTimeoutRef = useRef(null);
   const hintTimeoutRef = useRef(null);
@@ -3011,6 +3015,12 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
       if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
     };
+  }, []);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setUiVisible(true), 120);
+    const t2 = setTimeout(() => setObjectsVisible(true), 260);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const placedSet = useMemo(() => new Set(placedIds), [placedIds]);
@@ -3106,7 +3116,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
             <div className="ch2-debug-src">{gameBaseSrc}</div>
           </div>
         ) : null}
-        <div className="ch2-game-slot-shell">
+        <div className={`ch2-game-slot-shell${uiVisible ? " is-visible" : ""}`}>
           <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
           <div className="ch2-game-slot-grid">
             {Array.from({ length: CH2_OBJECT_ORDER.length }).map((_, index) => {
@@ -3126,7 +3136,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
         <div className="ch1-scan" />
       </div>
 
-      <div className="ch2-game-slot-shell ch2-game-slot-shell-mobile">
+      <div className={`ch2-game-slot-shell ch2-game-slot-shell-mobile${uiVisible ? " is-visible" : ""}`}>
         <div className="ch2-game-slot-label">{T.gameSlotsLabel}</div>
         <div className="ch2-game-slot-grid">
           {Array.from({ length: CH2_OBJECT_ORDER.length }).map((_, index) => {
@@ -3144,7 +3154,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
       <div className="ch1-controls-slot ch2-object-controls-slot">
         <div className={`ch2-game-feedback ${feedback ? 'show' : ''} ${isComplete ? 'is-complete' : ''}`}>{feedback}</div>
         {!isComplete ? <div className="ch2-game-prompt">{T.gameMobilePrompt}</div> : null}
-        <div className="ch2-game-grid">
+        <div className={`ch2-game-grid${objectsVisible ? " is-visible" : ""}`}>
           {items.map((item) => {
             const isPlaced = placedSet.has(item.id);
             const isWrong = item.type === 'decoy';
@@ -3180,6 +3190,8 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
   const [roomNightShade, setRoomNightShade] = useState(0.16);
   const [deskFeedbackText, setDeskFeedbackText] = useState("");
   const [deskTransitioning, setDeskTransitioning] = useState(false);
+  const [selectionMounted, setSelectionMounted] = useState(false);
+  const [selectionReveal, setSelectionReveal] = useState(false);
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -3236,9 +3248,14 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     setDeskTransitioning(true);
     onUnlockProfile?.("conflict");
     if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
+    // Mount game under wash, then reveal
     selectionTimeoutRef.current = setTimeout(() => {
+      setSelectionMounted(true);
       setScene("selection");
-    }, 2600);
+    }, 1400);
+    selectionTimeoutRef.current = setTimeout(() => {
+      setSelectionReveal(true);
+    }, 1700);
   }, [T, deskTransitioning, onUnlockProfile]);
 
   useEffect(() => {
@@ -3264,7 +3281,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
           </div>
         ) : null}
 
-        {scene === "desk" ? (
+        {!selectionMounted && (
           <>
             <div className={`ch2-stage ${deskTransitioning ? "ch2-stage-transitioning" : ""} ${deskFeedbackText ? "has-feedback" : ""}`}>
               <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
@@ -3302,8 +3319,14 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
               )}
             </div>
           </>
-        ) : (
+        )}
+
+        {selectionMounted && (
           <ChapterTwoObjectGame lang={lang} T={T} onComplete={onComplete} />
+        )}
+
+        {deskTransitioning && (
+          <div className={`ch2-scene-wash${selectionReveal ? " is-opening" : " is-closing"}`} />
         )}
 
       </div>
@@ -3631,6 +3654,8 @@ function Ch4Controller({ lit = false, ghost = false, accent = "#7A5CFF", flip = 
 function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const t4 = T;
   // phases: idle | crt_on | cart_drag | cart_in | cable | passed1 | passed2 | passed3 | connected | unlocked
+  const [sceneReady, setSceneReady] = useState(false);
+  const [narrativeIdx, setNarrativeIdx] = useState(0);
   const [phase, setPhase]           = useState("idle");
   const [passed, setPassed]         = useState([false, false, false]);
   const [cableEnd, setCableEnd]     = useState({ ...CH4_ORIGIN });
@@ -3682,6 +3707,12 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
       if (cartRafRef.current) cancelAnimationFrame(cartRafRef.current);
       if (connectTORef.current) clearTimeout(connectTORef.current);
     };
+  }, []);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setNarrativeIdx(1), 2200);
+    const t2 = setTimeout(() => setSceneReady(true), 4800);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const startCartLoop = useCallback(() => {
@@ -3903,6 +3934,19 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
             background:"radial-gradient(ellipse at center, transparent 32%, rgba(0,0,0,.16) 68%, rgba(0,0,0,.34) 100%)" }} />
           <div style={{ position:"absolute", inset:"0 0 auto 0", height:"20%", pointerEvents:"none",
             background:"linear-gradient(to bottom, rgba(0,0,0,.26), transparent)" }} />
+          {/* Narrative intro overlay */}
+          {!sceneReady && (
+            <div style={{ position:"absolute", inset:0, zIndex:12, pointerEvents:"none",
+              display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+              background:"linear-gradient(to bottom, rgba(4,3,10,.32) 0%, rgba(4,3,10,.08) 50%, rgba(4,3,10,.32) 100%)" }}>
+              {(t4.narrativeCopy || []).slice(0, narrativeIdx + 1).map((line, i) => (
+                <div key={i} style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:11,
+                  letterSpacing:2, textTransform:"uppercase", color:"rgba(200,190,230,.62)",
+                  lineHeight:2.2, textAlign:"center", opacity: i < narrativeIdx ? 0.38 : 1,
+                  transition:"opacity .8s ease" }}>{line}</div>
+              ))}
+            </div>
+          )}
           {/* Sunset window glow — warm core + soft halo + shimmer */}
           <div style={{ position:"absolute", pointerEvents:"none",
             left:"22%", top:"5%", width:"38%", height:"54%",
@@ -4185,7 +4229,7 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
 
         <div className="ch1-controls-slot">
           <div className="ch1-controls ch2-controls" onClick={e => e.stopPropagation()}>
-            <Ch1ChoiceButton onClick={phase === "idle" ? handleActivateBtn : undefined} disabled={phase !== "idle"}>
+            <Ch1ChoiceButton onClick={phase === "idle" && sceneReady ? handleActivateBtn : undefined} disabled={phase !== "idle" || !sceneReady}>
               {phase === "idle" ? t4.crtBtn : isConnected ? t4.connectedCopy : showCart ? t4.cartCopy : t4.activatedCopy}
             </Ch1ChoiceButton>
           </div>
@@ -4903,6 +4947,15 @@ export default function Roberto() {
         @keyframes ch4DustFloat{0%,100%{opacity:.12;transform:translateY(0) scale(1)}40%{opacity:.42;transform:translateY(-4px) scale(1.18)}70%{opacity:.22;transform:translateY(-7px) scale(.9)}}
         @keyframes ch4CartHint{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
         @keyframes ch4PressStart{0%,49%{opacity:1}50%,100%{opacity:0}}
+        .ch2-scene-wash{position:fixed;inset:0;z-index:100;pointer-events:none;background:radial-gradient(ellipse at center, rgba(155,210,120,0.10) 0%, rgba(40,65,38,0.22) 42%, rgba(6,10,8,0.82) 100%);opacity:0;transition:opacity .55s ease}
+        .ch2-scene-wash.is-closing{opacity:1}
+        .ch2-scene-wash.is-opening{opacity:0;transition:opacity .65s ease}
+        .ch2-stage-transitioning .ch2-window-video,.ch2-stage-transitioning .ch2-fill{transform:scale(1.015);filter:brightness(.72) contrast(1.02) saturate(.9);transition:transform .8s ease,filter .8s ease}
+        .ch2-stage-transitioning .ch2-line-block,.ch2-stage-transitioning .ch2-feedback-overlay{opacity:1}
+        .ch2-game-slot-shell{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+        .ch2-game-slot-shell.is-visible{opacity:1;transform:translateY(0)}
+        .ch2-game-grid{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+        .ch2-game-grid.is-visible{opacity:1;transform:translateY(0)}
         .ch2-game-stage{background:#0a0f12}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
