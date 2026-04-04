@@ -3710,8 +3710,8 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
   }, []);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setNarrativeIdx(1), 2200);
-    const t2 = setTimeout(() => setSceneReady(true), 4800);
+    const t1 = setTimeout(() => setNarrativeIdx(1), 2800);
+    const t2 = setTimeout(() => setSceneReady(true), 7500);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
@@ -4947,7 +4947,7 @@ export default function Roberto() {
         @keyframes ch4DustFloat{0%,100%{opacity:.12;transform:translateY(0) scale(1)}40%{opacity:.42;transform:translateY(-4px) scale(1.18)}70%{opacity:.22;transform:translateY(-7px) scale(.9)}}
         @keyframes ch4CartHint{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
         @keyframes ch4PressStart{0%,49%{opacity:1}50%,100%{opacity:0}}
-        .ch2-scene-wash{position:fixed;inset:0;z-index:100;pointer-events:none;background:radial-gradient(ellipse at center, rgba(155,210,120,0.10) 0%, rgba(40,65,38,0.22) 42%, rgba(6,10,8,0.82) 100%);opacity:0;transition:opacity .55s ease}
+        .ch2-scene-wash{position:fixed;inset:0;z-index:100;pointer-events:none;background:rgba(4,8,6,0.88);opacity:0;transition:opacity .55s ease}
         .ch2-scene-wash.is-closing{opacity:1}
         .ch2-scene-wash.is-opening{opacity:0;transition:opacity .65s ease}
         .ch2-stage-transitioning .ch2-window-video,.ch2-stage-transitioning .ch2-fill{transform:scale(1.015);filter:brightness(.72) contrast(1.02) saturate(.9);transition:transform .8s ease,filter .8s ease}
