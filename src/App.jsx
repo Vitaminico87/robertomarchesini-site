@@ -5377,16 +5377,6 @@ export default function Roberto() {
                   <article
                     key={work.title}
                     className="home-work-item"
-                    onClick={() => openCaseStudy(getWorkSlug(work.title))}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        openCaseStudy(getWorkSlug(work.title));
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`${CASE_STUDIES[lang][getWorkSlug(work.title)]?.openLabel || (lang === "it" ? "Apri case study" : "Open case study")}: ${work.title}`}
                   >
                     <div className="home-work-top">
                       <h3 className="home-work-title">{work.title}</h3>
