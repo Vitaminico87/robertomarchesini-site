@@ -5022,7 +5022,7 @@ export default function Roberto() {
         .ch3-kite-gust{transition:transform 1.30s cubic-bezier(.18,.82,.40,1),filter 1.30s ease}
         .ch3-synthesis-panel.pulse-step-1 .ch3-kite-gust{transform:translate(-16px,-5px) rotate(-6deg);transition:transform .50s cubic-bezier(.18,.9,.36,1),filter .50s ease;filter:drop-shadow(0 0 5px rgba(255,200,120,.32))}
         .ch3-synthesis-panel.pulse-step-2 .ch3-kite-gust{transform:translate(-36px,-11px) rotate(-12deg);transition:transform .50s cubic-bezier(.18,.9,.36,1),filter .50s ease;filter:drop-shadow(0 0 9px rgba(255,200,120,.50))}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-kite-gust{transform:translate(-72px,-22px) rotate(-22deg);transition:transform .48s cubic-bezier(.14,.92,.34,1),filter .48s ease;filter:drop-shadow(0 0 18px rgba(255,200,120,.78))}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-kite-gust{transform:translate(-520px,-340px) rotate(-72deg) scale(0.58);transition:transform 1.7s cubic-bezier(.4,0,.72,.98),filter 1.3s ease,opacity 1.5s ease .18s;filter:drop-shadow(0 0 28px rgba(255,200,120,.95));opacity:0}
         .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;transform:scale(1.22);filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
         .ch3-kite-diamond{position:absolute;left:6px;top:2px;width:11px;height:11px;background:rgba(238,86,24,.98);border:1px solid rgba(255,220,198,.38);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.18) inset}
         .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.76)}
