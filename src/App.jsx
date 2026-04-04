@@ -3902,16 +3902,15 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
             <div style={{ position:"absolute", inset:0, zIndex:12, pointerEvents:"none",
               display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
               background:"linear-gradient(to bottom, rgba(4,3,10,.32) 0%, rgba(4,3,10,.08) 50%, rgba(4,3,10,.32) 100%)" }}>
-              {(t4.narrativeCopy || []).slice(0, narrativeIdx + 1).map((line, i) => (
-                <div key={i} style={{ fontFamily:"'IBM Plex Mono',monospace",
-                  fontSize:"clamp(11px,3vw,13px)",
-                  letterSpacing:"clamp(1px,0.5vw,2px)", textTransform:"uppercase",
-                  color:"rgba(210,200,240,.88)",
-                  lineHeight:2.2, textAlign:"center", padding:"0 16px",
-                  opacity: i < narrativeIdx ? 0.4 : 1,
-                  transition:"opacity .8s ease",
-                  textShadow:"0 1px 8px rgba(0,0,0,.72)" }}>{line}</div>
-              ))}
+              <div key={narrativeIdx} style={{ fontFamily:"'IBM Plex Mono',monospace",
+                fontSize:"clamp(11px,3vw,13px)",
+                letterSpacing:"clamp(1px,0.5vw,2px)", textTransform:"uppercase",
+                color:"rgba(210,200,240,.88)",
+                lineHeight:1.6, textAlign:"center", padding:"0 24px",
+                opacity:1, animation:"ch4NarrativeFade .7s ease forwards",
+                textShadow:"0 1px 8px rgba(0,0,0,.72)" }}>
+                {(t4.narrativeCopy || [])[narrativeIdx]}
+              </div>
             </div>
           )}
           {/* Sunset window glow — warm core + soft halo + shimmer */}
@@ -4914,6 +4913,7 @@ export default function Roberto() {
         @keyframes ch4DustFloat{0%,100%{opacity:.12;transform:translateY(0) scale(1)}40%{opacity:.42;transform:translateY(-4px) scale(1.18)}70%{opacity:.22;transform:translateY(-7px) scale(.9)}}
         @keyframes ch4CartHint{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
         @keyframes ch4PressStart{0%,49%{opacity:1}50%,100%{opacity:0}}
+        @keyframes ch4NarrativeFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .ch2-game-slot-shell{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch2-game-slot-shell.is-visible{opacity:1;transform:translateY(0)}
         .ch2-game-grid{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
