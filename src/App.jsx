@@ -2966,6 +2966,20 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
 
 
 
+function TimeSkipCard({ lang, onDone }) {
+  useEffect(() => {
+    const t = setTimeout(() => onDone?.(), 3400);
+    return () => clearTimeout(t);
+  }, []);
+  const label = lang === "it" ? "10 anni dopo" : "10 years later";
+  return (
+    <div className="time-skip-card" onClick={onDone} role="button" tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
+      <span className="time-skip-text">{label}</span>
+    </div>
+  );
+}
+
 function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
   useEffect(() => {
     const t = setTimeout(() => {
@@ -4536,6 +4550,10 @@ export default function Roberto() {
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
+        @keyframes timeSkipBgFade{0%{opacity:0}12%{opacity:1}80%{opacity:1}100%{opacity:0}}
+        @keyframes timeSkipTextAnim{0%{opacity:0;transform:translateY(10px)}18%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-6px)}}
+        .time-skip-card{position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:200;animation:timeSkipBgFade 3.4s ease both;cursor:default;pointer-events:all}
+        .time-skip-text{color:rgba(255,218,178,.78);font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(22px,4.5vw,46px);letter-spacing:.06em;animation:timeSkipTextAnim 3.4s ease both}
         @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(18px) rotate(-20deg)}8%{transform:translateX(3vw) translateY(10px) rotate(-12deg)}16%{transform:translateX(8vw) translateY(-2px) rotate(-4deg)}24%{transform:translateX(12vw) translateY(-13px) rotate(6deg)}32%{transform:translateX(15vw) translateY(-22px) rotate(12deg)}40%{transform:translateX(19vw) translateY(-14px) rotate(4deg)}48%{transform:translateX(23vw) translateY(1px) rotate(-8deg)}56%{transform:translateX(29vw) translateY(11px) rotate(-16deg)}64%{transform:translateX(36vw) translateY(4px) rotate(-5deg)}72%{transform:translateX(43vw) translateY(-10px) rotate(7deg)}80%{transform:translateX(50vw) translateY(-21px) rotate(14deg)}90%{transform:translateX(59vw) translateY(-9px) rotate(3deg)}100%{transform:translateX(68vw) translateY(6px) rotate(-6deg)}}
         @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(18px) rotate(20deg)}8%{transform:translateX(-3vw) translateY(10px) rotate(12deg)}16%{transform:translateX(-8vw) translateY(-2px) rotate(4deg)}24%{transform:translateX(-12vw) translateY(-13px) rotate(-6deg)}32%{transform:translateX(-15vw) translateY(-22px) rotate(-12deg)}40%{transform:translateX(-19vw) translateY(-14px) rotate(-4deg)}48%{transform:translateX(-23vw) translateY(1px) rotate(8deg)}56%{transform:translateX(-29vw) translateY(11px) rotate(16deg)}64%{transform:translateX(-36vw) translateY(4px) rotate(5deg)}72%{transform:translateX(-43vw) translateY(-10px) rotate(-7deg)}80%{transform:translateX(-50vw) translateY(-21px) rotate(-14deg)}90%{transform:translateX(-59vw) translateY(-9px) rotate(-3deg)}100%{transform:translateX(-68vw) translateY(6px) rotate(6deg)}}
         @keyframes ch1KiteBodyFlutter{0%,100%{transform:rotate(45deg) skewX(0deg)}50%{transform:rotate(45deg) skewX(3deg)}}
@@ -4924,10 +4942,10 @@ export default function Roberto() {
         .ch3-synthesis-circuit-pulse{position:absolute;right:15%;top:15%;width:30%;height:52%;z-index:3;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.14) 0%, rgba(255,199,124,.06) 24%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.16;animation:ch3CircuitPulse 4.8s ease-in-out infinite}
         .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.12) 74%, rgba(0,0,0,.38) 100%), linear-gradient(180deg, rgba(12,8,7,.06) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.22) 100%)}
         .ch3-distant-kite{position:absolute;left:31.5%;top:38.8%;width:12%;height:12%;z-index:8;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
-        .ch3-kite-gust{transition:transform 1.10s cubic-bezier(.22,.8,.44,1),filter 1.10s ease}
-        .ch3-synthesis-panel.pulse-step-1 .ch3-kite-gust{transform:translate(-9px,-3px) rotate(-4deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 4px rgba(255,200,120,.28))}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-kite-gust{transform:translate(-18px,-6px) rotate(-7deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 7px rgba(255,200,120,.42))}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-kite-gust{transform:translate(-30px,-10px) rotate(-11deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 12px rgba(255,200,120,.60))}
+        .ch3-kite-gust{transition:transform 1.30s cubic-bezier(.18,.82,.40,1),filter 1.30s ease}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-kite-gust{transform:translate(-16px,-5px) rotate(-6deg);transition:transform .50s cubic-bezier(.18,.9,.36,1),filter .50s ease;filter:drop-shadow(0 0 5px rgba(255,200,120,.32))}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-kite-gust{transform:translate(-36px,-11px) rotate(-12deg);transition:transform .50s cubic-bezier(.18,.9,.36,1),filter .50s ease;filter:drop-shadow(0 0 9px rgba(255,200,120,.50))}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-kite-gust{transform:translate(-72px,-22px) rotate(-22deg);transition:transform .48s cubic-bezier(.14,.92,.34,1),filter .48s ease;filter:drop-shadow(0 0 18px rgba(255,200,120,.78))}
         .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;transform:scale(1.22);filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
         .ch3-kite-diamond{position:absolute;left:6px;top:2px;width:11px;height:11px;background:rgba(238,86,24,.98);border:1px solid rgba(255,220,198,.38);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.18) inset}
         .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.76)}
@@ -5180,31 +5198,6 @@ export default function Roberto() {
             <polyline points="96,7 99,4"   stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
             <polyline points="5,6 1,4"     stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
             <polyline points="70,3 72,1"   stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
-          </g>
-          {/* Child figure — sitting at trunk base, back leaning against trunk */}
-          {!isMobileViewport && (
-            <g filter="url(#htHalo)" opacity="0.28">
-              {/* head */}
-              <ellipse cx="61" cy="85.6" rx="2.1" ry="1.5" stroke="#ff9820" strokeWidth="0.55" fill="none"/>
-              {/* torso / back leaning toward trunk */}
-              <line x1="61.2" y1="87.1" x2="64.2" y2="91.8" stroke="#ff9820" strokeWidth="0.55" strokeLinecap="round"/>
-              {/* legs bent, knees pulled up */}
-              <path d="M 64.0,91.6 Q 58.5,89.2 55.8,87.0 Q 57.2,91.6 63.4,93.2" stroke="#ff9820" strokeWidth="0.50" strokeLinecap="round" fill="none"/>
-              {/* arms hugging knees */}
-              <path d="M 62.2,88.6 Q 57.0,88.0 55.8,87.0" stroke="#ff9820" strokeWidth="0.40" strokeLinecap="round" fill="none"/>
-              <path d="M 62.4,89.8 Q 58.4,91.0 57.4,91.2" stroke="#ff9820" strokeWidth="0.36" strokeLinecap="round" fill="none"/>
-            </g>
-          )}
-          <g filter={isMobileViewport ? undefined : "url(#htWire)"} opacity={isMobileViewport ? "0.22" : "0.42"}>
-            {/* head */}
-            <ellipse cx="61" cy="85.6" rx="2.1" ry="1.5" stroke="#ffe4a8" strokeWidth="0.22" fill="none"/>
-            {/* torso / back */}
-            <line x1="61.2" y1="87.1" x2="64.2" y2="91.8" stroke="#ffe4a8" strokeWidth="0.22" strokeLinecap="round"/>
-            {/* legs */}
-            <path d="M 64.0,91.6 Q 58.5,89.2 55.8,87.0 Q 57.2,91.6 63.4,93.2" stroke="#ffe4a8" strokeWidth="0.20" strokeLinecap="round" fill="none"/>
-            {/* arms */}
-            <path d="M 62.2,88.6 Q 57.0,88.0 55.8,87.0" stroke="#ffe4a8" strokeWidth="0.16" strokeLinecap="round" fill="none"/>
-            <path d="M 62.4,89.8 Q 58.4,91.0 57.4,91.2" stroke="#ffe4a8" strokeWidth="0.14" strokeLinecap="round" fill="none"/>
           </g>
         </svg>
       )}
@@ -5545,6 +5538,13 @@ export default function Roberto() {
         />
       )}
 
+      {phase === "game" && gameFlow === "timeSkip1to2" && (
+        <TimeSkipCard
+          lang={lang}
+          onDone={() => setGameFlow("chapter2Intro")}
+        />
+      )}
+
       {phase === "game" && gameFlow === "chapter2Intro" && (
         <ChapterIntroCard
           number="2"
@@ -5567,7 +5567,7 @@ export default function Roberto() {
           unlockedProfileIds={unlockedProfileIds}
           onUnlockProfile={unlockProfile}
           onRequestChapterTwo={() => {
-            setGameFlow("chapter2Intro");
+            setGameFlow("timeSkip1to2");
           }}
         />
       )}
