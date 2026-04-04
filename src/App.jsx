@@ -773,21 +773,6 @@ function shuffleArray(list) {
 // ============================================================================
 // UTILITY COMPONENTS
 // ============================================================================
-function GlitchText({ text, active }) {
-  const [display, setDisplay] = useState(text);
-  useEffect(() => {
-    if (!active) { setDisplay(text); return; }
-    const chars = "!@#$%^&*_+-=[]{}|<>?/~ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let f = 0;
-    const iv = setInterval(() => {
-      if (f >= 10) { clearInterval(iv); setDisplay(text); return; }
-      setDisplay(text.split("").map(c => c === " " ? " " : Math.random() > .5 ? chars[Math.floor(Math.random() * chars.length)] : c).join(""));
-      f++;
-    }, 45);
-    return () => clearInterval(iv);
-  }, [active, text]);
-  return <span>{display}</span>;
-}
 
 // EmphasisCycler: cycles words[0]→words[1]→...→words[N-1]→words[0], then stops.
 // delays[i] = ms to wait before leaving step i.
@@ -4485,12 +4470,13 @@ export default function Roberto() {
   // Glitch on main
   useEffect(() => { if (phase === "main") { setGlitch(true); setTimeout(() => setGlitch(false), 600); } }, [phase]);
 
-  // Rare random flicker
+  // Rare random flicker (desktop only)
   useEffect(() => {
+    if (isMobileViewport) return;
     if (phase !== "main" && phase !== "game") return;
     const iv = setInterval(() => { if (Math.random() > .93) { setFlicker(true); setTimeout(() => setFlicker(false), 50 + Math.random() * 80); } }, 5000);
     return () => clearInterval(iv);
-  }, [phase]);
+  }, [phase, isMobileViewport]);
 
   useEffect(() => {
     const updateViewport = () => {
@@ -5243,11 +5229,11 @@ export default function Roberto() {
       {/* CRT overlay - always visible */}
       <div className="crt-vignette" style={{ position: "fixed", inset: 0, zIndex: 80, pointerEvents: "none", borderRadius: 16 }} />
       <div style={{ position: "fixed", inset: 0, zIndex: 81, pointerEvents: "none", background: "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.1) 2px,rgba(0,0,0,.1) 4px)", opacity: .4 }} />
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 6, zIndex: 82, pointerEvents: "none", background: "linear-gradient(to bottom,transparent,rgba(255,77,0,.03),rgba(255,77,0,.08),rgba(255,77,0,.03),transparent)", animation: "scanbeam 3.5s linear infinite" }} />
+      {!isMobileViewport && <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 6, zIndex: 82, pointerEvents: "none", background: "linear-gradient(to bottom,transparent,rgba(255,77,0,.03),rgba(255,77,0,.08),rgba(255,77,0,.03),transparent)", animation: "scanbeam 3.5s linear infinite" }} />}
       <div style={{ position: "fixed", inset: 0, zIndex: 79, pointerEvents: "none", background: "radial-gradient(ellipse at center,transparent 60%,rgba(255,50,0,.012) 80%,rgba(255,30,0,.03) 100%)" }} />
       <div style={{ position: "fixed", inset: 0, zIndex: 78, pointerEvents: "none", background: "radial-gradient(ellipse at 0% 0%,rgba(0,0,0,.18) 0%,transparent 35%),radial-gradient(ellipse at 100% 0%,rgba(0,0,0,.18) 0%,transparent 35%),radial-gradient(ellipse at 0% 100%,rgba(0,0,0,.18) 0%,transparent 35%),radial-gradient(ellipse at 100% 100%,rgba(0,0,0,.18) 0%,transparent 35%)" }} />
       <div style={{ position: "fixed", inset: -1, zIndex: 77, pointerEvents: "none", border: "1.5px solid rgba(255,77,0,.025)", borderRadius: 18 }} />
-      <div style={{ position: "fixed", inset: 0, zIndex: 83, pointerEvents: "none", opacity: flicker ? .3 : 0, background: "linear-gradient(90deg,rgba(255,0,0,.03) 33%,rgba(0,255,0,.03) 33% 66%,rgba(0,80,255,.03) 66%)", transition: "opacity .04s", mixBlendMode: "screen" }} />
+      {!isMobileViewport && <div style={{ position: "fixed", inset: 0, zIndex: 83, pointerEvents: "none", opacity: flicker ? .3 : 0, background: "linear-gradient(90deg,rgba(255,0,0,.03) 33%,rgba(0,255,0,.03) 33% 66%,rgba(0,80,255,.03) 66%)", transition: "opacity .04s", mixBlendMode: "screen" }} />}
 
       {/* Blackout for transitions */}
       <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "#050505", opacity: blackout ? 1 : 0, pointerEvents: "none", transition: "opacity .15s" }} />
