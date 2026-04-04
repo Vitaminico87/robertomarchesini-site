@@ -2049,7 +2049,7 @@ function useChapterThreeAmbience() {
     playSafely(chatter);
   }, []);
 
-  return { roomRef, chatterRef, unlock, start, stop };
+  return useMemo(() => ({ roomRef, chatterRef, unlock, start, stop }), [unlock, start, stop]);
 }
 
 function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, finalPause = 3200, hintText = "Tap when the light is centered", ariaLabel = "Cross. Tap when the light is centered.", unlockLines = [] }) {
