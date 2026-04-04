@@ -729,18 +729,18 @@ const EMERGED_PROFILE = {
 const CH2_OBJECTS = {
   it: [
     { id: "vinyl", label: "Vinile", type: "decoy", description: "Bella presenza. Funzione discutibile.", wrongLine: "Molto atmosfera. Poco avanzamento." },
-    { id: "notebook", label: "Taccuino", type: "correct", description: "Per idee, appunti, connessioni.", wrongLine: "Da solo non basta. Ma senza questo mancava una base.", placedLine: "Prima di capire cosa fare, di solito scrivevo." },
+    { id: "notebook", label: "Taccuino", type: "correct", description: "Per idee, appunti, connessioni.", placedLine: "Prima di capire cosa fare, di solito scrivevo." },
     { id: "badge", label: "Badge corporate", type: "decoy", description: "Arriverà. Ma non da qui.", wrongLine: "Un po' presto per fingersi già risolto." },
-    { id: "camera", label: "Macchina fotografica", type: "correct", description: "Per imparare a guardare davvero.", wrongLine: "Serve. Ma non è il primo tassello.", placedLine: "Guardare bene veniva prima di spiegare bene." },
-    { id: "floppy", label: "Floppy disk", type: "correct", description: "Per il lato sistema, memoria, macchina.", wrongLine: "Ci arrivo. Ma non ancora.", placedLine: "Una parte di tutto questo passava già da una macchina." },
+    { id: "camera", label: "Macchina fotografica", type: "correct", description: "Per imparare a guardare davvero.", placedLine: "Guardare bene veniva prima di spiegare bene." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "Per il lato sistema, memoria, macchina.", placedLine: "Una parte di tutto questo passava già da una macchina." },
     { id: "ticket", label: "Biglietto aereo", type: "decoy", description: "Tentazione chiara. Tempismo sbagliato.", wrongLine: "Prima la traiettoria. Poi l'aeroporto." },
   ],
   en: [
     { id: "vinyl", label: "Vinyl", type: "decoy", description: "Great presence. Questionable function.", wrongLine: "A lot of atmosphere. Not much progress." },
-    { id: "notebook", label: "Notebook", type: "correct", description: "For ideas, notes, connections.", wrongLine: "Not enough on its own. But without it, the base was missing.", placedLine: "Before figuring out what to do, I usually wrote." },
+    { id: "notebook", label: "Notebook", type: "correct", description: "For ideas, notes, connections.", placedLine: "Before figuring out what to do, I usually wrote." },
     { id: "badge", label: "Corporate badge", type: "decoy", description: "That comes later. Not from here.", wrongLine: "A little early to pretend it was already solved." },
-    { id: "camera", label: "Camera", type: "correct", description: "To learn how to really look.", wrongLine: "It matters. But it's not the first piece.", placedLine: "Looking well came before explaining well." },
-    { id: "floppy", label: "Floppy disk", type: "correct", description: "For the system side: memory, machine, structure.", wrongLine: "I get there. But not yet.", placedLine: "Part of all this already passed through a machine." },
+    { id: "camera", label: "Camera", type: "correct", description: "To learn how to really look.", placedLine: "Looking well came before explaining well." },
+    { id: "floppy", label: "Floppy disk", type: "correct", description: "For the system side: memory, machine, structure.", placedLine: "Part of all this already passed through a machine." },
     { id: "ticket", label: "Plane ticket", type: "decoy", description: "Clear temptation. Wrong timing.", wrongLine: "First the trajectory. Then the airport." },
   ],
 };
