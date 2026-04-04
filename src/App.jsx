@@ -2774,7 +2774,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
     video.loop = loop;
     video.muted = muted;
     video.playsInline = true;
-    video.preload = 'auto';
+    video.preload = visible ? 'auto' : 'none';
     video.style.display = visible ? 'block' : 'none';
     if (visible) {
       const p = video.play();
@@ -2799,7 +2799,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
 
       fullVideo.muted = true;
       fullVideo.playsInline = true;
-      fullVideo.preload = 'auto';
+      fullVideo.preload = activated ? 'auto' : 'metadata';
 
       if (activated) {
         fullVideo.style.display = 'block';
@@ -2946,7 +2946,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
 
               <section className={`ch1-scene ${scene === 'meadow' ? 'active' : ''}`}>
                 <img className="ch1-fill" src={ASSETS.pratoFirstFrame} alt="" />
-                <video ref={meadowVideoRef} className="ch1-fill ch1-grass-loop" src={ASSETS.pratoFull} autoPlay loop muted playsInline preload="auto" />
+                <video ref={meadowVideoRef} className="ch1-fill ch1-grass-loop" src={ASSETS.pratoFull} autoPlay loop muted playsInline preload="none" />
                 <div className="ch1-meadow-shade" />
                 <div className="ch1-line-block">
                   <div className="ch1-line">{T.meadowIntro}</div>
@@ -2974,7 +2974,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
 
               <section className={`ch1-scene ${scene === 'library' ? 'active' : ''}`}>
                 <div className={`ch1-library-base-layer ${libraryTakeoverSolid ? 'taken' : ''}`}>
-                  <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="auto" />
+                  <video ref={libraryLoopRef} className="ch1-fill" src={ASSETS.libraryLoop} autoPlay loop muted playsInline preload="none" />
                   <div className="ch1-library-glow" />
                   </div>
                 <video
@@ -2983,7 +2983,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
                   src={ASSETS.libraryFull}
                   muted
                   playsInline
-                  preload="auto"
+                  preload="none"
                 />
                 <div className={`ch1-library-activated-glow ${activated ? 'active' : ''}`} />
                 <div className={`ch1-library-monitor-portal ${libraryPortalOpen ? 'active' : ''}`} />
@@ -3238,7 +3238,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     video.loop = true;
     video.muted = true;
     video.playsInline = true;
-    video.preload = "auto";
+    video.preload = "metadata";
     const play = () => { const p = video.play(); if (p?.catch) p.catch(() => {}); };
     play();
 
@@ -3333,7 +3333,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
                     loop
                     muted
                     playsInline
-                    preload="auto"
+                    preload="none"
                   />
                 </div>
 
