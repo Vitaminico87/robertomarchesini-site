@@ -4264,10 +4264,27 @@ export default function Roberto() {
   const proofStripText = isMobileViewport ? (T.proofStripMobile || T.proofStrip) : T.proofStrip;
   const selectedWorkSubText = isMobileViewport ? (T.selectedWorkMobileSub || T.selectedWorkSub) : T.selectedWorkSub;
   const [gameFlow, setGameFlow] = useState("chapter1");
+  const [gameCompleted, setGameCompleted] = useState(() => localStorage.getItem('rmg_completed') === 'true');
   const [unlockedProfileIds, setUnlockedProfileIds] = useState([]);
   const [activeCaseStudy, setActiveCaseStudy] = useState(null);
   const scanAudioCtxRef = useRef(null);
   const scrollScanPlayedRef = useRef(false);
+
+  // Persist chapter progress
+  useEffect(() => {
+    const skip = ['chapter1', 'chapter1Intro'];
+    if (phase === 'game' && !skip.includes(gameFlow)) {
+      localStorage.setItem('rmg_flow', gameFlow);
+    }
+  }, [gameFlow, phase]);
+
+  // Mark game completed when Ch4 is reached
+  useEffect(() => {
+    if (gameFlow === 'chapter4' && !gameCompleted) {
+      localStorage.setItem('rmg_completed', 'true');
+      setGameCompleted(true);
+    }
+  }, [gameFlow, gameCompleted]);
 
   const playScrollScan = useCallback(() => {
     try {
@@ -4442,7 +4459,9 @@ export default function Roberto() {
   const handleTrash = () => {
     scrollScanPlayedRef.current = false;
     setUnlockedProfileIds([]);
-    setGameFlow("chapter1Intro");
+    const savedFlow = localStorage.getItem('rmg_flow');
+    const resumeFlow = savedFlow && !['chapter1', 'chapter1Intro'].includes(savedFlow) ? savedFlow : 'chapter1Intro';
+    setGameFlow(resumeFlow);
     setActiveCaseStudy(null);
     setFallingWords(genFallingWords(T));
     setFalling(true);
@@ -4493,6 +4512,8 @@ export default function Roberto() {
         @keyframes scanbeam{0%{transform:translateY(-100vh)}100%{transform:translateY(100vh)}}
         @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(255,77,0,.12)}50%{box-shadow:0 0 35px rgba(255,77,0,.25)}}
         @keyframes nameGlow{0%,100%{text-shadow:0 0 30px rgba(255,77,0,.04)}50%{text-shadow:0 0 50px rgba(255,77,0,.08)}}
+        @keyframes homeTreeBreathe{0%,100%{opacity:.042}50%{opacity:.11}}
+        .home-tree-echo{position:fixed;top:0;right:0;width:min(52vw,480px);height:min(82vh,660px);pointer-events:none;z-index:0;mix-blend-mode:screen;animation:homeTreeBreathe 7.5s ease-in-out infinite}
         @keyframes trashPulse{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.12)}}
         @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.12), 0 0 40px rgba(255,77,0,.06);transform:scale(1)}50%{box-shadow:0 0 40px rgba(255,77,0,.25), 0 0 80px rgba(255,77,0,.12);transform:scale(1.02)}}
         @keyframes trashArrow{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.6;transform:translateY(4px)}}
@@ -5076,6 +5097,30 @@ export default function Roberto() {
           />
         );
       })()}
+
+      {/* TREE ECHO — visible after game completion */}
+      {phase === "main" && gameCompleted && (
+        <svg className="home-tree-echo" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <filter id="homeGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="1.4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#homeGlow)">
+            <polyline points="66,92 65,41" stroke="#ffb84a" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+            <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ffb84a" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="65,41 74,23 84,6" stroke="#ffb84a" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="66,38 68,14 70,3" stroke="#ffb84a" strokeWidth="0.7" strokeLinecap="round" fill="none"/>
+            <polyline points="50,28 38,17 23,14" stroke="#ffb84a" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="34,18 27,12" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
+            <polyline points="74,23 89,14 96,7" stroke="#ffb84a" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="17,9 9,4" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
+            <polyline points="84,6 90,3" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
+            <polyline points="50,28 42,21 30,20" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          </g>
+        </svg>
+      )}
 
       {/* MAIN */}
       {phase === "main" && !activeCaseStudy && (
