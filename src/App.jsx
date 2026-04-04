@@ -4458,8 +4458,9 @@ export default function Roberto() {
   const handleTrash = () => {
     scrollScanPlayedRef.current = false;
     setUnlockedProfileIds([]);
+    const isCompleted = localStorage.getItem('rmg_completed') === 'true';
     const savedFlow = localStorage.getItem('rmg_flow');
-    const resumeFlow = savedFlow && !['chapter1', 'chapter1Intro'].includes(savedFlow) ? savedFlow : 'chapter1Intro';
+    const resumeFlow = !isCompleted && savedFlow && !['chapter1', 'chapter1Intro'].includes(savedFlow) ? savedFlow : 'chapter1Intro';
     setGameFlow(resumeFlow);
     setActiveCaseStudy(null);
     setFallingWords(genFallingWords(T));
@@ -4577,7 +4578,8 @@ export default function Roberto() {
         .home-section-sub{font-size:15px;color:#b7afa5;margin-bottom:52px;font-style:italic;font-family:'Playfair Display',serif;line-height:2.0;max-width:540px;text-wrap:pretty}
         .home-selected-heading-wrap{margin-bottom:16px}
         .home-selected-heading{display:inline-block;font-size:clamp(38px,5.2vw,58px);line-height:1.0;color:#F5F0E8;font-family:'Playfair Display',serif;font-style:italic;letter-spacing:-.5px;text-wrap:balance}
-        .has-accent-dot::after{content:'.';color:#FF4D00;font-style:normal}
+        @keyframes arrowBob{0%,100%{transform:translateY(0);opacity:.65}50%{transform:translateY(5px);opacity:.90}}
+        .selected-work-arrow{display:block;margin-top:10px;animation:arrowBob 2.6s ease-in-out infinite}
         .svc-tw{min-width:0}
         .home-work-narrative{font-size:17px;color:#EDE8E0;line-height:1.96;margin-bottom:16px;max-width:620px;text-wrap:pretty;font-family:'Playfair Display',serif;font-style:italic}
         .home-work-secondary{font-size:14px;color:#b0a89f;line-height:2.0;margin-bottom:22px;max-width:580px;text-wrap:pretty}
@@ -5166,7 +5168,7 @@ export default function Roberto() {
 
           {/* 3. PROOF STRIP */}
           <Section delay={0.09}>
-            <div style={{ marginBottom: 60, paddingBottom: 22, borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+            <div style={{ marginBottom: 60 }}>
               <div style={{ fontSize: 11, color: "#7a746d", fontFamily: "'IBM Plex Mono',monospace", letterSpacing: 1.5, lineHeight: 1.9, textTransform: "uppercase" }}>
                 {proofStripText}
               </div>
@@ -5187,8 +5189,11 @@ export default function Roberto() {
                   gap: 48,
                   alignItems: "center",
                 }}>
-                  <div className="home-selected-heading has-accent-dot" style={{ marginBottom: isMobileViewport ? 14 : 0 }}>
-                    {T.selectedWorkLabel}
+                  <div style={{ marginBottom: isMobileViewport ? 14 : 0 }}>
+                    <div className="home-selected-heading">{T.selectedWorkLabel}</div>
+                    <svg className="selected-work-arrow" width="18" height="11" viewBox="0 0 18 11" fill="none" aria-hidden="true">
+                      <path d="M1 1.5L9 9L17 1.5" stroke="#FF4D00" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </div>
                   <div style={{ fontSize: 15, color: "#bfb4a8", fontStyle: "italic", fontFamily: "'Playfair Display',serif", lineHeight: 1.72, textWrap: "pretty", maxWidth: 360, paddingBottom: isMobileViewport ? 0 : 8 }}>
                     {selectedWorkSubText}
