@@ -5242,9 +5242,6 @@ export default function Roberto() {
           <Section delay={0.12}>
             <div style={{ marginBottom: isMobileViewport ? 64 : 88 }}>
               <div style={{ paddingTop: 22, marginBottom: isMobileViewport ? 32 : 44 }}>
-                <div style={{ fontSize: 9, letterSpacing: 3, color: "#4a4540", fontFamily: "'IBM Plex Mono',monospace", textTransform: "uppercase", marginBottom: 14 }}>
-                  {T.selectedWorkKicker}
-                </div>
                 <div className="home-selected-heading">{T.selectedWorkLabel}</div>
                 <div style={{ marginTop: 10, fontSize: 15, color: "#bfb4a8", fontStyle: "italic", fontFamily: "'Playfair Display',serif", lineHeight: 1.72, textWrap: "pretty", maxWidth: 420 }}>
                   {selectedWorkSubText}
