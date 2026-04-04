@@ -3377,9 +3377,10 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (scene !== "synthesis") return undefined;
     onUnlockProfile?.("synthesis");
     setFinalFade(false);
-    setShowFutureBtn(true);
-    // Delay caption until synthesis panel has fully faded in (~720ms transition)
+    // Delay caption until synthesis panel is fully faded in (~720ms)
     finalLineTimeoutRef.current = setTimeout(() => setShowFinalLine(true), 950);
+    // Delay button until caption has been readable for a moment
+    continueTimeoutRef.current = setTimeout(() => setShowFutureBtn(true), 2600);
     return () => {
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
@@ -4895,9 +4896,9 @@ export default function Roberto() {
         .ch2-game-feedback{width:100%;margin-top:2px;margin-bottom:14px;min-height:52px;padding:13px 16px;border-radius:8px;border:1px solid rgba(148,174,188,.18);background:rgba(3,8,10,.72);color:#d8e0e6;font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease,opacity .2s ease}
         .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
         .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
-        .ch2-final-caption{position:absolute;left:0;right:0;bottom:0;z-index:9;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:none}
+        .ch2-final-caption{position:absolute;left:0;right:0;top:0;z-index:9;pointer-events:none;opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:none}
         .ch2-final-caption.is-visible{opacity:1;transform:translateY(0)}
-        .ch2-final-caption-inner{display:block;max-width:none;width:100%;padding:12px 18px 11px;border-top:1px solid rgba(255,218,178,.20);background:linear-gradient(180deg,rgba(10,7,6,.06) 0%,rgba(8,6,5,.34) 16%,rgba(5,5,5,.84) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,228,198,.08);backdrop-filter:blur(5px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.05vw,24px);line-height:1.24;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34),0 10px 24px rgba(0,0,0,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .ch2-final-caption-inner{display:block;max-width:none;width:100%;padding:12px 18px 11px;border-bottom:1px solid rgba(255,218,178,.20);border-top:none;background:linear-gradient(180deg,rgba(5,5,5,.88) 0%,rgba(8,6,5,.44) 72%,rgba(10,7,6,.06) 100%);box-shadow:0 16px 34px rgba(0,0,0,.22),inset 0 -1px 0 rgba(255,228,198,.06);backdrop-filter:blur(5px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.05vw,24px);line-height:1.24;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34),0 10px 24px rgba(0,0,0,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
         .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
         .ch2-game-object-icon{display:none;font-size:18px;line-height:1;color:#ddd2c4;margin-bottom:8px}
@@ -4946,9 +4947,9 @@ export default function Roberto() {
         .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.12) 74%, rgba(0,0,0,.38) 100%), linear-gradient(180deg, rgba(12,8,7,.06) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.22) 100%)}
         .ch3-distant-kite{position:absolute;left:31.5%;top:38.8%;width:12%;height:12%;z-index:8;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
         .ch3-kite-gust{transition:transform 1.10s cubic-bezier(.22,.8,.44,1),filter 1.10s ease}
-        .ch3-synthesis-panel.pulse-step-1 .ch3-kite-gust{transform:translate(-5px,-8px) rotate(-5deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 4px rgba(255,200,120,.28))}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-kite-gust{transform:translate(-10px,-16px) rotate(-10deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 7px rgba(255,200,120,.42))}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-kite-gust{transform:translate(-18px,-28px) rotate(-16deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 12px rgba(255,200,120,.60))}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-kite-gust{transform:translate(-9px,-3px) rotate(-4deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 4px rgba(255,200,120,.28))}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-kite-gust{transform:translate(-18px,-6px) rotate(-7deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 7px rgba(255,200,120,.42))}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-kite-gust{transform:translate(-30px,-10px) rotate(-11deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 12px rgba(255,200,120,.60))}
         .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;transform:scale(1.22);filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
         .ch3-kite-diamond{position:absolute;left:6px;top:2px;width:11px;height:11px;background:rgba(238,86,24,.98);border:1px solid rgba(255,220,198,.38);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.18) inset}
         .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.76)}
@@ -4958,13 +4959,13 @@ export default function Roberto() {
         .ch3-kite-tail-a{top:13px;height:7px;transform:rotate(18deg)}
         .ch3-kite-tail-b{top:18px;height:6px;left:15px;transform:rotate(-10deg)}
         .ch3-kite-tail-c{top:24px;height:5px;left:13px;transform:rotate(14deg)}
-        .ch3-synthesis-caption{position:absolute;left:0;right:0;bottom:0;z-index:14;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:none}
+        .ch3-synthesis-caption{position:absolute;left:0;right:0;top:0;z-index:14;pointer-events:none;opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:none}
         .ch3-synthesis-caption.show{opacity:1;transform:translateY(0)}
-        .ch3-synthesis-caption-inner{display:block;max-width:none;width:100%;padding:12px 18px 11px;border-top:1px solid rgba(255,218,178,.20);background:linear-gradient(180deg, rgba(10,7,6,.06) 0%, rgba(8,6,5,.34) 16%, rgba(5,5,5,.84) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,228,198,.08);backdrop-filter:blur(5px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.05vw,24px);line-height:1.24;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34), 0 10px 24px rgba(0,0,0,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .ch3-synthesis-caption-inner{display:block;max-width:none;width:100%;padding:12px 18px 11px;border-bottom:1px solid rgba(255,218,178,.20);border-top:none;background:linear-gradient(180deg, rgba(5,5,5,.88) 0%, rgba(8,6,5,.44) 72%, rgba(10,7,6,.06) 100%);box-shadow:0 16px 34px rgba(0,0,0,.22), inset 0 -1px 0 rgba(255,228,198,.06);backdrop-filter:blur(5px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.05vw,24px);line-height:1.24;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34), 0 10px 24px rgba(0,0,0,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .ch3-controls-final{justify-content:center}
         .ch3-hold-space{min-height:48px}
         .ch3-stage.is-final-fade .ch3-synthesis-panel{opacity:0;transform:scale(1.022);transition:opacity .72s ease,transform .72s ease}
-        .ch3-stage.is-final-fade .ch3-synthesis-caption{opacity:0;transform:translateY(18px)}
+        .ch3-stage.is-final-fade .ch3-synthesis-caption{opacity:0;transform:translateY(-18px)}
         /* Pulse: brightness on the img itself + soft bloom overlay.
            Attack fast (250ms), decay slow (700ms) — asymmetric via class rule override */
         /* decay speed when pulse class is removed */
@@ -5005,9 +5006,7 @@ export default function Roberto() {
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line-block{position:relative;bottom:auto;left:auto;right:auto;border-top:none;background:transparent;padding:10px 14px 4px;margin-top:0;z-index:1}
           .ch3-line{white-space:normal;text-wrap:balance;font-size:clamp(15px,4.5vw,20px);line-height:1.22;text-align:center;color:rgba(224,233,242,.88)}
-          .ch3-synthesis-caption{left:0;right:0;top:0;bottom:auto;max-width:none;transform:translateY(-8px)}
-          .ch3-synthesis-caption.show{transform:translateY(0)}
-          .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip;background:linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.40) 70%,transparent 100%);border-top:none;border-bottom:1px solid rgba(192,218,244,.12)}
+          .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
           .ch3-synthesis-branch-glow{right:2%;top:10%;width:60%;height:66%;opacity:.30}
           .ch3-synthesis-flow{right:10%;top:12%;width:40%;height:66%;opacity:.14}
@@ -5076,9 +5075,7 @@ export default function Roberto() {
           .ch2-game-slot.is-filled{font-size:10px}
           .ch2-game-feedback{font-size:11px;line-height:1.68;min-height:42px;margin-bottom:10px}
           .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
-          .ch2-final-caption{top:0;bottom:auto;transform:translateY(-8px)}
-          .ch2-final-caption.is-visible{transform:translateY(0)}
-          .ch2-final-caption-inner{font-size:clamp(15px,4.2vw,20px);white-space:normal;overflow:visible;text-overflow:clip;border-top:none;border-bottom:1px solid rgba(255,218,178,.16);background:linear-gradient(to bottom,rgba(5,5,5,.88) 0%,rgba(8,6,5,.44) 80%,transparent 100%)}
+          .ch2-final-caption-inner{font-size:clamp(15px,4.2vw,20px);white-space:normal;overflow:visible;text-overflow:clip}
           .ch2-game-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
           .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
           .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
