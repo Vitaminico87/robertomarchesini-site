@@ -217,14 +217,10 @@ const LANG = {
   it: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "Il Petroliere", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
     statusLabel: { listening: "ascoltando", watching: "ultimo film" },
-    heroThesis: "Leggo, scrivo, costruisco.",
     heroMainBefore: "Trasformo complessità in ",
     heroMainEmphasis: "sistemi creativi",
     heroMainAfter: " per comunicazione, contenuti ed esperienze digitali.",
-    heroProofTop: ["15+ anni di direzione creativa", "tra comunicazione, marketing e sistemi."],
-    heroProofBottomBefore: "Oggi lavoro con AI e workflow per dare più ",
-    heroProofBottomEmphasis: "controllo",
-    heroProofBottomAfter: ", non più rumore.",
+    heroSub: "15+ anni tra direzione creativa, comunicazione e marketing. Oggi progetto strutture più chiare, solide e utili, anche con l'AI.",
     proofStrip: "15+ anni tra direzione creativa, comunicazione, marketing e sistemi. Oggi uso AI e workflow per aumentare controllo e qualità.",
     proofStripMobile: "15+ anni tra direzione creativa, comunicazione e sistemi.",
     whatido: "Cosa costruisco",
@@ -432,10 +428,7 @@ const LANG = {
     heroMainBefore: "I turn complexity into ",
     heroMainEmphasis: "creative systems",
     heroMainAfter: " for communication, content, and digital experiences.",
-    heroProofTop: ["15+ years of creative direction", "across communication, marketing, and systems."],
-    heroProofBottomBefore: "Today I use AI and workflows to give more ",
-    heroProofBottomEmphasis: "control",
-    heroProofBottomAfter: ", not more noise.",
+    heroSub: "15+ years across creative direction, communication, and marketing. Today I design clearer, more solid, and more useful structures — with AI when it helps.",
     proofStrip: "15+ years across creative direction, communication, marketing, and systems. Today I use AI and workflows to increase control and quality.",
     proofStripMobile: "15+ years across creative direction, communication, and systems.",
     whatido: "What I build",
@@ -4227,8 +4220,9 @@ function TracceEmerse({ T, onBack }) {
 // ============================================================================
 function genFallingWords(t) {
   const all = ["Roberto", "Marchesini", "Creative", "Director", "AI", "Systems",
-    ...t.hero.split(/\s+/),
-    ...t.services.flatMap(s => [s.title, ...s.desc.split(/\s+/).slice(0, 5)]),
+    ...(t.heroMainBefore || "").split(/\s+/),
+    ...(t.heroSub || "").split(/\s+/).slice(0, 6),
+    ...t.services.flatMap(s => [s.title, ...(s.description || s.desc || "").split(/\s+/).slice(0, 5)]),
     ...t.method.flatMap(m => [...m.title.split(/\s+/), ...m.desc.split(/\s+/).slice(0, 3)]),
     t.trashBtn, t.contactBtn];
   const u = [...new Set(all)].filter(w => w.length > 1).slice(0, 55);
@@ -4630,16 +4624,14 @@ export default function Roberto() {
         @keyframes homeMemorySweep{0%,100%{transform:translateX(-8%);opacity:.45}50%{transform:translateX(8%);opacity:.9}}
 
         .home-hero-shell{position:relative;overflow:visible}
-        .home-hero-copy{display:flex;flex-direction:column;gap:1.1rem;max-width:760px}
-        .home-hero-thesis{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(2.6rem,5.8vw,4.8rem);line-height:0.96;letter-spacing:-0.03em;color:#f6f1ea;max-width:9ch}
-        .home-hero-main{max-width:19ch;font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2vw,1.85rem);line-height:1.18;letter-spacing:-0.02em;color:rgba(246,241,234,0.94)}
+        .home-hero-copy{display:flex;flex-direction:column;gap:1rem;max-width:560px}
+        .home-hero-main{font-family:'Playfair Display',serif;font-size:clamp(1.35rem,2.1vw,1.9rem);line-height:1.22;letter-spacing:-0.02em;color:rgba(246,241,234,0.96)}
         .home-hero-main em{font-style:italic;color:#ff4d00}
-        .home-hero-proof{margin-top:0.55rem;max-width:32ch;font-family:'IBM Plex Mono',monospace;font-size:clamp(0.78rem,1vw,0.92rem);line-height:1.8;letter-spacing:0.01em;color:rgba(214,205,194,0.78)}
-        .home-hero-proof em{font-style:normal;color:#f6f1ea}
-        .home-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem 2rem}
-        .home-service-card{padding:0 0 1.15rem 0;border-bottom:1px solid rgba(255,255,255,0.08)}
-        .home-service-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.35rem,2vw,1.75rem);line-height:1.08;color:#f6f1ea;margin-bottom:0.55rem}
-        .home-service-description{max-width:34ch;font-family:'IBM Plex Mono',monospace;font-size:0.9rem;line-height:1.8;color:rgba(214,205,194,0.78)}
+        .home-hero-sub{max-width:52ch;font-family:'IBM Plex Mono',monospace;font-size:clamp(0.74rem,0.95vw,0.86rem);line-height:1.85;letter-spacing:0.01em;color:rgba(214,205,194,0.62)}
+        .home-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem 3rem}
+        .home-service-card{padding:0 0 1.5rem 0;border-bottom:1px solid rgba(255,255,255,0.07)}
+        .home-service-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.15rem,1.6vw,1.42rem);line-height:1.1;color:#f0ece6;margin-bottom:0.65rem;letter-spacing:-0.01em}
+        .home-service-description{font-family:'IBM Plex Mono',monospace;font-size:0.86rem;line-height:1.88;color:rgba(214,205,194,0.86)}
         .home-social-rail{position:absolute;top:8px;right:-98px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;z-index:6}
         .home-social-rail-mobile{position:relative;top:auto;right:auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
         .pixel-social-link{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1px solid rgba(255,255,255,.08);border-radius:4px;background:rgba(5,5,5,.82);color:#8b8b8b;text-decoration:none;transition:border-color .22s ease,color .22s ease,transform .22s ease,background .22s ease}
@@ -5053,14 +5045,13 @@ export default function Roberto() {
           .home-work-sub{max-width:100%!important;font-size:0.79rem!important;line-height:1.65!important}
           .home-work-tags{gap:0.35rem 0.55rem!important}
           .home-work-tag{font-size:0.68rem!important}
-          .home-hero-copy{gap:0.85rem!important;max-width:100%!important}
-          .home-hero-thesis{max-width:10ch!important;font-size:clamp(2.15rem,9vw,3.2rem)!important;line-height:0.98!important}
-          .home-hero-main{max-width:100%!important;font-size:clamp(1.12rem,4.8vw,1.35rem)!important;line-height:1.22!important}
-          .home-hero-proof{max-width:100%!important;margin-top:0.4rem!important;font-size:0.8rem!important;line-height:1.7!important}
-          .home-services-grid{grid-template-columns:1fr!important;gap:1rem!important}
-          .home-service-card{padding-bottom:1rem!important}
-          .home-service-title{font-size:1.25rem!important;margin-bottom:0.45rem!important}
-          .home-service-description{max-width:100%!important;font-size:0.84rem!important;line-height:1.75!important}
+          .home-hero-copy{gap:0.8rem!important;max-width:100%!important}
+          .home-hero-main{font-size:clamp(1.15rem,4.8vw,1.38rem)!important;line-height:1.26!important}
+          .home-hero-sub{max-width:100%!important;font-size:0.76rem!important;line-height:1.8!important}
+          .home-services-grid{grid-template-columns:1fr!important;gap:0.2rem 0!important}
+          .home-service-card{padding-bottom:1.1rem!important;padding-top:1.1rem!important}
+          .home-service-title{font-size:1.15rem!important;margin-bottom:0.5rem!important}
+          .home-service-description{font-size:0.82rem!important;line-height:1.8!important}
           .home-method-title{font-size:14px!important;line-height:1.42!important;margin-bottom:8px!important}
           .home-method-desc{font-size:12px!important;line-height:1.82!important;max-width:100%!important;color:#9e9e9e!important}
           .svc-tw{min-width:auto!important}
@@ -5237,28 +5228,15 @@ export default function Roberto() {
                 <GlitchText text="Marchesini" active={glitch} />
               </h1>
               <div className="home-hero-copy">
-                <div className="home-hero-thesis">{T.heroThesis}</div>
                 <div className="home-hero-main">
                   {T.heroMainBefore}<em>{T.heroMainEmphasis}</em>{T.heroMainAfter}
                 </div>
-                <div className="home-hero-proof">
-                  {T.heroProofTop.map((line, i) => <span key={i}>{line}<br /></span>)}
-                  <br />
-                  {T.heroProofBottomBefore}<em>{T.heroProofBottomEmphasis}</em>{T.heroProofBottomAfter}
-                </div>
+                <div className="home-hero-sub">{T.heroSub}</div>
               </div>
               {!isMobileViewport ? <HomeSocialRail /> : <HomeSocialRail mobile />}
             </div>
           </Section>
 
-          {/* 3. PROOF STRIP */}
-          <Section delay={0.09}>
-            <div style={{ marginBottom: 60 }}>
-              <div style={{ fontSize: 11, color: "#7a746d", fontFamily: "'IBM Plex Mono',monospace", letterSpacing: 1.5, lineHeight: 1.9, textTransform: "uppercase" }}>
-                {proofStripText}
-              </div>
-            </div>
-          </Section>
 
           {/* 4. SELECTED WORK */}
           <Section delay={0.12}>
@@ -5313,8 +5291,8 @@ export default function Roberto() {
 
           {/* 5. WHAT I DO */}
           <Section delay={0.15}>
-            <div style={{ marginBottom: isMobileViewport ? 52 : 66 }}>
-              <div className="home-section-kicker" style={{ marginBottom: 24 }}>{T.whatido}</div>
+            <div style={{ marginBottom: isMobileViewport ? 52 : 66, paddingTop: isMobileViewport ? 8 : 16 }}>
+              <div className="home-section-kicker" style={{ marginBottom: 32 }}>{T.whatido}</div>
               <div className="home-services-grid">
                 {T.services.map((svc) => (
                   <div key={svc.title} className="home-service-card">
