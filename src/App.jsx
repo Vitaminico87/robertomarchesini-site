@@ -226,8 +226,8 @@ const LANG = {
     whatido: "Cosa costruisco",
     services: [
       { index: "01", axis: "Posizionamento · Linguaggio", title: "Chiarezza", description: "Quando un brand non riesce più a dire bene chi è, cosa offre e con quale tono può risultare credibile." },
-      { index: "02", axis: "Contenuti · Continuità", title: "Struttura", description: "Quando contenuti, promozione e ritmo operativo devono reggere nel tempo senza collassare nella ripetizione." },
-      { index: "03", axis: "Sito · Landing · Contatto", title: "Presenza digitale", description: "Quando sito e punti di contatto devono trasformare una visita in fiducia, non limitarsi a \"esserci\"." },
+      { index: "02", axis: "Contenuti · Campagne · Continuità", title: "Sistema di comunicazione", description: "Quando social, newsletter, promozione e direzione creativa devono lavorare insieme senza diventare rumore o improvvisazione." },
+      { index: "03", axis: "Sito · Landing · Funnel", title: "Struttura digitale", description: "Quando sito, pagine e punti di contatto devono trasformare attenzione in fiducia, richieste e decisione." },
       { index: "04", axis: "Controllo · Velocità · Qualità", title: "Workflow AI", description: "Quando l’AI serve ad aumentare possibilità e controllo, non a produrre più rumore abbassando il livello." },
     ],
     selectedWorkKicker: "Selezione",
@@ -435,8 +435,8 @@ const LANG = {
     whatido: "What I build",
     services: [
       { index: "01", axis: "Positioning · Language", title: "Clarity", description: "When a brand can no longer say clearly who it is, what it offers, and what tone makes it credible." },
-      { index: "02", axis: "Content · Continuity", title: "Structure", description: "When content, promotion, and operational rhythm need to hold up over time without collapsing into repetition." },
-      { index: "03", axis: "Website · Landing · Contact", title: "Digital presence", description: "When a website and touchpoints need to turn a visit into trust — not just be there." },
+      { index: "02", axis: "Content · Campaigns · Continuity", title: "Communication system", description: "When social, newsletter, promotion, and creative direction need to work together without becoming noise or improvisation." },
+      { index: "03", axis: "Website · Landing · Funnel", title: "Digital structure", description: "When website, pages, and touchpoints need to turn attention into trust, requests, and decisions." },
       { index: "04", axis: "Control · Speed · Quality", title: "AI workflows", description: "When AI is there to expand possibilities and control, not to produce more noise by lowering the standard." },
     ],
     selectedWorkKicker: "Selection",
@@ -1498,88 +1498,63 @@ function useLandingSound() {
       }
       const ctx = audioCtxRef.current;
       if (ctx.state === 'suspended') ctx.resume();
-      
+
       const note = LANDING_NOTES[Math.min(noteIndex, LANDING_NOTES.length - 1)];
       const now = ctx.currentTime;
       const isHold = note.hold;
-      
-      // Oscillatore principale (onda triangolare per suono caldo)
+      const isMobile = window.matchMedia?.('(pointer: coarse)')?.matches;
+
       const osc = ctx.createOscillator();
-      osc.type = isHold ? 'sine' : 'triangle'; // Sine per nota finale (più puro)
+      osc.type = isHold ? 'sine' : 'triangle';
       osc.frequency.setValueAtTime(note.freq, now);
-      
-      // Leggero detune per suono più organico
       osc.detune.setValueAtTime(Math.random() * 10 - 5, now);
-      
-      // Secondo oscillatore per armonico (ottava sopra, molto sottile)
-      const osc2 = ctx.createOscillator();
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(note.freq * 2, now);
-      
-      // Terzo oscillatore per nota hold (quinta, crea accordo)
-      const osc3 = isHold ? ctx.createOscillator() : null;
-      if (osc3) {
-        osc3.type = 'sine';
-        osc3.frequency.setValueAtTime(note.freq * 1.5, now); // Quinta
-      }
-      
-      // Gain principale con envelope ADSR
+
       const gainNode = ctx.createGain();
       const volume = isHold ? 0.18 : (0.12 + noteIndex * 0.015);
       gainNode.gain.setValueAtTime(0, now);
-      gainNode.gain.linearRampToValueAtTime(volume, now + (isHold ? 0.05 : 0.02)); // Attack
-      
+      gainNode.gain.linearRampToValueAtTime(volume, now + (isHold ? 0.05 : 0.02));
       if (isHold) {
-        // Sustain lungo per nota finale
         gainNode.gain.linearRampToValueAtTime(volume * 0.8, now + 0.3);
         gainNode.gain.linearRampToValueAtTime(volume * 0.6, now + 1.0);
         gainNode.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000);
       } else {
-        gainNode.gain.exponentialRampToValueAtTime(volume * 0.6, now + 0.08); // Decay
-        gainNode.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000); // Release
+        gainNode.gain.exponentialRampToValueAtTime(volume * 0.6, now + 0.08);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000);
       }
-      
-      // Gain per armonico
-      const gain2 = ctx.createGain();
-      gain2.gain.setValueAtTime(0, now);
-      gain2.gain.linearRampToValueAtTime(volume * (isHold ? 0.25 : 0.15), now + 0.02);
-      gain2.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1200);
-      
-      // Gain per terzo oscillatore (quinta)
-      const gain3 = isHold ? ctx.createGain() : null;
-      if (gain3) {
-        gain3.gain.setValueAtTime(0, now);
-        gain3.gain.linearRampToValueAtTime(volume * 0.12, now + 0.1);
-        gain3.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000);
-      }
-      
-      // Filtro passa-basso per suono più morbido
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(isHold ? 2000 : (1200 + noteIndex * 200), now);
-      filter.Q.setValueAtTime(0.5, now);
-      
-      // Connessioni
+
       osc.connect(gainNode);
-      osc2.connect(gain2);
-      gainNode.connect(filter);
-      gain2.connect(filter);
-      if (osc3 && gain3) {
-        osc3.connect(gain3);
-        gain3.connect(filter);
+
+      if (!isMobile) {
+        // Desktop: full quality with harmonics and filter
+        const osc2 = ctx.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(note.freq * 2, now);
+        const osc3 = isHold ? ctx.createOscillator() : null;
+        if (osc3) { osc3.type = 'sine'; osc3.frequency.setValueAtTime(note.freq * 1.5, now); }
+        const gain2 = ctx.createGain();
+        gain2.gain.setValueAtTime(0, now);
+        gain2.gain.linearRampToValueAtTime(volume * (isHold ? 0.25 : 0.15), now + 0.02);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1200);
+        const gain3 = isHold ? ctx.createGain() : null;
+        if (gain3) { gain3.gain.setValueAtTime(0, now); gain3.gain.linearRampToValueAtTime(volume * 0.12, now + 0.1); gain3.gain.exponentialRampToValueAtTime(0.001, now + note.duration / 1000); }
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(isHold ? 2000 : (1200 + noteIndex * 200), now);
+        filter.Q.setValueAtTime(0.5, now);
+        osc2.connect(gain2);
+        gainNode.connect(filter); gain2.connect(filter);
+        if (osc3 && gain3) { osc3.connect(gain3); gain3.connect(filter); }
+        filter.connect(ctx.destination);
+        osc2.start(now); osc2.stop(now + note.duration / 1000 + 0.1);
+        if (osc3) { osc3.start(now); osc3.stop(now + note.duration / 1000 + 0.1); }
+      } else {
+        // Mobile: single oscillator, direct to destination
+        gainNode.connect(ctx.destination);
       }
-      filter.connect(ctx.destination);
-      
-      // Start e stop
+
       osc.start(now);
-      osc2.start(now);
-      if (osc3) osc3.start(now);
       osc.stop(now + note.duration / 1000 + 0.1);
-      osc2.stop(now + note.duration / 1000 + 0.1);
-      if (osc3) osc3.stop(now + note.duration / 1000 + 0.1);
-    } catch (e) {
-      // Audio non supportato, ignora silenziosamente
-    }
+    } catch (e) { /* Audio non supportato */ }
   }, []);
   
   return playNote;
@@ -3249,13 +3224,10 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     onUnlockProfile?.("conflict");
     if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
     // Mount game under wash, then reveal
-    selectionTimeoutRef.current = setTimeout(() => {
-      setSelectionMounted(true);
-      setScene("selection");
-    }, 1400);
-    selectionTimeoutRef.current = setTimeout(() => {
-      setSelectionReveal(true);
-    }, 1700);
+    setTimeout(() => { setSelectionMounted(true); setScene("selection"); }, 1400);
+    setTimeout(() => { setSelectionReveal(true); }, 1700);
+    // Clean up wash after transition fully completes
+    selectionTimeoutRef.current = setTimeout(() => { setDeskTransitioning(false); }, 2600);
   }, [T, deskTransitioning, onUnlockProfile]);
 
   useEffect(() => {
@@ -3796,6 +3768,7 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
   }, []);
 
   const handlePointerDown = useCallback((e) => {
+    if (!sceneReady) return;
     const ph = phaseRef.current;
     const pos = getNorm(e);
     if (!pos) return;
@@ -3918,7 +3891,7 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
 
         <div
           ref={stageRef}
-          className={`ch2-stage${showForm ? ' is-form-open' : ''}`}
+          className={`ch2-stage ch4-scene${showForm ? ' is-form-open' : ''}`}
           style={{
             position: "relative", background: "#080510",
             border: "1px solid rgba(130,100,200,.12)",
@@ -3940,10 +3913,14 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
               display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
               background:"linear-gradient(to bottom, rgba(4,3,10,.32) 0%, rgba(4,3,10,.08) 50%, rgba(4,3,10,.32) 100%)" }}>
               {(t4.narrativeCopy || []).slice(0, narrativeIdx + 1).map((line, i) => (
-                <div key={i} style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:11,
-                  letterSpacing:2, textTransform:"uppercase", color:"rgba(200,190,230,.62)",
-                  lineHeight:2.2, textAlign:"center", opacity: i < narrativeIdx ? 0.38 : 1,
-                  transition:"opacity .8s ease" }}>{line}</div>
+                <div key={i} style={{ fontFamily:"'IBM Plex Mono',monospace",
+                  fontSize:"clamp(11px,3vw,13px)",
+                  letterSpacing:"clamp(1px,0.5vw,2px)", textTransform:"uppercase",
+                  color:"rgba(210,200,240,.88)",
+                  lineHeight:2.2, textAlign:"center", padding:"0 16px",
+                  opacity: i < narrativeIdx ? 0.4 : 1,
+                  transition:"opacity .8s ease",
+                  textShadow:"0 1px 8px rgba(0,0,0,.72)" }}>{line}</div>
               ))}
             </div>
           )}
@@ -4770,7 +4747,7 @@ export default function Roberto() {
         .ch1-library-monitor-portal{position:absolute;left:46.8%;top:31.5%;width:9.5%;height:8.2%;opacity:0;pointer-events:none;border-radius:2px;background:radial-gradient(circle at center,rgba(225,255,220,.92) 0%,rgba(165,220,150,.78) 26%,rgba(90,170,95,.34) 55%,rgba(90,170,95,0) 78%);box-shadow:0 0 18px rgba(170,230,160,.30),0 0 42px rgba(120,200,120,.18);transform:scale(1);transform-origin:center center;filter:blur(.2px)}
         .ch1-library-monitor-portal.active{animation:ch1MonitorPortalOpen 820ms cubic-bezier(.2,.7,.2,1) forwards}
         @keyframes ch1MonitorPortalOpen{0%{opacity:0;transform:scale(.92)}18%{opacity:.95;transform:scale(1.18)}45%{opacity:.92;transform:scale(2.8,2.3)}72%{opacity:.88;transform:scale(5.8,4.6)}100%{opacity:.82;transform:scale(11.5,8.8)}}
-        .ch1-crossing-shell{position:relative;width:100%;animation:ch1CrossingBloomIn 280ms ease-out both}
+        .ch1-crossing-shell{position:relative;width:100%;overflow:hidden;animation:ch1CrossingBloomIn 280ms ease-out both}
         @keyframes ch1CrossingBloomIn{0%{opacity:0;transform:scale(1.015);filter:brightness(1.2)}100%{opacity:1;transform:scale(1);filter:brightness(1)}}
 
         .ch1-feedback{position:absolute;left:22px;right:22px;bottom:22px;z-index:8;max-width:420px;border-top:1px solid rgba(167,203,216,.18);padding-top:12px;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease}
@@ -4957,6 +4934,7 @@ export default function Roberto() {
         .ch2-game-grid{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch2-game-grid.is-visible{opacity:1;transform:translateY(0)}
         .ch2-game-stage{background:#0a0f12}
+        @media(max-width:820px){.ch4-scene{filter:brightness(1.28) contrast(0.96)}}
         .ch2-game-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(4,7,10,.08), rgba(0,0,0,.18)), radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.16) 74%, rgba(0,0,0,.42) 100%)}
         .ch2-game-slot-shell{position:absolute;left:18px;right:18px;bottom:18px;z-index:8;padding:12px 14px;border:1px solid rgba(148,174,188,.14);border-radius:10px;background:rgba(3,8,10,.62);backdrop-filter:blur(6px)}
         .ch2-game-slot-shell-mobile{display:none;position:relative;left:auto;right:auto;bottom:auto;margin-top:12px;background:rgba(3,8,10,.72)}
@@ -5087,7 +5065,7 @@ export default function Roberto() {
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line-block{position:relative;bottom:auto;left:auto;right:auto;border-top:none;background:transparent;padding:10px 14px 4px;margin-top:0;z-index:1}
           .ch3-line{white-space:normal;text-wrap:balance;font-size:clamp(15px,4.5vw,20px);line-height:1.22;text-align:center;color:rgba(224,233,242,.88)}
-          .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
+          .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip;background:linear-gradient(180deg,rgba(5,5,5,.42) 0%,rgba(8,6,5,.18) 72%,rgba(10,7,6,.02) 100%)!important;backdrop-filter:none!important;box-shadow:none!important}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
           .ch3-synthesis-branch-glow{right:2%;top:10%;width:60%;height:66%;opacity:.30}
           .ch3-synthesis-flow{right:10%;top:12%;width:40%;height:66%;opacity:.14}
