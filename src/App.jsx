@@ -254,7 +254,7 @@ const LANG = {
     services: [
       { index: "01", axis: "Posizionamento · Linguaggio", title: "Chiarezza", description: "Quando un brand non riesce più a dire bene chi è, cosa offre e con quale tono può risultare credibile." },
       { index: "02", axis: "Social · Newsletter · Campagne", title: "Comunicazione", description: "Quando contenuti, promozione e direzione creativa devono lavorare insieme con continuità, senza diventare rumore o improvvisazione." },
-      { index: "03", axis: "Sito · Landing · Funnel", title: "Architettura", description: "Quando un sito, le sue pagine e i punti di contatto devono trasformare attenzione in fiducia, richieste e decisione." },
+      { index: "03", axis: "Sito · Landing · Funnel", title: "Architettura", description: "Quando sito, pagine e punti di contatto devono trasformare attenzione in fiducia, richieste e decisione." },
       { index: "04", axis: "Controllo · Velocità · Qualità", title: "Workflow AI", description: "Quando l’AI serve ad aumentare possibilità e controllo, non a produrre più rumore abbassando il livello." },
     ],
     selectedWorkKicker: "Selezione",
