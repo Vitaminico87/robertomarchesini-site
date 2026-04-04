@@ -43,7 +43,7 @@ const CASE_STUDIES = {
       ],
       meta: "Comunicazione · Contenuti · Sistema promozionale",
       lead: "150+ eventi l’anno, ogni settimana. Un sistema di contenuti, comunicazione e promozione costruito per non fermarsi mai — e per non diventare mai generico.",
-      proof: ["150+ eventi l’anno", "1M+ visualizzazioni mensili", "programmazione continua"],
+      proof: ["150+ eventi l’anno", "programmazione continua", "sistema operativo ricorrente"],
       sections: [
         {
           title: "Il problema",
@@ -72,7 +72,7 @@ const CASE_STUDIES = {
       ],
       meta: "Comunicazione digitale · Contenuti · Promozione",
       lead: "Dodici anni di comunicazione digitale, contenuti e promozione per uno dei live brand più riconoscibili in Italia. Non un singolo progetto, ma una costruzione lenta — sedimentata nel tempo.",
-      proof: ["12 anni di continuità", "400K+ audience", "scala nazionale"],
+      proof: ["12 anni di continuità", "cicli lunghi e tournée", "scala nazionale"],
       sections: [
         {
           title: "Il problema",
@@ -132,7 +132,7 @@ const CASE_STUDIES = {
       ],
       meta: "Communication · Content · Promotional system",
       lead: "150+ events a year, every single week. A content, communication, and promotion system built to never stop — and never become generic.",
-      proof: ["150+ events per year", "1M+ monthly views", "continuous programming"],
+      proof: ["150+ events per year", "continuous programming", "recurring operating system"],
       sections: [
         {
           title: "The problem",
@@ -161,7 +161,7 @@ const CASE_STUDIES = {
       ],
       meta: "Digital communication · Content · Promotion",
       lead: "Twelve years of digital communication, content, and promotion for one of Italy’s most recognizable live brands. Not a single project, but a slow construction — layered over time.",
-      proof: ["12 years of continuity", "400K+ audience", "national scale"],
+      proof: ["12 years of continuity", "long cycles and tours", "national scale"],
       sections: [
         {
           title: "The problem",
@@ -4630,11 +4630,16 @@ export default function Roberto() {
         .home-hero-main em{font-style:italic;color:#ff4d00}
         .home-hero-sub{max-width:52ch;font-family:'IBM Plex Mono',monospace;font-size:clamp(0.74rem,0.95vw,0.86rem);line-height:1.85;letter-spacing:0.01em;color:rgba(214,205,194,0.62)}
         .home-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.2rem 3rem}
-        .home-service-card{padding:0 0 1.6rem 0;border-bottom:1px solid rgba(255,255,255,0.07)}
-        .home-service-index{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,77,0,0.55);margin-bottom:0.3rem;line-height:1}
-        .home-service-axis{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.04em;color:rgba(214,205,194,0.45);margin-bottom:0.55rem;line-height:1.4}
-        .home-service-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.15rem,1.6vw,1.42rem);line-height:1.1;color:#f0ece6;margin-bottom:0.6rem;letter-spacing:-0.01em}
-        .home-service-description{font-family:'IBM Plex Mono',monospace;font-size:0.86rem;line-height:1.88;color:rgba(214,205,194,0.86)}
+        .home-service-card{position:relative;padding:0.2rem 0 1.7rem 0;border-bottom:1px solid rgba(255,255,255,0.07);transition:border-color .22s ease,transform .22s ease,background .22s ease}
+        .home-service-card::before{content:"";position:absolute;left:0;top:0.1rem;width:22px;height:1px;background:linear-gradient(90deg,rgba(255,77,0,.55),rgba(255,77,0,0));opacity:.7;transition:width .22s ease,opacity .22s ease}
+        .home-service-card:hover{border-bottom-color:rgba(255,77,0,.18);transform:translateY(-2px)}
+        .home-service-card:hover::before{width:38px;opacity:1}
+        .home-service-index{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;color:rgba(255,77,0,0.58);margin-bottom:0.38rem;line-height:1}
+        .home-service-axis{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;line-height:1.6;letter-spacing:0.05em;text-transform:uppercase;color:rgba(214,205,194,0.46);margin-bottom:0.65rem}
+        .home-service-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.45rem,2.2vw,2.05rem);line-height:1.02;letter-spacing:-0.02em;color:#f0ece6;margin-bottom:0.72rem;transition:color .22s ease,transform .22s ease;text-wrap:balance}
+        .home-service-card:hover .home-service-title{color:#fff7f1}
+        .home-service-description{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.9;color:rgba(214,205,194,0.78);max-width:34ch}
+        .home-service-card:hover .home-service-description{color:rgba(228,220,210,0.9)}
         .home-social-rail{position:absolute;top:8px;right:-98px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;z-index:6}
         .home-social-rail-mobile{position:relative;top:auto;right:auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
         .pixel-social-link{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1px solid rgba(255,255,255,.08);border-radius:4px;background:rgba(5,5,5,.82);color:#8b8b8b;text-decoration:none;transition:border-color .22s ease,color .22s ease,transform .22s ease,background .22s ease}
@@ -5051,12 +5056,12 @@ export default function Roberto() {
           .home-hero-copy{gap:0.8rem!important;max-width:100%!important}
           .home-hero-main{font-size:clamp(1.15rem,4.8vw,1.38rem)!important;line-height:1.26!important}
           .home-hero-sub{max-width:100%!important;font-size:0.76rem!important;line-height:1.8!important}
-          .home-services-grid{grid-template-columns:1fr!important;gap:0.2rem 0!important}
+          .home-services-grid{grid-template-columns:1fr!important;gap:1.7rem!important}
           .home-service-card{padding-bottom:1.2rem!important;padding-top:1.2rem!important}
           .home-service-index{font-size:0.62rem!important}
           .home-service-axis{font-size:0.64rem!important;margin-bottom:0.45rem!important}
-          .home-service-title{font-size:1.15rem!important;margin-bottom:0.45rem!important}
-          .home-service-description{font-size:0.82rem!important;line-height:1.8!important}
+          .home-service-title{font-size:clamp(1.3rem,6vw,1.75rem)!important;margin-bottom:0.45rem!important}
+          .home-service-description{font-size:0.82rem!important;line-height:1.8!important;max-width:none!important}
           .home-method-title{font-size:14px!important;line-height:1.42!important;margin-bottom:8px!important}
           .home-method-desc{font-size:12px!important;line-height:1.82!important;max-width:100%!important;color:#9e9e9e!important}
           .svc-tw{min-width:auto!important}
