@@ -41,24 +41,28 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/largo_02.jpg", caption: "" },
         { src: "https://www.robertomarchesini.com/assets/clients/largo_03.jpg", caption: "" },
       ],
-      meta: "Comunicazione · Contenuti · Sistema promozionale",
-      lead: "150+ eventi l’anno, ogni settimana. Un sistema di contenuti, comunicazione e promozione costruito per non fermarsi mai — e per non diventare mai generico.",
-      proof: ["150+ eventi l’anno", "programmazione continua", "sistema operativo ricorrente"],
+      meta: "Direzione creativa · Sistema contenuti · Comunicazione continua",
+      lead: "Sei anni di direzione creativa per uno spazio culturale con oltre 150 eventi l’anno. Non una campagna, non un rilancio: un sistema costruito per reggere ogni settimana senza perdere identità.",
+      proof: ["6 anni di continuità", "150+ eventi l’anno", "sistema costruito da zero"],
       sections: [
         {
-          title: "Il problema",
-          body: "Il problema di Largo non è mai stato la qualità di un singolo post. È la pressione: ogni settimana servono contenuti nuovi, promozione attiva, identità riconoscibile. Senza margine. Senza pause. Senza poter scendere di livello."
+          title: "Il punto di partenza",
+          body: "Quando sono arrivato a Largo non c’era un sistema di comunicazione. C’erano locandine, qualche post, nessuna continuità. Nessun tono di voce definito, nessun flusso produttivo, nessuna struttura adv. Ogni settimana si ripartiva da capo, e ogni evento veniva trattato come un caso a sé."
+        },
+        {
+          title: "Il problema reale",
+          body: "Il problema di Largo non è mai stato fare un bel contenuto. È costruire contenuti che funzionino ogni settimana, per pubblici diversi, senza diventare generici e senza scendere di livello. Jazz il martedì, elettronica il venerdì, teatro il sabato: linguaggi, estetiche e target diversi che devono convivere sotto la stessa identità. Se perdi il ritmo, perdi il pubblico. Se perdi la firma, perdi il luogo. La pressione non è un picco: è la condizione costante."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho impostato un impianto che gira ogni settimana: programmazione, format ricorrenti, adv, fotografia live, tono di voce. Ogni pezzo entra in un flusso già avviato. Non si ricomincia mai da zero, si alimenta quello che c’è."
+          body: "Ho costruito un impianto che gira ogni settimana su un ciclo stabile: programmazione degli eventi, produzione contenuti — video, grafiche, fotografia live — campagne adv e pubblicazione. Ogni elemento entra in un flusso già attivo: non si ricomincia da zero, si alimenta quello che c’è. Tono di voce, identità visiva e format sono stati definiti nei primi mesi e affinati nel tempo, ma la struttura di base è rimasta la stessa. È ciò che permette di assorbire eventi diversi senza reinventare ogni volta l’approccio. Ho gestito il sistema in prima persona, in modo operativo: grafiche, video, copy, adv, coordinamento con artisti e team interni. Negli ultimi anni ho integrato anche strumenti AI come supporto trasversale alla produzione e al controllo qualità, non per fare di più, ma per mantenere il livello più costante sotto pressione."
         },
         {
           title: "Cosa ha retto davvero",
-          body: "Il ritmo. La capacità di far convivere serate, pubblici e linguaggi diversi senza perdere la firma del luogo. Dopo anni, il sistema non si è logorato: ha trovato il suo passo."
+          body: "Il ritmo. La capacità di tenere insieme generi, pubblici e linguaggi diversi senza perdere la firma del luogo — e senza far collassare il sistema nella ripetizione. Dopo sei anni, l’impianto non si è logorato: ha trovato il suo passo. Non è un progetto con un inizio e una fine. È un progetto che funziona perché non si è mai fermato."
         }
       ],
-      closing: "Un sistema creativo utile non serve a pubblicare di più. Serve a non cedere sotto pressione."
+      closing: "Un sistema creativo utile non serve a pubblicare di più. Serve a non cedere sotto pressione — settimana dopo settimana, anno dopo anno."
     },
     ndp: {
       backLabel: "← Torna ai lavori",
@@ -71,23 +75,27 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_03.jpg", caption: "" },
       ],
       meta: "Comunicazione digitale · Contenuti · Promozione",
-      lead: "Dodici anni di comunicazione digitale, contenuti e promozione per uno dei live brand più riconoscibili in Italia. Non un singolo progetto, ma una costruzione lenta — sedimentata nel tempo.",
+      lead: "Dodici anni di comunicazione digitale, contenuti e promozione per uno dei live brand più riconoscibili in Italia. Non un progetto singolo, ma una continuità costruita nel tempo.",
       proof: ["12 anni di continuità", "cicli lunghi e tournée", "scala nazionale"],
       sections: [
         {
-          title: "Il problema",
-          body: "Notre Dame de Paris attraversa cicli lunghi: tournée, pause, riaperture, pubblici che cambiano. Il rischio non era la mancanza di contenuti, ma la perdita di coerenza nel tempo. Serviva un racconto che sapesse aspettare e tornare senza ricominciare ogni volta da zero."
+          title: "Il punto di partenza",
+          body: "Notre Dame de Paris non si muove su cicli brevi. Attraversa tournée, pause, ritorni, pubblici che cambiano. In un contesto così, il problema non è riempire il calendario di contenuti. È evitare che ogni riapertura sembri un nuovo inizio."
+        },
+        {
+          title: "Il problema reale",
+          body: "Quando un progetto dura davvero, il rischio non è il silenzio. È la dispersione. Se ogni ciclo parla un linguaggio diverso, il racconto perde memoria. Se la comunicazione rincorre solo l’urgenza del momento, il brand smette di accumulare valore. Qui serviva continuità: una struttura capace di attraversare il tempo senza consumarsi."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho costruito una continuità narrativa che si è sedimentata negli anni — contenuti, social e promozione pensati per accumularsi, non per esaurirsi. Ogni ciclo aggiungeva uno strato, non sostituiva il precedente."
+          body: "Ho lavorato su contenuti, comunicazione digitale e promozione con una logica di sedimentazione, non di sostituzione. Ogni ciclo doveva aggiungere uno strato, non cancellare il precedente. Il sistema non era pensato per esaurirsi in una campagna, ma per costruire riconoscibilità, memoria e coerenza nel lungo periodo. Non un flusso nervoso, ma una tenuta narrativa capace di tornare, riattivarsi e restare leggibile."
         },
         {
           title: "Cosa ha retto davvero",
-          body: "La memoria. La capacità del racconto di crescere con l’audience senza disperdersi. Dopo dodici anni, il sistema non era invecchiato: si era stratificato."
+          body: "La memoria del progetto. La capacità del racconto di crescere insieme all’audience senza perdere coerenza. Dopo dodici anni, la comunicazione non si era semplicemente mantenuta: si era stratificata. Ed è questa stratificazione, più di qualsiasi picco, a dare forza a un brand che continua a esistere nel tempo."
         }
       ],
-      closing: "Quando un progetto dura davvero, la creatività da sola non basta. Serve qualcosa che sappia attraversare il tempo."
+      closing: "Quando un progetto attraversa gli anni, la creatività da sola non basta. Serve una struttura capace di reggere il tempo."
     },
     theia: {
       backLabel: "← Torna ai lavori",
@@ -100,23 +108,27 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/theia_03.jpg", caption: "" },
       ],
       meta: "Posizionamento · Sito · Architettura digitale",
-      lead: "Posizionamento, sito e struttura digitale per un brand eventi dove ogni visita è già un primo contatto commerciale. Niente può essere approssimativo.",
+      lead: "Posizionamento, sito e struttura digitale per un brand eventi in cui ogni visita è già un primo contatto commerciale. Nulla può essere lasciato all’approssimazione.",
       proof: ["posizionamento premium", "brand + landing + tracking", "architettura orientata al lead"],
       sections: [
         {
-          title: "Il problema",
-          body: "THEIA non aveva bisogno di un sito bello. Aveva bisogno che chiunque arrivasse capisse in pochi secondi chi ha davanti, cosa offre e perché fidarsi. Il primo contatto è già il momento della decisione."
+          title: "Il punto di partenza",
+          body: "THEIA non aveva bisogno solo di presenza online. Aveva bisogno di un sistema capace di sostenere un posizionamento più alto e di rendere chiaro, fin dal primo impatto, il tipo di brand con cui si stava entrando in contatto."
+        },
+        {
+          title: "Il problema reale",
+          body: "In questo tipo di lavoro il sito non è una vetrina. È già una parte della trattativa. Se il tono è confuso, se la gerarchia non guida, se il percorso di contatto crea attrito, perdi fiducia prima ancora di iniziare la conversazione. Il problema non era fare qualcosa di bello. Era costruire una percezione coerente con il valore del brand e trasformarla in contatto qualificato."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho lavorato su tono, gerarchia delle pagine e percorso di contatto per costruire un’esperienza che converte senza forzare. Ogni elemento — dalla headline al form — è pensato per ridurre attrito e costruire fiducia."
+          body: "Ho lavorato su posizionamento, tono, architettura delle pagine e percorso di contatto per costruire un’esperienza più chiara, più leggibile e più utile. Il sito è stato pensato come un’infrastruttura: non solo immagine, ma organizzazione della fiducia. Landing, form, tracking e gerarchia dei contenuti sono stati costruiti per accompagnare la visita verso una decisione, senza forzature e senza dispersione."
         },
         {
           title: "Cosa ha retto davvero",
-          body: "La chiarezza. L’allineamento tra percezione premium e qualità del contatto generato. Non estetica per sé stessa, ma precisione al servizio della conversione."
+          body: "La coerenza tra percezione e funzione. Un brand premium non può permettersi un’esperienza digitale vaga o decorativa. Qui la parte visiva e la parte operativa lavorano nella stessa direzione: chiarire, qualificare, accompagnare. È questo che rende il sito uno strumento commerciale, non una semplice presenza online."
         }
       ],
-      closing: "Quando il sito lavora per te, smette di essere una vetrina e diventa il tuo miglior commerciale."
+      closing: "Quando il sito lavora davvero, smette di essere una vetrina. Diventa una struttura che accompagna la decisione."
     }
   },
   en: {
@@ -130,24 +142,28 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/largo_02.jpg", caption: "" },
         { src: "https://www.robertomarchesini.com/assets/clients/largo_03.jpg", caption: "" },
       ],
-      meta: "Communication · Content · Promotional system",
-      lead: "150+ events a year, every single week. A content, communication, and promotion system built to never stop — and never become generic.",
-      proof: ["150+ events per year", "continuous programming", "recurring operating system"],
+      meta: "Creative direction · Content system · Ongoing communication",
+      lead: "Six years of creative direction for a cultural venue with over 150 events a year. Not a campaign, not a relaunch: a system built to hold up every week without losing its identity.",
+      proof: ["6 years of continuity", "150+ events a year", "system built from scratch"],
       sections: [
         {
-          title: "The problem",
-          body: "Largo's problem was never the quality of a single post. It's the pressure: every week demands fresh content, active promotion, recognizable identity. No margin. No breaks. No dropping the standard."
+          title: "The starting point",
+          body: "When I arrived at Largo, there was no communication system. There were flyers, the occasional post, no continuity. No defined tone of voice, no production workflow, no ad structure. Every week started from zero, and every event was treated as a standalone case."
+        },
+        {
+          title: "The real problem",
+          body: "Largo’s problem was never making a good piece of content. It was building content that works every week, for different audiences, without becoming generic and without dropping the standard. Jazz on Tuesday, electronic on Friday, theater on Saturday: different languages, aesthetics, and targets that need to coexist under the same identity. If you lose the rhythm, you lose the audience. If you lose the signature, you lose the venue. The pressure is not a peak — it is the permanent condition."
         },
         {
           title: "The system built",
-          body: "I set up a system that runs every week: programming, recurring formats, ads, live photography, tone of voice. Every piece feeds into an ongoing flow. You never start from zero — you feed what's already moving."
+          body: "I built an operation that runs every week on a stable cycle: event scheduling, content production — video, graphics, live photography — ad campaigns, and publishing. Every piece feeds into an active flow: you do not start from zero, you feed what is already moving. Tone of voice, visual identity, and formats were defined in the first months and refined over time, but the underlying structure remained the same. That is what allows very different events to be absorbed without reinventing the approach each time. I handled the system directly, hands-on: graphics, video, copy, ads, and coordination with artists and internal teams. In recent years I also integrated AI tools as support across production and quality control — not to produce more, but to keep the standard more consistent under pressure."
         },
         {
           title: "What actually held up",
-          body: "The rhythm. The ability to let different nights, audiences, and tones coexist without losing the venue's signature. After years, the system didn't wear out — it found its pace."
+          body: "The rhythm. The ability to hold together different genres, audiences, and languages without losing the venue’s signature — and without letting the whole system collapse into repetition. After six years, the structure did not wear out: it found its pace. This is not a project with a beginning and an end. It works because it never stopped."
         }
       ],
-      closing: "A useful creative system is not there to publish more. It is there to not break under pressure."
+      closing: "A useful creative system is not there to publish more. It is there to not break under pressure — week after week, year after year."
     },
     ndp: {
       backLabel: "← Back to work",
@@ -160,23 +176,27 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_03.jpg", caption: "" },
       ],
       meta: "Digital communication · Content · Promotion",
-      lead: "Twelve years of digital communication, content, and promotion for one of Italy’s most recognizable live brands. Not a single project, but a slow construction — layered over time.",
+      lead: "Twelve years of digital communication, content, and promotion for one of Italy’s most recognizable live brands. Not a single project, but a continuity built over time.",
       proof: ["12 years of continuity", "long cycles and tours", "national scale"],
       sections: [
         {
-          title: "The problem",
-          body: "Notre Dame de Paris moves through long cycles: tours, pauses, relaunches, shifting audiences. The risk was never a lack of content — it was losing coherence over time. It needed a narrative that could wait, return, and never start from scratch."
+          title: "The starting point",
+          body: "Notre Dame de Paris does not move through short cycles. It goes through tours, pauses, returns, and shifting audiences. In a context like this, the challenge is not filling a calendar with content. It is making sure every return does not feel like starting over."
+        },
+        {
+          title: "The real problem",
+          body: "When a project truly lasts, the risk is not silence. It is dispersion. If each cycle speaks a different language, the narrative loses memory. If communication only chases the urgency of the moment, the brand stops accumulating value. What this needed was continuity: a structure able to move through time without wearing out."
         },
         {
           title: "The system built",
-          body: "I built a narrative continuity that settled over the years — content, social, and promotion designed to accumulate, not to expire. Each cycle added a layer, never replaced the previous one."
+          body: "I worked on content, digital communication, and promotion with a logic of sedimentation rather than replacement. Each cycle had to add a layer, not erase the previous one. The system was not designed to burn out within a campaign, but to build recognizability, memory, and long-term coherence. Not a nervous content flow, but a narrative structure able to return, reactivate, and remain legible."
         },
         {
           title: "What actually held up",
-          body: "Memory. The ability of the narrative to grow with the audience without dispersing. After twelve years, the system hadn’t aged — it had stratified."
+          body: "The project’s memory. The ability of the narrative to grow with the audience without losing coherence. After twelve years, the communication had not simply been maintained: it had stratified. And that stratification, more than any short-term spike, is what gives strength to a brand that continues to exist over time."
         }
       ],
-      closing: "When a project truly lasts, creativity alone is not enough. It needs something that can move through time."
+      closing: "When a project moves through years, creativity alone is not enough. It needs a structure that can hold time."
     },
     theia: {
       backLabel: "← Back to work",
@@ -193,19 +213,23 @@ const CASE_STUDIES = {
       proof: ["premium positioning", "brand + landing + tracking", "lead-oriented architecture"],
       sections: [
         {
-          title: "The problem",
-          body: "THEIA did not need a beautiful website. It needed anyone who arrived to understand in seconds who they're dealing with, what's offered, and why to trust it. The first contact is already the moment of decision."
+          title: "The starting point",
+          body: "THEIA did not just need an online presence. It needed a system capable of sustaining a higher positioning and making the nature of the brand immediately clear from the first impression."
+        },
+        {
+          title: "The real problem",
+          body: "In this kind of work, the website is not a showcase. It is already part of the negotiation. If the tone is unclear, if the hierarchy does not guide, if the contact path creates friction, trust is lost before the conversation even starts. The challenge was not making something beautiful. It was building a perception aligned with the brand’s value and turning it into qualified contact."
         },
         {
           title: "The system built",
-          body: "I worked on tone, page hierarchy, and the contact journey to build an experience that converts without forcing. Every element — from headline to form — is designed to reduce friction and build trust."
+          body: "I worked on positioning, tone, page architecture, and contact flow to build an experience that was clearer, more legible, and more useful. The website was designed as infrastructure: not just image, but an organization of trust. Landing pages, forms, tracking, and content hierarchy were built to guide the visit toward a decision without forcing it and without losing coherence."
         },
         {
           title: "What actually held up",
-          body: "Clarity. The alignment between premium perception and the quality of leads generated. Not aesthetics for their own sake, but precision in service of conversion."
+          body: "The alignment between perception and function. A premium brand cannot afford a vague or merely decorative digital experience. Here, the visual and the operational sides work in the same direction: clarify, qualify, and guide. That is what turns the website into a commercial tool rather than simple online presence."
         }
       ],
-      closing: "When a website works for you, it stops being a showcase and becomes your best salesperson."
+      closing: "When a website truly works, it stops being a showcase. It becomes a structure that supports decision-making."
     }
   }
 };
