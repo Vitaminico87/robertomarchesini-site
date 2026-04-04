@@ -3266,7 +3266,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
 
         {scene === "desk" ? (
           <>
-            <div className={`ch2-stage ${deskTransitioning ? "ch2-stage-transitioning" : ""}`}>
+            <div className={`ch2-stage ${deskTransitioning ? "ch2-stage-transitioning" : ""} ${deskFeedbackText ? "has-feedback" : ""}`}>
               <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
 
               <div className="ch2-window-mask">
@@ -3507,7 +3507,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
           <audio ref={ambience.roomRef} src={ASSETS.chapter3RoomTone} preload="auto" />
           <audio ref={ambience.chatterRef} src={ASSETS.chapter3OpenChatter} preload="auto" />
 
-          <section className={`ch3-scene-panel ch3-backstage-panel ${scene === 'backstage' ? 'is-active' : ''}`}>
+          <section className={`ch3-scene-panel ch3-backstage-panel ${scene === 'backstage' ? 'is-active' : ''} ${feedbackText ? 'has-feedback' : ''}`}>
             <img className="ch2-fill" src={ASSETS.chapter3Frame1} alt="" />
             <div className="ch3-light-bloom" />
             <div className="ch3-grade" />
@@ -3883,7 +3883,7 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
 
         <div
           ref={stageRef}
-          className="ch2-stage"
+          className={`ch2-stage${showForm ? ' is-form-open' : ''}`}
           style={{
             position: "relative", background: "#080510",
             border: "1px solid rgba(130,100,200,.12)",
@@ -4953,7 +4953,7 @@ export default function Roberto() {
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line-block{position:relative;bottom:auto;left:auto;right:auto;border-top:none;background:transparent;padding:10px 14px 4px;margin-top:0;z-index:1}
-          .ch3-line{white-space:normal;font-size:clamp(15px,4.5vw,20px);line-height:1.22;text-align:center;color:rgba(224,233,242,.88)}
+          .ch3-line{white-space:normal;text-wrap:balance;font-size:clamp(15px,4.5vw,20px);line-height:1.22;text-align:center;color:rgba(224,233,242,.88)}
           .ch3-synthesis-caption{left:0;right:0;bottom:0;max-width:none}
           .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
@@ -5030,6 +5030,9 @@ export default function Roberto() {
           .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
           .chapter-intro-inner{transform:translateY(0)}
           .ch4-form-overlay{align-items:flex-start!important;padding:6px!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
+          .ch2-line{text-wrap:balance}
+          .has-feedback .ch2-line-block{opacity:0;pointer-events:none;transition:opacity .2s ease}
+          .ch2-stage.is-form-open{aspect-ratio:auto!important;min-height:520px}
         }
 
         @media (max-width:600px){
@@ -5383,7 +5386,7 @@ export default function Roberto() {
       {/* TRASHED — transition */}
       {phase === "trashed" && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", padding: 40, animation: "fadeIn 1s ease-out" }}>
-          <div style={{ fontSize: 38, marginBottom: 24, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#FF4D00", textShadow: "0 0 50px rgba(255,77,0,.2)", letterSpacing: 1 }}>
+          <div style={{ fontSize: isMobileViewport ? 28 : 38, marginBottom: 24, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#FF4D00", textShadow: "0 0 50px rgba(255,77,0,.2)", letterSpacing: 1, whiteSpace: "nowrap" }}>
             {T.finally}
           </div>
           <div style={{ fontSize: 13, color: "#666", letterSpacing: .5, textAlign: "center", lineHeight: 1.9, maxWidth: 380 }}>
