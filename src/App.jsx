@@ -42,23 +42,23 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/largo_03.jpg", caption: "" },
       ],
       meta: "Comunicazione · Contenuti · Sistema promozionale",
-      lead: "Un sistema di contenuti, comunicazione e promozione costruito per reggere una venue con programmazione continua, oltre 150 eventi l’anno e una pressione settimanale che non poteva diventare generica.",
+      lead: "150+ eventi l’anno, ogni settimana. Un sistema di contenuti, comunicazione e promozione costruito per non fermarsi mai — e per non diventare mai generico.",
       proof: ["150+ eventi l’anno", "1M+ visualizzazioni mensili", "programmazione continua"],
       sections: [
         {
           title: "Il problema",
-          body: "Largo non aveva bisogno di singoli post riusciti. Aveva bisogno di una struttura capace di sostenere calendario, promozione, varietà e identità, settimana dopo settimana, senza collassare nella ripetizione."
+          body: "Il problema di Largo non è mai stato la qualità di un singolo post. È la pressione: ogni settimana servono contenuti nuovi, promozione attiva, identità riconoscibile. Senza margine. Senza pause. Senza poter scendere di livello."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho impostato un impianto editoriale e promozionale capace di tenere insieme programmazione, format ricorrenti, annunci, adv, repertorio fotografico e tono di voce. Non una sequenza di output isolati, ma una macchina leggibile e continua."
+          body: "Ho impostato un impianto che gira ogni settimana: programmazione, format ricorrenti, adv, fotografia live, tono di voce. Ogni pezzo entra in un flusso già avviato. Non si ricomincia mai da zero, si alimenta quello che c’è."
         },
         {
           title: "Cosa ha retto davvero",
-          body: "La continuità. La riconoscibilità. La capacità di far convivere serate, pubblici e linguaggi diversi senza perdere la sensazione di un luogo con una firma precisa."
+          body: "Il ritmo. La capacità di far convivere serate, pubblici e linguaggi diversi senza perdere la firma del luogo. Dopo anni, il sistema non si è logorato: ha trovato il suo passo."
         }
       ],
-      closing: "Un sistema creativo utile non serve solo a pubblicare di più. Serve a reggere meglio nel tempo."
+      closing: "Un sistema creativo utile non serve a pubblicare di più. Serve a non cedere sotto pressione."
     },
     ndp: {
       backLabel: "← Torna ai lavori",
@@ -71,23 +71,23 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_03.jpg", caption: "" },
       ],
       meta: "Comunicazione digitale · Contenuti · Promozione",
-      lead: "Dodici anni di comunicazione digitale, contenuti e promozione per uno dei live brand più riconoscibili in Italia. Un lavoro lungo, costruito per dare continuità, riconoscibilità e scala a un racconto che non poteva disperdersi.",
+      lead: "Dodici anni di comunicazione digitale, contenuti e promozione per uno dei live brand più riconoscibili in Italia. Non un singolo progetto, ma una costruzione lenta — sedimentata nel tempo.",
       proof: ["12 anni di continuità", "400K+ audience", "scala nazionale"],
       sections: [
         {
           title: "Il problema",
-          body: "Notre Dame de Paris non chiedeva solo presenza online. Chiedeva una struttura di comunicazione capace di restare coerente nel tempo, reggere cicli lunghi, tournée, riaperture e un pubblico molto ampio senza perdere riconoscibilità."
+          body: "Notre Dame de Paris attraversa cicli lunghi: tournée, pause, riaperture, pubblici che cambiano. Il rischio non era la mancanza di contenuti, ma la perdita di coerenza nel tempo. Serviva un racconto che sapesse aspettare e tornare senza ricominciare ogni volta da zero."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho lavorato su contenuti, social e promozione digitale costruendo una continuità di racconto capace di reggere tournée, riaperture e cicli lunghi senza perdere riconoscibilità. Il punto non era aumentare il volume, ma tenere insieme presenza e memoria."
+          body: "Ho costruito una continuità narrativa che si è sedimentata negli anni — contenuti, social e promozione pensati per accumularsi, non per esaurirsi. Ogni ciclo aggiungeva uno strato, non sostituiva il precedente."
         },
         {
           title: "Cosa ha retto davvero",
-          body: "La capacità di far crescere il racconto insieme all’audience, mantenendo riconoscibilità e tenuta anche nel lungo periodo. È qui che la narrativa è diventata sistema, non ornamento."
+          body: "La memoria. La capacità del racconto di crescere con l’audience senza disperdersi. Dopo dodici anni, il sistema non era invecchiato: si era stratificato."
         }
       ],
-      closing: "Quando un progetto dura davvero, la creatività da sola non basta. Serve una struttura che sappia reggere il tempo."
+      closing: "Quando un progetto dura davvero, la creatività da sola non basta. Serve qualcosa che sappia attraversare il tempo."
     },
     theia: {
       backLabel: "← Torna ai lavori",
@@ -100,23 +100,23 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/theia_03.jpg", caption: "" },
       ],
       meta: "Posizionamento · Sito · Architettura digitale",
-      lead: "Un lavoro di posizionamento, direzione del sito e struttura digitale pensato per rendere il brand più chiaro, più credibile e più solido nel momento del contatto.",
+      lead: "Posizionamento, sito e struttura digitale per un brand eventi dove ogni visita è già un primo contatto commerciale. Niente può essere approssimativo.",
       proof: ["posizionamento premium", "brand + landing + tracking", "architettura orientata al lead"],
       sections: [
         {
           title: "Il problema",
-          body: "THEIA non aveva bisogno di un sito bello. Aveva bisogno di una presenza digitale capace di sostenere percezione premium, chiarezza dell’offerta e qualità del primo contatto commerciale."
+          body: "THEIA non aveva bisogno di un sito bello. Aveva bisogno che chiunque arrivasse capisse in pochi secondi chi ha davanti, cosa offre e perché fidarsi. Il primo contatto è già il momento della decisione."
         },
         {
           title: "Il sistema costruito",
-          body: "Ho lavorato su tono, struttura delle pagine e gerarchia dei contenuti per costruire un’esperienza più chiara e più credibile, utile sia come presentazione del brand sia come macchina di contatto."
+          body: "Ho lavorato su tono, gerarchia delle pagine e percorso di contatto per costruire un’esperienza che converte senza forzare. Ogni elemento — dalla headline al form — è pensato per ridurre attrito e costruire fiducia."
         },
         {
           title: "Cosa ha retto davvero",
-          body: "L’allineamento tra percezione del brand, navigazione e qualità del contatto. Non un’estetica premium fine a sé stessa, ma una struttura pensata per sostenere fiducia e conversione."
+          body: "La chiarezza. L’allineamento tra percezione premium e qualità del contatto generato. Non estetica per sé stessa, ma precisione al servizio della conversione."
         }
       ],
-      closing: "Quando posizionamento e struttura lavorano insieme, il sito smette di essere vetrina e diventa sistema."
+      closing: "Quando il sito lavora per te, smette di essere una vetrina e diventa il tuo miglior commerciale."
     }
   },
   en: {
@@ -131,23 +131,23 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/largo_03.jpg", caption: "" },
       ],
       meta: "Communication · Content · Promotional system",
-      lead: "A content, communication, and promotion system built to sustain a venue with continuous programming, 150+ events per year, and weekly pressure that could not afford to become generic.",
+      lead: "150+ events a year, every single week. A content, communication, and promotion system built to never stop — and never become generic.",
       proof: ["150+ events per year", "1M+ monthly views", "continuous programming"],
       sections: [
         {
           title: "The problem",
-          body: "Largo did not need isolated good posts. It needed a structure able to sustain calendar, promotion, variety, and identity week after week, without collapsing into repetition."
+          body: "Largo's problem was never the quality of a single post. It's the pressure: every week demands fresh content, active promotion, recognizable identity. No margin. No breaks. No dropping the standard."
         },
         {
           title: "The system built",
-          body: "I designed an editorial and promotional structure able to hold programming, recurring formats, announcements, ads, live photography, and tone of voice together. Not a sequence of isolated outputs, but a readable and continuous system."
+          body: "I set up a system that runs every week: programming, recurring formats, ads, live photography, tone of voice. Every piece feeds into an ongoing flow. You never start from zero — you feed what's already moving."
         },
         {
           title: "What actually held up",
-          body: "Continuity. Recognizability. The ability to let different nights, audiences, and tones coexist without losing the feeling of a place with a precise signature."
+          body: "The rhythm. The ability to let different nights, audiences, and tones coexist without losing the venue's signature. After years, the system didn't wear out — it found its pace."
         }
       ],
-      closing: "A useful creative system is not there to publish more. It is there to hold up better over time."
+      closing: "A useful creative system is not there to publish more. It is there to not break under pressure."
     },
     ndp: {
       backLabel: "← Back to work",
@@ -160,23 +160,23 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/notre_dame_03.jpg", caption: "" },
       ],
       meta: "Digital communication · Content · Promotion",
-      lead: "Twelve years of digital communication, content, and promotion for one of Italy’s most recognizable live brands. Long-term work built to give continuity, recognizability, and scale to a narrative that could not afford to disperse.",
+      lead: "Twelve years of digital communication, content, and promotion for one of Italy’s most recognizable live brands. Not a single project, but a slow construction — layered over time.",
       proof: ["12 years of continuity", "400K+ audience", "national scale"],
       sections: [
         {
           title: "The problem",
-          body: "Notre Dame de Paris did not need online presence alone. It needed a communication structure able to stay coherent over time, hold up through long cycles, tours, and relaunches, and speak to a very large audience without losing recognizability."
+          body: "Notre Dame de Paris moves through long cycles: tours, pauses, relaunches, shifting audiences. The risk was never a lack of content — it was losing coherence over time. It needed a narrative that could wait, return, and never start from scratch."
         },
         {
           title: "The system built",
-          body: "I worked on content, social, and digital promotion, building a narrative continuity able to sustain tours, relaunches, and long cycles without losing recognizability. The point was not to increase volume, but to hold presence and memory together."
+          body: "I built a narrative continuity that settled over the years — content, social, and promotion designed to accumulate, not to expire. Each cycle added a layer, never replaced the previous one."
         },
         {
           title: "What actually held up",
-          body: "The ability to let the narrative grow with the audience while keeping recognizability and long-term consistency. This is where narrative became system, not ornament."
+          body: "Memory. The ability of the narrative to grow with the audience without dispersing. After twelve years, the system hadn’t aged — it had stratified."
         }
       ],
-      closing: "When a project truly lasts, creativity alone is not enough. It needs a structure that can hold time."
+      closing: "When a project truly lasts, creativity alone is not enough. It needs something that can move through time."
     },
     theia: {
       backLabel: "← Back to work",
@@ -189,23 +189,23 @@ const CASE_STUDIES = {
         { src: "https://www.robertomarchesini.com/assets/clients/theia_03.jpg", caption: "" },
       ],
       meta: "Positioning · Website · Digital architecture",
-      lead: "A positioning, website direction, and digital structure project designed to make the brand clearer, more credible, and more solid at the point of contact.",
+      lead: "Positioning, website, and digital structure for an event brand where every visit is already a first commercial contact. Nothing can be approximate.",
       proof: ["premium positioning", "brand + landing + tracking", "lead-oriented architecture"],
       sections: [
         {
           title: "The problem",
-          body: "THEIA did not need a beautiful website. It needed a digital presence able to sustain premium perception, clarity of offer, and the quality of the first commercial contact."
+          body: "THEIA did not need a beautiful website. It needed anyone who arrived to understand in seconds who they're dealing with, what's offered, and why to trust it. The first contact is already the moment of decision."
         },
         {
           title: "The system built",
-          body: "I worked on tone, page structure, and content hierarchy to build a clearer, more credible experience, useful both as brand presentation and as a contact engine."
+          body: "I worked on tone, page hierarchy, and the contact journey to build an experience that converts without forcing. Every element — from headline to form — is designed to reduce friction and build trust."
         },
         {
           title: "What actually held up",
-          body: "The alignment between brand perception, navigation, and contact quality. Not a premium aesthetic for its own sake, but a structure designed to sustain trust and conversion."
+          body: "Clarity. The alignment between premium perception and the quality of leads generated. Not aesthetics for their own sake, but precision in service of conversion."
         }
       ],
-      closing: "When positioning and structure work together, the website stops being a showcase and becomes a system."
+      closing: "When a website works for you, it stops being a showcase and becomes your best salesperson."
     }
   }
 };
@@ -239,10 +239,10 @@ const LANG = {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        role: "Direzione creativa · Sistema contenuti",
-        main: "150+ eventi all'anno da oltre 12 anni. Un sistema di contenuti e comunicazione costruito per reggere nel tempo.",
-        sub: "Continuità, coordinamento e qualità mantenuti su larga scala.",
-        tags: ["Live events", "Content system", "Continuity"]
+        role: "Direzione creativa · Comunicazione digitale · Sistema contenuti",
+        main: "Dodici anni di continuità su uno dei live brand più riconoscibili in Italia. Un sistema di contenuti e comunicazione costruito per restare coerente nel tempo.",
+        sub: "Tenuta narrativa, riconoscibilità e scala su cicli lunghi e tournée.",
+        tags: ["Live brand", "Continuity", "Digital communication"]
       },
       {
         title: "Largo Venue",
@@ -447,10 +447,10 @@ const LANG = {
         title: "Notre Dame de Paris",
         period: "2012 – 2024",
         status: "completed",
-        role: "Creative direction · Content system",
-        main: "150+ events a year for over 12 years. A content and communication system built to hold up over time.",
-        sub: "Continuity, coordination, and quality maintained at scale.",
-        tags: ["Live events", "Content system", "Continuity"]
+        role: "Creative direction · Digital communication · Content system",
+        main: "Twelve years of continuity on one of Italy's most recognizable live brands. A content and communication system built to stay coherent over time.",
+        sub: "Narrative consistency, recognizability, and scale across long cycles and tours.",
+        tags: ["Live brand", "Continuity", "Digital communication"]
       },
       {
         title: "Largo Venue",
