@@ -394,6 +394,7 @@ const LANG = {
     ch3: {
       kicker: "Capitolo 3 · Sintesi",
       introTitle: "Sintesi",
+      contextLine: "Il conflitto aveva trovato un posto dove stare. Dietro un palco, tra le cose che si muovono.",
       line: "Quando tutto si muove, serve un centro fermo.",
       finalLine: "Il conflitto non era sparito. Aveva trovato una forma.",
       stayBtn: "Resta nel flusso",
@@ -606,6 +607,7 @@ const LANG = {
     ch3: {
       kicker: "Chapter 3 · Synthesis",
       introTitle: "Synthesis",
+      contextLine: "The conflict had found a place to live. Backstage, among the things that move.",
       line: "When everything moves, you need a steady center.",
       finalLine: "The conflict had not disappeared. It had found a form.",
       stayBtn: "Stay in the flow",
@@ -3371,6 +3373,14 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   const [futureTitleExit, setFutureTitleExit] = useState(false);
   const futurePulseTimeoutsRef = useRef([]);
   const futureAudioCtxRef = useRef(null);
+  const [contextLineVisible, setContextLineVisible] = useState(false);
+  const [mainLineVisible, setMainLineVisible] = useState(false);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setContextLineVisible(true), 400);
+    const t2 = setTimeout(() => setMainLineVisible(true), 1900);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
 
   useEffect(() => {
     const breathT = setInterval(() => setSceneBreath((v) => !v), 2800);
@@ -3554,7 +3564,25 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             <div className="ch3-tech-flicker" />
             <div className="ch3-vignette" />
             <div className="ch2-line-block ch3-line-block">
-              <div className="ch2-line ch3-line">{T.line}</div>
+              {T.contextLine && (
+                <div className="ch2-line ch3-line ch3-context-line" style={{
+                  opacity: contextLineVisible ? 1 : 0,
+                  transform: contextLineVisible ? "translateY(0)" : "translateY(6px)",
+                  transition: "opacity 0.9s ease, transform 0.9s ease",
+                  marginBottom: "0.55em",
+                  fontSize: "0.88em",
+                  color: "rgba(224,210,192,0.72)",
+                }}>
+                  {T.contextLine}
+                </div>
+              )}
+              <div className="ch2-line ch3-line" style={{
+                opacity: mainLineVisible ? 1 : 0,
+                transform: mainLineVisible ? "translateY(0)" : "translateY(6px)",
+                transition: "opacity 0.9s ease, transform 0.9s ease",
+              }}>
+                {T.line}
+              </div>
             </div>
             <div className={`ch2-feedback-overlay ch3-feedback-overlay ${feedbackText ? 'show' : ''}`}>{feedbackText}</div>
           </section>
