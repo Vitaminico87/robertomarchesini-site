@@ -789,42 +789,50 @@ function GlitchText({ text, active }) {
   return <span>{display}</span>;
 }
 
+// EmphasisCycler: cycles words[0]→words[1]→...→words[N-1]→words[0], then stops.
+// delays[i] = ms to wait before leaving step i.
+// When delays.length === words.length, the last delay brings it back to words[0].
 function EmphasisCycler({ prefix = "", words = [], suffix = "", delays = [] }) {
-  const [idx, setIdx] = useState(0);
+  const [displayIdx, setDisplayIdx] = useState(0);
   const [visible, setVisible] = useState(true);
-  const doneRef = useRef(false);
+  const timersRef = useRef([]);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
-    if (!words.length || doneRef.current) return;
-    let cancelled = false;
-    let currentIdx = 0;
+    mountedRef.current = true;
+    if (!words.length || !delays.length) return;
+    const totalTransitions = delays.length; // number of word changes to perform
+    let accumulated = 0; // ms from now
 
-    function advance() {
-      if (cancelled || doneRef.current) return;
-      const nextIdx = currentIdx + 1;
-      if (nextIdx >= words.length) { doneRef.current = true; return; }
-      // fade out
-      setVisible(false);
-      setTimeout(() => {
-        if (cancelled) return;
-        currentIdx = nextIdx;
-        setIdx(nextIdx);
+    for (let i = 0; i < totalTransitions; i++) {
+      accumulated += delays[i] ?? 1800;
+      const targetWordIdx = (i + 1) >= totalTransitions ? 0 : (i + 1) % words.length;
+      const fadeOutAt = accumulated;
+      const fadeInAt = accumulated + 280;
+
+      const t1 = setTimeout(() => {
+        if (!mountedRef.current) return;
+        setVisible(false);
+      }, fadeOutAt);
+
+      const t2 = setTimeout(() => {
+        if (!mountedRef.current) return;
+        setDisplayIdx(targetWordIdx);
         setVisible(true);
-        // schedule next if not last
-        const nextDelay = delays[nextIdx] ?? 1800;
-        if (nextIdx < words.length - 1) {
-          setTimeout(advance, nextDelay);
-        }
-      }, 280);
+      }, fadeInAt);
+
+      timersRef.current.push(t1, t2);
     }
 
-    const firstDelay = delays[0] ?? 2200;
-    const t = setTimeout(advance, firstDelay);
-    return () => { cancelled = true; clearTimeout(t); };
+    return () => {
+      mountedRef.current = false;
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const word = words[idx] ?? words[0] ?? "";
+  const word = words[displayIdx] ?? words[0] ?? "";
   return (
     <span style={{ display: "inline-block" }}>
       {prefix}
@@ -1072,6 +1080,7 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   const [animPhase, setAnimPhase] = useState("idle");
   const [shownIndices, setShownIndices] = useState({ early: 0, mid: 0, late: 0 });
   const [isMobile, setIsMobile] = useState(false);
+  const [retryTick, setRetryTick] = useState(0);
   const timers = useRef([]);
   const scrollRef = useRef(scrollProgress);
   const isRunning = useRef(false);
@@ -1106,14 +1115,19 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
     // On mobile: show at most one phrase total in the late phase
     if (isMobile && shownIndices.late >= 1) return;
     isRunning.current = true;
-    const baseDelay = isMobile ? 9000 : 4000;
-    const randomDelay = isMobile ? 4000 : 2500;
+    const baseDelay = 3000;
+    const randomDelay = 2000;
     const delay = baseDelay + Math.random() * randomDelay;
 
     const t1 = setTimeout(() => {
       const currentStage = getStage(scrollRef.current);
-      // Only fire in late phase
-      if (currentStage !== "late") { isRunning.current = false; return; }
+      // Not yet at late scroll — release lock and retry in 3s
+      if (currentStage !== "late") {
+        isRunning.current = false;
+        const tRetry = setTimeout(() => setRetryTick(c => c + 1), 3000);
+        timers.current.push(tRetry);
+        return;
+      }
       const phrases = ghostPhases[currentStage];
       const stageConfig = getStageConfig(isMobile);
       const config = stageConfig[currentStage];
@@ -1125,11 +1139,11 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
       const side = isMobile ? "center" : (idx % 2 === 0 ? "right" : "left");
       const [yMin, yMax] = config.yRange;
       const yPct = yMin + Math.random() * (yMax - yMin);
-      
+
       setCurrent({ text, side, yPct, key: Date.now(), opacity: config.opacity, stage: currentStage, isMobile });
       setAnimPhase("show");
       setShownIndices(prev => ({ ...prev, [currentStage]: prev[currentStage] + 1 }));
-      
+
       const t2 = setTimeout(() => {
         setAnimPhase("fade");
         const t3 = setTimeout(() => { setCurrent(null); setAnimPhase("idle"); isRunning.current = false; }, 800);
@@ -1138,7 +1152,7 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
       timers.current.push(t2);
     }, delay);
     timers.current.push(t1);
-  }, [active, animPhase, ghostPhases, isMobile]);
+  }, [active, animPhase, ghostPhases, isMobile, retryTick]);
 
   if (!current) return null;
   const show = animPhase === "show";
@@ -4493,8 +4507,8 @@ export default function Roberto() {
     if (phase !== "main" || ghostReady) return;
     const timeInterval = setInterval(() => {
       timeOnPage.current += 100;
-      if (timeOnPage.current >= 8000 && hasScrolled.current && !ghostReady) {
-        setTimeout(() => setGhostReady(true), 2500);
+      if (timeOnPage.current >= 5000 && hasScrolled.current && !ghostReady) {
+        setTimeout(() => setGhostReady(true), 1200);
         clearInterval(timeInterval);
       }
     }, 100);
