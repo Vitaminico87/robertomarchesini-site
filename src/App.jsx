@@ -254,7 +254,7 @@ const LANG = {
     services: [
       { index: "01", axis: "Posizionamento · Linguaggio", title: "Chiarezza", description: "Quando un brand non riesce più a dire bene chi è, cosa offre e con quale tono può risultare credibile." },
       { index: "02", axis: "Social · Newsletter · Campagne", title: "Comunicazione", description: "Quando contenuti, promozione e direzione creativa devono lavorare insieme con continuità, senza diventare rumore o improvvisazione." },
-      { index: "03", axis: "Sito · Landing · Funnel", title: "Architettura", description: "Quando sito, pagine e punti di contatto devono trasformare attenzione in fiducia, richieste e decisione." },
+      { index: "03", axis: "Sito · Landing · Funnel", title: "Architettura", description: "Quando un sito, le sue pagine e ogni punto di contatto devono trasformare attenzione in fiducia, richieste e decisione." },
       { index: "04", axis: "Controllo · Velocità · Qualità", title: "Workflow AI", description: "Quando l’AI serve ad aumentare possibilità e controllo, non a produrre più rumore abbassando il livello." },
     ],
     selectedWorkKicker: "Selezione",
@@ -459,7 +459,7 @@ const LANG = {
     heroEmphasisPrefix: "",
     heroEmphasisCycle: ["creative", "narrative", "operational"],
     heroEmphasisSuffix: " systems",
-    heroSub: "15+ years across creative direction, communication, and marketing. Today I design clearer, more solid, and more useful structures — with AI when it helps.",
+    heroSub: "15+ years across creative direction, communication, and marketing. I design solid, useful structures built to last, with AI when it helps.",
     proofStrip: "15+ years across creative direction, communication, marketing, and systems. Today I use AI and workflows to increase control and quality.",
     proofStripMobile: "15+ years across creative direction, communication, and systems.",
     whatido: "What I build",
@@ -2088,10 +2088,11 @@ function useChapterThreeAmbience() {
     const chatter = chatterRef.current;
     if (!room || !chatter) return;
 
+    const isMob = window.innerWidth <= 600;
     room.loop = true;
     chatter.loop = true;
-    room.volume = 0.22;
-    chatter.volume = 0.14;
+    room.volume = isMob ? 0.11 : 0.22;
+    chatter.volume = isMob ? 0.07 : 0.14;
 
     const playSafely = (audio) => {
       try {
