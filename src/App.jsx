@@ -289,7 +289,7 @@ const LANG = {
     ghostPhases: {
       early: ["Elegante. Anche troppo.", "Il bello non basta."],
       mid: ["Sì ok, ma chi sei davvero?", "Quanta cura per non dire niente.", "Manca qualcosa, no?"],
-      late: ["Tutto perfetto. Troppo perfetto.", "Il portfolio vero non è ancora iniziato.", "C'è una parte che qui non si vede.", "Provaci a cestinarlo.", "Non lo faresti mai.", "Quel bottone non serve a niente."]
+      late: ["Il lavoro l'hai visto. Il resto è interattivo.", "Quel bottone non apre un'altra pagina.", "Cestina non è una CTA. È l'altro lato del sito.", "Sotto non c'è una bio. C'è un'esperienza da attraversare.", "Se lo premi, il sito cambia grammatica."]
     },
     // Chapter 1 strings
     ch1: {
@@ -498,7 +498,7 @@ const LANG = {
     ghostPhases: {
       early: ["Slick. Maybe too slick.", "Pretty isn't enough."],
       mid: ["Yeah but who are you, really?", "So much polish to say so little.", "Something's missing, no?"],
-      late: ["All perfect. Too perfect.", "The real portfolio hasn't started yet.", "There's a part you can't see here.", "Go ahead, trash it.", "You wouldn't dare.", "That button does nothing."]
+      late: ["You've seen the work. The rest is interactive.", "That button doesn't open another page.", "Bin me is not a CTA. It's the other side of the site.", "There isn't a bio underneath. There's an experience to go through.", "Press it and the site changes grammar."]
     },
     ch1: {
       kicker: "Chapter 1 · Origin",
@@ -1013,7 +1013,7 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
   const getStageConfig = (mobile) => ({
     early: { opacity: mobile ? 0.6 : 0.45, duration: mobile ? 3500 : 3000, yRange: mobile ? [55, 65] : [45, 55] },
     mid: { opacity: mobile ? 0.65 : 0.5, duration: mobile ? 3800 : 3200, yRange: mobile ? [60, 70] : [55, 68] },
-    late: { opacity: mobile ? 0.7 : 0.55, duration: mobile ? 4000 : 3500, yRange: mobile ? [65, 78] : [65, 80] }
+    late: { opacity: mobile ? 0.42 : 0.55, duration: mobile ? 3200 : 3500, yRange: mobile ? [65, 78] : [65, 80] }
   });
 
   useEffect(() => {
@@ -1022,17 +1022,21 @@ function GhostLayer({ ghostPhases, active, scrollProgress }) {
 
   useEffect(() => {
     if (!active || animPhase !== "idle" || isRunning.current) return;
+    // On mobile: show at most one phrase total in the late phase
+    if (isMobile && shownIndices.late >= 1) return;
     isRunning.current = true;
-    const baseDelay = isMobile ? 5000 : 4000;
-    const randomDelay = isMobile ? 3000 : 2500;
+    const baseDelay = isMobile ? 9000 : 4000;
+    const randomDelay = isMobile ? 4000 : 2500;
     const delay = baseDelay + Math.random() * randomDelay;
-    
+
     const t1 = setTimeout(() => {
       const currentStage = getStage(scrollRef.current);
+      // Only fire in late phase
+      if (currentStage !== "late") { isRunning.current = false; return; }
       const phrases = ghostPhases[currentStage];
       const stageConfig = getStageConfig(isMobile);
       const config = stageConfig[currentStage];
-      
+
       if (!phrases || phrases.length === 0) { isRunning.current = false; return; }
 
       const idx = shownIndices[currentStage] % phrases.length;
@@ -2973,27 +2977,18 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const [feedback, setFeedback] = useState('');
   const [shakeId, setShakeId] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
-  const [showNextHint, setShowNextHint] = useState(false);
-  const [lastPlacedId, setLastPlacedId] = useState(null);
-  const [slotPulse, setSlotPulse] = useState(false);
   const [gameBaseSrc, setGameBaseSrc] = useState(ASSETS.chapter2DeskGameBase);
   const [imageState, setImageState] = useState("loading");
   const [uiVisible, setUiVisible] = useState(false);
   const [objectsVisible, setObjectsVisible] = useState(false);
   const completeTimeoutRef = useRef(null);
   const shakeTimeoutRef = useRef(null);
-  const hintTimeoutRef = useRef(null);
-  const placedGlowTimeoutRef = useRef(null);
-  const slotPulseTimeoutRef = useRef(null);
   const playObjectPlaceSound = useObjectPlaceSound();
 
   useEffect(() => {
     return () => {
       if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
       if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
-      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
-      if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
-      if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
     };
   }, []);
 
@@ -3004,72 +2999,37 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   }, []);
 
   const placedSet = useMemo(() => new Set(placedIds), [placedIds]);
-  const expectedId = CH2_OBJECT_ORDER[placedIds.length];
-  const finalLineParts = lang === 'it'
-    ? ["Non avevo ancora un ruolo.", "Avevo già una direzione."]
-    : ["I didn't have a role yet.", "I already had a direction."];
-
-  useEffect(() => {
-    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
-    setShowNextHint(false);
-
-    if (!expectedId || isComplete) return;
-
-    hintTimeoutRef.current = setTimeout(() => {
-      setShowNextHint(true);
-    }, 2400);
-
-    return () => {
-      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
-    };
-  }, [expectedId, isComplete]);
+  const correctIds = useMemo(() => new Set(CH2_OBJECT_ORDER), []);
 
   const triggerShake = useCallback((id) => {
     setShakeId(id);
     if (shakeTimeoutRef.current) clearTimeout(shakeTimeoutRef.current);
-    shakeTimeoutRef.current = setTimeout(() => setShakeId(null), 320);
+    shakeTimeoutRef.current = setTimeout(() => setShakeId(null), 280);
   }, []);
 
   const handlePick = useCallback((item) => {
     if (isComplete) return;
+    if (placedSet.has(item.id)) return; // already placed, silent
 
-    if (placedSet.has(item.id)) {
-      setFeedback(T.gameDuplicate);
-      return;
-    }
-
-    if (item.type === 'decoy') {
+    if (item.type === 'decoy' || !correctIds.has(item.id)) {
       triggerShake(item.id);
-      setFeedback(item.wrongLine);
-      return;
-    }
-
-    if (item.id !== expectedId) {
-      triggerShake(item.id);
-      setFeedback(item.wrongLine || T.gameOrderWrong);
+      setFeedback(item.wrongLine || '');
       return;
     }
 
     const nextPlaced = [...placedIds, item.id];
     setPlacedIds(nextPlaced);
-    setLastPlacedId(item.id);
-    setSlotPulse(true);
     setFeedback(item.placedLine);
     playObjectPlaceSound();
-
-    if (placedGlowTimeoutRef.current) clearTimeout(placedGlowTimeoutRef.current);
-    placedGlowTimeoutRef.current = setTimeout(() => setLastPlacedId(null), 520);
-    if (slotPulseTimeoutRef.current) clearTimeout(slotPulseTimeoutRef.current);
-    slotPulseTimeoutRef.current = setTimeout(() => setSlotPulse(false), 420);
 
     if (nextPlaced.length === CH2_OBJECT_ORDER.length) {
       setIsComplete(true);
       setFeedback('');
       completeTimeoutRef.current = setTimeout(() => {
         onComplete?.();
-      }, 2400);
+      }, 1200);
     }
-  }, [T.gameDuplicate, T.gameFinalLine, T.gameOrderWrong, expectedId, isComplete, onComplete, placedIds, placedSet, triggerShake]);
+  }, [isComplete, onComplete, placedIds, placedSet, correctIds, triggerShake, playObjectPlaceSound]);
 
   return (
     <>
@@ -3103,8 +3063,8 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
               const placedId = placedIds[index];
               const placedItem = items.find((item) => item.id === placedId);
               return (
-                <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''} ${slotPulse && placedItem ? 'is-pulsing' : ''}`}>
-                  {placedItem ? placedItem.label : <span>Slot {index + 1}</span>}
+                <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''}`}>
+                  {placedItem ? placedItem.label : <span>—</span>}
                 </div>
               );
             })}
@@ -3123,8 +3083,8 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
             const placedId = placedIds[index];
             const placedItem = items.find((item) => item.id === placedId);
             return (
-              <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''} ${slotPulse && placedItem ? 'is-pulsing' : ''}`}>
-                {placedItem ? placedItem.label : <span>Slot {index + 1}</span>}
+              <div key={index} className={`ch2-game-slot ${placedItem ? 'is-filled' : ''}`}>
+                {placedItem ? placedItem.label : <span>—</span>}
               </div>
             );
           })}
@@ -3144,7 +3104,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
                 type="button"
                 onClick={() => handlePick(item)}
                 disabled={isComplete}
-                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''} ${!isPlaced && !isComplete && showNextHint && item.id === expectedId ? 'is-next' : ''} ${lastPlacedId === item.id ? 'is-placed-feedback' : ''}`}
+                className={`ch2-game-object ${isPlaced ? 'is-placed' : ''} ${isWrong ? 'is-decoy' : ''} ${shakeId === item.id ? 'is-shaking' : ''}`}
               >
                 <span className="ch2-game-object-icon" aria-hidden="true">{CH2_OBJECT_ICONS[item.id] || "◻"}</span>
                 <span className="ch2-game-object-title">{item.label}</span>
@@ -4922,9 +4882,7 @@ export default function Roberto() {
         @keyframes ch2LampPulse{0%,100%{opacity:.74;transform:scale(1)}50%{opacity:.96;transform:scale(1.04)}}
         @keyframes ch2RainBackShift{0%{background-position:0 -6px, 12px 18px}100%{background-position:-18px 56px, -8px 82px}}
         @keyframes ch2RainFrontShift{0%{background-position:8px -10px, 20px 10px}100%{background-position:-22px 72px, -10px 96px}}
-@keyframes ch2NextObjectGlow{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.14)}}
-        @keyframes ch2PlacedPulse{0%{transform:scale(1);box-shadow:0 0 0 rgba(255,196,132,0)}35%{transform:scale(1.03);box-shadow:0 0 18px rgba(255,196,132,.22)}100%{transform:scale(1);box-shadow:0 0 0 rgba(255,196,132,0)}}
-        @keyframes ch2SlotPulse{0%{transform:scale(1)}40%{transform:scale(1.02)}100%{transform:scale(1)}}
+        @keyframes ch2SlotFill{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
         @keyframes ch2HeadlightSweepBack{0%,18%{transform:translateX(0) skewX(-16deg);opacity:0}30%,56%{opacity:.34}78%{transform:translateX(-195%) skewX(-16deg);opacity:.18}100%{transform:translateX(-195%) skewX(-16deg);opacity:0}}
         @keyframes ch2HeadlightSweepFront{0%,22%{transform:translateX(0) skewX(-16deg);opacity:0}34%,58%{opacity:.48}82%{transform:translateX(-214%) skewX(-16deg);opacity:.22}100%{transform:translateX(-214%) skewX(-16deg);opacity:0}}
         @keyframes ch2GameShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
@@ -4964,7 +4922,7 @@ export default function Roberto() {
         .ch2-game-slot-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(223,232,238,.56);margin-bottom:10px}
         .ch2-game-slot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
         .ch2-game-slot{min-height:54px;border-radius:8px;border:1px dashed rgba(162,186,198,.2);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px;color:#6b7880;font-size:10px;line-height:1.35;text-transform:uppercase;letter-spacing:1px}
-        .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(255,77,0,.28);color:#ece7de;background:rgba(255,77,0,.07);text-transform:none;letter-spacing:0;font-size:11px}.ch2-game-slot.is-pulsing{animation:ch2SlotPulse .42s ease-out;box-shadow:0 0 18px rgba(255,196,132,.14)}
+        .ch2-game-slot.is-filled{border-style:solid;border-color:rgba(148,174,188,.22);color:#d8e0e6;background:rgba(255,255,255,.04);text-transform:none;letter-spacing:0;font-size:11px;animation:ch2SlotFill .45s ease-out}
         .ch2-object-controls-slot{min-height:auto;display:block}
         .ch2-game-feedback{width:100%;margin-top:2px;margin-bottom:14px;min-height:52px;padding:13px 16px;border-radius:8px;border:1px solid rgba(148,174,188,.18);background:rgba(3,8,10,.72);color:#d8e0e6;font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease,opacity .2s ease}
         .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
@@ -4973,13 +4931,12 @@ export default function Roberto() {
         .ch2-final-caption.is-visible{opacity:1;transform:translateY(0)}
         .ch2-final-caption-inner{display:block;max-width:none;width:100%;padding:12px 18px 11px;border-bottom:1px solid rgba(255,218,178,.20);border-top:none;background:linear-gradient(180deg,rgba(5,5,5,.88) 0%,rgba(8,6,5,.44) 72%,rgba(10,7,6,.06) 100%);box-shadow:0 16px 34px rgba(0,0,0,.22),inset 0 -1px 0 rgba(255,228,198,.06);backdrop-filter:blur(5px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.05vw,24px);line-height:1.24;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34),0 10px 24px rgba(0,0,0,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-        .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
+        .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .3s ease,border-color .3s ease,opacity .5s ease,filter .5s ease}
         .ch2-game-object-icon{display:none;font-size:18px;line-height:1;color:#ddd2c4;margin-bottom:8px}
-        .ch2-game-object:hover{border-color:rgba(255,77,0,.34);background:rgba(255,77,0,.04)}
-        .ch2-game-object.is-decoy:hover{border-color:rgba(138,138,138,.28);background:rgba(255,255,255,.015)}
-        .ch2-game-object.is-placed{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.08)}.ch2-game-object.is-placed-feedback{animation:ch2PlacedPulse .52s ease-out;border-color:rgba(255,196,132,.44);background:rgba(255,196,132,.10)}
-.ch2-game-object.is-next{border-color:rgba(255,77,0,.22);box-shadow:0 0 0 rgba(255,77,0,0);animation:ch2NextObjectGlow 3.2s ease-in-out infinite}
-        .ch2-game-object.is-shaking{animation:ch2GameShake .28s ease-out}
+        .ch2-game-object:hover{border-color:rgba(255,77,0,.28);background:rgba(255,77,0,.03)}
+        .ch2-game-object.is-decoy:hover{border-color:rgba(100,100,100,.22);background:rgba(255,255,255,.01)}
+        .ch2-game-object.is-placed{opacity:.3;filter:saturate(.4);pointer-events:none;border-color:rgba(80,80,80,.28);background:rgba(0,0,0,.12)}
+        .ch2-game-object.is-shaking{animation:ch2GameShake .22s ease-out}
         .ch2-game-object-title{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:1.05;color:#f0ece6;margin-bottom:8px}
         .ch2-game-object-desc{display:block;font-size:11px;line-height:1.7;color:#9ea4a8}
         .ch2-game-object:disabled{cursor:default}
@@ -5632,6 +5589,14 @@ export default function Roberto() {
           unlockedProfileIds={unlockedProfileIds}
           currentProfileId={unlockedProfileIds.includes("synthesis") ? null : "synthesis"}
           onUnlockProfile={unlockProfile}
+        />
+      )}
+
+      {phase === "main" && (
+        <GhostLayer
+          ghostPhases={T.ghostPhases}
+          active={ghostReady && scrollProgress >= 0.75}
+          scrollProgress={scrollProgress}
         />
       )}
 
