@@ -3311,7 +3311,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
   );
 }
 
-function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
+function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile, ch4Kicker, ch4Title }) {
   const ambience = useChapterThreeAmbience();
   const feedbackTimeoutRef = useRef(null);
   const sceneSwitchTimeoutRef = useRef(null);
@@ -3332,6 +3332,9 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
   const [showFutureBtn, setShowFutureBtn] = useState(false);
   const [futureActivating, setFutureActivating] = useState(false);
   const [futurePulseStep, setFuturePulseStep] = useState(0);
+  const [futureWhiteout, setFutureWhiteout] = useState(false);
+  const [futureTitleVisible, setFutureTitleVisible] = useState(false);
+  const [futureTitleExit, setFutureTitleExit] = useState(false);
   const futurePulseTimeoutsRef = useRef([]);
   const futureAudioCtxRef = useRef(null);
 
@@ -3473,7 +3476,7 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     futurePulseTimeoutsRef.current = [];
     setFutureActivating(true);
     setShowFutureBtn(false);
-    // Three slow atmospheric pulses — each breathes in, holds, breathes out
+    // Three slow atmospheric pulses
     [[0,1],[1500,0],[2700,2],[4200,0],[5400,3]].forEach(([delay, step]) => {
       const t = setTimeout(() => {
         setFuturePulseStep(step);
@@ -3481,10 +3484,14 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
       }, delay);
       futurePulseTimeoutsRef.current.push(t);
     });
-    const fadeT = setTimeout(() => setFinalFade(true), 7200);
-    futurePulseTimeoutsRef.current.push(fadeT);
-    const completeT = setTimeout(() => onComplete?.(), 7700);
-    futurePulseTimeoutsRef.current.push(completeT);
+    // Whiteout starts after third pulse
+    futurePulseTimeoutsRef.current.push(setTimeout(() => setFutureWhiteout(true), 5600));
+    // Title card appears inside the white
+    futurePulseTimeoutsRef.current.push(setTimeout(() => setFutureTitleVisible(true), 6200));
+    // Title begins to exit
+    futurePulseTimeoutsRef.current.push(setTimeout(() => setFutureTitleExit(true), 7300));
+    // Transition to chapter 4
+    futurePulseTimeoutsRef.current.push(setTimeout(() => onComplete?.(), 7900));
   }, [scene, futureActivating, onComplete, playFuturePulseNote]);
 
   return (
@@ -3528,6 +3535,14 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             <div className="ch3-synthesis-circuit-pulse" />
             <div className="ch3-synthesis-vignette" />
             <div className="ch3-pulse-bloom" />
+            {futureWhiteout && (
+              <div className={`ch3-future-whiteout${futureTitleVisible ? ' is-title-phase' : ''}${futureTitleExit ? ' is-title-exit' : ''}`}>
+                <div className={`ch3-future-title${futureTitleVisible ? ' is-visible' : ''}${futureTitleExit ? ' is-exit' : ''}`}>
+                  <div className="ch3-future-kicker">{ch4Kicker}</div>
+                  <div className="ch3-future-heading">{ch4Title}</div>
+                </div>
+              </div>
+            )}
             <div className="ch3-distant-kite" aria-hidden="true">
               <div className="ch3-kite-gust">
                 <span className="ch3-kite">
@@ -4990,13 +5005,22 @@ export default function Roberto() {
         .ch3-synthesis-panel.pulse-step-2 .ch3-pulse-bloom{opacity:.72;transition:opacity .55s ease}
         .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-core-glow{opacity:.88;filter:blur(23px);transform:scale(1.07);mix-blend-mode:screen;transition:opacity .55s ease,filter .55s ease,transform .55s ease}
         .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-branch-glow{opacity:.52;filter:blur(18px);transition:opacity .55s ease,filter .55s ease}
-        /* step 3 — full bloom, attack 550ms */
-        .ch3-synthesis-panel.pulse-step-3 .ch2-fill{filter:brightness(2.00) contrast(1.14) saturate(1.22);transition:filter .55s ease}
+        /* step 3 — massive collapse into white, attack 550ms */
+        .ch3-synthesis-panel.pulse-step-3 .ch2-fill{filter:brightness(3.8) contrast(1.02) saturate(0.4);transition:filter .55s ease}
         .ch3-synthesis-panel.pulse-step-3 .ch3-pulse-bloom{opacity:1;transition:opacity .55s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-core-glow{opacity:1;filter:blur(26px);transform:scale(1.11);mix-blend-mode:screen;transition:opacity .55s ease,filter .55s ease,transform .55s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-branch-glow{opacity:.80;filter:blur(22px);transform:scale(1.03);transition:opacity .55s ease,filter .55s ease,transform .55s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-flow{opacity:.38;transition:opacity .55s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-amber-shimmer{opacity:.30;transform:translateX(-6%);transition:opacity .55s ease,transform .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-core-glow{opacity:1;filter:blur(52px);transform:scale(1.32);mix-blend-mode:screen;transition:opacity .55s ease,filter .55s ease,transform .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-branch-glow{opacity:1;filter:blur(40px);transform:scale(1.18);transition:opacity .55s ease,filter .55s ease,transform .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-flow{opacity:.72;transition:opacity .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-amber-shimmer{opacity:.60;transform:translateX(-6%);transition:opacity .55s ease,transform .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-ground-haze{opacity:.88;filter:blur(18px);transition:opacity .55s ease,filter .55s ease}
+        /* whiteout overlay */
+        .ch3-future-whiteout{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0);pointer-events:none;transition:background 1.2s ease}
+        .ch3-future-whiteout.is-title-phase{background:rgba(255,255,255,0.96)}
+        .ch3-future-title{opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;text-align:center;color:#111}
+        .ch3-future-title.is-visible{opacity:1;transform:translateY(0)}
+        .ch3-future-title.is-exit{opacity:0;transform:translateY(-8px)}
+        .ch3-future-kicker{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;color:rgba(0,0,0,.58)}
+        .ch3-future-heading{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(42px,7vw,72px);line-height:.95;letter-spacing:-0.02em;color:#111}
 
         @keyframes ch3ShimmerSweep{0%,100%{opacity:.08;transform:translateX(-10%)}42%{opacity:.18;transform:translateX(0%)}68%{opacity:.12;transform:translateX(4%)}}
         @keyframes ch3CircuitPulse{0%,100%{opacity:.10;transform:scale(.995)}46%{opacity:.18;transform:scale(1.01)}}
@@ -5493,15 +5517,6 @@ export default function Roberto() {
         />
       )}
 
-      {phase === "game" && gameFlow === "chapter4Intro" && (
-        <ChapterIntroCard
-          number="4"
-          title={T.ch4.introTitle}
-          label={lang === "it" ? "Capitolo" : "Chapter"}
-          onDone={() => setGameFlow("chapter4")}
-        />
-      )}
-
       {phase === "game" && gameFlow === "chapter2Intro" && (
         <ChapterIntroCard
           number="2"
@@ -5552,7 +5567,9 @@ export default function Roberto() {
         <ChapterThreeScene
           T={T.ch3}
           onBack={handleBack}
-          onComplete={() => setGameFlow("chapter4Intro")}
+          onComplete={() => setGameFlow("chapter4")}
+          ch4Kicker={T.ch4.kicker}
+          ch4Title={T.ch4.introTitle}
           profileUi={{
             title: T.ch1.profileTitle,
             idle: T.ch1.profileIdle,
