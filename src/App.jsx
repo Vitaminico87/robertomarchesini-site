@@ -277,7 +277,8 @@ const LANG = {
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    ctaBridge: "Parliamone. O cestinami. La seconda è più interessante di quanto pensi.",
+    ctaBridge: "Parliamone. O cestinami.",
+    ctaBridgeSub: "La seconda è più interessante di quanto pensi.",
     availableFor: "Aperto a poche collaborazioni selezionate.",
     trashPlay: "Gioca",
     ctaHint: "",
@@ -475,7 +476,8 @@ const LANG = {
     ],
     nowBuildingLabel: "",
     nowBuilding: "",
-    ctaBridge: "Let's talk. Or bin me. The second option is more interesting than you'd think.",
+    ctaBridge: "Let's talk. Or bin me.",
+    ctaBridgeSub: "The second option is more interesting than you'd think.",
     availableFor: "Open to a small number of selected collaborations.",
     trashPlay: "Play",
     ctaHint: "",
@@ -4505,7 +4507,7 @@ export default function Roberto() {
   }, []);
 
   return (
-    <div style={{ background: "#050505", minHeight: "100vh", color: "#E8E4DE", fontFamily: "'IBM Plex Mono','Courier New',monospace", position: "relative", overflow: "hidden" }}>
+    <div style={{ background: "#050505", minHeight: "100vh", color: "#E8E4DE", fontFamily: "'IBM Plex Mono','Courier New',monospace", position: "relative" }}>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
         ::selection{background:#FF4D00;color:#050505}
@@ -4513,7 +4515,7 @@ export default function Roberto() {
         @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(255,77,0,.12)}50%{box-shadow:0 0 35px rgba(255,77,0,.25)}}
         @keyframes nameGlow{0%,100%{text-shadow:0 0 30px rgba(255,77,0,.04)}50%{text-shadow:0 0 50px rgba(255,77,0,.08)}}
         @keyframes homeTreeBreathe{0%,100%{opacity:.05}50%{opacity:.20}}
-        .home-tree-echo{position:fixed;top:0;right:0;width:min(52vw,480px);height:min(82vh,660px);pointer-events:none;z-index:0;mix-blend-mode:screen;animation:homeTreeBreathe 7.5s ease-in-out infinite}
+        .home-tree-echo{position:absolute;top:0;right:0;width:min(52vw,480px);height:min(82vh,660px);pointer-events:none;z-index:0;mix-blend-mode:screen;animation:homeTreeBreathe 7.5s ease-in-out infinite}
         @keyframes trashPulse{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.12)}}
         @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.12), 0 0 40px rgba(255,77,0,.06);transform:scale(1)}50%{box-shadow:0 0 40px rgba(255,77,0,.25), 0 0 80px rgba(255,77,0,.12);transform:scale(1.02)}}
         @keyframes trashArrow{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.6;transform:translateY(4px)}}
@@ -5302,8 +5304,13 @@ export default function Roberto() {
           {/* CTA + CESTINA - SEMPLIFICATO */}
           <Section delay={0.22}>
             <div style={{ marginBottom: 8 }}>
-              <div style={{ textAlign: "center", marginBottom: 32, fontSize: isMobileViewport ? 18 : 22, color: "#c8c0b4", fontFamily: "'Playfair Display', serif", fontStyle: "italic", lineHeight: 1.6, maxWidth: 480, marginInline: "auto" }}>
-                {T.ctaBridge}
+              <div style={{ textAlign: "center", marginBottom: 32, maxWidth: 520, marginInline: "auto" }}>
+                <div style={{ fontSize: isMobileViewport ? 22 : 28, color: "#ddd6cc", fontFamily: "'Playfair Display', serif", fontStyle: "italic", lineHeight: 1.28, marginBottom: 10 }}>
+                  {T.ctaBridge}
+                </div>
+                <div style={{ fontSize: isMobileViewport ? 12 : 14, color: "#7a746d", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 0.4, lineHeight: 1.7, whiteSpace: "nowrap" }}>
+                  {T.ctaBridgeSub}
+                </div>
               </div>
               <div className="home-cta-shell">
                 <div className="home-cta-actions">
