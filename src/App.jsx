@@ -225,10 +225,10 @@ const LANG = {
     proofStripMobile: "15+ anni tra direzione creativa, comunicazione e sistemi.",
     whatido: "Cosa costruisco",
     services: [
-      { title: "Chiarezza", description: "Quando un progetto non sa bene cosa dire, come dirlo o con quale tono risultare credibile." },
-      { title: "Struttura", description: "Quando contenuti, promozione e continuità devono tenere insieme ritmo, varietà e riconoscibilità senza collassare nella ripetizione." },
-      { title: "Presenza digitale", description: "Quando sito, landing e punti di contatto devono essere più chiari, leggibili e solidi nel momento in cui qualcuno arriva." },
-      { title: "Workflow AI", description: "Quando l’AI serve ad aumentare possibilità, velocità e controllo. Non a produrre più rumore." },
+      { index: "01", axis: "Posizionamento · Linguaggio", title: "Chiarezza", description: "Quando un brand non riesce più a dire bene chi è, cosa offre e con quale tono può risultare credibile." },
+      { index: "02", axis: "Contenuti · Continuità", title: "Struttura", description: "Quando contenuti, promozione e ritmo operativo devono reggere nel tempo senza collassare nella ripetizione." },
+      { index: "03", axis: "Sito · Landing · Contatto", title: "Presenza digitale", description: "Quando sito e punti di contatto devono trasformare una visita in fiducia, non limitarsi a \"esserci\"." },
+      { index: "04", axis: "Controllo · Velocità · Qualità", title: "Workflow AI", description: "Quando l’AI serve ad aumentare possibilità e controllo, non a produrre più rumore abbassando il livello." },
     ],
     selectedWorkKicker: "Selezione",
     selectedWorkLabel: "Tre storie",
@@ -433,10 +433,10 @@ const LANG = {
     proofStripMobile: "15+ years across creative direction, communication, and systems.",
     whatido: "What I build",
     services: [
-      { title: "Clarity", description: "When a project doesn't quite know what to say, how to say it, or what tone makes it credible." },
-      { title: "Structure", description: "When content, promotion, and continuity need to hold rhythm, variety, and recognizability together without collapsing into repetition." },
-      { title: "Digital presence", description: "When website, landing pages, and touchpoints need to be clearer, more readable, and more solid for the moment someone arrives." },
-      { title: "AI workflows", description: "When AI is there to expand possibilities, speed, and control. Not to produce more noise." },
+      { index: "01", axis: "Positioning · Language", title: "Clarity", description: "When a brand can no longer say clearly who it is, what it offers, and what tone makes it credible." },
+      { index: "02", axis: "Content · Continuity", title: "Structure", description: "When content, promotion, and operational rhythm need to hold up over time without collapsing into repetition." },
+      { index: "03", axis: "Website · Landing · Contact", title: "Digital presence", description: "When a website and touchpoints need to turn a visit into trust — not just be there." },
+      { index: "04", axis: "Control · Speed · Quality", title: "AI workflows", description: "When AI is there to expand possibilities and control, not to produce more noise by lowering the standard." },
     ],
     selectedWorkKicker: "Selection",
     selectedWorkLabel: "Three stories",
@@ -4629,9 +4629,11 @@ export default function Roberto() {
         .home-hero-main{font-family:'Playfair Display',serif;font-size:clamp(1.35rem,2.1vw,1.9rem);line-height:1.22;letter-spacing:-0.02em;color:rgba(246,241,234,0.96)}
         .home-hero-main em{font-style:italic;color:#ff4d00}
         .home-hero-sub{max-width:52ch;font-family:'IBM Plex Mono',monospace;font-size:clamp(0.74rem,0.95vw,0.86rem);line-height:1.85;letter-spacing:0.01em;color:rgba(214,205,194,0.62)}
-        .home-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem 3rem}
-        .home-service-card{padding:0 0 1.5rem 0;border-bottom:1px solid rgba(255,255,255,0.07)}
-        .home-service-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.15rem,1.6vw,1.42rem);line-height:1.1;color:#f0ece6;margin-bottom:0.65rem;letter-spacing:-0.01em}
+        .home-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.2rem 3rem}
+        .home-service-card{padding:0 0 1.6rem 0;border-bottom:1px solid rgba(255,255,255,0.07)}
+        .home-service-index{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,77,0,0.55);margin-bottom:0.3rem;line-height:1}
+        .home-service-axis{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.04em;color:rgba(214,205,194,0.45);margin-bottom:0.55rem;line-height:1.4}
+        .home-service-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.15rem,1.6vw,1.42rem);line-height:1.1;color:#f0ece6;margin-bottom:0.6rem;letter-spacing:-0.01em}
         .home-service-description{font-family:'IBM Plex Mono',monospace;font-size:0.86rem;line-height:1.88;color:rgba(214,205,194,0.86)}
         .home-social-rail{position:absolute;top:8px;right:-98px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;z-index:6}
         .home-social-rail-mobile{position:relative;top:auto;right:auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
@@ -5050,8 +5052,10 @@ export default function Roberto() {
           .home-hero-main{font-size:clamp(1.15rem,4.8vw,1.38rem)!important;line-height:1.26!important}
           .home-hero-sub{max-width:100%!important;font-size:0.76rem!important;line-height:1.8!important}
           .home-services-grid{grid-template-columns:1fr!important;gap:0.2rem 0!important}
-          .home-service-card{padding-bottom:1.1rem!important;padding-top:1.1rem!important}
-          .home-service-title{font-size:1.15rem!important;margin-bottom:0.5rem!important}
+          .home-service-card{padding-bottom:1.2rem!important;padding-top:1.2rem!important}
+          .home-service-index{font-size:0.62rem!important}
+          .home-service-axis{font-size:0.64rem!important;margin-bottom:0.45rem!important}
+          .home-service-title{font-size:1.15rem!important;margin-bottom:0.45rem!important}
           .home-service-description{font-size:0.82rem!important;line-height:1.8!important}
           .home-method-title{font-size:14px!important;line-height:1.42!important;margin-bottom:8px!important}
           .home-method-desc{font-size:12px!important;line-height:1.82!important;max-width:100%!important;color:#9e9e9e!important}
@@ -5294,6 +5298,8 @@ export default function Roberto() {
               <div className="home-services-grid">
                 {T.services.map((svc) => (
                   <div key={svc.title} className="home-service-card">
+                    <div className="home-service-index">{svc.index}</div>
+                    <div className="home-service-axis">{svc.axis}</div>
                     <div className="home-service-title">{svc.title}</div>
                     <div className="home-service-description">{svc.description}</div>
                   </div>
@@ -5392,7 +5398,7 @@ export default function Roberto() {
           <div style={{ fontSize: isMobileViewport ? 28 : 38, marginBottom: 24, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#FF4D00", textShadow: "0 0 50px rgba(255,77,0,.2)", letterSpacing: 1, whiteSpace: "nowrap" }}>
             {T.finally}
           </div>
-          <div style={{ fontSize: isMobileViewport ? 12 : 13, color: "#666", letterSpacing: .5, textAlign: "center", lineHeight: 1.9, maxWidth: isMobileViewport ? "100%" : 380, padding: isMobileViewport ? "0 8px" : 0 }}>
+          <div style={{ fontSize: isMobileViewport ? 11 : 13, color: "#666", letterSpacing: isMobileViewport ? 0 : .5, textAlign: "center", lineHeight: 1.9, maxWidth: isMobileViewport ? "100%" : 380 }}>
             {lang === "it" ? (
               <>
                 <div>I servizi spiegano cosa faccio.</div>
