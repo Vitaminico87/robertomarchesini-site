@@ -244,6 +244,9 @@ const LANG = {
     heroMainBefore: "Trasformo complessità in ",
     heroMainEmphasis: "sistemi creativi",
     heroMainAfter: " per comunicazione, contenuti ed esperienze digitali.",
+    heroEmphasisPrefix: "sistemi ",
+    heroEmphasisCycle: ["creativi", "narrativi", "operativi"],
+    heroEmphasisSuffix: "",
     heroSub: "15+ anni tra direzione creativa, comunicazione e marketing. Oggi progetto strutture più chiare, solide e utili, anche con l'AI.",
     proofStrip: "15+ anni tra direzione creativa, comunicazione, marketing e sistemi. Oggi uso AI e workflow per aumentare controllo e qualità.",
     proofStripMobile: "15+ anni tra direzione creativa, comunicazione e sistemi.",
@@ -453,6 +456,9 @@ const LANG = {
     heroMainBefore: "I turn complexity into ",
     heroMainEmphasis: "creative systems",
     heroMainAfter: " for communication, content, and digital experiences.",
+    heroEmphasisPrefix: "",
+    heroEmphasisCycle: ["creative", "narrative", "operational"],
+    heroEmphasisSuffix: " systems",
     heroSub: "15+ years across creative direction, communication, and marketing. Today I design clearer, more solid, and more useful structures — with AI when it helps.",
     proofStrip: "15+ years across creative direction, communication, marketing, and systems. Today I use AI and workflows to increase control and quality.",
     proofStripMobile: "15+ years across creative direction, communication, and systems.",
@@ -781,6 +787,57 @@ function GlitchText({ text, active }) {
     return () => clearInterval(iv);
   }, [active, text]);
   return <span>{display}</span>;
+}
+
+function EmphasisCycler({ prefix = "", words = [], suffix = "", delays = [] }) {
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const doneRef = useRef(false);
+
+  useEffect(() => {
+    if (!words.length || doneRef.current) return;
+    let cancelled = false;
+    let currentIdx = 0;
+
+    function advance() {
+      if (cancelled || doneRef.current) return;
+      const nextIdx = currentIdx + 1;
+      if (nextIdx >= words.length) { doneRef.current = true; return; }
+      // fade out
+      setVisible(false);
+      setTimeout(() => {
+        if (cancelled) return;
+        currentIdx = nextIdx;
+        setIdx(nextIdx);
+        setVisible(true);
+        // schedule next if not last
+        const nextDelay = delays[nextIdx] ?? 1800;
+        if (nextIdx < words.length - 1) {
+          setTimeout(advance, nextDelay);
+        }
+      }, 280);
+    }
+
+    const firstDelay = delays[0] ?? 2200;
+    const t = setTimeout(advance, firstDelay);
+    return () => { cancelled = true; clearTimeout(t); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const word = words[idx] ?? words[0] ?? "";
+  return (
+    <span style={{ display: "inline-block" }}>
+      {prefix}
+      <span style={{
+        display: "inline-block",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(-5px)",
+        transition: "opacity 0.28s ease, transform 0.28s ease",
+        whiteSpace: "nowrap",
+      }}>{word}</span>
+      {suffix}
+    </span>
+  );
 }
 
 function useScrollReveal() {
@@ -5293,12 +5350,11 @@ export default function Roberto() {
           <Section delay={0.05}>
             <div className="home-hero-shell" style={{ marginBottom: isMobileViewport ? 34 : 40 }}>
               <h1 className="nm" style={{ fontFamily: "'Playfair Display',serif", fontSize: 52, fontWeight: 700, lineHeight: 1.02, margin: "0 0 18px", color: "#F0ECE6", animation: "nameGlow 6s ease-in-out infinite" }}>
-                <GlitchText text="Roberto" active={glitch} /><br />
-                <GlitchText text="Marchesini" active={glitch} />
+                Roberto<br />Marchesini
               </h1>
               <div className="home-hero-copy">
                 <div className="home-hero-main">
-                  {T.heroMainBefore}<em>{T.heroMainEmphasis}</em>{T.heroMainAfter}
+                  {T.heroMainBefore}<em><EmphasisCycler prefix={T.heroEmphasisPrefix} words={T.heroEmphasisCycle} suffix={T.heroEmphasisSuffix} delays={[2200, 1800, 1800]} /></em>{T.heroMainAfter}
                 </div>
                 <div className="home-hero-sub">{T.heroSub}</div>
               </div>
@@ -5619,7 +5675,7 @@ export default function Roberto() {
       {phase === "main" && (
         <GhostLayer
           ghostPhases={T.ghostPhases}
-          active={ghostReady && scrollProgress >= 0.75}
+          active={ghostReady}
           scrollProgress={scrollProgress}
         />
       )}
