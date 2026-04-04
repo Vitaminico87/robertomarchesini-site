@@ -4470,6 +4470,7 @@ export default function Roberto() {
   const handleTrash = () => {
     scrollScanPlayedRef.current = false;
     setUnlockedProfileIds([]);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     const isCompleted = localStorage.getItem('rmg_completed') === 'true';
     const savedFlow = localStorage.getItem('rmg_flow');
     const resumeFlow = !isCompleted && savedFlow && !['chapter1', 'chapter1Intro'].includes(savedFlow) ? savedFlow : 'chapter1Intro';
@@ -5391,7 +5392,7 @@ export default function Roberto() {
           <div style={{ fontSize: isMobileViewport ? 28 : 38, marginBottom: 24, fontFamily: "'Playfair Display',serif", fontStyle: "italic", color: "#FF4D00", textShadow: "0 0 50px rgba(255,77,0,.2)", letterSpacing: 1, whiteSpace: "nowrap" }}>
             {T.finally}
           </div>
-          <div style={{ fontSize: 13, color: "#666", letterSpacing: .5, textAlign: "center", lineHeight: 1.9, maxWidth: 380 }}>
+          <div style={{ fontSize: isMobileViewport ? 12 : 13, color: "#666", letterSpacing: .5, textAlign: "center", lineHeight: 1.9, maxWidth: isMobileViewport ? "100%" : 380, padding: isMobileViewport ? "0 8px" : 0 }}>
             {lang === "it" ? (
               <>
                 <div>I servizi spiegano cosa faccio.</div>
