@@ -247,7 +247,7 @@ const LANG = {
     heroEmphasisPrefix: "sistemi ",
     heroEmphasisCycle: ["creativi", "narrativi", "operativi"],
     heroEmphasisSuffix: "",
-    heroSub: "15+ anni tra direzione creativa, comunicazione e marketing. Progetto strutture solide, utili e fatte per restare — anche con l'AI.",
+    heroSub: "15+ anni tra direzione creativa, comunicazione e marketing. Progetto strutture solide, utili e fatte per restare, anche con l'AI.",
     proofStrip: "15+ anni tra direzione creativa, comunicazione, marketing e sistemi. Oggi uso AI e workflow per aumentare controllo e qualità.",
     proofStripMobile: "15+ anni tra direzione creativa, comunicazione e sistemi.",
     whatido: "Cosa costruisco",
