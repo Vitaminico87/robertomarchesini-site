@@ -5147,7 +5147,7 @@ export default function Roberto() {
 
         @media(max-width:600px){
           .ch2-stage{aspect-ratio:4 / 3}
-          .ch3-line-block{position:relative;bottom:auto;left:auto;right:auto;border-top:none;background:transparent;padding:10px 14px 4px;margin-top:0;z-index:1}
+          .ch3-line-block{position:relative;bottom:auto;left:auto;right:auto;border-top:none;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.52) 55%,rgba(0,0,0,.18) 82%,transparent 100%);padding:18px 14px 10px;margin-top:0;z-index:1;border-radius:0 0 4px 4px}
           .ch3-line{white-space:normal;text-wrap:balance;font-size:clamp(15px,4.5vw,20px);line-height:1.22;text-align:center;color:rgba(224,233,242,.88)}
           .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip;background:linear-gradient(180deg,rgba(5,5,5,.42) 0%,rgba(8,6,5,.18) 72%,rgba(10,7,6,.02) 100%)!important;backdrop-filter:none!important;box-shadow:none!important}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
