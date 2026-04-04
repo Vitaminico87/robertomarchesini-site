@@ -3228,7 +3228,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
     selectionTimeoutRef.current = setTimeout(() => {
       setScene("selection");
-    }, 600);
+    }, 950);
   }, [T, deskTransitioning, onUnlockProfile]);
 
   useEffect(() => {
