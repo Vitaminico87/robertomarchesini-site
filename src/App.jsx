@@ -338,7 +338,6 @@ const LANG = {
       bridgeLine: "Non potevo portarmi dietro tutto. Dovevo capire cosa restava.",
       continueFeedback: [
         "Come se non avessi già abbastanza cose aperte.",
-        "Un problema solo era chiaramente troppo semplice.",
         "Ovviamente ho deciso di aggiungerne un altro.",
       ],
       streetCopy: "Fuori, almeno, il rumore cambiava forma.",
@@ -2987,7 +2986,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
   const baseItems = CH2_OBJECTS[lang] || CH2_OBJECTS.it;
   const items = useMemo(() => shuffleArray(baseItems), [baseItems]);
   const [placedIds, setPlacedIds] = useState([]);
-  const [feedback, setFeedback] = useState(T.gameIntroLine);
+  const [feedback, setFeedback] = useState('');
   const [shakeId, setShakeId] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [showNextHint, setShowNextHint] = useState(false);
@@ -3120,7 +3119,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
           </div>
         </div>
         <div className={`ch2-final-caption ${isComplete ? 'is-visible' : ''}`}>
-          {T.gameFinalLine}
+          <div className="ch2-final-caption-inner">{T.gameFinalLine}</div>
         </div>
         <div className="ch1-scan" />
       </div>
@@ -4512,7 +4511,7 @@ export default function Roberto() {
         @keyframes scanbeam{0%{transform:translateY(-100vh)}100%{transform:translateY(100vh)}}
         @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(255,77,0,.12)}50%{box-shadow:0 0 35px rgba(255,77,0,.25)}}
         @keyframes nameGlow{0%,100%{text-shadow:0 0 30px rgba(255,77,0,.04)}50%{text-shadow:0 0 50px rgba(255,77,0,.08)}}
-        @keyframes homeTreeBreathe{0%,100%{opacity:.042}50%{opacity:.11}}
+        @keyframes homeTreeBreathe{0%,100%{opacity:.05}50%{opacity:.20}}
         .home-tree-echo{position:fixed;top:0;right:0;width:min(52vw,480px);height:min(82vh,660px);pointer-events:none;z-index:0;mix-blend-mode:screen;animation:homeTreeBreathe 7.5s ease-in-out infinite}
         @keyframes trashPulse{0%,100%{box-shadow:0 0 0 rgba(255,77,0,0)}50%{box-shadow:0 0 12px rgba(255,77,0,.12)}}
         @keyframes trashBreath{0%,100%{box-shadow:0 0 20px rgba(255,77,0,.12), 0 0 40px rgba(255,77,0,.06);transform:scale(1)}50%{box-shadow:0 0 40px rgba(255,77,0,.25), 0 0 80px rgba(255,77,0,.12);transform:scale(1.02)}}
@@ -4787,7 +4786,7 @@ export default function Roberto() {
         .ch2-street-narrative{color:rgba(239,233,224,.96);font-size:12px;line-height:1.82;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.88);background:linear-gradient(180deg, rgba(3,8,10,.68), rgba(3,8,10,.30));padding:12px 20px;border-top:1px solid rgba(255,203,154,.20);border-radius:8px;backdrop-filter:blur(5px)}
         .ch2-street-narrative-line{display:block}
         .ch2-street-mobile-copy{display:none}
-                .ch2-game-prompt{width:100%;margin:0 0 10px 0;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,77,0,.18);background:rgba(255,77,0,.04);color:#e6d5c9;font-size:11px;line-height:1.7;letter-spacing:.01em;text-align:center}
+                .ch2-game-prompt{display:none}
         .ch2-street-stage.is-holding .ch2-street-door-bloom{opacity:.82;filter:blur(24px)}
         .ch2-street-stage.is-holding .ch2-street-reflection-boost{opacity:.84}
         .ch2-street-stage.is-transitioning .ch2-street-frame{filter:saturate(.98) contrast(1.04) brightness(.92);transform:scale(1.01)}
@@ -4845,8 +4844,9 @@ export default function Roberto() {
         .ch2-game-feedback{width:100%;margin-top:2px;margin-bottom:14px;min-height:52px;padding:13px 16px;border-radius:8px;border:1px solid rgba(148,174,188,.18);background:rgba(3,8,10,.72);color:#d8e0e6;font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease,opacity .2s ease}
         .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
         .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
-        .ch2-final-caption{position:absolute;left:0;right:0;bottom:0;z-index:9;padding:42px 24px 20px;background:linear-gradient(0deg,rgba(4,4,4,.90) 0%,rgba(4,4,4,.60) 52%,transparent 100%);font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(18px,1.95vw,24px);line-height:1.26;color:rgba(241,232,223,.96);text-align:center;text-shadow:0 1px 0 rgba(0,0,0,.36),0 8px 22px rgba(0,0,0,.44);opacity:0;transform:translateY(5px);transition:opacity .65s ease,transform .65s ease;pointer-events:none}
+        .ch2-final-caption{position:absolute;left:0;right:0;bottom:0;z-index:9;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;display:block;max-width:none}
         .ch2-final-caption.is-visible{opacity:1;transform:translateY(0)}
+        .ch2-final-caption-inner{display:block;max-width:none;width:100%;padding:12px 18px 11px;border-top:1px solid rgba(255,218,178,.20);background:linear-gradient(180deg,rgba(10,7,6,.06) 0%,rgba(8,6,5,.34) 16%,rgba(5,5,5,.84) 100%);box-shadow:0 -16px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,228,198,.08);backdrop-filter:blur(5px);color:rgba(247,238,224,.99);font-family:Georgia,serif;font-style:italic;font-size:clamp(18px,2.05vw,24px);line-height:1.24;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.34),0 10px 24px rgba(0,0,0,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
         .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
         .ch2-game-object-icon{display:none;font-size:18px;line-height:1;color:#ddd2c4;margin-bottom:8px}
@@ -4966,7 +4966,7 @@ export default function Roberto() {
           .ch2-street-line-mobile{font-size:clamp(16px,4.9vw,22px);line-height:1.18;text-align:center;color:#e0e9f2}
           .ch2-game-slot-shell{display:none}
           .ch2-game-slot-shell-mobile{display:block}
-          .ch2-game-prompt{font-size:11px;padding:10px 12px;margin-top:2px;margin-bottom:10px;line-height:1.65}
+          .ch2-game-prompt{display:block;width:100%;margin:0 0 10px;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,77,0,.18);background:rgba(255,77,0,.04);color:#e6d5c9;font-size:11px;line-height:1.65;letter-spacing:.01em;text-align:center}
           .ch2-game-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
           .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
           .ch2-game-object-icon{display:block;font-size:16px;margin-bottom:6px}
@@ -5020,7 +5020,7 @@ export default function Roberto() {
           .ch2-game-slot.is-filled{font-size:10px}
           .ch2-game-feedback{font-size:11px;line-height:1.68;min-height:42px;margin-bottom:10px}
           .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
-          .ch2-final-caption{font-size:clamp(16px,4.2vw,21px)}
+          .ch2-final-caption-inner{font-size:clamp(15px,4.2vw,20px);white-space:normal;overflow:visible;text-overflow:clip}
           .ch2-game-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
           .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
           .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
@@ -5102,22 +5102,45 @@ export default function Roberto() {
       {phase === "main" && gameCompleted && (
         <svg className="home-tree-echo" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           <defs>
-            <filter id="homeGlow" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="1.4" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            {/* halo: wide soft warmth behind each branch */}
+            <filter id="htHalo" x="-120%" y="-120%" width="340%" height="340%">
+              <feGaussianBlur stdDeviation="2.6"/>
+            </filter>
+            {/* wire: barely-there softening, keeps line crisp */}
+            <filter id="htWire" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="0.28" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-          <g filter="url(#homeGlow)">
-            <polyline points="66,92 65,41" stroke="#ffb84a" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
-            <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ffb84a" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="65,41 74,23 84,6" stroke="#ffb84a" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="66,38 68,14 70,3" stroke="#ffb84a" strokeWidth="0.7" strokeLinecap="round" fill="none"/>
-            <polyline points="50,28 38,17 23,14" stroke="#ffb84a" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="34,18 27,12" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
-            <polyline points="74,23 89,14 96,7" stroke="#ffb84a" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="17,9 9,4" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
-            <polyline points="84,6 90,3" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
-            <polyline points="50,28 42,21 30,20" stroke="#ffb84a" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          {/* Layer 1 — ambient halo, wide and blurry */}
+          <g filter="url(#htHalo)" opacity="0.55">
+            <polyline points="66,92 65,41" stroke="#ff9820" strokeWidth="2.0" strokeLinecap="round" fill="none"/>
+            <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ff9820" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="65,41 74,23 84,6" stroke="#ff9820" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="66,38 68,14 70,3" stroke="#ff9820" strokeWidth="0.9" strokeLinecap="round" fill="none"/>
+            <polyline points="50,28 38,17 23,14" stroke="#ff9820" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="74,23 89,14 96,7" stroke="#ff9820" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="50,28 42,21 30,20" stroke="#ff9820" strokeWidth="0.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="34,18 27,12" stroke="#ff9820" strokeWidth="0.6" strokeLinecap="round" fill="none"/>
+            <polyline points="17,9 9,4"    stroke="#ff9820" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
+            <polyline points="84,6 90,3"   stroke="#ff9820" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
+          </g>
+          {/* Layer 2 — crisp filament, ultra-thin */}
+          <g filter="url(#htWire)" opacity="0.88">
+            <polyline points="66,92 65,41" stroke="#ffe4a8" strokeWidth="0.26" strokeLinecap="round" fill="none"/>
+            <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ffe4a8" strokeWidth="0.20" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="65,41 74,23 84,6" stroke="#ffe4a8" strokeWidth="0.18" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="66,38 68,14 70,3" stroke="#ffe4a8" strokeWidth="0.16" strokeLinecap="round" fill="none"/>
+            <polyline points="50,28 38,17 23,14" stroke="#ffe4a8" strokeWidth="0.15" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="74,23 89,14 96,7" stroke="#ffe4a8" strokeWidth="0.15" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="50,28 42,21 30,20" stroke="#ffe4a8" strokeWidth="0.13" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="34,18 27,12" stroke="#ffe4a8" strokeWidth="0.12" strokeLinecap="round" fill="none"/>
+            <polyline points="17,9 9,4"    stroke="#ffe4a8" strokeWidth="0.11" strokeLinecap="round" fill="none"/>
+            <polyline points="84,6 90,3"   stroke="#ffe4a8" strokeWidth="0.11" strokeLinecap="round" fill="none"/>
+            <polyline points="23,14 14,10 7,8"  stroke="#ffe4a8" strokeWidth="0.10" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <polyline points="96,7 99,4"   stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
+            <polyline points="5,6 1,4"     stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
+            <polyline points="70,3 72,1"   stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
           </g>
         </svg>
       )}
@@ -5144,7 +5167,7 @@ export default function Roberto() {
           {/* 3. PROOF STRIP */}
           <Section delay={0.09}>
             <div style={{ marginBottom: 60, paddingBottom: 22, borderBottom: "1px solid rgba(255,255,255,.06)" }}>
-              <div style={{ fontSize: 10, color: "#5a5450", fontFamily: "'IBM Plex Mono',monospace", letterSpacing: 1.6, lineHeight: 2.0, textTransform: "uppercase" }}>
+              <div style={{ fontSize: 11, color: "#7a746d", fontFamily: "'IBM Plex Mono',monospace", letterSpacing: 1.5, lineHeight: 1.9, textTransform: "uppercase" }}>
                 {proofStripText}
               </div>
             </div>
@@ -5162,12 +5185,12 @@ export default function Roberto() {
                   display: isMobileViewport ? "block" : "grid",
                   gridTemplateColumns: "1fr 1fr",
                   gap: 48,
-                  alignItems: "flex-end",
+                  alignItems: "center",
                 }}>
                   <div className="home-selected-heading has-accent-dot" style={{ marginBottom: isMobileViewport ? 14 : 0 }}>
                     {T.selectedWorkLabel}
                   </div>
-                  <div style={{ fontSize: 14, color: "#9d968d", fontStyle: "italic", fontFamily: "'Playfair Display',serif", lineHeight: 1.86, textWrap: "pretty", paddingBottom: isMobileViewport ? 0 : 4 }}>
+                  <div style={{ fontSize: 15, color: "#bfb4a8", fontStyle: "italic", fontFamily: "'Playfair Display',serif", lineHeight: 1.72, textWrap: "pretty", maxWidth: 360, paddingBottom: isMobileViewport ? 0 : 8 }}>
                     {selectedWorkSubText}
                   </div>
                 </div>
