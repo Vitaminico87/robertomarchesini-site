@@ -411,7 +411,20 @@ const LANG = {
       formSentTitle: "Messaggio inviato.",
       formSentNote: "Ti rispondo entro 48 ore.",
       backToSurface: "← Torna in superficie",
-    }
+    },
+    tracce: {
+      title: "Tracce emerse",
+      kicker: "Sistema: lettura completata",
+      backToSurface: "← Torna in superficie",
+      contactCta: "Contattami",
+      contactHref: "mailto:info@robertomarchesini.com",
+      entries: [
+        { n: "01", text: "Sguardo prima del rumore" },
+        { n: "02", text: "Scelta dentro il sovraccarico" },
+        { n: "03", text: "Una forma trovata sotto pressione" },
+        { n: "04", text: "Connessione attivata" },
+      ],
+    },
   },
   en: {
     status: { listening: "Aphex Twin — Windowlicker", watching: "There Will Be Blood", rating: 5, imdb: "https://www.imdb.com/title/tt0469494/" },
@@ -610,7 +623,20 @@ const LANG = {
       formSentTitle: "Message sent.",
       formSentNote: "I'll reply within 48 hours.",
       backToSurface: "← Back to surface",
-    }
+    },
+    tracce: {
+      title: "Emerged traces",
+      kicker: "System: reading complete",
+      backToSurface: "← Back to surface",
+      contactCta: "Contact me",
+      contactHref: "mailto:info@robertomarchesini.com",
+      entries: [
+        { n: "01", text: "A gaze before the noise" },
+        { n: "02", text: "Choice within overload" },
+        { n: "03", text: "A form found under pressure" },
+        { n: "04", text: "Connection activated" },
+      ],
+    },
   },
 };
 
@@ -2918,15 +2944,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
               )}
             </div>
 
-            <div className="ch1-profile-slot">
-              <EmergingProfilePanel
-                title={profileUi.title}
-                idle={profileUi.idle}
-                profiles={profileEntries}
-                unlockedIds={unlockedProfileIds}
-                currentLabel={profileUi.currentLabel}
-              />
-            </div>
           </>
         ) : (
           <>
@@ -2939,15 +2956,6 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
               />
             </div>
             <div className="ch1-controls-slot" aria-hidden="true" />
-            <div className="ch1-profile-slot">
-              <EmergingProfilePanel
-                title={profileUi.title}
-                idle={profileUi.idle}
-                profiles={profileEntries}
-                unlockedIds={unlockedProfileIds}
-                currentLabel={profileUi.currentLabel}
-              />
-            </div>
           </>
         )}
       </div>
@@ -3306,16 +3314,6 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
           <ChapterTwoObjectGame lang={lang} T={T} onComplete={onComplete} />
         )}
 
-        <div className="ch1-profile-slot ch2-profile-slot">
-          <EmergingProfilePanel
-            title={profileUi.title}
-            idle={profileUi.idle}
-            profiles={profileEntries}
-            unlockedIds={unlockedProfileIds}
-            currentId={currentProfileId}
-            currentLabel={profileUi.currentLabel}
-          />
-        </div>
       </div>
     </div>
   );
@@ -3562,16 +3560,6 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
           )}
         </div>
 
-        <div className="ch1-profile-slot ch2-profile-slot">
-          <EmergingProfilePanel
-            title={profileUi.title}
-            idle={profileUi.idle}
-            profiles={profileEntries}
-            unlockedIds={unlockedProfileIds}
-            currentId={currentProfileId}
-            currentLabel={profileUi.currentLabel}
-          />
-        </div>
       </div>
     </div>
   );
@@ -3624,7 +3612,7 @@ function Ch4Controller({ lit = false, ghost = false, accent = "#7A5CFF", flip = 
   );
 }
 
-function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
+function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profileEntries, unlockedProfileIds, currentProfileId, onUnlockProfile }) {
   const t4 = T;
   // phases: idle | crt_on | cart_drag | cart_in | cable | passed1 | passed2 | passed3 | connected | unlocked
   const [phase, setPhase]           = useState("idle");
@@ -3791,7 +3779,7 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
     if (ph === "press_start") {
       e.preventDefault();
       phaseRef.current = "unlocked"; setPhase("unlocked");
-      setShowForm(true);
+      setTimeout(() => onComplete?.(), 600);
       return;
     }
     if (ph === "cart_in" || ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
@@ -4195,17 +4183,45 @@ function ChapterFourScene({ T, onBack, onContact, profileUi, profileEntries, unl
           </div>
         </div>
 
-        <div className="ch1-profile-slot ch2-profile-slot">
-          <EmergingProfilePanel
-            title={profileUi.title} idle={profileUi.idle}
-            profiles={profileEntries} unlockedIds={unlockedProfileIds}
-            currentId={currentProfileId} currentLabel={profileUi.currentLabel}
-          />
-        </div>
       </div>
     </div>
   );
 }
+// ============================================================================
+// TRACCE EMERSE — final reading screen
+// ============================================================================
+function TracceEmerse({ T, onBack }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div className="tracce-root" style={{ opacity: visible ? 1 : 0, transition: "opacity 1s ease" }}>
+      <div className="tracce-wrap">
+        <div className="tracce-kicker">{T.kicker}</div>
+        <h1 className="tracce-title">{T.title}</h1>
+        <div className="tracce-rule" />
+        <ul className="tracce-list">
+          {T.entries.map((entry) => (
+            <li key={entry.n} className="tracce-row">
+              <span className="tracce-num">{entry.n}</span>
+              <span className="tracce-dash">—</span>
+              <span className="tracce-text">{entry.text}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="tracce-rule" />
+        <div className="tracce-actions">
+          <a href={T.contactHref} className="tracce-contact-btn">{T.contactCta}</a>
+        </div>
+        <button className="ch1-back-btn tracce-back" onClick={onBack}>{T.backToSurface}</button>
+      </div>
+    </div>
+  );
+}
+
 // ============================================================================
 // FALLING WORDS GENERATOR
 // ============================================================================
@@ -4273,7 +4289,7 @@ export default function Roberto() {
 
   // Persist chapter progress
   useEffect(() => {
-    const skip = ['chapter1', 'chapter1Intro'];
+    const skip = ['chapter1', 'chapter1Intro', 'tracceEmerse'];
     if (phase === 'game' && !skip.includes(gameFlow)) {
       localStorage.setItem('rmg_flow', gameFlow);
     }
@@ -4700,6 +4716,20 @@ export default function Roberto() {
         .ch1-profile-subcap{color:#6a6a6a;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
         .ch1-profile-body{color:#9a9a9a;font-size:12px;line-height:1.65}
         .ch1-profile-card.is-current .ch1-profile-body{color:#a99182}
+        .tracce-root{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:52px 28px;background:#07050f}
+        .tracce-wrap{width:100%;max-width:480px;display:flex;flex-direction:column}
+        .tracce-kicker{font-size:9px;letter-spacing:2.8px;text-transform:uppercase;color:#3e3a50;font-family:'IBM Plex Mono',monospace;margin-bottom:20px}
+        .tracce-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(34px,6.5vw,56px);color:#ece7de;line-height:1.06;margin:0 0 30px;font-weight:600;letter-spacing:-.3px}
+        .tracce-rule{width:100%;height:1px;background:rgba(255,255,255,.07);margin-bottom:28px}
+        .tracce-list{list-style:none;margin:0 0 30px;padding:0;display:flex;flex-direction:column;gap:18px}
+        .tracce-row{display:flex;align-items:baseline;gap:12px}
+        .tracce-num{font-size:9px;letter-spacing:2px;color:#3e3a50;font-family:'IBM Plex Mono',monospace;min-width:18px;flex-shrink:0}
+        .tracce-dash{color:#2e2c3a;font-size:13px;flex-shrink:0}
+        .tracce-text{font-family:Georgia,serif;font-style:italic;font-size:clamp(16px,3.2vw,21px);color:#b8b0a6;line-height:1.3}
+        .tracce-actions{margin-bottom:24px}
+        .tracce-contact-btn{display:inline-block;padding:11px 26px;border:1px solid rgba(255,77,0,.28);color:#FF4D00;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2.2px;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:border-color .22s,background .22s}
+        .tracce-contact-btn:hover{border-color:rgba(255,77,0,.60);background:rgba(255,77,0,.05)}
+        .tracce-back{margin-top:0}
         .ch1-crossing-wrap{width:100%;display:flex;flex-direction:column;gap:12px}
         .ch1-crossing-kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(232,228,222,.46)}
         .ch1-crossing-frame{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:8px;border:1px solid rgba(15,22,16,.72);background:linear-gradient(180deg,#d7e1b7 0%,#c5d090 46%,#b7c07f 100%);touch-action:none;user-select:none}
@@ -5031,6 +5061,7 @@ export default function Roberto() {
           .chapter-intro-inner{transform:translateY(0)}
           .ch4-form-overlay{align-items:flex-start!important;padding:6px!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
           .ch2-line{text-wrap:balance}
+          .home-tree-echo{display:none}
           .has-feedback .ch2-line-block{opacity:0;pointer-events:none;transition:opacity .2s ease}
           .ch2-stage.is-form-open{aspect-ratio:auto!important;min-height:520px}
         }
@@ -5555,6 +5586,7 @@ export default function Roberto() {
           T={T.ch4}
           onBack={handleBack}
           onContact={openContact}
+          onComplete={() => setGameFlow("tracceEmerse")}
           profileUi={{
             title: T.ch1.profileTitle,
             idle: T.ch1.profileIdle,
@@ -5564,6 +5596,13 @@ export default function Roberto() {
           unlockedProfileIds={unlockedProfileIds}
           currentProfileId={unlockedProfileIds.includes("future") ? null : "future"}
           onUnlockProfile={unlockProfile}
+        />
+      )}
+
+      {phase === "game" && gameFlow === "tracceEmerse" && (
+        <TracceEmerse
+          T={T.tracce}
+          onBack={handleBack}
         />
       )}
     </div>
