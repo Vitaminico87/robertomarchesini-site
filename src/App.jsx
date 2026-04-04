@@ -236,15 +236,6 @@ const LANG = {
     selectedWorkMobileSub: "Progetti reali. Strutture che hanno dovuto reggere.",
     selectedWork: [
       {
-        title: "Notre Dame de Paris",
-        period: "2012 – 2024",
-        status: "completed",
-        role: "Direzione creativa · Comunicazione digitale · Sistema contenuti",
-        main: "Dodici anni di continuità su uno dei live brand più riconoscibili in Italia. Un sistema di contenuti e comunicazione costruito per restare coerente nel tempo.",
-        sub: "Tenuta narrativa, riconoscibilità e scala su cicli lunghi e tournée.",
-        tags: ["Live brand", "Continuity", "Digital communication"]
-      },
-      {
         title: "Largo Venue",
         period: "2019 – in corso",
         status: "active",
@@ -252,6 +243,15 @@ const LANG = {
         main: "Programmazione settimanale continua e sistema contenuti attivo. Identità, promozione e direzione artistica tenute insieme ogni settimana.",
         sub: "Gestione reale, non campagne isolate.",
         tags: ["Cultural venue", "Weekly execution", "Content system"]
+      },
+      {
+        title: "Notre Dame de Paris",
+        period: "2012 – 2024",
+        status: "completed",
+        role: "Direzione creativa · Comunicazione digitale · Sistema contenuti",
+        main: "Dodici anni di continuità su uno dei live brand più riconoscibili in Italia. Un sistema di contenuti e comunicazione costruito per restare coerente nel tempo.",
+        sub: "Tenuta narrativa, riconoscibilità e scala su cicli lunghi e tournée.",
+        tags: ["Live brand", "Continuity", "Digital communication"]
       },
       {
         title: "THEIA Events",
@@ -444,15 +444,6 @@ const LANG = {
     selectedWorkMobileSub: "Real projects. Structures that had to hold up.",
     selectedWork: [
       {
-        title: "Notre Dame de Paris",
-        period: "2012 – 2024",
-        status: "completed",
-        role: "Creative direction · Digital communication · Content system",
-        main: "Twelve years of continuity on one of Italy's most recognizable live brands. A content and communication system built to stay coherent over time.",
-        sub: "Narrative consistency, recognizability, and scale across long cycles and tours.",
-        tags: ["Live brand", "Continuity", "Digital communication"]
-      },
-      {
         title: "Largo Venue",
         period: "2019 – ongoing",
         status: "active",
@@ -460,6 +451,15 @@ const LANG = {
         main: "Continuous weekly programming and an active content system. Identity, promotion, and artistic direction held together every week.",
         sub: "Real ongoing management, not isolated campaigns.",
         tags: ["Cultural venue", "Weekly execution", "Content system"]
+      },
+      {
+        title: "Notre Dame de Paris",
+        period: "2012 – 2024",
+        status: "completed",
+        role: "Creative direction · Digital communication · Content system",
+        main: "Twelve years of continuity on one of Italy's most recognizable live brands. A content and communication system built to stay coherent over time.",
+        sub: "Narrative consistency, recognizability, and scale across long cycles and tours.",
+        tags: ["Live brand", "Continuity", "Digital communication"]
       },
       {
         title: "THEIA Events",
