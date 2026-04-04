@@ -377,6 +377,7 @@ const LANG = {
       finalLine: "Il conflitto non era sparito. Aveva trovato una forma.",
       stayBtn: "Resta nel flusso",
       centerBtn: "Trova il centro",
+      centerFeedback: "Il centro non si cerca. Si sceglie.",
       stayFeedback: [
         "Muoversi non bastava.",
         "Il rumore da solo non decide niente.",
@@ -589,6 +590,7 @@ const LANG = {
       finalLine: "The conflict had not disappeared. It had found a form.",
       stayBtn: "Stay in the flow",
       centerBtn: "Find the center",
+      centerFeedback: "The center isn't found. It's chosen.",
       stayFeedback: [
         "Movement alone wasn't enough.",
         "Noise doesn't decide anything by itself.",
@@ -2966,21 +2968,7 @@ function ChapterOne({ T, onBack, onRequestChapterTwo, profileUi, profileEntries,
 
 
 
-function TimeSkipCard({ lang, onDone }) {
-  useEffect(() => {
-    const t = setTimeout(() => onDone?.(), 3400);
-    return () => clearTimeout(t);
-  }, []);
-  const label = lang === "it" ? "10 anni dopo" : "10 years later";
-  return (
-    <div className="time-skip-card" onClick={onDone} role="button" tabIndex={0}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onDone?.(); }}>
-      <span className="time-skip-text">{label}</span>
-    </div>
-  );
-}
-
-function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
+function ChapterIntroCard({ number, title, onDone, label = "Chapter", subtitle }) {
   useEffect(() => {
     const t = setTimeout(() => {
       if (typeof onDone === "function") onDone();
@@ -2997,6 +2985,7 @@ function ChapterIntroCard({ number, title, onDone, label = "Chapter" }) {
           <div className="chapter-intro-inner">
             <div className="chapter-intro-kicker">{label} {number}</div>
             <div className="chapter-intro-title">{title}</div>
+            {subtitle && <div className="chapter-intro-subtitle">{subtitle}</div>}
           </div>
         </div>
         <div className="ch1-controls-slot chapter-intro-controls-slot" aria-hidden="true" />
@@ -3423,26 +3412,31 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     if (scene !== "backstage" || sceneTransitioning) return;
     unlockAmbience();
     ambience.stop();
-    setFeedbackText("");
-    setSceneTransitioning(true);
-    setShowFinalLine(false);
-    setFinalFade(false);
-    setSynthesisRevealed(false);
     if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
     if (sceneSwitchTimeoutRef.current) clearTimeout(sceneSwitchTimeoutRef.current);
     if (sceneTransitionTimeoutRef.current) clearTimeout(sceneTransitionTimeoutRef.current);
     if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
     if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
-
     setShowFutureBtn(false);
-    setScene("synthesis");
-    sceneSwitchTimeoutRef.current = setTimeout(() => {
-      setSynthesisRevealed(true);
-    }, 40);
-    sceneTransitionTimeoutRef.current = setTimeout(() => {
-      setSceneTransitioning(false);
-    }, 520);
-  }, [scene, sceneTransitioning, unlockAmbience, ambience]);
+
+    const doTransition = () => {
+      setFeedbackText("");
+      setSceneTransitioning(true);
+      setShowFinalLine(false);
+      setFinalFade(false);
+      setSynthesisRevealed(false);
+      setScene("synthesis");
+      sceneSwitchTimeoutRef.current = setTimeout(() => setSynthesisRevealed(true), 40);
+      sceneTransitionTimeoutRef.current = setTimeout(() => setSceneTransitioning(false), 520);
+    };
+
+    if (T.centerFeedback) {
+      setFeedbackText(T.centerFeedback);
+      feedbackTimeoutRef.current = setTimeout(doTransition, 1200);
+    } else {
+      doTransition();
+    }
+  }, [scene, sceneTransitioning, unlockAmbience, ambience, T.centerFeedback]);
 
   const playFuturePulseNote = useCallback((step) => {
     try {
@@ -4550,10 +4544,7 @@ export default function Roberto() {
         @keyframes appear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes chapterCardHoldFade{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
         @keyframes chapterCardTextFloat{0%{opacity:0;transform:translateY(18px)}14%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
-        @keyframes timeSkipBgFade{0%{opacity:0}12%{opacity:1}80%{opacity:1}100%{opacity:0}}
-        @keyframes timeSkipTextAnim{0%{opacity:0;transform:translateY(10px)}18%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-6px)}}
-        .time-skip-card{position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:200;animation:timeSkipBgFade 3.4s ease both;cursor:default;pointer-events:all}
-        .time-skip-text{color:rgba(255,218,178,.78);font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(22px,4.5vw,46px);letter-spacing:.06em;animation:timeSkipTextAnim 3.4s ease both}
+        .chapter-intro-subtitle{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:#9d8e80;margin-top:18px;font-style:normal;opacity:.78}
         @keyframes ch1KitePassLeft{0%{transform:translateX(0) translateY(18px) rotate(-20deg)}8%{transform:translateX(3vw) translateY(10px) rotate(-12deg)}16%{transform:translateX(8vw) translateY(-2px) rotate(-4deg)}24%{transform:translateX(12vw) translateY(-13px) rotate(6deg)}32%{transform:translateX(15vw) translateY(-22px) rotate(12deg)}40%{transform:translateX(19vw) translateY(-14px) rotate(4deg)}48%{transform:translateX(23vw) translateY(1px) rotate(-8deg)}56%{transform:translateX(29vw) translateY(11px) rotate(-16deg)}64%{transform:translateX(36vw) translateY(4px) rotate(-5deg)}72%{transform:translateX(43vw) translateY(-10px) rotate(7deg)}80%{transform:translateX(50vw) translateY(-21px) rotate(14deg)}90%{transform:translateX(59vw) translateY(-9px) rotate(3deg)}100%{transform:translateX(68vw) translateY(6px) rotate(-6deg)}}
         @keyframes ch1KitePassRight{0%{transform:translateX(0) translateY(18px) rotate(20deg)}8%{transform:translateX(-3vw) translateY(10px) rotate(12deg)}16%{transform:translateX(-8vw) translateY(-2px) rotate(4deg)}24%{transform:translateX(-12vw) translateY(-13px) rotate(-6deg)}32%{transform:translateX(-15vw) translateY(-22px) rotate(-12deg)}40%{transform:translateX(-19vw) translateY(-14px) rotate(-4deg)}48%{transform:translateX(-23vw) translateY(1px) rotate(8deg)}56%{transform:translateX(-29vw) translateY(11px) rotate(16deg)}64%{transform:translateX(-36vw) translateY(4px) rotate(5deg)}72%{transform:translateX(-43vw) translateY(-10px) rotate(-7deg)}80%{transform:translateX(-50vw) translateY(-21px) rotate(-14deg)}90%{transform:translateX(-59vw) translateY(-9px) rotate(-3deg)}100%{transform:translateX(-68vw) translateY(6px) rotate(6deg)}}
         @keyframes ch1KiteBodyFlutter{0%,100%{transform:rotate(45deg) skewX(0deg)}50%{transform:rotate(45deg) skewX(3deg)}}
@@ -5538,18 +5529,12 @@ export default function Roberto() {
         />
       )}
 
-      {phase === "game" && gameFlow === "timeSkip1to2" && (
-        <TimeSkipCard
-          lang={lang}
-          onDone={() => setGameFlow("chapter2Intro")}
-        />
-      )}
-
       {phase === "game" && gameFlow === "chapter2Intro" && (
         <ChapterIntroCard
           number="2"
           title={T.ch2.introTitle}
           label={lang === "it" ? "Capitolo" : "Chapter"}
+          subtitle={lang === "it" ? "(10 anni dopo)" : "(10 years later)"}
           onDone={() => setGameFlow("chapter2")}
         />
       )}
@@ -5567,7 +5552,7 @@ export default function Roberto() {
           unlockedProfileIds={unlockedProfileIds}
           onUnlockProfile={unlockProfile}
           onRequestChapterTwo={() => {
-            setGameFlow("timeSkip1to2");
+            setGameFlow("chapter2Intro");
           }}
         />
       )}
