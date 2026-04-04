@@ -3961,29 +3961,7 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
                 style={{ animation:`ch4DustFloat ${p.dur}s ${p.d}s ease-in-out infinite` }} />
             ))}
 
-            {/* CRT screen: idle = pulsing hint, crt_on+ = glow */}
-            {phase === "idle" && (
-              <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
-                rx={CH4_CRT_SCREEN.rx * sw} ry={CH4_CRT_SCREEN.ry * sh}
-                fill="rgba(0,0,0,0)" stroke="rgba(140,220,180,.18)" strokeWidth={1}
-                style={{ cursor:"pointer", animation:"ch4CtrlHint 3s ease-in-out infinite" }} />
-            )}
-            {isCrtOn && (
-              <g>
-                {/* Wide halo — cabinet ambient spill */}
-                <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
-                  rx={CH4_CRT_SCREEN.rx * sw * 2.2} ry={CH4_CRT_SCREEN.ry * sh * 2.2}
-                  fill="rgba(100,220,160,.04)" filter="url(#ch4nBloom)" />
-                {/* Core bloom */}
-                <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
-                  rx={CH4_CRT_SCREEN.rx * sw * 1.1} ry={CH4_CRT_SCREEN.ry * sh * 1.1}
-                  fill="rgba(120,240,180,.13)" filter="url(#ch4nBloom)" />
-                {/* Screen pulse */}
-                <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
-                  rx={CH4_CRT_SCREEN.rx * sw * .72} ry={CH4_CRT_SCREEN.ry * sh * .72}
-                  fill="rgba(160,255,200,.18)" style={{ animation:"ch4CrtGlow 3.8s ease-in-out infinite" }} />
-              </g>
-            )}
+            {/* CRT screen: placeholder — video mask coming soon */}
 
             {/* Cartridge slot indicator */}
             {showCart && (() => {
@@ -5202,6 +5180,31 @@ export default function Roberto() {
             <polyline points="96,7 99,4"   stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
             <polyline points="5,6 1,4"     stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
             <polyline points="70,3 72,1"   stroke="#ffe4a8" strokeWidth="0.09" strokeLinecap="round" fill="none"/>
+          </g>
+          {/* Child figure — sitting at trunk base, back leaning against trunk */}
+          {!isMobileViewport && (
+            <g filter="url(#htHalo)" opacity="0.28">
+              {/* head */}
+              <ellipse cx="61" cy="85.6" rx="2.1" ry="1.5" stroke="#ff9820" strokeWidth="0.55" fill="none"/>
+              {/* torso / back leaning toward trunk */}
+              <line x1="61.2" y1="87.1" x2="64.2" y2="91.8" stroke="#ff9820" strokeWidth="0.55" strokeLinecap="round"/>
+              {/* legs bent, knees pulled up */}
+              <path d="M 64.0,91.6 Q 58.5,89.2 55.8,87.0 Q 57.2,91.6 63.4,93.2" stroke="#ff9820" strokeWidth="0.50" strokeLinecap="round" fill="none"/>
+              {/* arms hugging knees */}
+              <path d="M 62.2,88.6 Q 57.0,88.0 55.8,87.0" stroke="#ff9820" strokeWidth="0.40" strokeLinecap="round" fill="none"/>
+              <path d="M 62.4,89.8 Q 58.4,91.0 57.4,91.2" stroke="#ff9820" strokeWidth="0.36" strokeLinecap="round" fill="none"/>
+            </g>
+          )}
+          <g filter={isMobileViewport ? undefined : "url(#htWire)"} opacity={isMobileViewport ? "0.22" : "0.42"}>
+            {/* head */}
+            <ellipse cx="61" cy="85.6" rx="2.1" ry="1.5" stroke="#ffe4a8" strokeWidth="0.22" fill="none"/>
+            {/* torso / back */}
+            <line x1="61.2" y1="87.1" x2="64.2" y2="91.8" stroke="#ffe4a8" strokeWidth="0.22" strokeLinecap="round"/>
+            {/* legs */}
+            <path d="M 64.0,91.6 Q 58.5,89.2 55.8,87.0 Q 57.2,91.6 63.4,93.2" stroke="#ffe4a8" strokeWidth="0.20" strokeLinecap="round" fill="none"/>
+            {/* arms */}
+            <path d="M 62.2,88.6 Q 57.0,88.0 55.8,87.0" stroke="#ffe4a8" strokeWidth="0.16" strokeLinecap="round" fill="none"/>
+            <path d="M 62.4,89.8 Q 58.4,91.0 57.4,91.2" stroke="#ffe4a8" strokeWidth="0.14" strokeLinecap="round" fill="none"/>
           </g>
         </svg>
       )}
