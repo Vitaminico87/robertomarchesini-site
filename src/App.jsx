@@ -2091,8 +2091,8 @@ function useChapterThreeAmbience() {
     const isMob = window.innerWidth <= 600;
     room.loop = true;
     chatter.loop = true;
-    room.volume = isMob ? 0.11 : 0.22;
-    chatter.volume = isMob ? 0.07 : 0.14;
+    room.volume = isMob ? 0.05 : 0.22;
+    chatter.volume = isMob ? 0.03 : 0.14;
 
     const playSafely = (audio) => {
       try {
@@ -2692,25 +2692,19 @@ function ConnectionsCrossing({ onComplete, jumpDuration = 440, arcHeight = 115, 
       <div className="ch1-scan" />
     </div>
     {isTouchDevice && !isComplete && (
-      <button
-        onPointerDown={(e) => { e.stopPropagation(); handleAdvance(); }}
-        style={{
-          display: "block",
-          margin: "12px auto 0",
-          padding: "10px 32px",
-          background: "#fff",
-          color: "#0a0d0b",
-          border: "none",
-          borderRadius: 999,
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: 12,
-          letterSpacing: 2,
-          textTransform: "uppercase",
-          cursor: "pointer",
-          userSelect: "none",
-          touchAction: "manipulation",
-        }}
-      >Salta</button>
+      <div style={{
+        textAlign: "center",
+        marginTop: 14,
+        color: "rgba(199,212,160,0.55)",
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 11,
+        letterSpacing: 1.5,
+        textTransform: "uppercase",
+        pointerEvents: "none",
+        userSelect: "none",
+      }}>
+        Tocca lo schermo per saltare
+      </div>
     )}
     </>
   );
