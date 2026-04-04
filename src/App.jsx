@@ -226,8 +226,8 @@ const LANG = {
     whatido: "Cosa costruisco",
     services: [
       { index: "01", axis: "Posizionamento · Linguaggio", title: "Chiarezza", description: "Quando un brand non riesce più a dire bene chi è, cosa offre e con quale tono può risultare credibile." },
-      { index: "02", axis: "Contenuti · Campagne · Continuità", title: "Sistema di comunicazione", description: "Quando social, newsletter, promozione e direzione creativa devono lavorare insieme senza diventare rumore o improvvisazione." },
-      { index: "03", axis: "Sito · Landing · Funnel", title: "Struttura digitale", description: "Quando sito, pagine e punti di contatto devono trasformare attenzione in fiducia, richieste e decisione." },
+      { index: "02", axis: "Social · Newsletter · Campagne", title: "Comunicazione", description: "Quando contenuti, promozione e direzione creativa devono lavorare insieme con continuità, senza diventare rumore o improvvisazione." },
+      { index: "03", axis: "Sito · Landing · Funnel", title: "Architettura", description: "Quando sito, pagine e punti di contatto devono trasformare attenzione in fiducia, richieste e decisione." },
       { index: "04", axis: "Controllo · Velocità · Qualità", title: "Workflow AI", description: "Quando l’AI serve ad aumentare possibilità e controllo, non a produrre più rumore abbassando il livello." },
     ],
     selectedWorkKicker: "Selezione",
@@ -435,8 +435,8 @@ const LANG = {
     whatido: "What I build",
     services: [
       { index: "01", axis: "Positioning · Language", title: "Clarity", description: "When a brand can no longer say clearly who it is, what it offers, and what tone makes it credible." },
-      { index: "02", axis: "Content · Campaigns · Continuity", title: "Communication system", description: "When social, newsletter, promotion, and creative direction need to work together without becoming noise or improvisation." },
-      { index: "03", axis: "Website · Landing · Funnel", title: "Digital structure", description: "When website, pages, and touchpoints need to turn attention into trust, requests, and decisions." },
+      { index: "02", axis: "Social · Newsletter · Campaigns", title: "Communication", description: "When content, promotion, and creative direction need to work together with continuity — without becoming noise or improvisation." },
+      { index: "03", axis: "Website · Landing · Funnel", title: "Architecture", description: "When website, pages, and touchpoints need to turn attention into trust, requests, and decisions." },
       { index: "04", axis: "Control · Speed · Quality", title: "AI workflows", description: "When AI is there to expand possibilities and control, not to produce more noise by lowering the standard." },
     ],
     selectedWorkKicker: "Selection",
@@ -3165,8 +3165,6 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
   const [roomNightShade, setRoomNightShade] = useState(0.16);
   const [deskFeedbackText, setDeskFeedbackText] = useState("");
   const [deskTransitioning, setDeskTransitioning] = useState(false);
-  const [selectionMounted, setSelectionMounted] = useState(false);
-  const [selectionReveal, setSelectionReveal] = useState(false);
 
   useEffect(() => {
     const video = deskLoopRef.current;
@@ -3223,11 +3221,9 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
     setDeskTransitioning(true);
     onUnlockProfile?.("conflict");
     if (selectionTimeoutRef.current) clearTimeout(selectionTimeoutRef.current);
-    // Mount game under wash, then reveal
-    setTimeout(() => { setSelectionMounted(true); setScene("selection"); }, 900);
-    setTimeout(() => { setSelectionReveal(true); }, 1100);
-    // Clean up wash after transition fully completes
-    selectionTimeoutRef.current = setTimeout(() => { setDeskTransitioning(false); }, 1900);
+    selectionTimeoutRef.current = setTimeout(() => {
+      setScene("selection");
+    }, 2600);
   }, [T, deskTransitioning, onUnlockProfile]);
 
   useEffect(() => {
@@ -3253,7 +3249,7 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
           </div>
         ) : null}
 
-        {!selectionMounted && (
+        {scene === "desk" ? (
           <>
             <div className={`ch2-stage ${deskTransitioning ? "ch2-stage-transitioning" : ""} ${deskFeedbackText ? "has-feedback" : ""}`}>
               <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
@@ -3291,14 +3287,8 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
               )}
             </div>
           </>
-        )}
-
-        {selectionMounted && (
+        ) : (
           <ChapterTwoObjectGame lang={lang} T={T} onComplete={onComplete} />
-        )}
-
-        {deskTransitioning && (
-          <div className={`ch2-scene-wash${selectionReveal ? " is-opening" : " is-closing"}`} />
         )}
 
       </div>
@@ -4924,12 +4914,7 @@ export default function Roberto() {
         @keyframes ch4DustFloat{0%,100%{opacity:.12;transform:translateY(0) scale(1)}40%{opacity:.42;transform:translateY(-4px) scale(1.18)}70%{opacity:.22;transform:translateY(-7px) scale(.9)}}
         @keyframes ch4CartHint{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
         @keyframes ch4PressStart{0%,49%{opacity:1}50%,100%{opacity:0}}
-        .ch2-scene-wash{position:fixed;inset:0;z-index:100;pointer-events:none;background:rgba(0,0,0,0.92);opacity:0;transition:opacity .35s ease}
-        .ch2-scene-wash.is-closing{opacity:1}
-        .ch2-scene-wash.is-opening{opacity:0;transition:opacity .45s ease}
-        .ch2-stage-transitioning .ch2-window-video,.ch2-stage-transitioning .ch2-fill{transform:scale(1.015);filter:brightness(.72) contrast(1.02) saturate(.9);transition:transform .8s ease,filter .8s ease}
-        .ch2-stage-transitioning .ch2-line-block,.ch2-stage-transitioning .ch2-feedback-overlay{opacity:1}
-        .ch2-game-slot-shell{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+.ch2-game-slot-shell{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch2-game-slot-shell.is-visible{opacity:1;transform:translateY(0)}
         .ch2-game-grid{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
         .ch2-game-grid.is-visible{opacity:1;transform:translateY(0)}
