@@ -3378,7 +3378,8 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     onUnlockProfile?.("synthesis");
     setFinalFade(false);
     setShowFutureBtn(true);
-    setShowFinalLine(true);
+    // Delay caption until synthesis panel has fully faded in (~720ms transition)
+    finalLineTimeoutRef.current = setTimeout(() => setShowFinalLine(true), 950);
     return () => {
       if (finalLineTimeoutRef.current) clearTimeout(finalLineTimeoutRef.current);
       if (continueTimeoutRef.current) clearTimeout(continueTimeoutRef.current);
@@ -3530,12 +3531,14 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
             <div className="ch3-synthesis-vignette" />
             <div className="ch3-pulse-bloom" />
             <div className="ch3-distant-kite" aria-hidden="true">
-              <span className="ch3-kite">
-                <span className="ch3-kite-diamond" />
-                <span className="ch3-kite-tail ch3-kite-tail-a" />
-                <span className="ch3-kite-tail ch3-kite-tail-b" />
-                <span className="ch3-kite-tail ch3-kite-tail-c" />
-              </span>
+              <div className="ch3-kite-gust">
+                <span className="ch3-kite">
+                  <span className="ch3-kite-diamond" />
+                  <span className="ch3-kite-tail ch3-kite-tail-a" />
+                  <span className="ch3-kite-tail ch3-kite-tail-b" />
+                  <span className="ch3-kite-tail ch3-kite-tail-c" />
+                </span>
+              </div>
             </div>
             <div className={`ch3-synthesis-caption ${showFinalLine ? 'show' : ''}`}>
               <div className="ch3-synthesis-caption-inner">{T.finalLine || T.line}</div>
@@ -3779,7 +3782,7 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
     if (ph === "press_start") {
       e.preventDefault();
       phaseRef.current = "unlocked"; setPhase("unlocked");
-      setTimeout(() => onComplete?.(), 600);
+      setShowForm(true);
       return;
     }
     if (ph === "cart_in" || ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
@@ -3884,35 +3887,42 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
             objectFit: "cover", pointerEvents: "none", display: "block",
           }} />
           <div style={{ position:"absolute", inset:0, pointerEvents:"none",
-            background:"radial-gradient(ellipse at center, transparent 28%, rgba(0,0,0,.28) 68%, rgba(0,0,0,.52) 100%)" }} />
+            background:"radial-gradient(ellipse at center, transparent 32%, rgba(0,0,0,.16) 68%, rgba(0,0,0,.34) 100%)" }} />
           <div style={{ position:"absolute", inset:"0 0 auto 0", height:"20%", pointerEvents:"none",
-            background:"linear-gradient(to bottom, rgba(0,0,0,.42), transparent)" }} />
+            background:"linear-gradient(to bottom, rgba(0,0,0,.26), transparent)" }} />
           {/* Sunset window glow — warm core + soft halo + shimmer */}
           <div style={{ position:"absolute", pointerEvents:"none",
             left:"22%", top:"5%", width:"38%", height:"54%",
-            background:"radial-gradient(ellipse at 50% 44%, rgba(255,140,55,.09) 0%, rgba(240,100,40,.05) 38%, transparent 72%)",
+            background:"radial-gradient(ellipse at 50% 44%, rgba(255,140,55,.16) 0%, rgba(240,100,40,.09) 38%, transparent 72%)",
             animation:"ch4WindowBreathe 7s ease-in-out infinite" }} />
           <div style={{ position:"absolute", pointerEvents:"none",
             left:"26%", top:"9%", width:"30%", height:"42%",
-            background:"radial-gradient(ellipse at 50% 38%, rgba(255,175,80,.07) 0%, rgba(255,120,50,.03) 50%, transparent 78%)",
+            background:"radial-gradient(ellipse at 50% 38%, rgba(255,175,80,.12) 0%, rgba(255,120,50,.06) 50%, transparent 78%)",
             animation:"ch4WindowBreathe 5.2s ease-in-out infinite reverse" }} />
           <div style={{ position:"absolute", pointerEvents:"none",
-            left:"28%", top:"60%", right:"28%", height:"18%",
-            background:"linear-gradient(to bottom, rgba(200,80,40,.055) 0%, transparent 100%)",
+            left:"20%", top:"58%", right:"20%", height:"22%",
+            background:"linear-gradient(to bottom, rgba(200,80,40,.10) 0%, rgba(180,60,30,.04) 60%, transparent 100%)",
             animation:"ch4WindowBreathe 9s ease-in-out infinite" }} />
           {isActive && (
             <div style={{ position:"absolute", pointerEvents:"none",
-              left:`${(CH4_CTRL_AREA.x - 0.06) * 100}%`, top:`${(CH4_CTRL_AREA.y - 0.09) * 100}%`,
-              width:"12%", height:"18%",
-              background:"radial-gradient(ellipse, rgba(120,90,220,.28) 0%, transparent 70%)",
+              left:`${(CH4_CTRL_AREA.x - 0.07) * 100}%`, top:`${(CH4_CTRL_AREA.y - 0.11) * 100}%`,
+              width:"14%", height:"22%",
+              background:"radial-gradient(ellipse, rgba(120,90,220,.44) 0%, rgba(90,60,200,.12) 55%, transparent 80%)",
               animation:"ch4CtrlLed 3.5s ease-in-out infinite" }} />
           )}
           {isConnected && (
-            <div style={{ position:"absolute", pointerEvents:"none",
-              left:`${(CH4_CHAIR.x - CH4_CHAIR.rx) * 100}%`, top:`${(CH4_CHAIR.y - CH4_CHAIR.ry) * 100}%`,
-              width:`${CH4_CHAIR.rx * 2 * 100}%`, height:`${CH4_CHAIR.ry * 2 * 100}%`,
-              background:"radial-gradient(ellipse, rgba(200,180,255,.15) 0%, rgba(140,110,230,.06) 55%, transparent 80%)",
-              animation:"ch4ChairSpill .55s ease-out forwards" }} />
+            <>
+              <div style={{ position:"absolute", pointerEvents:"none",
+                left:`${(CH4_CHAIR.x - CH4_CHAIR.rx) * 100}%`, top:`${(CH4_CHAIR.y - CH4_CHAIR.ry) * 100}%`,
+                width:`${CH4_CHAIR.rx * 2 * 100}%`, height:`${CH4_CHAIR.ry * 2 * 100}%`,
+                background:"radial-gradient(ellipse, rgba(200,180,255,.26) 0%, rgba(140,110,230,.12) 55%, transparent 80%)",
+                animation:"ch4ChairSpill .55s ease-out forwards" }} />
+              {/* Cold floor spill spreading from connection point */}
+              <div style={{ position:"absolute", pointerEvents:"none",
+                left:"0%", top:"52%", width:"38%", height:"38%",
+                background:"radial-gradient(ellipse at 40% 40%, rgba(160,140,255,.08) 0%, rgba(100,80,220,.03) 50%, transparent 78%)",
+                animation:"ch4ChairSpill .9s ease-out forwards" }} />
+            </>
           )}
 
           <svg
@@ -3959,12 +3969,18 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
             )}
             {isCrtOn && (
               <g>
+                {/* Wide halo — cabinet ambient spill */}
+                <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
+                  rx={CH4_CRT_SCREEN.rx * sw * 2.2} ry={CH4_CRT_SCREEN.ry * sh * 2.2}
+                  fill="rgba(100,220,160,.04)" filter="url(#ch4nBloom)" />
+                {/* Core bloom */}
                 <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
                   rx={CH4_CRT_SCREEN.rx * sw * 1.1} ry={CH4_CRT_SCREEN.ry * sh * 1.1}
-                  fill="rgba(120,240,180,.06)" filter="url(#ch4nBloom)" />
+                  fill="rgba(120,240,180,.13)" filter="url(#ch4nBloom)" />
+                {/* Screen pulse */}
                 <ellipse cx={sx(CH4_CRT_SCREEN.x)} cy={sy(CH4_CRT_SCREEN.y)}
                   rx={CH4_CRT_SCREEN.rx * sw * .72} ry={CH4_CRT_SCREEN.ry * sh * .72}
-                  fill="rgba(160,255,200,.09)" style={{ animation:"ch4CrtGlow 3.8s ease-in-out infinite" }} />
+                  fill="rgba(160,255,200,.18)" style={{ animation:"ch4CrtGlow 3.8s ease-in-out infinite" }} />
               </g>
             )}
 
@@ -4045,9 +4061,10 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
               const spx = sx(CH4_SOCKET.x), spy = sy(CH4_SOCKET.y), sr = CH4_SNAP_R * sw * .65;
               return (
                 <g>
-                  <circle cx={spx} cy={spy} r={sr * 2.4} fill="rgba(214,205,253,.05)" filter="url(#ch4nBloom)" />
-                  <circle cx={spx} cy={spy} r={sr} fill="rgba(214,205,253,.22)" stroke="rgba(214,205,253,.7)" strokeWidth={1.5} />
-                  <circle cx={spx} cy={spy} r={sr * .4} fill="rgba(214,205,253,.88)" />
+                  <circle cx={spx} cy={spy} r={sr * 3.6} fill="rgba(214,205,253,.06)" filter="url(#ch4nBloom)" />
+                  <circle cx={spx} cy={spy} r={sr * 2.0} fill="rgba(214,205,253,.09)" filter="url(#ch4nBloom)" />
+                  <circle cx={spx} cy={spy} r={sr} fill="rgba(214,205,253,.30)" stroke="rgba(214,205,253,.85)" strokeWidth={1.8} />
+                  <circle cx={spx} cy={spy} r={sr * .4} fill="rgba(255,255,255,.92)" />
                 </g>
               );
             })()}
@@ -4055,8 +4072,8 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
             {isActive && (
               <>
                 <path d={cablePath} fill="none" stroke="rgba(15,8,35,.65)" strokeWidth={5} strokeLinecap="round" filter="url(#ch4nBloom)" opacity={.45} />
-                <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={5.5} strokeLinecap="round" opacity={.15} filter="url(#ch4nGlow)" />
-                <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={1.8} strokeLinecap="round" opacity={.9} />
+                <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={5.5} strokeLinecap="round" opacity={isConnected ? .32 : .15} filter="url(#ch4nGlow)" />
+                <path d={cablePath} fill="none" stroke={cableColor} strokeWidth={1.8} strokeLinecap="round" opacity={1} />
               </>
             )}
 
@@ -4928,6 +4945,10 @@ export default function Roberto() {
         .ch3-synthesis-circuit-pulse{position:absolute;right:15%;top:15%;width:30%;height:52%;z-index:3;pointer-events:none;background:radial-gradient(circle at 56% 38%, rgba(255,199,124,.14) 0%, rgba(255,199,124,.06) 24%, rgba(0,0,0,0) 54%);mix-blend-mode:screen;opacity:.16;animation:ch3CircuitPulse 4.8s ease-in-out infinite}
         .ch3-synthesis-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.12) 74%, rgba(0,0,0,.38) 100%), linear-gradient(180deg, rgba(12,8,7,.06) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,.22) 100%)}
         .ch3-distant-kite{position:absolute;left:31.5%;top:38.8%;width:12%;height:12%;z-index:8;pointer-events:none;opacity:.98;animation:ch3KiteDrift 10.8s ease-in-out infinite}
+        .ch3-kite-gust{transition:transform 1.10s cubic-bezier(.22,.8,.44,1),filter 1.10s ease}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-kite-gust{transform:translate(-5px,-8px) rotate(-5deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 4px rgba(255,200,120,.28))}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-kite-gust{transform:translate(-10px,-16px) rotate(-10deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 7px rgba(255,200,120,.42))}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-kite-gust{transform:translate(-18px,-28px) rotate(-16deg);transition:transform .55s cubic-bezier(.18,.9,.36,1),filter .55s ease;filter:drop-shadow(0 0 12px rgba(255,200,120,.60))}
         .ch3-kite{position:absolute;left:32%;top:26%;width:24px;height:24px;transform:scale(1.22);filter:drop-shadow(0 0 8px rgba(255,214,188,.24))}
         .ch3-kite-diamond{position:absolute;left:6px;top:2px;width:11px;height:11px;background:rgba(238,86,24,.98);border:1px solid rgba(255,220,198,.38);transform:rotate(45deg);transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.18) inset}
         .ch3-kite-diamond::before,.ch3-kite-diamond::after{content:"";position:absolute;background:rgba(255,214,188,.76)}
@@ -4984,8 +5005,9 @@ export default function Roberto() {
           .ch2-stage{aspect-ratio:4 / 3}
           .ch3-line-block{position:relative;bottom:auto;left:auto;right:auto;border-top:none;background:transparent;padding:10px 14px 4px;margin-top:0;z-index:1}
           .ch3-line{white-space:normal;text-wrap:balance;font-size:clamp(15px,4.5vw,20px);line-height:1.22;text-align:center;color:rgba(224,233,242,.88)}
-          .ch3-synthesis-caption{left:0;right:0;bottom:0;max-width:none}
-          .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
+          .ch3-synthesis-caption{left:0;right:0;top:0;bottom:auto;max-width:none;transform:translateY(-8px)}
+          .ch3-synthesis-caption.show{transform:translateY(0)}
+          .ch3-synthesis-caption-inner{padding:11px 14px 10px;font-size:clamp(15px,4.2vw,20px);line-height:1.18;max-width:none;white-space:normal;overflow:visible;text-overflow:clip;background:linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.40) 70%,transparent 100%);border-top:none;border-bottom:1px solid rgba(192,218,244,.12)}
           .ch3-synthesis-core-glow{right:8%;top:14%;width:46%;height:46%;opacity:.48}
           .ch3-synthesis-branch-glow{right:2%;top:10%;width:60%;height:66%;opacity:.30}
           .ch3-synthesis-flow{right:10%;top:12%;width:40%;height:66%;opacity:.14}
@@ -5054,14 +5076,16 @@ export default function Roberto() {
           .ch2-game-slot.is-filled{font-size:10px}
           .ch2-game-feedback{font-size:11px;line-height:1.68;min-height:42px;margin-bottom:10px}
           .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
-          .ch2-final-caption-inner{font-size:clamp(15px,4.2vw,20px);white-space:normal;overflow:visible;text-overflow:clip}
+          .ch2-final-caption{top:0;bottom:auto;transform:translateY(-8px)}
+          .ch2-final-caption.is-visible{transform:translateY(0)}
+          .ch2-final-caption-inner{font-size:clamp(15px,4.2vw,20px);white-space:normal;overflow:visible;text-overflow:clip;border-top:none;border-bottom:1px solid rgba(255,218,178,.16);background:linear-gradient(to bottom,rgba(5,5,5,.88) 0%,rgba(8,6,5,.44) 80%,transparent 100%)}
           .ch2-game-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
           .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
           .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
           .chapter-intro-inner{transform:translateY(0)}
           .ch4-form-overlay{align-items:flex-start!important;padding:6px!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
           .ch2-line{text-wrap:balance}
-          .home-tree-echo{display:none}
+          .home-tree-echo{mix-blend-mode:normal;opacity:.35}
           .has-feedback .ch2-line-block{opacity:0;pointer-events:none;transition:opacity .2s ease}
           .ch2-stage.is-form-open{aspect-ratio:auto!important;min-height:520px}
         }
@@ -5150,21 +5174,23 @@ export default function Roberto() {
               <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-          {/* Layer 1 — ambient halo, wide and blurry */}
-          <g filter="url(#htHalo)" opacity="0.55">
-            <polyline points="66,92 65,41" stroke="#ff9820" strokeWidth="2.0" strokeLinecap="round" fill="none"/>
-            <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ff9820" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="65,41 74,23 84,6" stroke="#ff9820" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="66,38 68,14 70,3" stroke="#ff9820" strokeWidth="0.9" strokeLinecap="round" fill="none"/>
-            <polyline points="50,28 38,17 23,14" stroke="#ff9820" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="74,23 89,14 96,7" stroke="#ff9820" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="50,28 42,21 30,20" stroke="#ff9820" strokeWidth="0.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <polyline points="34,18 27,12" stroke="#ff9820" strokeWidth="0.6" strokeLinecap="round" fill="none"/>
-            <polyline points="17,9 9,4"    stroke="#ff9820" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
-            <polyline points="84,6 90,3"   stroke="#ff9820" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
-          </g>
-          {/* Layer 2 — crisp filament, ultra-thin */}
-          <g filter="url(#htWire)" opacity="0.88">
+          {/* Layer 1 — ambient halo (desktop only, expensive blur) */}
+          {!isMobileViewport && (
+            <g filter="url(#htHalo)" opacity="0.55">
+              <polyline points="66,92 65,41" stroke="#ff9820" strokeWidth="2.0" strokeLinecap="round" fill="none"/>
+              <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ff9820" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <polyline points="65,41 74,23 84,6" stroke="#ff9820" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <polyline points="66,38 68,14 70,3" stroke="#ff9820" strokeWidth="0.9" strokeLinecap="round" fill="none"/>
+              <polyline points="50,28 38,17 23,14" stroke="#ff9820" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <polyline points="74,23 89,14 96,7" stroke="#ff9820" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <polyline points="50,28 42,21 30,20" stroke="#ff9820" strokeWidth="0.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <polyline points="34,18 27,12" stroke="#ff9820" strokeWidth="0.6" strokeLinecap="round" fill="none"/>
+              <polyline points="17,9 9,4"    stroke="#ff9820" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
+              <polyline points="84,6 90,3"   stroke="#ff9820" strokeWidth="0.5" strokeLinecap="round" fill="none"/>
+            </g>
+          )}
+          {/* Layer 2 — crisp filament (desktop: subtle blur; mobile: plain lines) */}
+          <g filter={isMobileViewport ? undefined : "url(#htWire)"} opacity={isMobileViewport ? "0.30" : "0.88"}>
             <polyline points="66,92 65,41" stroke="#ffe4a8" strokeWidth="0.26" strokeLinecap="round" fill="none"/>
             <polyline points="65,41 50,28 34,18 17,9 5,6" stroke="#ffe4a8" strokeWidth="0.20" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
             <polyline points="65,41 74,23 84,6" stroke="#ffe4a8" strokeWidth="0.18" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
@@ -5586,7 +5612,6 @@ export default function Roberto() {
           T={T.ch4}
           onBack={handleBack}
           onContact={openContact}
-          onComplete={() => setGameFlow("tracceEmerse")}
           profileUi={{
             title: T.ch1.profileTitle,
             idle: T.ch1.profileIdle,
@@ -5599,12 +5624,6 @@ export default function Roberto() {
         />
       )}
 
-      {phase === "game" && gameFlow === "tracceEmerse" && (
-        <TracceEmerse
-          T={T.tracce}
-          onBack={handleBack}
-        />
-      )}
     </div>
   );
 }
