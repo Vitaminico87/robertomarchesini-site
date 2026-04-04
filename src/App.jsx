@@ -3073,7 +3073,7 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
 
     if (nextPlaced.length === CH2_OBJECT_ORDER.length) {
       setIsComplete(true);
-      setFeedback(T.gameFinalLine);
+      setFeedback('');
       completeTimeoutRef.current = setTimeout(() => {
         onComplete?.();
       }, 2400);
@@ -3119,16 +3119,9 @@ function ChapterTwoObjectGame({ lang, T, onComplete }) {
             })}
           </div>
         </div>
-        {isComplete ? (
-          <div className="ch2-game-complete-card">
-            <div className="ch2-game-complete-kicker">{T.gameCompleteKicker}</div>
-            <div className="ch2-game-complete-line">
-              {finalLineParts.map((line, index) => (
-                <span key={index} className={index === 0 ? 'is-top' : 'is-bottom'}>{line}</span>
-              ))}
-            </div>
-          </div>
-        ) : null}
+        <div className={`ch2-final-caption ${isComplete ? 'is-visible' : ''}`}>
+          {T.gameFinalLine}
+        </div>
         <div className="ch1-scan" />
       </div>
 
@@ -3444,25 +3437,36 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
       const ctx = futureAudioCtxRef.current;
       if (ctx.state === "suspended") ctx.resume();
       const now = ctx.currentTime;
-      const freqs = [392, 494, 587]; // G4, B4, D5
-      const freq = freqs[Math.min(step - 1, freqs.length - 1)];
-      const osc = ctx.createOscillator();
-      osc.type = step === 3 ? "sine" : "triangle";
-      osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.06, now + 0.16);
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.linearRampToValueAtTime(step === 3 ? 0.03 : 0.022, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
-      const filter = ctx.createBiquadFilter();
-      filter.type = "bandpass";
-      filter.frequency.setValueAtTime(step === 3 ? 1700 : 1300, now);
-      filter.Q.setValueAtTime(0.8, now);
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.28);
+      // Ancient war horn: low sawtooth + octave, slow attack, dense low-pass
+      const cfg = [
+        { f: 82,  vol: 0.055, dur: 2.0, lp: 340, lpRise: 1.20, fRise: 1.035 },
+        { f: 110, vol: 0.090, dur: 2.3, lp: 460, lpRise: 1.28, fRise: 1.055 },
+        { f: 138, vol: 0.140, dur: 2.8, lp: 600, lpRise: 1.38, fRise: 1.080 },
+      ][step - 1];
+      const attack = 0.48;
+      // Two oscillators: fundamental + octave for body
+      [1, 2].forEach((mult) => {
+        const osc = ctx.createOscillator();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(cfg.f * mult, now);
+        osc.frequency.exponentialRampToValueAtTime(cfg.f * mult * cfg.fRise, now + cfg.dur * 0.72);
+        const lp = ctx.createBiquadFilter();
+        lp.type = "lowpass";
+        lp.frequency.setValueAtTime(cfg.lp, now);
+        lp.frequency.linearRampToValueAtTime(cfg.lp * cfg.lpRise, now + cfg.dur * 0.55);
+        lp.Q.setValueAtTime(0.5, now);
+        const vol = mult === 1 ? cfg.vol : cfg.vol * 0.28;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(vol, now + attack);
+        gain.gain.setValueAtTime(vol, now + cfg.dur * 0.58);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + cfg.dur);
+        osc.connect(lp);
+        lp.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + cfg.dur + 0.05);
+      });
     } catch (_) {}
   }, []);
 
@@ -3474,16 +3478,16 @@ function ChapterThreeScene({ T, onBack, onComplete, profileUi, profileEntries, u
     setFutureActivating(true);
     setShowFutureBtn(false);
     // Three slow atmospheric pulses — each breathes in, holds, breathes out
-    [[0,1],[1100,0],[2000,2],[3100,0],[3900,3]].forEach(([delay, step]) => {
+    [[0,1],[1500,0],[2700,2],[4200,0],[5400,3]].forEach(([delay, step]) => {
       const t = setTimeout(() => {
         setFuturePulseStep(step);
         if (step > 0) playFuturePulseNote(step);
       }, delay);
       futurePulseTimeoutsRef.current.push(t);
     });
-    const fadeT = setTimeout(() => setFinalFade(true), 5100);
+    const fadeT = setTimeout(() => setFinalFade(true), 7200);
     futurePulseTimeoutsRef.current.push(fadeT);
-    const completeT = setTimeout(() => onComplete?.(), 5500);
+    const completeT = setTimeout(() => onComplete?.(), 7700);
     futurePulseTimeoutsRef.current.push(completeT);
   }, [scene, futureActivating, onComplete, playFuturePulseNote]);
 
@@ -4822,10 +4826,8 @@ export default function Roberto() {
         .ch2-game-feedback{width:100%;margin-top:2px;margin-bottom:14px;min-height:52px;padding:13px 16px;border-radius:8px;border:1px solid rgba(148,174,188,.18);background:rgba(3,8,10,.72);color:#d8e0e6;font-size:12px;line-height:1.78;font-family:'IBM Plex Mono',monospace;transition:border-color .25s ease,color .25s ease,background .25s ease,opacity .2s ease}
         .ch2-game-feedback-overlay{position:absolute;left:18px;top:18px;z-index:8;max-width:430px;margin:0;background:rgba(3,8,10,.66);border-color:rgba(148,174,188,.16);backdrop-filter:blur(6px)}
         .ch2-game-feedback.is-complete{border-color:rgba(255,77,0,.24);color:#e8ddd3;background:rgba(255,77,0,.05)}
-        .ch2-game-complete-card{position:absolute;left:50%;top:22px;z-index:9;width:min(calc(100% - 40px),540px);transform:translateX(-50%);padding:14px 18px 15px;border-radius:10px;border:1px solid rgba(255,77,0,.18);background:linear-gradient(180deg, rgba(18,9,6,.82), rgba(8,6,6,.58));backdrop-filter:blur(6px);text-align:center;animation:fadeIn .24s ease-out}
-        .ch2-game-complete-kicker{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:rgba(255,192,152,.78);margin-bottom:8px}
-        .ch2-game-complete-line{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(21px,2.25vw,28px);line-height:1.02;color:#f1e8df;text-align:center}
-        .ch2-game-complete-line span{display:block;text-wrap:initial;white-space:nowrap}.ch2-game-complete-line .is-top{letter-spacing:-.01em}.ch2-game-complete-line .is-bottom{letter-spacing:-.015em}
+        .ch2-final-caption{position:absolute;left:0;right:0;bottom:0;z-index:9;padding:42px 24px 20px;background:linear-gradient(0deg,rgba(4,4,4,.90) 0%,rgba(4,4,4,.60) 52%,transparent 100%);font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(18px,1.95vw,24px);line-height:1.26;color:rgba(241,232,223,.96);text-align:center;text-shadow:0 1px 0 rgba(0,0,0,.36),0 8px 22px rgba(0,0,0,.44);opacity:0;transform:translateY(5px);transition:opacity .65s ease,transform .65s ease;pointer-events:none}
+        .ch2-final-caption.is-visible{opacity:1;transform:translateY(0)}
         .ch2-game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
         .ch2-game-object{padding:14px 14px 15px;border-radius:10px;border:1px solid rgba(80,80,80,.72);background:rgba(0,0,0,.22);color:#ece7de;text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .35s ease}
         .ch2-game-object-icon{display:none;font-size:18px;line-height:1;color:#ddd2c4;margin-bottom:8px}
@@ -4891,30 +4893,31 @@ export default function Roberto() {
         .ch3-stage.is-final-fade .ch3-synthesis-caption{opacity:0;transform:translateY(18px)}
         /* Pulse: brightness on the img itself + soft bloom overlay.
            Attack fast (250ms), decay slow (700ms) — asymmetric via class rule override */
-        .ch3-synthesis-panel .ch2-fill{transition:filter .70s ease}
+        /* decay speed when pulse class is removed */
+        .ch3-synthesis-panel .ch2-fill{transition:filter 1.10s ease}
         .ch3-synthesis-panel.is-future-arming .ch3-synthesis-core-glow,
         .ch3-synthesis-panel.is-future-arming .ch3-synthesis-branch-glow,
         .ch3-synthesis-panel.is-future-arming .ch3-synthesis-circuit-pulse,
         .ch3-synthesis-panel.is-future-arming .ch3-synthesis-flow,
-        .ch3-synthesis-panel.is-future-arming .ch3-synthesis-amber-shimmer{transition:opacity .70s ease,filter .70s ease,transform .70s ease}
+        .ch3-synthesis-panel.is-future-arming .ch3-synthesis-amber-shimmer{transition:opacity 1.10s ease,filter 1.10s ease,transform 1.10s ease}
         /* bloom overlay */
-        .ch3-pulse-bloom{position:absolute;right:-8%;top:-4%;width:76%;height:82%;pointer-events:none;z-index:4;background:radial-gradient(ellipse at 68% 46%, rgba(255,185,80,.22) 0%, rgba(255,155,50,.12) 32%, rgba(255,120,30,.04) 58%, transparent 78%);mix-blend-mode:screen;filter:blur(28px);opacity:0;transition:opacity .70s ease}
-        /* step 1 — subtle swell, trunk zone warms */
-        .ch3-synthesis-panel.pulse-step-1 .ch2-fill{filter:brightness(1.28) contrast(1.06);transition:filter .25s ease}
-        .ch3-synthesis-panel.pulse-step-1 .ch3-pulse-bloom{opacity:.45;transition:opacity .25s ease}
-        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-core-glow{opacity:.70;filter:blur(20px);transform:scale(1.04);mix-blend-mode:screen;transition:opacity .25s ease,filter .25s ease,transform .25s ease}
-        /* step 2 — medium bloom, branches visible */
-        .ch3-synthesis-panel.pulse-step-2 .ch2-fill{filter:brightness(1.60) contrast(1.10) saturate(1.10);transition:filter .25s ease}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-pulse-bloom{opacity:.72;transition:opacity .25s ease}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-core-glow{opacity:.88;filter:blur(23px);transform:scale(1.07);mix-blend-mode:screen;transition:opacity .25s ease,filter .25s ease,transform .25s ease}
-        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-branch-glow{opacity:.52;filter:blur(18px);transition:opacity .25s ease,filter .25s ease}
-        /* step 3 — full bloom, whole tree ignites */
-        .ch3-synthesis-panel.pulse-step-3 .ch2-fill{filter:brightness(2.00) contrast(1.14) saturate(1.22);transition:filter .25s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-pulse-bloom{opacity:1;transition:opacity .25s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-core-glow{opacity:1;filter:blur(26px);transform:scale(1.11);mix-blend-mode:screen;transition:opacity .25s ease,filter .25s ease,transform .25s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-branch-glow{opacity:.80;filter:blur(22px);transform:scale(1.03);transition:opacity .25s ease,filter .25s ease,transform .25s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-flow{opacity:.38;transition:opacity .25s ease}
-        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-amber-shimmer{opacity:.30;transform:translateX(-6%);transition:opacity .25s ease,transform .25s ease}
+        .ch3-pulse-bloom{position:absolute;right:-8%;top:-4%;width:76%;height:82%;pointer-events:none;z-index:4;background:radial-gradient(ellipse at 68% 46%, rgba(255,185,80,.22) 0%, rgba(255,155,50,.12) 32%, rgba(255,120,30,.04) 58%, transparent 78%);mix-blend-mode:screen;filter:blur(28px);opacity:0;transition:opacity 1.10s ease}
+        /* step 1 — subtle swell, attack 550ms */
+        .ch3-synthesis-panel.pulse-step-1 .ch2-fill{filter:brightness(1.28) contrast(1.06);transition:filter .55s ease}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-pulse-bloom{opacity:.45;transition:opacity .55s ease}
+        .ch3-synthesis-panel.pulse-step-1 .ch3-synthesis-core-glow{opacity:.70;filter:blur(20px);transform:scale(1.04);mix-blend-mode:screen;transition:opacity .55s ease,filter .55s ease,transform .55s ease}
+        /* step 2 — medium bloom, attack 550ms */
+        .ch3-synthesis-panel.pulse-step-2 .ch2-fill{filter:brightness(1.60) contrast(1.10) saturate(1.10);transition:filter .55s ease}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-pulse-bloom{opacity:.72;transition:opacity .55s ease}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-core-glow{opacity:.88;filter:blur(23px);transform:scale(1.07);mix-blend-mode:screen;transition:opacity .55s ease,filter .55s ease,transform .55s ease}
+        .ch3-synthesis-panel.pulse-step-2 .ch3-synthesis-branch-glow{opacity:.52;filter:blur(18px);transition:opacity .55s ease,filter .55s ease}
+        /* step 3 — full bloom, attack 550ms */
+        .ch3-synthesis-panel.pulse-step-3 .ch2-fill{filter:brightness(2.00) contrast(1.14) saturate(1.22);transition:filter .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-pulse-bloom{opacity:1;transition:opacity .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-core-glow{opacity:1;filter:blur(26px);transform:scale(1.11);mix-blend-mode:screen;transition:opacity .55s ease,filter .55s ease,transform .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-branch-glow{opacity:.80;filter:blur(22px);transform:scale(1.03);transition:opacity .55s ease,filter .55s ease,transform .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-flow{opacity:.38;transition:opacity .55s ease}
+        .ch3-synthesis-panel.pulse-step-3 .ch3-synthesis-amber-shimmer{opacity:.30;transform:translateX(-6%);transition:opacity .55s ease,transform .55s ease}
 
         @keyframes ch3ShimmerSweep{0%,100%{opacity:.08;transform:translateX(-10%)}42%{opacity:.18;transform:translateX(0%)}68%{opacity:.12;transform:translateX(4%)}}
         @keyframes ch3CircuitPulse{0%,100%{opacity:.10;transform:scale(.995)}46%{opacity:.18;transform:scale(1.01)}}
@@ -4998,8 +5001,7 @@ export default function Roberto() {
           .ch2-game-slot.is-filled{font-size:10px}
           .ch2-game-feedback{font-size:11px;line-height:1.68;min-height:42px;margin-bottom:10px}
           .ch2-game-feedback-overlay{left:14px;right:14px;top:14px;max-width:none}
-          .ch2-game-complete-card{left:14px;right:14px;top:14px;width:auto;transform:none;padding:12px 12px 13px}
-          .ch2-game-complete-line{font-size:22px;line-height:1.14}
+          .ch2-final-caption{font-size:clamp(16px,4.2vw,21px)}
           .ch2-game-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
           .ch2-game-object{padding:10px 6px 9px;min-height:78px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
           .ch2-game-object-title{font-size:10px;line-height:1.15;margin-bottom:0;font-style:normal;font-family:'IBM Plex Mono',monospace;letter-spacing:.2px;color:#ece7de}
