@@ -1497,8 +1497,7 @@ function useLandingSound() {
         audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
       }
       const ctx = audioCtxRef.current;
-      if (ctx.state === 'suspended') ctx.resume();
-
+      const schedule = () => {
       const note = LANDING_NOTES[Math.min(noteIndex, LANDING_NOTES.length - 1)];
       const now = ctx.currentTime;
       const isHold = note.hold;
@@ -1554,6 +1553,12 @@ function useLandingSound() {
 
       osc.start(now);
       osc.stop(now + note.duration / 1000 + 0.1);
+      }; // end schedule
+      if (ctx.state !== 'running') {
+        ctx.resume().then(schedule).catch(() => {});
+      } else {
+        schedule();
+      }
     } catch (e) { /* Audio non supportato */ }
   }, []);
   
@@ -3249,47 +3254,56 @@ function ChapterTwoScene({ lang, T, onBack, onComplete, profileUi, profileEntrie
           </div>
         ) : null}
 
-        {scene === "desk" ? (
-          <>
-            <div className={`ch2-stage ${deskTransitioning ? "ch2-stage-transitioning" : ""} ${deskFeedbackText ? "has-feedback" : ""}`}>
-              <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
+        {/* Crossfade wrapper: game renders underneath, desk fades out on top */}
+        <div style={{ position: "relative", width: "100%" }}>
+          {(deskTransitioning || scene === "selection") && (
+            <ChapterTwoObjectGame lang={lang} T={T} onComplete={onComplete} />
+          )}
+          {scene === "desk" && (
+            <div style={{
+              position: deskTransitioning ? "absolute" : "relative",
+              top: 0, left: 0, right: 0,
+              zIndex: deskTransitioning ? 5 : "auto",
+              pointerEvents: deskTransitioning ? "none" : "auto",
+            }}>
+              <div className={`ch2-stage ${deskTransitioning ? "ch2-stage-transitioning" : ""} ${deskFeedbackText ? "has-feedback" : ""}`}>
+                <img className="ch2-fill" src={ASSETS.chapter2DeskFrame} alt="" />
 
-              <div className="ch2-window-mask">
-                <video
-                  ref={deskLoopRef}
-                  className="ch2-window-video"
-                  src={ASSETS.chapter2DeskLoop}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-
-              <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
-              <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
-              <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
-              <div className="ch2-monitor-breath" />
-              <div className="ch2-room-grade" />
-              <div className="ch2-line-block">
-                <div className="ch2-line">{T.introCopy}</div>
-              </div>
-              <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""} ${deskTransitioning ? "is-bridge" : ""}`}>{deskFeedbackText}</div>
-              <div className="ch1-scan" />
-            </div>
-            <div className="ch1-controls-slot">
-              {!deskTransitioning && (
-                <div className="ch1-controls ch2-controls">
-                  <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
-                  <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+                <div className="ch2-window-mask">
+                  <video
+                    ref={deskLoopRef}
+                    className="ch2-window-video"
+                    src={ASSETS.chapter2DeskLoop}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                  />
                 </div>
-              )}
+
+                <div className="ch2-window-spill" style={{ opacity: windowGlow }} />
+                <div className="ch2-room-daylift" style={{ opacity: roomDayLift }} />
+                <div className="ch2-room-nightshade" style={{ opacity: roomNightShade }} />
+                <div className="ch2-monitor-breath" />
+                <div className="ch2-room-grade" />
+                <div className="ch2-line-block">
+                  <div className="ch2-line">{T.introCopy}</div>
+                </div>
+                <div className={`ch2-feedback-overlay ${deskFeedbackText ? "show" : ""} ${deskTransitioning ? "is-bridge" : ""}`}>{deskFeedbackText}</div>
+                <div className="ch1-scan" />
+              </div>
+              <div className="ch1-controls-slot">
+                {!deskTransitioning && (
+                  <div className="ch1-controls ch2-controls">
+                    <Ch1ChoiceButton onClick={handleContinueBuild}>{T.continueBuildBtn}</Ch1ChoiceButton>
+                    <Ch1ChoiceButton subtle onClick={handleStepOut}>{T.stepOutBtn}</Ch1ChoiceButton>
+                  </div>
+                )}
+              </div>
             </div>
-          </>
-        ) : (
-          <ChapterTwoObjectGame lang={lang} T={T} onComplete={onComplete} />
-        )}
+          )}
+        </div>
 
       </div>
     </div>
@@ -3835,9 +3849,30 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
   }, [startLoop, startCartLoop]);
 
   const handleActivateBtn = useCallback(() => {
-    if (phaseRef.current !== "idle") return;
-    phaseRef.current = "crt_on"; setPhase("crt_on");
-  }, []);
+    if (!sceneReady) return;
+    const ph = phaseRef.current;
+    if (ph === "idle") {
+      phaseRef.current = "crt_on"; setPhase("crt_on");
+    } else if (ph === "crt_on") {
+      if (cartRafRef.current) { cancelAnimationFrame(cartRafRef.current); cartRafRef.current = null; }
+      isCartDragRef.current = false; setIsCartDragging(false);
+      cartPosRef.current = { ...CH4_CART_SLOT }; cartTargetRef.current = { ...CH4_CART_SLOT };
+      phaseRef.current = "cart_in"; setPhase("cart_in");
+      setCartPos({ ...CH4_CART_SLOT });
+    } else if (ph === "cart_in" || ph === "cable" || ph === "passed1" || ph === "passed2" || ph === "passed3") {
+      if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
+      isDraggingRef.current = false; setIsDragging(false);
+      passedRef.current = [true, true, true]; setPassed([true, true, true]);
+      currentRef.current = { ...CH4_SOCKET }; targetRef.current = { ...CH4_SOCKET };
+      phaseRef.current = "connected"; setPhase("connected");
+      setCableEnd({ ...CH4_SOCKET });
+      onUnlockProfile?.("future");
+      connectTORef.current = setTimeout(() => { phaseRef.current = "press_start"; setPhase("press_start"); }, 900);
+    } else if (ph === "press_start") {
+      phaseRef.current = "unlocked"; setPhase("unlocked");
+      setShowForm(true);
+    }
+  }, [sceneReady, onUnlockProfile]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
@@ -4195,8 +4230,11 @@ function ChapterFourScene({ T, onBack, onContact, onComplete, profileUi, profile
 
         <div className="ch1-controls-slot">
           <div className="ch1-controls ch2-controls" onClick={e => e.stopPropagation()}>
-            <Ch1ChoiceButton onClick={phase === "idle" && sceneReady ? handleActivateBtn : undefined} disabled={phase !== "idle" || !sceneReady}>
-              {phase === "idle" ? t4.crtBtn : isConnected ? t4.connectedCopy : showCart ? t4.cartCopy : t4.activatedCopy}
+            <Ch1ChoiceButton
+              onClick={sceneReady && phase !== "connected" && phase !== "cart_drag" && phase !== "unlocked" ? handleActivateBtn : undefined}
+              disabled={!sceneReady || phase === "connected" || phase === "cart_drag" || phase === "unlocked"}
+            >
+              {phase === "idle" ? t4.crtBtn : showCart ? t4.cartCopy : isPressStart ? t4.pressStartCopy : isConnected ? t4.connectedCopy : t4.activatedCopy}
             </Ch1ChoiceButton>
           </div>
         </div>
